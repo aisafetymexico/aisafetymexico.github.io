@@ -1,0 +1,61 @@
+# Dependencias de Node
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+
+# Archivos de entorno
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Archivos de construcción/distribución
+/dist
+/build
+/out
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de depuración
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Directorios de caché
+.cache/
+.sass-cache/
+.eslintcache
+
+# Gestores de paquetes
+.npm
+.yarn-integrity
+
+# IDE y editores
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# Sistemas de construcción
+.webpack/
+.rollup.cache/
+
+# Directorios de cobertura
+coverage/
+.nyc_output/
+
+# Archivos temporales
+tmp/
+temp/
