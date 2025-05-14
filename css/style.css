@@ -1,30 +1,36 @@
-/* Main Styles for AI Safety Mexico */
+/* Main Styles for AI Safety Mexico - Formal Academic Style */
 :root {
-    --primary-color: #0066cc;
-    --secondary-color: #003366;
-    --light-color: #f4f4f4;
-    --dark-color: #333;
+    --primary-color: #003366;
+    --secondary-color: #00509E;
+    --accent-color: #A3320B;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --text-color: #333;
+    --border-color: #d1d1d1;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
+    font-family: 'Garamond', 'Georgia', 'Times New Roman', serif;
+    line-height: 1.7;
     margin: 0;
     padding: 0;
-    color: var(--dark-color);
+    color: var(--text-color);
+    background-color: var(--light-color);
 }
 
 .container {
-    width: 80%;
+    width: 85%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
 
+/* Header Styles */
 header {
     background-color: var(--primary-color);
     color: white;
-    padding: 20px 0;
+    padding: 30px 0;
+    border-bottom: 5px solid var(--accent-color);
 }
 
 header .container {
@@ -33,9 +39,28 @@ header .container {
     align-items: center;
 }
 
+.logo {
+    font-size: 2.5rem;
+    font-weight: normal;
+    letter-spacing: 1px;
+    margin: 0;
+    text-align: center;
+    font-family: 'Palatino', serif;
+}
+
+.subtitle {
+    font-style: italic;
+    text-align: center;
+    margin-top: 10px;
+    font-weight: normal;
+    font-size: 1.2rem;
+}
+
 nav {
-    margin-top: 20px;
+    margin-top: 25px;
     width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    padding-top: 15px;
 }
 
 nav ul {
@@ -46,52 +71,121 @@ nav ul {
 }
 
 nav ul li {
-    margin: 0 15px;
+    margin: 0 20px;
 }
 
 nav ul li a {
     color: white;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: normal;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    padding-bottom: 5px;
+    transition: border-bottom 0.3s;
 }
 
-nav ul li a:hover {
-    color: var(--light-color);
+nav ul li a:hover, nav ul li a.active {
+    border-bottom: 2px solid white;
+}
+
+/* Main Content Styles */
+main {
+    padding: 40px 0;
+    background-color: white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
 }
 
 section {
     margin: 40px 0;
+    padding: 0 20px;
 }
 
-h1, h2, h3 {
+.section-title {
+    font-size: 1.8rem;
     color: var(--primary-color);
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--border-color);
+    font-weight: normal;
 }
 
-.btn {
-    display: inline-block;
-    background: var(--primary-color);
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
+/* Course and Program Styles */
+.program {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.program:last-child {
+    border-bottom: none;
+}
+
+.program-title {
+    color: var(--secondary-color);
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    font-weight: normal;
+}
+
+.program-content {
+    margin-left: 20px;
+}
+
+/* Members Section */
+.members-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.member {
+    width: 48%;
+    margin-bottom: 30px;
+}
+
+.member-name {
     font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    font-size: 1.1rem;
+    color: var(--secondary-color);
 }
 
-.btn:hover {
-    background-color: var(--secondary-color);
+.member-role {
+    font-style: italic;
+    margin-top: 5px;
+    color: #666;
 }
 
+/* Footer Styles */
 footer {
-    background-color: var(--dark-color);
+    background-color: var(--primary-color);
     color: white;
     text-align: center;
-    padding: 20px 0;
+    padding: 30px 0;
     margin-top: 40px;
+    font-size: 0.9rem;
 }
 
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.footer-links {
+    margin: 20px 0;
+}
+
+.footer-links a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Styles */
 @media (max-width: 768px) {
     nav ul {
         flex-direction: column;
@@ -99,10 +193,14 @@ footer {
     }
     
     nav ul li {
-        margin: 5px 0;
+        margin: 8px 0;
     }
     
     .container {
-        width: 90%;
+        width: 95%;
+    }
+    
+    .member {
+        width: 100%;
     }
 }
