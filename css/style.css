@@ -27,8 +27,8 @@ body {
 
 /* Header Styles */
 header {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: #f3f3f3;
+    color: #003c46;
     padding: 30px 0;
     border-bottom: 5px solid var(--accent-color);
 }
@@ -68,10 +68,19 @@ header .container {
     font-size: 1.2rem;
 }
 
+.hero-gif {
+    display: block;
+    margin: 25px auto 0 auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
 nav {
     margin-top: 25px;
     width: 100%;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-top: 1px solid var(--border-color);
     padding-top: 15px;
 }
 
@@ -87,7 +96,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: white;
+    color: #003c46;
     text-decoration: none;
     font-weight: normal;
     font-size: 1.1rem;
@@ -97,7 +106,7 @@ nav ul li a {
 }
 
 nav ul li a:hover, nav ul li a.active {
-    border-bottom: 2px solid white;
+    border-bottom: 2px solid #003c46;
 }
 
 /* Main Content Styles */
