@@ -7,6 +7,11 @@
     --dark-color: #212529;
     --text-color: #333;
     --border-color: #d1d1d1;
+    --base-font-size: 20px;
+}
+
+html {
+    font-size: var(--base-font-size);
 }
 
 body {
@@ -152,6 +157,29 @@ section {
     margin-left: 20px;
 }
 
+.program-actions {
+    margin-top: 10px;
+}
+
+.action-button {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 4px;
+    background-color: var(--secondary-color);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-right: 10px;
+}
+
+.action-button.secondary {
+    background-color: var(--accent-color);
+}
+
+.action-button:hover {
+    opacity: 0.9;
+}
+
 /* Members Section */
 .members-list {
     display: flex;
@@ -163,6 +191,29 @@ section {
 .member {
     width: 48%;
     margin-bottom: 30px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.member-photo-wrapper {
+    width: 90px;
+    min-width: 90px;
+    height: 90px;
+    margin-right: 16px;
+    border-radius: 50%;
+    background-color: #e4e4e4; /* espacio visual aunque no haya foto */
+    overflow: hidden;
+}
+
+.member-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.member-info {
+    flex: 1;
 }
 
 .member-name {
@@ -175,6 +226,18 @@ section {
     font-style: italic;
     margin-top: 5px;
     color: #666;
+}
+
+.member-linkedin {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.95rem;
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.member-linkedin:hover {
+    text-decoration: underline;
 }
 
 /* Footer Styles */
