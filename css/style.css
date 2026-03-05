@@ -180,28 +180,31 @@ section {
     opacity: 0.9;
 }
 
-/* Members Section */
+/* Equipo / Members Section */
 .members-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    gap: 24px 4%;
     margin-top: 30px;
 }
 
 .member {
     width: 48%;
-    margin-bottom: 30px;
+    min-width: 280px;
+    margin-bottom: 10px;
     display: flex;
     align-items: flex-start;
+    gap: 16px;
 }
 
 .member-photo-wrapper {
+    flex-shrink: 0;
     width: 90px;
     min-width: 90px;
     height: 90px;
-    margin-right: 16px;
     border-radius: 50%;
-    background-color: #e4e4e4; /* espacio visual aunque no haya foto */
+    background-color: #e4e4e4;
     overflow: hidden;
 }
 
@@ -214,6 +217,7 @@ section {
 
 .member-info {
     flex: 1;
+    min-width: 0;
 }
 
 .member-name {
