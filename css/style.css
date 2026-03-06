@@ -1,11 +1,17 @@
 /* Main Styles for AI Safety Mexico - Formal Academic Style */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 :root {
-    --primary-color: #003366;
-    --secondary-color: #00509E;
+    --primary-color: #003c46;
+    --secondary-color: #003c46;
     --accent-color: #A3320B;
     --light-color: #f8f9fa;
     --dark-color: #212529;
-    --text-color: #333;
+    --text-color: #003c46;
     --border-color: #d1d1d1;
     --base-font-size: 20px;
 }
@@ -21,6 +27,7 @@ body {
     padding: 0;
     color: var(--text-color);
     background-color: var(--light-color);
+    overflow-x: hidden;
 }
 
 .container {
@@ -28,6 +35,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    box-sizing: border-box;
 }
 
 /* Header Styles */
@@ -360,26 +368,159 @@ footer {
     background: var(--accent-color);
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-    nav ul {
-        flex-direction: column;
-        text-align: center;
+/* Responsive: tablet (iPad) y móvil */
+@media (max-width: 1024px) {
+    .container {
+        width: 92%;
+        padding: 16px;
+    }
+    
+    header {
+        padding: 20px 0;
     }
     
     nav ul li {
-        margin: 8px 0;
+        margin: 0 12px;
     }
     
+    nav ul li a {
+        font-size: 1rem;
+    }
+    
+    .hero-gif {
+        margin-top: 16px;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+    }
+    
+    main {
+        padding: 28px 0;
+    }
+    
+    section {
+        margin: 28px 0;
+        padding: 0 8px;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .member {
+        width: 48%;
+        min-width: 0;
+    }
+    
+    .carousel {
+        height: 350px;
+    }
+    
+    .carousel-container {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
     .container {
-        width: 95%;
+        width: 94%;
+        padding: 12px;
+    }
+    
+    header {
+        padding: 16px 0;
+    }
+    
+    nav {
+        margin-top: 16px;
+        padding-top: 12px;
+    }
+    
+    nav ul {
+        flex-direction: column;
+        text-align: center;
+        gap: 4px;
+    }
+    
+    nav ul li {
+        margin: 6px 0;
+    }
+    
+    nav ul li a {
+        font-size: 0.95rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+        margin-top: 8px;
     }
     
     .member {
         width: 100%;
+        min-width: 0;
+        margin-bottom: 20px;
+    }
+    
+    .member-photo-wrapper {
+        width: 72px;
+        min-width: 72px;
+        height: 72px;
     }
     
     .carousel {
-        height: 300px;
+        height: 260px;
+    }
+    
+    .program-title {
+        font-size: 1.2rem;
+    }
+    
+    .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .footer-links a {
+        margin: 0 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    html {
+        font-size: 17px;
+    }
+    
+    .container {
+        width: 96%;
+        padding: 10px;
+    }
+    
+    header {
+        padding: 12px 0;
+    }
+    
+    .subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .section-title {
+        font-size: 1.35rem;
+    }
+    
+    .carousel {
+        height: 220px;
+    }
+    
+    .program-content {
+        margin-left: 0;
+    }
+    
+    .action-button {
+        display: block;
+        margin: 8px 0;
+        text-align: center;
     }
 }
