@@ -182,10 +182,47 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
     
+    // Carrusel: slide más cercano al centro = activo (nítido); el resto con blur en CSS
+    const editorialTrack = document.querySelector('.editorial-carousel');
+    if (editorialTrack) {
+        const editorialCards = editorialTrack.querySelectorAll('.editorial-card');
+
+        function updateEditorialFocus() {
+            const scrollCenter = editorialTrack.scrollLeft + editorialTrack.clientWidth / 2;
+            let activeIndex = 0;
+            let best = Infinity;
+            editorialCards.forEach(function (card, i) {
+                const mid = card.offsetLeft + card.offsetWidth / 2;
+                const d = Math.abs(mid - scrollCenter);
+                if (d < best) {
+                    best = d;
+                    activeIndex = i;
+                }
+            });
+            editorialCards.forEach(function (card, i) {
+                card.classList.toggle('is-active', i === activeIndex);
+            });
+        }
+
+        let editorialScrollRaf = null;
+        function onEditorialScroll() {
+            if (editorialScrollRaf !== null) return;
+            editorialScrollRaf = requestAnimationFrame(function () {
+                editorialScrollRaf = null;
+                updateEditorialFocus();
+            });
+        }
+
+        editorialTrack.addEventListener('scroll', onEditorialScroll, { passive: true });
+        window.addEventListener('resize', updateEditorialFocus);
+        updateEditorialFocus();
+    }
+
     if (lightbox && lightboxImg) {
-        document.querySelectorAll('.certificate-img, .member-photo').forEach(img => {
+        document.querySelectorAll('.certificate-img, .member-photo, .editorial-card img').forEach(img => {
             img.addEventListener('click', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 openLightbox(this.src, this.alt);
             });
         });
