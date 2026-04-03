@@ -1,156 +1,138 @@
-// Main JavaScript for AI Safety Mexico website
+// Main JavaScript for AI Safety Mexico website — Mexican Cultural Premium redesign
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+document.addEventListener('DOMContentLoaded', function () {
+
+    // ── Mobile Menu Toggle ──
+    const toggle = document.querySelector('.mobile-toggle');
+    const nav = document.getElementById('main-nav');
+    if (toggle && nav) {
+        toggle.addEventListener('click', function () {
+            const open = nav.classList.toggle('is-open');
+            toggle.classList.toggle('is-open', open);
+            toggle.setAttribute('aria-expanded', String(open));
+        });
+        // Close menu when a link is clicked
+        nav.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                nav.classList.remove('is-open');
+                toggle.classList.remove('is-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+
+    // ── Smooth Scrolling for Anchor Links ──
+    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
         anchor.addEventListener('click', function (e) {
-            if (this.getAttribute('href') !== '#') {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80, // Offset for header
-                        behavior: 'smooth'
+            var href = this.getAttribute('href');
+            if (href === '#') return;
+            e.preventDefault();
+            var target = document.querySelector(href);
+            if (target) {
+                var headerH = document.querySelector('.site-header');
+                var offset = headerH ? headerH.offsetHeight + 16 : 80;
+                window.scrollTo({
+                    top: target.offsetTop - offset,
+                    behavior: 'smooth'
+                });
+                // Update active nav
+                document.querySelectorAll('.main-nav a').forEach(function (l) { l.classList.remove('active'); });
+                this.classList.add('active');
+            }
+        });
+    });
+
+    // ── Active Navigation on Scroll ──
+    var sections = document.querySelectorAll('section[id]');
+    if (sections.length) {
+        window.addEventListener('scroll', function () {
+            var scrollY = window.scrollY;
+            var headerH = document.querySelector('.site-header');
+            var offset = headerH ? headerH.offsetHeight + 50 : 100;
+
+            sections.forEach(function (section) {
+                var top = section.offsetTop - offset;
+                var height = section.offsetHeight;
+                var id = section.getAttribute('id');
+                if (scrollY >= top && scrollY < top + height) {
+                    document.querySelectorAll('.main-nav a').forEach(function (l) {
+                        l.classList.remove('active');
+                        if (l.getAttribute('href') === '#' + id) l.classList.add('active');
                     });
-                    
-                    // Update active state in navigation
-                    document.querySelectorAll('nav ul li a').forEach(navLink => {
-                        navLink.classList.remove('active');
-                    });
-                    this.classList.add('active');
                 }
-            }
-        });
-    });
-    
-    // Active navigation based on scroll position
-    window.addEventListener('scroll', function() {
-        const scrollPosition = window.scrollY;
-        
-        document.querySelectorAll('section[id]').forEach(section => {
-            const sectionTop = section.offsetTop - 100;
-            const sectionHeight = section.offsetHeight;
-            const sectionId = section.getAttribute('id');
-            
-            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                document.querySelectorAll('nav ul li a').forEach(navLink => {
-                    navLink.classList.remove('active');
-                    if (navLink.getAttribute('href') === '#' + sectionId) {
-                        navLink.classList.add('active');
-                    }
-                });
-            }
-            
-            // Special case for top of page
-            if (scrollPosition < 300) {
-                document.querySelectorAll('nav ul li a').forEach(navLink => {
-                    navLink.classList.remove('active');
-                    if (navLink.getAttribute('href') === '#') {
-                        navLink.classList.add('active');
-                    }
+            });
+            // Top of page
+            if (scrollY < 300) {
+                document.querySelectorAll('.main-nav a').forEach(function (l) {
+                    l.classList.remove('active');
+                    if (l.getAttribute('href') === '#') l.classList.add('active');
                 });
             }
         });
-    });
-    
-    // Add fade-in animation for sections
-    const fadeInElements = document.querySelectorAll('section');
-    
-    const fadeInObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = 1;
-                entry.target.style.transform = 'translateY(0)';
-                fadeInObserver.unobserve(entry.target);
-            }
+    }
+
+    // ── Header Shrink on Scroll ──
+    var header = document.querySelector('.site-header');
+    if (header) {
+        window.addEventListener('scroll', function () {
+            header.classList.toggle('scrolled', window.scrollY > 60);
         });
-    }, {
-        threshold: 0.1
-    });
-    
-    fadeInElements.forEach(element => {
-        element.style.opacity = 0;
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        fadeInObserver.observe(element);
-    });
-    
-    // Carousel functionality
-    const carousel = document.querySelector('.carousel');
-    const slides = document.querySelectorAll('.carousel-slide');
-    const prevBtn = document.querySelector('.carousel-btn.prev');
-    const nextBtn = document.querySelector('.carousel-btn.next');
-    const indicators = document.querySelector('.carousel-indicators');
-    
-    if (carousel && slides.length > 0) {
-        let currentIndex = 0;
-        
-        // Create indicator dots
-        slides.forEach((_, index) => {
-            const dot = document.createElement('div');
+    }
+
+    // ── Carousel ──
+    var carousel = document.querySelector('.carousel');
+    var slides = document.querySelectorAll('.carousel-slide');
+    var prevBtn = document.querySelector('.carousel-btn.prev');
+    var nextBtn = document.querySelector('.carousel-btn.next');
+    var indicatorsWrap = document.querySelector('.carousel-indicators');
+
+    if (carousel && slides.length > 0 && indicatorsWrap) {
+        var currentIndex = 0;
+
+        // Build indicator dots
+        slides.forEach(function (_, i) {
+            var dot = document.createElement('button');
             dot.classList.add('carousel-indicator');
-            if (index === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => {
-                goToSlide(index);
-            });
-            indicators.appendChild(dot);
+            dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', function () { goToSlide(i); });
+            indicatorsWrap.appendChild(dot);
         });
-        
-        // Update carousel position and indicators
+
         function updateCarousel() {
-            carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-            
-            document.querySelectorAll('.carousel-indicator').forEach((dot, index) => {
-                if (index === currentIndex) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
+            carousel.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
+            document.querySelectorAll('.carousel-indicator').forEach(function (dot, i) {
+                dot.classList.toggle('active', i === currentIndex);
             });
         }
-        
-        // Go to specific slide
-        function goToSlide(index) {
-            currentIndex = index;
-            updateCarousel();
-        }
-        
-        // Previous slide
-        prevBtn.addEventListener('click', () => {
+
+        function goToSlide(i) { currentIndex = i; updateCarousel(); }
+
+        if (prevBtn) prevBtn.addEventListener('click', function () {
             currentIndex = (currentIndex === 0) ? slides.length - 1 : currentIndex - 1;
             updateCarousel();
         });
-        
-        // Next slide
-        nextBtn.addEventListener('click', () => {
+        if (nextBtn) nextBtn.addEventListener('click', function () {
             currentIndex = (currentIndex === slides.length - 1) ? 0 : currentIndex + 1;
             updateCarousel();
         });
-        
-        // Auto-advance slides every 5 seconds
-        let autoSlide = setInterval(() => {
+
+        // Auto-advance
+        var autoSlide = setInterval(function () {
             currentIndex = (currentIndex === slides.length - 1) ? 0 : currentIndex + 1;
             updateCarousel();
         }, 5000);
-        
-        // Pause auto-advance when hovering over carousel
-        carousel.parentElement.addEventListener('mouseenter', () => {
-            clearInterval(autoSlide);
-        });
-        
-        // Resume auto-advance when mouse leaves carousel
-        carousel.parentElement.addEventListener('mouseleave', () => {
-            autoSlide = setInterval(() => {
+
+        carousel.parentElement.addEventListener('mouseenter', function () { clearInterval(autoSlide); });
+        carousel.parentElement.addEventListener('mouseleave', function () {
+            autoSlide = setInterval(function () {
                 currentIndex = (currentIndex === slides.length - 1) ? 0 : currentIndex + 1;
                 updateCarousel();
             }, 5000);
         });
-        
-        // Handle keyboard navigation
-        document.addEventListener('keydown', (e) => {
+
+        // Keyboard nav
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'ArrowLeft') {
                 currentIndex = (currentIndex === 0) ? slides.length - 1 : currentIndex - 1;
                 updateCarousel();
@@ -160,12 +142,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
-    // Lightbox: ampliar imagen al hacer clic
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = lightbox ? lightbox.querySelector('.lightbox-img') : null;
-    const lightboxClose = lightbox ? lightbox.querySelector('.lightbox-close') : null;
-    
+
+    // ── Lightbox ──
+    var lightbox = document.getElementById('lightbox');
+    var lightboxImg = lightbox ? lightbox.querySelector('.lightbox-img') : null;
+    var lightboxCloseBtn = lightbox ? lightbox.querySelector('.lightbox-close') : null;
+
     function openLightbox(src, alt) {
         if (!lightbox || !lightboxImg) return;
         lightboxImg.src = src;
@@ -174,64 +156,26 @@ document.addEventListener('DOMContentLoaded', function() {
         lightbox.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
     }
-    
+
     function closeLightbox() {
         if (!lightbox) return;
         lightbox.classList.remove('is-open');
         lightbox.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
     }
-    
-    // Carrusel: slide más cercano al centro = activo (nítido); el resto con blur en CSS
-    const editorialTrack = document.querySelector('.editorial-carousel');
-    if (editorialTrack) {
-        const editorialCards = editorialTrack.querySelectorAll('.editorial-card');
-
-        function updateEditorialFocus() {
-            const scrollCenter = editorialTrack.scrollLeft + editorialTrack.clientWidth / 2;
-            let activeIndex = 0;
-            let best = Infinity;
-            editorialCards.forEach(function (card, i) {
-                const mid = card.offsetLeft + card.offsetWidth / 2;
-                const d = Math.abs(mid - scrollCenter);
-                if (d < best) {
-                    best = d;
-                    activeIndex = i;
-                }
-            });
-            editorialCards.forEach(function (card, i) {
-                card.classList.toggle('is-active', i === activeIndex);
-            });
-        }
-
-        let editorialScrollRaf = null;
-        function onEditorialScroll() {
-            if (editorialScrollRaf !== null) return;
-            editorialScrollRaf = requestAnimationFrame(function () {
-                editorialScrollRaf = null;
-                updateEditorialFocus();
-            });
-        }
-
-        editorialTrack.addEventListener('scroll', onEditorialScroll, { passive: true });
-        window.addEventListener('resize', updateEditorialFocus);
-        updateEditorialFocus();
-    }
 
     if (lightbox && lightboxImg) {
-        document.querySelectorAll('.certificate-img, .member-photo, .editorial-card img').forEach(img => {
-            img.addEventListener('click', function(e) {
+        document.querySelectorAll('.certificate-img, .member-photo').forEach(function (img) {
+            img.addEventListener('click', function (e) {
                 e.preventDefault();
-                e.stopPropagation();
                 openLightbox(this.src, this.alt);
             });
         });
-        
-        if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
-        lightbox.addEventListener('click', function(e) {
+        if (lightboxCloseBtn) lightboxCloseBtn.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', function (e) {
             if (e.target === lightbox) closeLightbox();
         });
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && lightbox.classList.contains('is-open')) closeLightbox();
         });
     }

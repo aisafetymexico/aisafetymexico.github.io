@@ -4,309 +4,376 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Safety Mexico - Seguridad de la Inteligencia Artificial</title>
-    <link rel="stylesheet" href="css/style.css?v=12">
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
     <meta name="description" content="AI Safety Mexico es una organización dedicada a promover la investigación, educación y políticas sobre la seguridad y alineación de la inteligencia artificial en México.">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <nav>
+
+    <!-- Sticky Header -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="#" class="header-logo">
+                <img src="images/aisafetymx_logo.png" alt="AI Safety Mexico logo" class="logo-img">
+                <span class="logo-text">AI SAFETY MX</span>
+            </a>
+            <button class="mobile-toggle" aria-label="Abrir menú" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <nav class="main-nav" id="main-nav">
                 <ul>
                     <li><a href="#" class="active">Inicio</a></li>
-                    <li><a href="#programas">Programas educativos y colaboraciones</a></li>
+                    <li><a href="#programas">Programas</a></li>
                     <li><a href="#investigacion">Investigación</a></li>
                     <li><a href="#equipo">Equipo</a></li>
                     <li><a href="#advisors">Advisors</a></li>
                     <li><a href="#contacto">Contacto</a></li>
                 </ul>
             </nav>
-            
-            <img src="images/AI%20Safety.png" alt="Portada AI Safety Mexico" class="hero-gif">
-            <p class="subtitle">Investigación y Educación en Seguridad de Inteligencia Artificial</p>
         </div>
     </header>
-    
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-content">
+                <h1 class="hero-title">Investigación y Educación en Seguridad de Inteligencia Artificial</h1>
+                <p class="hero-subtitle">Fomentamos la colaboración entre investigadores, desarrolladores y responsables políticos para garantizar que los sistemas de IA se desarrollen de forma segura y beneficiosa para toda la sociedad mexicana.</p>
+                <div class="hero-actions">
+                    <a href="#programas" class="btn btn-primary">Nuestros programas</a>
+                    <a href="#contacto" class="btn btn-outline">Contáctanos</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="images/AI%20Safety.png" alt="Portada AI Safety Mexico">
+            </div>
+        </div>
+    </section>
+
     <main>
-        <div class="container">
-            <section>
-                <h2 class="section-title">Sobre nosotros</h2>
-                <p>AI Safety Mexico es una organización académica dedicada a promover la investigación, educación y políticas sobre la seguridad y alineación de la inteligencia artificial en México. Nuestra misión es fomentar la colaboración entre investigadores, desarrolladores, y responsables políticos para garantizar que los sistemas de IA se desarrollen de forma segura y beneficiosa para toda la sociedad mexicana.</p>
-            </section>
-            
-            <section>
-                <h2 class="section-title">Actividades Pasadas</h2>
-                <div class="editorial-carousel-strip">
-                <div class="editorial-carousel" aria-label="Galería de actividades pasadas">
-                    <article class="editorial-card is-active">
-                        <img src="images/carousel/carousel-image-1.jpeg" alt="AI Safety Mexico Actividad 1">
-                    </article>
-                    <article class="editorial-card">
-                        <img src="images/carousel/carousel-image-2.jpeg" alt="AI Safety Mexico Actividad 2">
-                    </article>
-                    <article class="editorial-card">
-                        <img src="images/carousel/carousel-image-3.jpeg" alt="AI Safety Mexico Actividad 3">
-                    </article>
-                    <article class="editorial-card">
-                        <img src="images/carousel/carousel-image-5.jpeg" alt="AI Safety Mexico Actividad 5">
-                    </article>
-                    <article class="editorial-card">
-                        <img src="images/carousel/carousel-image-6.jpeg" alt="AI Safety Mexico Actividad 6">
-                    </article>
-                    <article class="editorial-card">
-                        <img src="images/carousel/carousel-image-7.jpeg" alt="AI Safety Mexico Actividad 7">
-                    </article>
-                    <article class="editorial-card">
-                        <img src="images/carousel/carousel-image-9.jpeg" alt="AI Safety Mexico Actividad 9">
-                    </article>
-                    <article class="editorial-card">
-                        <img src="images/carousel/carousel-image-10.jpeg" alt="AI Safety Mexico Actividad 10">
-                    </article>
-                    <article class="editorial-card">
-                        <img src="images/carousel/Dexter.png" alt="AI Safety Mexico - Equipo en sesión de trabajo">
-                    </article>
-                    <article class="editorial-card">
-                        <img src="images/carousel/IMG_7302 Copy.JPG" alt="AI Safety Mexico - Taller con participantes">
-                    </article>
-                    <article class="editorial-card">
-                        <img src="images/carousel/Screenshot 2026-03-05 at 12.16.56 p.m..png" alt="AI Safety Mexico - Material de curso">
-                    </article>
-                    <article class="editorial-card">
-                        <img src="images/carousel/Screenshot 2026-03-05 at 1.34.26 p.m..png" alt="AI Safety Mexico - Resultados y visualizaciones">
-                    </article>
+
+        <!-- What We Do -->
+        <section class="section-what-we-do">
+            <div class="container">
+                <h2 class="section-heading">Sobre nosotros</h2>
+                <p class="section-description">AI Safety Mexico es una organización académica dedicada a promover la investigación, educación y políticas sobre la seguridad y alineación de la inteligencia artificial en México. Nuestra misión es fomentar la colaboración entre investigadores, desarrolladores, y responsables políticos para garantizar que los sistemas de IA se desarrollen de forma segura y beneficiosa para toda la sociedad mexicana.</p>
+                <div class="tag-list">
+                    <span class="tag">Educación</span>
+                    <span class="tag">Investigación</span>
+                    <span class="tag">Gobernanza de IA</span>
+                    <span class="tag">Colaboración Internacional</span>
+                    <span class="tag">Divulgación</span>
                 </div>
-                </div>
-            </section>
-            
-            <section>
-                <h2 class="section-title">Actividades en curso</h2>
-                <p>Actualmente estamos trabajando en las siguientes iniciativas:</p>
-                <ul>
-                    <li>Mesas de trabajo primer viernes del mes</li>
-                </ul>
-            </section>
-            
-            <section id="programas">
-                <h2 class="section-title">Programas educativos y colaboraciones</h2>
-                
-                <div class="program">
-                    <h3 class="program-title">Curso de Fundamentos de Seguridad en IA y Gobernanza en IA</h3>
-                    <div class="program-content">
-                        <p>Se han realizado cursos gratuitos para la comunidad basados en el material de AI Safety Fundamentals de BlueDot Impact, ARENA, AI Safety Collab y AI Safety Atlas. Jason Pinelo, Angel Tenorio, Janeth Valdivia, Isabel Cámara y Karime Pacheco fungieron como facilitadores de estos programas, que introducen los conceptos fundamentales de seguridad y gobernanza en inteligencia artificial.</p>
-                        <div class="program-certificates">
-                            <img src="images/Certificados/AI%20Safety%20Atlas%20Angel.jpeg" alt="Certificado AI Safety Atlas - Angel Tenorio" class="certificate-img">
-                            <img src="images/Certificados/ENAIS%20Janeth.png" alt="Certificado ENAIS - Janeth Valdivia" class="certificate-img">
-                        </div>
+            </div>
+        </section>
+
+        <!-- Stats Bar -->
+        <section class="section-stats">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat">
+                        <span class="stat-number">6+</span>
+                        <span class="stat-label">Cursos</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">30+</span>
+                        <span class="stat-label">Participantes</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">3</span>
+                        <span class="stat-label">Publicaciones</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">10+</span>
+                        <span class="stat-label">Investigadores</span>
                     </div>
                 </div>
-                
-                <div class="program">
-                    <h3 class="program-title">Curso Técnico de Seguridad en IA</h3>
-                    <div class="program-content">
-                        <p>Curso sobre aspectos técnicos de seguridad en IA, con sesiones intensivas basadas en los materiales de ARENA. Este curso profundiza en los aspectos técnicos de la seguridad en sistemas de IA. Jason Pinelo y Angel Tenorio fungen como facilitadores de este programa.</p>
-                    </div>
-                </div>
-                
-                <div class="program">
-                    <h3 class="program-title">Seguridad en IA para Instituciones</h3>
-                    <div class="program-content">
-                        <p>Se han impartido cursos especializados sobre seguridad en IA en el Centro de Investigación Geoestadística, a cargo de Angel Tenorio y Silvia Fernández. También se llevó a cabo un curso en la Facultad de Matemáticas de la UADY, dirigido por Silvia Fernández, Angel Tenorio y Jason Pinelo.</p>
-                        <div class="program-certificates">
-                            <img src="images/Certificados/Centro%20Geo%20Angel.jpeg" alt="Certificado Centro Geo - Angel Tenorio" class="certificate-img">
-                            <img src="images/Certificados/UADY%20Angel.jpeg" alt="Certificado UADY - Angel Tenorio" class="certificate-img">
+            </div>
+        </section>
+
+        <!-- Actividades Pasadas — Carousel -->
+        <section class="section-carousel">
+            <div class="container">
+                <h2 class="section-heading">Actividades Pasadas</h2>
+                <div class="carousel-container">
+                    <div class="carousel">
+                        <div class="carousel-slide">
+                            <img src="images/carousel/carousel-image-1.jpeg" alt="AI Safety Mexico Actividad 1">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/carousel/carousel-image-2.jpeg" alt="AI Safety Mexico Actividad 2">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/carousel/carousel-image-3.jpeg" alt="AI Safety Mexico Actividad 3">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/carousel/carousel-image-5.jpeg" alt="AI Safety Mexico Actividad 5">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/carousel/carousel-image-6.jpeg" alt="AI Safety Mexico Actividad 6">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/carousel/carousel-image-7.jpeg" alt="AI Safety Mexico Actividad 7">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/carousel/carousel-image-9.jpeg" alt="AI Safety Mexico Actividad 9">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/carousel/carousel-image-10.jpeg" alt="AI Safety Mexico Actividad 10">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/carousel/Dexter.png" alt="AI Safety Mexico - Equipo en sesión de trabajo">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/carousel/IMG_7302 Copy.JPG" alt="AI Safety Mexico - Taller con participantes">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/carousel/Screenshot 2026-03-05 at 12.16.56 p.m..png" alt="AI Safety Mexico - Material de curso">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="images/carousel/Screenshot 2026-03-05 at 1.34.26 p.m..png" alt="AI Safety Mexico - Resultados y visualizaciones">
                         </div>
                     </div>
+                    <button class="carousel-btn prev" aria-label="Anterior">&#10094;</button>
+                    <button class="carousel-btn next" aria-label="Siguiente">&#10095;</button>
+                    <div class="carousel-indicators"></div>
                 </div>
-                
-                <div class="program">
-                    <h3 class="program-title">VIGÍA: Plataforma para el análisis de gobernanza de IA y soberanía digital en México</h3>
-                    <div class="program-content">
-                        <p>VIGÍA (Valoración de Impactos Gubernamentales de Inteligencia Artificial) es una plataforma en desarrollo que surge como parte de los proyectos del curso de AI Governance, en colaboración con ENAIS. El proyecto recibió un <em>Special Recognition</em> en la AI Safety Collab 2025 Summer Action Competition por su propuesta de infraestructura regional para el análisis de políticas públicas relacionadas con inteligencia artificial.</p>
-                        <p>El equipo detrás del proyecto está conformado por: Pilar Carolina Moncada Santana, Jason Maximiliano Pinelo Hau, Axel Alexander Pinelo Hau, Janeth Valdivia y Angel Tenorio.</p>
-                        <div class="program-actions">
-                            <a class="action-button" href="https://vigia-observatorio.github.io/index-en.html" target="_blank" rel="noopener noreferrer">Saber más</a>
-                        </div>
+            </div>
+        </section>
+
+        <!-- Actividades en curso -->
+        <section class="section-current">
+            <div class="container">
+                <h2 class="section-heading">Actividades en curso</h2>
+                <div class="card">
+                    <p>Actualmente estamos trabajando en las siguientes iniciativas:</p>
+                    <ul>
+                        <li>Mesas de trabajo primer viernes del mes</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Programas educativos y colaboraciones -->
+        <section id="programas" class="section-programs">
+            <div class="container">
+                <h2 class="section-heading">Programas educativos y colaboraciones</h2>
+
+                <div class="program-card">
+                    <h3 class="program-card-title">Curso de Fundamentos de Seguridad en IA y Gobernanza en IA</h3>
+                    <p>Se han realizado cursos gratuitos para la comunidad basados en el material de AI Safety Fundamentals de BlueDot Impact, ARENA, AI Safety Collab y AI Safety Atlas. Jason Pinelo, Angel Tenorio, Janeth Valdivia y Karime Pacheco fungieron como facilitadores de estos programas, que introducen los conceptos fundamentales de seguridad y gobernanza en inteligencia artificial.</p>
+                    <div class="program-certificates">
+                        <img src="images/Certificados/AI%20Safety%20Atlas%20Angel.jpeg" alt="Certificado AI Safety Atlas - Angel Tenorio" class="certificate-img">
+                        <img src="images/Certificados/ENAIS%20Janeth.png" alt="Certificado ENAIS - Janeth Valdivia" class="certificate-img">
                     </div>
                 </div>
 
-                <div class="program">
-                    <h3 class="program-title">SPAR – AI Safety Connect</h3>
-                    <div class="program-content">
-                        <p>Integrantes de AI Safety México, Jason Pinelo, Dexter Gómez y Janeth Valdivia, tuvieron la oportunidad de participar en el <em>Supervised Program for Alignment Research (SPAR)</em>, un programa de investigación que conecta a talento emergente con especialistas para abordar los riesgos asociados al desarrollo de la inteligencia artificial.</p>
-                        <p>Como equipo mexicano trabajamos en el proyecto <strong>AI Safety Connect</strong>, el cual pretende minimizar la brecha estructural de coordinación entre la investigación académica y las comunidades de seguridad en inteligencia artificial mediante la construcción de una plataforma integrada que mapea de forma sistemática autores, publicaciones y áreas temáticas relevantes para la seguridad de la IA por medio de una taxonomía estructurada, búsqueda semántica y <em>pipelines</em> de datos escalables.</p>
-                        <p>La colaboración en este proyecto refleja un compromiso con enfoques basados en evidencia, el desarrollo responsable de la inteligencia artificial y el fortalecimiento de la infraestructura de investigación en AI Safety.</p>
-                        <p>Agradecemos a SPAR Research, a Jaime Raldua Veuthey y a todas las personas comprometidas que hicieron posible la colaboración en este proyecto: Julius A. Odai, Ihor Kendiukhov, Tim Sankara, Jakub K. Nowak y Kailer Laino.</p>
-                        <div class="program-certificates">
-                            <img src="images/Certificados/AI%20Safety%20Connect.png" alt="Póster del proyecto AI Safety Connect" class="certificate-img">
-                        </div>
-                        <div class="program-actions">
-                            <a class="action-button" href="ai-safety-connect.html" target="_blank" rel="noopener noreferrer">Ver paper</a>
-                        </div>
+                <div class="program-card">
+                    <h3 class="program-card-title">Curso Técnico de Seguridad en IA</h3>
+                    <p>Curso sobre aspectos técnicos de seguridad en IA, con sesiones intensivas basadas en los materiales de ARENA. Este curso profundiza en los aspectos técnicos de la seguridad en sistemas de IA. Jason Pinelo y Angel Tenorio fungen como facilitadores de este programa.</p>
+                </div>
+
+                <div class="program-card">
+                    <h3 class="program-card-title">Seguridad en IA para Instituciones</h3>
+                    <p>Se han impartido cursos especializados sobre seguridad en IA en el Centro de Investigación Geoestadística, a cargo de Angel Tenorio y Silvia Fernández. También se llevó a cabo un curso en la Facultad de Matemáticas de la UADY, dirigido por Silvia Fernández, Angel Tenorio y Jason Pinelo.</p>
+                    <div class="program-certificates">
+                        <img src="images/Certificados/Centro%20Geo%20Angel.jpeg" alt="Certificado Centro Geo - Angel Tenorio" class="certificate-img">
+                        <img src="images/Certificados/UADY%20Angel.jpeg" alt="Certificado UADY - Angel Tenorio" class="certificate-img">
                     </div>
                 </div>
-                
-            </section>
-            
-            <section id="investigacion">
-                <h2 class="section-title">Investigación</h2>
-                <p>Nuestro equipo participa activamente en proyectos de investigación orientados a la seguridad en inteligencia artificial:</p>
-                
-                <div class="program">
-                    <h3 class="program-title">Evaluación de Seguridad en Modelos de IA</h3>
-                    <div class="program-content">
+
+                <div class="program-card">
+                    <h3 class="program-card-title">VIGÍA: Plataforma para el análisis de gobernanza de IA y soberanía digital en México</h3>
+                    <p>VIGÍA (Valoración de Impactos Gubernamentales de Inteligencia Artificial) es una plataforma en desarrollo que surge como parte de los proyectos del curso de AI Governance, en colaboración con ENAIS. El proyecto recibió un <em>Special Recognition</em> en la AI Safety Collab 2025 Summer Action Competition por su propuesta de infraestructura regional para el análisis de políticas públicas relacionadas con inteligencia artificial.</p>
+                    <p>El equipo detrás del proyecto está conformado por: Pilar Carolina Moncada Santana, Jason Maximiliano Pinelo Hau, Axel Alexander Pinelo Hau, Janeth Valdivia y Angel Tenorio.</p>
+                    <div class="program-actions">
+                        <a class="btn btn-primary" href="https://vigia-observatorio.github.io/index-en.html" target="_blank" rel="noopener noreferrer">Saber más</a>
+                    </div>
+                </div>
+
+                <div class="program-card">
+                    <h3 class="program-card-title">SPAR – AI Safety Connect</h3>
+                    <p>Integrantes de AI Safety México, Jason Pinelo, Dexter Gómez y Janeth Valdivia, tuvieron la oportunidad de participar en el <em>Supervised Program for Alignment Research (SPAR)</em>, un programa de investigación que conecta a talento emergente con especialistas para abordar los riesgos asociados al desarrollo de la inteligencia artificial.</p>
+                    <p>Como equipo mexicano trabajamos en el proyecto <strong>AI Safety Connect</strong>, el cual pretende minimizar la brecha estructural de coordinación entre la investigación académica y las comunidades de seguridad en inteligencia artificial mediante la construcción de una plataforma integrada que mapea de forma sistemática autores, publicaciones y áreas temáticas relevantes para la seguridad de la IA por medio de una taxonomía estructurada, búsqueda semántica y <em>pipelines</em> de datos escalables.</p>
+                    <p>La colaboración en este proyecto refleja un compromiso con enfoques basados en evidencia, el desarrollo responsable de la inteligencia artificial y el fortalecimiento de la infraestructura de investigación en AI Safety.</p>
+                    <p>Agradecemos a SPAR Research, a Jaime Raldua Veuthey y a todas las personas comprometidas que hicieron posible la colaboración en este proyecto: Julius A. Odai, Ihor Kendiukhov, Tim Sankara, Jakub K. Nowak y Kailer Laino.</p>
+                    <div class="program-certificates">
+                        <img src="images/Certificados/AI%20Safety%20Connect.png" alt="Póster del proyecto AI Safety Connect" class="certificate-img">
+                    </div>
+                    <div class="program-actions">
+                        <a class="btn btn-primary" href="ai-safety-connect.html" target="_blank" rel="noopener noreferrer">Ver paper</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Investigación -->
+        <section id="investigacion" class="section-research">
+            <div class="container">
+                <h2 class="section-heading">Investigación</h2>
+                <p class="section-description">Nuestro equipo participa activamente en proyectos de investigación orientados a la seguridad en inteligencia artificial:</p>
+
+                <div class="research-grid">
+                    <div class="program-card">
+                        <h3 class="program-card-title">Evaluación de Seguridad en Modelos de IA</h3>
                         <p>Miguel Angel Peñaloza está trabajando en construir evaluaciones para medir el comportamiento de los modelos en cuanto a seguridad. Este proyecto busca desarrollar métricas y herramientas para la evaluación sistemática de riesgos en sistemas de IA.</p>
                     </div>
-                </div>
-                
-                <div class="program">
-                    <h3 class="program-title">AI Safety in Mexico: A Pilot Survey in Yucatan</h3>
-                    <div class="program-content">
+
+                    <div class="program-card">
+                        <h3 class="program-card-title">AI Safety in Mexico: A Pilot Survey in Yucatan</h3>
                         <p>Janet Valdivia, Silvia Fernández, Valeria Ramírez y Angel Tenorio realizaron el trabajo "A pilot survey conducted in Yucatán, México", destinado a capturar preocupaciones locales acerca de la seguridad en inteligencia artificial en Mérida, Yucatán.</p>
                         <div class="program-actions">
-                            <a class="action-button" href="https://www.rcs.cic.ipn.mx/2025_154_9/AI%20Safety%20in%20Mexico_%20A%20Pilot%20Survey%20in%20Yucatan.pdf" target="_blank" rel="noopener noreferrer">Paper</a>
-                            <a class="action-button secondary" href="https://open.spotify.com/episode/7lun4sk8BwhzO4MGNM5k6V?si=d91d18607cc84b85" target="_blank" rel="noopener noreferrer">Podcast</a>
+                            <a class="btn btn-primary" href="https://www.rcs.cic.ipn.mx/2025_154_9/AI%20Safety%20in%20Mexico_%20A%20Pilot%20Survey%20in%20Yucatan.pdf" target="_blank" rel="noopener noreferrer">Paper</a>
+                            <a class="btn btn-secondary" href="https://open.spotify.com/episode/7lun4sk8BwhzO4MGNM5k6V?si=d91d18607cc84b85" target="_blank" rel="noopener noreferrer">Podcast</a>
                         </div>
                     </div>
-                </div>
-                
-                <div class="program">
-                    <h3 class="program-title">Desarrollo Profesional: ML4Good</h3>
-                    <div class="program-content">
-                        <p>Angel Tenorio, Max Pinelo, Isabel Cámara y Janeth Valdivia asistieron al campamento ML4Good para incrementar sus conocimientos en seguridad de inteligencia artificial y aplicar estos conocimientos en sus investigaciones y actividades educativas.</p>
+
+                    <div class="program-card">
+                        <h3 class="program-card-title">Desarrollo Profesional: ML4Good</h3>
+                        <p>Angel Tenorio, Max Pinelo y Janeth Valdivia asistieron al campamento ML4Good para incrementar sus conocimientos en seguridad de inteligencia artificial y aplicar estos conocimientos en sus investigaciones y actividades educativas.</p>
                     </div>
-                </div>
-                
-                <div class="program">
-                    <h3 class="program-title">Participación en EAGxCDMX</h3>
-                    <div class="program-content">
+
+                    <div class="program-card">
+                        <h3 class="program-card-title">Participación en EAGxCDMX</h3>
                         <p>En el marco de la conferencia Effective Altruism Global X Ciudad de México (EAGxCDMX), Silvia Fernández, Angel Tenorio y Jason Pinelo impartieron el taller "Not so speedy AI Safety", evento diseñado para establecer vínculos colaborativos con especialistas del área y difundir el trabajo desarrollado en México sobre seguridad en inteligencia artificial a la comunidad internacional.</p>
                     </div>
                 </div>
-            </section>
-            
-            <section id="equipo">
-                <h2 class="section-title">Equipo</h2>
-                <p>Nuestro equipo está formado por profesionales dedicados a la seguridad en inteligencia artificial desde diferentes perspectivas y áreas de especialización:</p>
-                
-                <div class="members-list">
-                    <div class="member">
-                        <div class="member-photo-wrapper">
+            </div>
+        </section>
+
+        <!-- Equipo -->
+        <section id="equipo" class="section-team">
+            <div class="container">
+                <h2 class="section-heading">Equipo</h2>
+                <p class="section-description">Nuestro equipo está formado por profesionales dedicados a la seguridad en inteligencia artificial desde diferentes perspectivas y áreas de especialización:</p>
+
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="team-photo-wrapper">
                             <img src="images/Equipo/Janeth.jpeg" alt="Janeth Valdivia" class="member-photo">
                         </div>
-                        <div class="member-info">
-                            <div class="member-name">Janeth Valdivia</div>
-                            <div class="member-role">Researcher in Technical AI Governance y facilitadora</div>
-                            <a href="https://www.linkedin.com/in/janeth-valdivia-b90087111/" class="member-linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <div class="team-info">
+                            <h3 class="team-name">Janeth Valdivia</h3>
+                            <p class="team-role">Researcher in Technical AI Governance y facilitadora</p>
+                            <a href="https://www.linkedin.com/in/janeth-valdivia-b90087111/" class="team-linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                         </div>
                     </div>
-                    
-                    <div class="member">
-                        <div class="member-photo-wrapper">
+
+                    <div class="team-card">
+                        <div class="team-photo-wrapper">
                             <img src="images/Equipo/Angel.jpeg" alt="Angel Tenorio" class="member-photo">
                         </div>
-                        <div class="member-info">
-                            <div class="member-name">Angel Tenorio</div>
-                            <div class="member-role">Software Engineer y Researcher in Mech Interp y facilitador</div>
-                            <a href="https://www.linkedin.com/in/angel-tenorio-vazquez/" class="member-linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <div class="team-info">
+                            <h3 class="team-name">Angel Tenorio</h3>
+                            <p class="team-role">Software Engineer y Researcher in Mech Interp y facilitador</p>
+                            <a href="https://www.linkedin.com/in/angel-tenorio-vazquez/" class="team-linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                         </div>
                     </div>
-                    
-                    <div class="member">
-                        <div class="member-photo-wrapper">
+
+                    <div class="team-card">
+                        <div class="team-photo-wrapper">
                             <img src="images/Equipo/Jason.jpeg" alt="Jason Pinelo" class="member-photo">
                         </div>
-                        <div class="member-info">
-                            <div class="member-name">Jason Pinelo</div>
-                            <div class="member-role">AI Engineer y Docente en Universidad Politécnica de Yucatán</div>
-                            <a href="https://www.linkedin.com/in/jason-pinelo-14a6a81a5/" class="member-linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <div class="team-info">
+                            <h3 class="team-name">Jason Pinelo</h3>
+                            <p class="team-role">AI Engineer y Docente en Universidad Politécnica de Yucatán</p>
+                            <a href="https://www.linkedin.com/in/jason-pinelo-14a6a81a5/" class="team-linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                         </div>
                     </div>
-                    
-                    <div class="member">
-                        <div class="member-photo-wrapper">
-                            <img src="images/Equipo/Isabel.jpeg" alt="Isabel Cámara" class="member-photo">
-                        </div>
-                        <div class="member-info">
-                            <div class="member-name">Isabel Cámara</div>
-                            <div class="member-role">Data Engineer y facilitadora de AI Governance</div>
-                            <a href="https://www.linkedin.com/in/isabel-montalvo/" class="member-linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                        </div>
-                    </div>
-                    
-                    <div class="member">
-                        <div class="member-photo-wrapper">
+
+
+                    <div class="team-card">
+                        <div class="team-photo-wrapper">
                             <img src="images/Equipo/Dexter.png" alt="Dexter Gómez" class="member-photo">
                         </div>
-                        <div class="member-info">
-                            <div class="member-name">Dexter Gómez</div>
-                            <div class="member-role">AI Engineer y Docente en Universidad Politécnica de Yucatán</div>
-                            <a href="https://www.linkedin.com/in/dextergmez/" class="member-linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <div class="team-info">
+                            <h3 class="team-name">Dexter Gómez</h3>
+                            <p class="team-role">AI Engineer y Docente en Universidad Politécnica de Yucatán</p>
+                            <a href="https://www.linkedin.com/in/dextergmez/" class="team-linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                         </div>
                     </div>
-                    
-                    <div class="member">
-                        <div class="member-photo-wrapper">
+
+                    <div class="team-card">
+                        <div class="team-photo-wrapper">
                             <img src="images/Equipo/Karime.jpeg" alt="Karime Pacheco" class="member-photo">
                         </div>
-                        <div class="member-info">
-                            <div class="member-name">Karime Pacheco</div>
-                            <div class="member-role">Directora de AIS UPY</div>
-                            <a href="https://www.linkedin.com/in/karime-pacheco-217368230/" class="member-linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <div class="team-info">
+                            <h3 class="team-name">Karime Pacheco</h3>
+                            <p class="team-role">Directora de AIS UPY</p>
+                            <a href="https://www.linkedin.com/in/karime-pacheco-217368230/" class="team-linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                         </div>
                     </div>
                 </div>
-            </section>
-            
-            <section id="advisors">
-                <h2 class="section-title">Advisors</h2>
-                <p>Contamos con el acompañamiento de advisors que brindan orientación estratégica y académica a AI Safety Mexico.</p>
-                
-                <div class="members-list">
-                    
-                    <div class="member">
-                        <div class="member-name">Dra. Silvia Fernández</div>
-                        <div class="member-role">Advisor, Investigadora Centro Geo</div>
+            </div>
+        </section>
+
+        <!-- Advisors -->
+        <section id="advisors" class="section-advisors">
+            <div class="container">
+                <h2 class="section-heading">Advisors</h2>
+                <p class="section-description">Contamos con el acompañamiento de advisors que brindan orientación estratégica y académica a AI Safety Mexico.</p>
+                <div class="advisor-list">
+                    <div class="advisor-card">
+                        <h3 class="team-name">Dra. Silvia Fernández</h3>
+                        <p class="team-role">Advisor, Investigadora Centro Geo</p>
                     </div>
                 </div>
-            </section>
-            
-            <section id="contacto">
-                <h2 class="section-title">Contacto</h2>
+            </div>
+        </section>
+
+        <!-- Partners -->
+        <section class="section-partners">
+            <div class="container">
+                <h2 class="section-heading">Colaboradores</h2>
+                <div class="partners-row">
+                    <span class="partner">BlueDot Impact</span>
+                    <span class="partner">ARENA</span>
+                    <span class="partner">AI Safety Collab</span>
+                    <span class="partner">ENAIS</span>
+                    <span class="partner">Centro Geo</span>
+                    <span class="partner">UADY</span>
+                    <span class="partner">ML4Good</span>
+                    <span class="partner">SPAR Research</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contacto -->
+        <section id="contacto" class="section-contact">
+            <div class="container">
+                <h2 class="section-heading section-heading--light">Contacto</h2>
                 <p>Para obtener más información sobre nuestros programas, investigaciones o para colaborar con nosotros, puede contactarnos a través de:</p>
-                <p>Correo electrónico: <a href="mailto:">contact@aismx.org</a></p>
-            </section>
-        </div>
+                <p class="contact-email">Correo electrónico: <a href="mailto:contact@aismx.org">contact@aismx.org</a></p>
+            </div>
+        </section>
+
     </main>
-    
-    <footer>
-        <div class="footer-content">
-            <p>&copy; 2025 AI Safety Mexico. Todos los derechos reservados.</p>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="images/aisafetymx_logo.png" alt="AI Safety Mexico" class="footer-logo">
+                <span class="footer-name">AI Safety Mexico</span>
+            </div>
             <div class="footer-links">
                 <a href="#programas">Programas</a>
                 <a href="#investigacion">Investigación</a>
                 <a href="#equipo">Equipo</a>
                 <a href="#contacto">Contacto</a>
             </div>
-            <div class="footer-social">
-                <a
-                    href="https://www.linkedin.com/company/ai-safety-m%C3%A9xico"
-                    class="footer-linkedin"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="AI Safety México en LinkedIn"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="currentColor" aria-hidden="true" focusable="false">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
-                </a>
-            </div>
+            <p class="footer-copy">&copy; 2025 AI Safety Mexico. Todos los derechos reservados.</p>
         </div>
     </footer>
-    
+
+    <!-- Lightbox -->
     <div id="lightbox" class="lightbox" aria-hidden="true">
         <button class="lightbox-close" type="button" aria-label="Cerrar">&times;</button>
         <img class="lightbox-img" src="" alt="">
     </div>
-    
-    <script src="js/main.js?v=10"></script>
+
+    <script src="js/main.js"></script>
 </body>
 </html>

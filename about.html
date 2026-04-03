@@ -4,72 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre nosotros - AI Safety Mexico</title>
-    <link rel="stylesheet" href="css/style.css?v=12">
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>AI Safety Mexico</h1>
-            <nav>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" class="header-logo">
+                <img src="images/aisafetymx_logo.png" alt="AI Safety Mexico logo" class="logo-img">
+                <span class="logo-text">AI SAFETY MX</span>
+            </a>
+            <button class="mobile-toggle" aria-label="Abrir menú" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <nav class="main-nav" id="main-nav">
                 <ul>
                     <li><a href="index.html">Inicio</a></li>
-                    <li><a href="about.html">Sobre nosotros</a></li>
-                    <li><a href="#contact">Contacto</a></li>
+                    <li><a href="about.html" class="active">Sobre nosotros</a></li>
+                    <li><a href="index.html#contacto">Contacto</a></li>
                 </ul>
             </nav>
         </div>
     </header>
-    
-    <main class="container">
-        <section>
-            <h2>¿Quiénes somos?</h2>
-            <p>AI Safety Mexico es una organización sin fines de lucro fundada en 2025 por un grupo de investigadores, ingenieros y profesionales preocupados por el desarrollo seguro y ético de la inteligencia artificial en México.</p>
-            
-            <p>Nuestra organización está compuesta por expertos en campos como la ciencia de datos, la ética tecnológica, políticas públicas y desarrollo de software, todos unidos por un objetivo común: asegurar que el avance de la IA en México sea beneficioso, seguro y alineado con valores humanos fundamentales.</p>
-        </section>
-        
-        <section>
-            <h2>Nuestra visión</h2>
-            <p>Aspiramos a un México donde la inteligencia artificial se desarrolle e implemente de manera segura, ética y beneficiosa para toda la sociedad, respetando la diversidad cultural y promoviendo el bienestar común.</p>
-        </section>
-        
-        <section>
-            <h2>Nuestra misión</h2>
-            <p>Promover la investigación, educación y políticas sobre seguridad y alineación de IA en México a través de:</p>
-            <ul>
-                <li>Desarrollo de capacidades técnicas locales en seguridad de IA</li>
-                <li>Creación de espacios de diálogo entre la academia, industria y gobierno</li>
-                <li>Elaboración de recomendaciones para políticas públicas sobre IA</li>
-                <li>Divulgación científica sobre los riesgos y beneficios de la IA</li>
-            </ul>
-        </section>
-        
-        <section id="contact">
-            <h2>Contacto</h2>
-            <p>Para más información o para unirte a nuestra comunidad:</p>
-            <p>Email: <a href="mailto:info@aisafetymexico.org">info@aisafetymexico.org</a></p>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <h1 class="page-hero-title">Sobre nosotros</h1>
+        </div>
+    </section>
+
+    <main>
+        <section class="section-content">
+            <div class="container">
+                <div class="content-card">
+                    <h2 class="section-heading">¿Quiénes somos?</h2>
+                    <p>AI Safety Mexico es una organización sin fines de lucro fundada en 2025 por un grupo de investigadores, ingenieros y profesionales preocupados por el desarrollo seguro y ético de la inteligencia artificial en México.</p>
+                    <p>Nuestra organización está compuesta por expertos en campos como la ciencia de datos, la ética tecnológica, políticas públicas y desarrollo de software, todos unidos por un objetivo común: asegurar que el avance de la IA en México sea beneficioso, seguro y alineado con valores humanos fundamentales.</p>
+                </div>
+
+                <div class="content-card">
+                    <h2 class="section-heading">Nuestra visión</h2>
+                    <p>Aspiramos a un México donde la inteligencia artificial se desarrolle e implemente de manera segura, ética y beneficiosa para toda la sociedad, respetando la diversidad cultural y promoviendo el bienestar común.</p>
+                </div>
+
+                <div class="content-card">
+                    <h2 class="section-heading">Nuestra misión</h2>
+                    <p>Promover la investigación, educación y políticas sobre seguridad y alineación de IA en México a través de:</p>
+                    <ul>
+                        <li>Desarrollo de capacidades técnicas locales en seguridad de IA</li>
+                        <li>Creación de espacios de diálogo entre la academia, industria y gobierno</li>
+                        <li>Elaboración de recomendaciones para políticas públicas sobre IA</li>
+                        <li>Divulgación científica sobre los riesgos y beneficios de la IA</li>
+                    </ul>
+                </div>
+
+                <div class="content-card" id="contact">
+                    <h2 class="section-heading">Contacto</h2>
+                    <p>Para más información o para unirte a nuestra comunidad:</p>
+                    <p>Email: <a href="mailto:info@aisafetymexico.org">info@aisafetymexico.org</a></p>
+                </div>
+            </div>
         </section>
     </main>
-    
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 AI Safety Mexico. Todos los derechos reservados.</p>
-            <div class="footer-social">
-                <a
-                    href="https://www.linkedin.com/company/ai-safety-m%C3%A9xico"
-                    class="footer-linkedin"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="AI Safety México en LinkedIn"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="currentColor" aria-hidden="true" focusable="false">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
-                </a>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="images/aisafetymx_logo.png" alt="AI Safety Mexico" class="footer-logo">
+                <span class="footer-name">AI Safety Mexico</span>
             </div>
+            <div class="footer-links">
+                <a href="index.html#programas">Programas</a>
+                <a href="index.html#investigacion">Investigación</a>
+                <a href="index.html#equipo">Equipo</a>
+                <a href="index.html#contacto">Contacto</a>
+            </div>
+            <p class="footer-copy">&copy; 2025 AI Safety Mexico. Todos los derechos reservados.</p>
         </div>
     </footer>
-    
+
     <script src="js/main.js"></script>
 </body>
 </html>
