@@ -220,13 +220,18 @@ ul { list-style: none; }
     flex-wrap: wrap;
 }
 .hero-image {
-    flex: 0 0 380px;
-    max-width: 380px;
+    flex: 0 0 320px;
+    max-width: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .hero-image img {
-    width: 100%;
-    border-radius: var(--radius-lg);
-    box-shadow: 0 12px 40px rgba(0,0,0,.3);
+    width: 280px;
+    height: auto;
+    border-radius: 0;
+    box-shadow: none;
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,.3));
 }
 
 /* Page hero (sub-pages) */
