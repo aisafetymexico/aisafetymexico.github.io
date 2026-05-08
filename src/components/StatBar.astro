@@ -36,13 +36,20 @@ const { stats } = Astro.props;
 </section>
 
 <style>
-  /* Polish-rand (RAND-DIFF §1.5, §7.2, §8.4): solid navy surface (no 135°
-     gradient wash) and no inset-section-stats box-shadow. */
+  /* Polish-rand (RAND-DIFF §1.5, §7.2, §8.4): solid surface (no 135°
+     gradient wash) and no inset-section-stats box-shadow.
+     Dark-mode subtle (QA-DARKMODE-VISUAL top-5 #1 / EDITORIAL-DARKMODE):
+     demoted from --color-bg-impact (indigo-900) to --color-bg-warm
+     (bg-elevated #262624) so the home page no longer stacks two adjacent
+     indigo bands (StatBar + CtaSection) in the lower fold. The closing
+     CtaSection remains the single indigo focal band. */
   .stat-bar {
     position: relative;
-    background: var(--color-bg-impact);
+    background: var(--color-bg-warm);
     color: var(--color-text-on-dark);
     padding-block: var(--space-12);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
   }
 
   .stat-bar__inner {

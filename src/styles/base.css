@@ -135,7 +135,7 @@ hr {
 }
 
 ::selection {
-  background: var(--copper-tint-strong);
+  background: var(--color-accent-soft);
   color: var(--color-text-heading);
 }
 

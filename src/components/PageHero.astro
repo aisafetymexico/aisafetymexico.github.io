@@ -93,7 +93,9 @@ const hasBreadcrumb = breadcrumb && breadcrumb.items && breadcrumb.items.length 
     font-size: var(--fs-h1);
     line-height: var(--lh-snug);
     letter-spacing: var(--ls-tight);
-    color: var(--color-text-heading);
+    /* Dark-mode subtle (PALETTE-MAPPING §4.5): hero h1 overrides default
+       cream heading color to peach so it carries the focal poster weight. */
+    color: var(--color-accent);
     margin-bottom: var(--space-3);
   }
 

@@ -332,11 +332,11 @@ const slidesId = `${carouselId}-slides`;
     margin-inline: auto;
     border-radius: var(--radius-lg, 16px);
     overflow: hidden;
-    background: var(--color-bg-elevated, var(--white, #fff));
-    box-shadow: var(--shadow, 0 4px 24px rgba(27, 35, 64, 0.08));
+    background: var(--color-bg-elevated);
+    box-shadow: var(--shadow);
   }
   .carousel:focus-visible {
-    outline: 2px solid var(--color-focus-ring, var(--copper, #C4854A));
+    outline: 2px solid var(--color-focus-ring);
     outline-offset: 2px;
   }
 
@@ -373,8 +373,8 @@ const slidesId = `${carouselId}-slides`;
     padding: var(--space-4, 16px) var(--space-6, 24px);
     font-family: var(--font-body, 'Inter', sans-serif);
     font-size: var(--fs-small, 0.92rem);
-    color: var(--color-text-secondary, var(--text-light, #6A6A7A));
-    background: var(--color-bg-warm, var(--cream, #FAF3E8));
+    color: var(--color-text-secondary);
+    background: var(--color-bg-warm);
     text-align: center;
   }
 
@@ -387,8 +387,8 @@ const slidesId = `${carouselId}-slides`;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--navy-overlay-soft, rgba(27, 35, 64, 0.55));
-    color: var(--color-text-on-dark, var(--white, #fff));
+    background: var(--color-bg-overlay-dark);
+    color: var(--color-text-on-dark);
     border: none;
     border-radius: var(--radius-full, 50%);
     cursor: pointer;
@@ -397,9 +397,9 @@ const slidesId = `${carouselId}-slides`;
     z-index: 2;
     transition: background var(--transition, 0.25s ease);
   }
-  .carousel__nav:hover { background: var(--navy-overlay, rgba(27, 35, 64, 0.75)); }
+  .carousel__nav:hover { background: var(--bg-base-overlay-strong); }
   .carousel__nav:focus-visible {
-    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline: 2px solid var(--color-accent-secondary);
     outline-offset: 3px;
   }
   .carousel__nav--prev { left: var(--space-4, 16px); }
@@ -419,17 +419,17 @@ const slidesId = `${carouselId}-slides`;
     height: 10px;
     padding: 0;
     border-radius: var(--radius-full, 50%);
-    background: rgba(255, 255, 255, 0.5);
+    background: var(--color-border-on-dark);
     border: none;
     cursor: pointer;
     transition: background var(--transition, 0.25s ease), transform var(--transition, 0.25s ease);
   }
   .carousel__indicator.is-active {
-    background: var(--color-accent, var(--copper, #C4854A));
+    background: var(--color-accent);
     transform: scale(1.2);
   }
   .carousel__indicator:focus-visible {
-    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline: 2px solid var(--color-accent-secondary);
     outline-offset: 3px;
   }
 
@@ -441,8 +441,8 @@ const slidesId = `${carouselId}-slides`;
     height: 36px;
     border-radius: var(--radius-full, 50%);
     border: none;
-    background: var(--navy-overlay-soft, rgba(27, 35, 64, 0.55));
-    color: var(--color-text-on-dark, var(--white, #fff));
+    background: var(--color-bg-overlay-dark);
+    color: var(--color-text-on-dark);
     cursor: pointer;
     font-size: 12px;
     z-index: 2;
@@ -450,9 +450,9 @@ const slidesId = `${carouselId}-slides`;
     align-items: center;
     justify-content: center;
   }
-  .carousel__playpause:hover { background: var(--navy-overlay, rgba(27, 35, 64, 0.75)); }
+  .carousel__playpause:hover { background: var(--bg-base-overlay-strong); }
   .carousel__playpause:focus-visible {
-    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline: 2px solid var(--color-accent-secondary);
     outline-offset: 3px;
   }
 

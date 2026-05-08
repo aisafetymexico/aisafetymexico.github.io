@@ -82,7 +82,7 @@ const isActive = (href: string): boolean => {
     align-items: center;
     padding: 8px 14px;
     border-radius: 6px;
-    color: var(--color-text-on-dark-muted, rgba(255, 255, 255, 0.80));
+    color: var(--color-text-on-dark-muted);
     font-family: var(--font-body, 'Inter', sans-serif);
     font-size: 0.9rem;
     font-weight: 500;
@@ -90,16 +90,16 @@ const isActive = (href: string): boolean => {
     transition: background 0.15s ease, color 0.15s ease;
   }
   .main-nav__link:hover {
-    color: var(--color-text-on-dark, var(--white, #fff));
-    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-on-dark);
+    background: var(--peach-tint);
   }
   .main-nav__link:focus-visible {
-    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline: 2px solid var(--color-accent-secondary);
     outline-offset: 2px;
   }
   .main-nav__link.is-active {
-    color: var(--color-text-on-dark, var(--white, #fff));
-    background: rgba(196, 133, 74, 0.25);
+    color: var(--color-text-on-dark);
+    background: var(--peach-border-soft);
   }
 
   /* "Colabora" link — demoted from pill to plain text-only nav link
@@ -110,16 +110,16 @@ const isActive = (href: string): boolean => {
     padding: 8px 14px;
     border-radius: 6px;
     background: transparent;
-    color: var(--color-text-on-dark, var(--white, #fff));
+    color: var(--color-text-on-dark);
     font-weight: 600;
   }
   .main-nav__link--cta:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--color-text-on-dark, var(--white, #fff));
+    background: var(--peach-tint);
+    color: var(--color-text-on-dark);
   }
   .main-nav__link--cta.is-active {
-    background: rgba(196, 133, 74, 0.25);
-    color: var(--color-text-on-dark, var(--white, #fff));
+    background: var(--peach-border-soft);
+    color: var(--color-text-on-dark);
   }
 
   /* Hide desktop list on tablet + mobile (MobileMenu takes over).

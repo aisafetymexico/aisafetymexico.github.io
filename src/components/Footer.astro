@@ -232,7 +232,7 @@ const columns = DEFAULT_COLUMNS;
     margin: 0;
     font-family: var(--font-body);
     font-size: var(--fs-caption);
-    color: var(--white-text-soft);
+    color: var(--cream-text-soft);
     line-height: var(--lh-normal);
     max-width: 56ch;
   }
@@ -252,12 +252,12 @@ const columns = DEFAULT_COLUMNS;
     width: 36px;
     height: 36px;
     border-radius: var(--radius-full);
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.9);
+    background: var(--peach-tint);
+    color: var(--cream-text-strong);
     transition: background var(--transition), color var(--transition);
   }
   .site-footer__social-icon:hover {
-    background: rgba(255, 255, 255, 0.18);
+    background: var(--peach-tint-strong);
     color: var(--color-text-on-dark);
   }
   .site-footer__social-icon:focus-visible {
@@ -270,10 +270,11 @@ const columns = DEFAULT_COLUMNS;
   }
 
   /* Edge divider — Polish-rand (RAND-DIFF §1.4): copper→gold gradient
-     replaced by a 1px neutral hairline on the dark band. */
+     replaced by a 1px neutral hairline. Dark-subtle: cream-border alpha
+     keeps the rule legible on the indigo-900 footer band. */
   .site-footer__divider {
     height: 1px;
-    background: rgba(255, 255, 255, 0.10);
+    background: var(--color-border-on-dark);
     margin: 0 0 var(--space-8);
   }
 
@@ -312,7 +313,7 @@ const columns = DEFAULT_COLUMNS;
   }
 
   .site-footer__link {
-    color: var(--white-text-muted);
+    color: var(--cream-text-muted);
     font-family: var(--font-body);
     font-size: var(--fs-small);
     text-decoration: none;
@@ -329,12 +330,15 @@ const columns = DEFAULT_COLUMNS;
 
   /* Legal row */
   .site-footer__legal {
-    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    border-top: 1px solid var(--color-border-on-dark);
     padding-top: var(--space-5);
   }
+  /* Dark-subtle (validated by editor pipeline): copy was --white-text-faint
+     (rgba 255 0.40 → 4.4:1 effective on indigo-900 — borderline). Bumped to
+     --color-text-on-dark-muted (cream 0.85) so legal copy clears AA cleanly. */
   .site-footer__copy {
     margin: 0;
-    color: var(--white-text-faint);
+    color: var(--color-text-on-dark-muted);
     font-family: var(--font-body);
     font-size: var(--fs-caption);
     line-height: var(--lh-normal);

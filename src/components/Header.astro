@@ -104,22 +104,22 @@ const {
 </script>
 
 <style>
+  /* Dark-subtle (PALETTE-MAPPING §4.1, validated by editor pipeline):
+     Header sits on the page surface (bg-base) with a permanent gray-700
+     hairline divider — no impact-band swap, no scroll-conditional border. */
   .site-header {
     position: sticky;
     top: 0;
     z-index: var(--z-sticky);
-    background: var(--color-bg-impact);
+    background: var(--color-bg-base);
     color: var(--color-text-on-dark);
     padding: var(--space-3) 0; /* 12px y — RAND-style compact chrome */
-    transition:
-      padding var(--transition),
-      border-color var(--transition);
-    border-bottom: 1px solid transparent;
+    transition: padding var(--transition);
+    border-bottom: 1px solid var(--color-border);
   }
 
   .site-header--scrolled {
     padding: 8px 0;
-    border-bottom-color: rgba(255, 255, 255, 0.10);
   }
 
   .site-header__inner {

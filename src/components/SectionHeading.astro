@@ -73,7 +73,12 @@ const Heading = as;
     line-height: 1;
     letter-spacing: var(--ls-uppercase);
     text-transform: uppercase;
-    color: var(--color-accent);
+    /* Dark-mode subtle (PALETTE-MAPPING §1.3, QA-DARKMODE-VISUAL A2/R2/Pr2):
+       eyebrows route through the SECONDARY accent (sky-300, 6.47:1 on
+       bg-base) so peach-500 stays reserved as the single focal hue carried
+       by the H1 / inline links. Dark tone variant below already uses
+       --color-accent-secondary; default tone now matches. */
+    color: var(--color-accent-secondary);
     margin: 0;
   }
 

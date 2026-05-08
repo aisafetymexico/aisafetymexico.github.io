@@ -162,11 +162,11 @@ const rootId = id || `accordion-${Math.random().toString(36).slice(2, 9)}`;
 <style>
   .accordion {
     width: 100%;
-    border-top: 1px solid var(--color-border, var(--border, #E2DED6));
+    border-top: 1px solid var(--color-border);
   }
 
   .accordion__item {
-    border-bottom: 1px solid var(--color-border, var(--border, #E2DED6));
+    border-bottom: 1px solid var(--color-border);
   }
 
   .accordion__heading {
@@ -189,14 +189,14 @@ const rootId = id || `accordion-${Math.random().toString(36).slice(2, 9)}`;
     font-family: var(--font-display, 'Playfair Display', serif);
     font-size: var(--fs-h6, 1.1rem);
     font-weight: var(--fw-bold, 700);
-    color: var(--color-text-heading, var(--navy, #1B2340));
+    color: var(--color-text-heading);
     transition: background var(--transition, 0.25s ease), color var(--transition, 0.25s ease);
   }
   .accordion__trigger:hover {
-    background: var(--color-accent-soft, var(--copper-tint, rgba(196, 133, 74, 0.08)));
+    background: var(--color-accent-soft);
   }
   .accordion__trigger:focus-visible {
-    outline: 2px solid var(--color-focus-ring, var(--copper, #C4854A));
+    outline: 2px solid var(--color-focus-ring);
     outline-offset: -2px;
   }
 
@@ -207,7 +207,7 @@ const rootId = id || `accordion-${Math.random().toString(36).slice(2, 9)}`;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-accent, var(--copper, #C4854A));
+    color: var(--color-accent);
     transition: transform var(--transition, 0.25s ease);
   }
   .accordion__trigger.is-open .accordion__icon { transform: rotate(180deg); }
@@ -219,7 +219,7 @@ const rootId = id || `accordion-${Math.random().toString(36).slice(2, 9)}`;
 
   .accordion__content {
     padding: 0 var(--space-4, 16px) var(--space-5, 20px);
-    color: var(--color-text-primary, var(--text, #3A3A4A));
+    color: var(--color-text-primary);
     line-height: var(--lh-relaxed, 1.7);
     font-family: var(--font-body, 'Inter', sans-serif);
     font-size: var(--fs-body, 1rem);

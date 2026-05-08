@@ -266,7 +266,7 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
     align-items: center;
     justify-content: center;
     padding: var(--space-6, 24px);
-    background: rgba(0, 0, 0, 0.85);
+    background: var(--bg-base-overlay-strong);
     opacity: 0;
     transition: opacity 0.2s ease;
   }
@@ -292,12 +292,12 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
     /* Polish-rand (RAND-DIFF §1.5, tokens.css §4.2): kept-modal shadow.
        --shadow-modal is one of the two functional shadow tokens that
        survive the chrome-strip (the other is --shadow-header). */
-    box-shadow: var(--shadow-modal, 0 24px 60px rgba(0, 0, 0, 0.30));
-    background: var(--color-bg-base, var(--white, #fff));
+    box-shadow: var(--shadow-modal);
+    background: var(--color-bg-elevated);
   }
 
   .lightbox__caption {
-    color: var(--white-text-strong, rgba(255, 255, 255, 0.85));
+    color: var(--color-text-on-dark-muted);
     font-family: var(--font-body, 'Inter', sans-serif);
     font-size: var(--fs-small, 0.92rem);
     text-align: center;
@@ -312,8 +312,8 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
     height: 48px;
     border-radius: var(--radius-full, 50%);
     border: none;
-    background: rgba(255, 255, 255, 0.12);
-    color: var(--white, #fff);
+    background: var(--cream-text-faint);
+    color: var(--color-text-on-dark);
     font-size: 24px;
     line-height: 1;
     cursor: pointer;
@@ -323,10 +323,10 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
     transition: background 0.2s ease;
   }
   .lightbox__close:hover,
-  .lightbox__nav:hover { background: rgba(255, 255, 255, 0.22); }
+  .lightbox__nav:hover { background: var(--cream-text-muted); }
   .lightbox__close:focus-visible,
   .lightbox__nav:focus-visible {
-    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline: 2px solid var(--color-focus-ring);
     outline-offset: 3px;
   }
 

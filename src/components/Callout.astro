@@ -62,7 +62,7 @@ const { tone = 'highlight' } = Astro.props;
   }
 
   .callout__body :global(strong) {
-    color: var(--copper-dark);
+    color: var(--color-accent);
     font-weight: var(--fw-semibold);
   }
 
@@ -85,11 +85,11 @@ const { tone = 'highlight' } = Astro.props;
 
   .callout--info {
     background: var(--color-bg-base);
-    border-inline-start-color: var(--navy);
+    border-inline-start-color: var(--color-bg-impact);
   }
 
   .callout--warning {
-    background: var(--copper-tint);
+    background: var(--color-accent-soft);
     border-inline-start-color: var(--color-accent-secondary);
   }
 

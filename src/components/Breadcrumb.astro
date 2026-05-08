@@ -116,7 +116,7 @@ const jsonLd = {
     font-family: var(--font-body, 'Inter', sans-serif);
     font-size: 14px;
     line-height: 1.4;
-    color: var(--color-text-secondary, var(--text-light, #6A6A7A));
+    color: var(--color-text-secondary);
   }
 
   .breadcrumb__trail {
@@ -137,23 +137,23 @@ const jsonLd = {
   }
 
   .breadcrumb__link {
-    color: var(--color-link, var(--copper, #C4854A));
+    color: var(--color-link);
     text-decoration: none;
     border-radius: 4px;
     transition: color 0.15s ease;
   }
   .breadcrumb__link:hover,
   .breadcrumb__link:focus-visible {
-    color: var(--color-link-hover, var(--copper-dark, #A86E3A));
+    color: var(--color-link-hover);
     text-decoration: underline;
   }
   .breadcrumb__link:focus-visible {
-    outline: 2px solid var(--color-focus-ring, var(--copper, #C4854A));
+    outline: 2px solid var(--color-focus-ring);
     outline-offset: 2px;
   }
 
   .breadcrumb__current {
-    color: var(--color-text-heading, var(--navy, #1B2340));
+    color: var(--color-text-heading);
     font-weight: 600;
     /* Truncate gracefully on tight rows */
     overflow: hidden;
@@ -163,7 +163,7 @@ const jsonLd = {
   }
 
   .breadcrumb__sep {
-    color: var(--color-text-muted, var(--text-muted, #8A8A9A));
+    color: var(--color-text-muted);
     font-size: 14px;
     line-height: 1;
     user-select: none;
@@ -175,18 +175,18 @@ const jsonLd = {
     display: none;
     align-items: center;
     gap: 6px;
-    color: var(--color-link, var(--copper, #C4854A));
+    color: var(--color-link);
     text-decoration: none;
     font-weight: 600;
     padding: 4px 0;
   }
   .breadcrumb__back:hover,
   .breadcrumb__back:focus-visible {
-    color: var(--color-link-hover, var(--copper-dark, #A86E3A));
+    color: var(--color-link-hover);
     text-decoration: underline;
   }
   .breadcrumb__back:focus-visible {
-    outline: 2px solid var(--color-focus-ring, var(--copper, #C4854A));
+    outline: 2px solid var(--color-focus-ring);
     outline-offset: 2px;
   }
 

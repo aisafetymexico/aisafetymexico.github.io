@@ -179,7 +179,10 @@ const ctaTarget = (cta?: { external?: boolean }) =>
     font-size: var(--fs-display);
     line-height: var(--lh-tight);
     letter-spacing: var(--ls-tight);
-    color: var(--color-text-on-dark);
+    /* Dark-mode subtle (PALETTE-MAPPING §4.5): align with PageHero h1 →
+       peach so the home headline carries the same focal poster weight as
+       interior pages. (QA-DARKMODE-VISUAL top-5 #2 / EDITORIAL-DARKMODE.) */
+    color: var(--color-accent);
     margin-bottom: var(--space-6);
   }
 
@@ -188,7 +191,7 @@ const ctaTarget = (cta?: { external?: boolean }) =>
     font-size: var(--fs-lead);
     font-weight: var(--fw-regular);
     line-height: var(--lh-loose);
-    color: var(--white-text-strong);
+    color: var(--color-text-on-dark-muted);
     margin-inline: auto;
     margin-bottom: var(--space-8);
     max-width: 640px;
@@ -223,8 +226,8 @@ const ctaTarget = (cta?: { external?: boolean }) =>
   }
 
   .hero__cta--primary {
-    /* CTA tokens (--color-cta-bg = copper-dark) garantizan WCAG AA 4.5:1
-       contra texto blanco. */
+    /* CTA tokens INVERT in dark-subtle (PALETTE-MAPPING §0/§4):
+       --color-cta-bg = peach-500, --color-cta-text = bg-base. */
     background: var(--color-cta-bg);
     color: var(--color-cta-text);
     border-color: var(--color-cta-bg);
@@ -243,7 +246,7 @@ const ctaTarget = (cta?: { external?: boolean }) =>
   }
   .hero__cta--secondary:hover,
   .hero__cta--secondary:focus-visible {
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--cream-text-faint);
     border-color: var(--color-text-on-dark);
     color: var(--color-text-on-dark);
   }

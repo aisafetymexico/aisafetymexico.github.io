@@ -1,32 +1,44 @@
 /*
- * AI Safety Mexico — Design Tokens
+ * AI Safety Mexico — Design Tokens (Dark Mode · Subtle variant)
  *
  * Single source of truth for color, typography, spacing, radii, shadows,
  * transitions, z-index, breakpoints, and container widths.
  *
- * Per docs/DESIGN-SYSTEM.md §0 ("Restricciones inviolables"):
- *   - Palette is FROZEN: only Navy / Copper / Cream / Gold and the derived
- *     alpha mixes already in use. NO new hues.
- *   - Typography is FROZEN: Playfair Display + Inter only.
+ * This file applies the SUBTLE mapping from `docs/PALETTE-MAPPING.md` §2,
+ * sourced from the desaturated/lifted Greywall poster primitives in
+ * `docs/POSTER-PALETTE.md` §2. Page surface is `#1E1E1C` (warm near-black,
+ * lifted ~+8L over faithful) with cream-rotated foregrounds and peach-500
+ * (`#D49E86`) inline accent.
+ *
+ * Critical guardrails (PALETTE-MAPPING §0):
+ *   1. Body links + inline accents MUST resolve to peach-500. Indigo-500
+ *      (2.21:1 on bg-base) and sky-500 (4.07:1) fail AA at body sizes;
+ *      both are reserved as decorative / display-only primitives.
+ *   2. `--color-accent-secondary` resolves to sky-300 (`#92A0CD`, 6.33:1)
+ *      — never sky-500 — so eyebrows / ornament rules clear AA body.
+ *   3. CTA color INVERTS: peach fill + bg-base text. Cream-on-peach fails
+ *      (~2:1); bg-base-on-peach scores 6.36:1. See `--color-cta-text`.
  *
  * Component CSS MUST consume the semantic tokens (§1.3). The primitives in
- * §1.1 / §1.2 live here exclusively.
+ * §1.1 / §1.1b / §1.2 live here exclusively. Legacy light-mode primitives
+ * (§1.1) are retained as back-compat aliases pending component migration
+ * in tasks #2 / #3 / #4 (base shell, components, pages).
  */
 
 :root {
   /* ============================================================
-   * 1.1 Color primitives (frozen — DESIGN-SYSTEM §1.1)
+   * 1.1 Legacy color primitives (light-mode aliases — pending migration)
+   * ------------------------------------------------------------
+   * These tokens are no longer used by the semantic layer below. They
+   * remain only so components that still reference `--navy`, `--copper`,
+   * etc. directly do not break the build. Component-darkmode tasks
+   * (#2 / #3 / #4) will migrate consumers; this section can be deleted
+   * after that migration lands.
    * ============================================================ */
   --navy: #1B2340;
   --navy-light: #2A3456;
   --copper: #C4854A;
-  /* --copper-dark: darkened from #A86E3A → #8B5A2B to reach WCAG AA 4.5:1
-     for white text on the active CTA / link-hover state. Used as the
-     consumed "CTA background" via --color-cta-bg below. */
   --copper-dark: #8B5A2B;
-  /* --gold: lightened from #D4A853 → #E8BD68 to reach WCAG AA 4.5:1 for
-     eyebrow text on slate / navy-light surfaces. The shift is small enough
-     that the brand reading stays "warm gold". */
   --gold: #E8BD68;
   --cream: #FAF3E8;
   --white: #FFFFFF;
@@ -36,8 +48,70 @@
   --border: #E2DED6;
 
   /* ============================================================
-   * 1.2 Derived alpha / overlay primitives (DESIGN-SYSTEM §1.2)
+   * 1.1b Dark-mode primitives (SUBTLE — POSTER-PALETTE §2)
+   * ------------------------------------------------------------
+   * Desaturated / lifted variant of the Greywall poster palette. Page
+   * surface is `--bg-base #1E1E1C`; all semantic tokens in §1.3 resolve
+   * to entries in this block (or the legacy alpha mixes in §1.2).
+   *
+   * Display-only watch:
+   *   --indigo-500 (#404F96)  → 2.21:1 on bg-base. Decorative wordmark
+   *                             / ornamental dots ONLY. Never a link or
+   *                             body text color.
+   *   --sky-500    (#6A7ABC)  → 4.07:1 on bg-base. Large-text only
+   *                             (≥18pt regular / ≥14pt bold). For
+   *                             inline secondary accent step UP to
+   *                             --sky-300.
    * ============================================================ */
+  /* Surfaces */
+  --bg-base: #1E1E1C;
+  --bg-elevated: #262624;
+  --bg-overlay: #2D2D2A;
+
+  /* Peach (primary brand accent in dark mode) */
+  --peach-50: #EED2C0;
+  --peach-100: #E5BFA9;
+  --peach-300: #DCB099;
+  --peach-500: #D49E86;   /* primary inline accent / link / focus */
+  --peach-700: #B88069;   /* CTA hover — see watch item §1.3 below */
+  --peach-900: #825642;
+
+  /* Indigo — display-only at -500/-700; -300/-900 OK at component spec */
+  --indigo-300: #7081B0;
+  --indigo-500: #404F96;  /* DECORATIVE DISPLAY ONLY — fails AA body */
+  --indigo-700: #2D376A;
+  --indigo-900: #1F274D;  /* impact band surface */
+
+  /* Sky — -300 is the inline secondary; -500 large-text only */
+  --sky-300: #92A0CD;     /* secondary inline accent (eyebrows, rules) */
+  --sky-500: #6A7ABC;     /* LARGE-TEXT ONLY — ≥18pt / ≥14pt bold */
+  --sky-700: #4D5A89;
+
+  /* Cream — foreground rotation (replaces white as text base) */
+  --cream-50: #F7F3E8;
+  --cream-100: #EFE9D8;
+  --cream-300: #E5DECB;
+  --cream-500: #EBE7DD;   /* primary body / heading text */
+
+  /* Gray — neutral support */
+  --gray-300: #BAB6AE;
+  --gray-500: #979593;
+  --gray-700: #5C5B57;
+  --gray-900: #2E2D2A;
+
+  /* Code highlight set (shared verbatim with faithful variant) */
+  --code-orange: #DC8149;
+  --code-green: #3F9C38;
+  --code-yellow: #E7B772;
+  --code-cyan: #88A9E5;
+
+  /* ============================================================
+   * 1.2 Derived alpha / overlay primitives
+   * ------------------------------------------------------------
+   * Subtle dark-mode alphas added below the legacy block. Legacy alphas
+   * (navy/cream/white) retained as back-compat for unmigrated consumers.
+   * ============================================================ */
+  /* Legacy (light-mode) alphas — pending migration */
   --navy-overlay-strong: rgba(27, 35, 64, 0.85);
   --navy-overlay: rgba(27, 35, 64, 0.75);
   --navy-overlay-soft: rgba(27, 35, 64, 0.55);
@@ -53,55 +127,75 @@
   --white-text-muted: rgba(255, 255, 255, 0.60);
   --white-text-faint: rgba(255, 255, 255, 0.40);
 
+  /* Dark-mode subtle alphas — semantic layer below resolves to these */
+  --bg-base-overlay-strong: rgba(30, 30, 28, 0.92);
+  --bg-base-overlay: rgba(30, 30, 28, 0.75);
+  --bg-elevated-overlay: rgba(38, 38, 36, 0.85);
+  --peach-tint: rgba(212, 158, 134, 0.08);
+  --peach-tint-strong: rgba(212, 158, 134, 0.10);
+  --peach-border-soft: rgba(212, 158, 134, 0.25);
+  --peach-border: rgba(212, 158, 134, 0.30);
+  --cream-text-strong: rgba(235, 231, 221, 0.85);
+  --cream-text: rgba(235, 231, 221, 0.80);
+  --cream-text-soft: rgba(235, 231, 221, 0.70);
+  --cream-text-muted: rgba(235, 231, 221, 0.60);
+  --cream-text-faint: rgba(235, 231, 221, 0.40);
+  --cream-border: rgba(235, 231, 221, 0.5);
+
   /* ============================================================
-   * 1.3 Semantic color tokens (DESIGN-SYSTEM §1.3)
+   * 1.3 Semantic color tokens (DESIGN-SYSTEM §1.3 · SUBTLE remap)
    * Components consume THESE, never the primitives directly.
+   * ------------------------------------------------------------
+   * Mapping table & contrast verdicts: docs/PALETTE-MAPPING.md §2 / §3.2.
    * ============================================================ */
 
   /* Texto */
-  --color-text-primary: var(--text);
-  --color-text-secondary: var(--text-light);
-  --color-text-muted: var(--text-muted);
-  --color-text-heading: var(--navy);
-  --color-text-on-dark: var(--white);
-  --color-text-on-dark-muted: var(--white-text);
-  --color-text-inverse: var(--white);
+  --color-text-primary: var(--cream-500);            /* #EBE7DD · 13.52:1 */
+  --color-text-secondary: var(--gray-300);           /* #BAB6AE · 8.26:1  */
+  --color-text-muted: var(--gray-500);               /* #979593 · 5.59:1  */
+  --color-text-heading: var(--cream-500);            /* hero h1 overrides → peach at component level */
+  --color-text-on-dark: var(--cream-500);            /* page is dark; "on-dark" stays cream */
+  --color-text-on-dark-muted: var(--cream-text-strong); /* rgba(235,231,221,0.85) */
+  --color-text-inverse: var(--bg-base);              /* used on rare cream-50/100 islands */
 
   /* Superficies */
-  --color-bg-base: var(--white);
-  --color-bg-warm: var(--cream);
-  --color-bg-elevated: var(--white);
-  --color-bg-section-warm: var(--surface-cream-overlay);
-  --color-bg-section-base: var(--surface-white-overlay);
-  --color-bg-impact: var(--navy);
-  --color-bg-overlay-dark: var(--navy-overlay);
+  --color-bg-base: var(--bg-base);                   /* #1E1E1C */
+  --color-bg-warm: var(--bg-elevated);               /* collapses to bg-elevated — see PALETTE-MAPPING §4.6 */
+  --color-bg-elevated: var(--bg-elevated);           /* #262624 */
+  --color-bg-section-warm: var(--bg-elevated-overlay);    /* rgba(38,38,36,0.85) */
+  --color-bg-section-base: var(--bg-base-overlay-strong); /* rgba(30,30,28,0.92) */
+  --color-bg-impact: var(--indigo-900);              /* #1F274D — preserves "MÉXICO indigo" rhythm */
+  --color-bg-overlay-dark: var(--bg-base-overlay);   /* rgba(30,30,28,0.75) */
 
   /* Acentos */
-  --color-accent: var(--copper);
-  --color-accent-hover: var(--copper-dark);
-  --color-accent-soft: var(--copper-tint);
-  --color-accent-secondary: var(--gold);
+  --color-accent: var(--peach-500);                  /* #D49E86 · 7.18:1 */
+  --color-accent-hover: var(--peach-300);            /* hover LIFTS in dark mode (RAND/Brookings convention) */
+  --color-accent-soft: var(--peach-tint);            /* rgba(212,158,134,0.08) */
+  --color-accent-secondary: var(--sky-300);          /* #92A0CD · 6.33:1 — sky-500 fails body AA */
 
-  /* CTA backgrounds — usan copper-dark (4.5:1 con texto blanco) en lugar
-     del copper base, que falla WCAG AA cuando se combina con #fff. Las
-     tarjetas y los chips siguen usando --color-accent (copper) para
-     conservar la lectura cromática de marca; solo los botones primarios
-     pasan por estos tokens. */
-  --color-cta-bg: var(--copper-dark);
-  --color-cta-bg-hover: #6F4621; /* aún más oscuro para reforzar el hover */
-  --color-cta-text: var(--white);
+  /* CTA — INVERTED: peach fill + bg-base text
+     Cream-on-peach scores 1.97:1 (fail). Bg-base-on-peach scores 6.36:1.
+     WATCH: cta-bg-hover (#1E1E1C on #B88069) = 4.55:1 — clears body AA
+     by only 0.05. If color-managed displays drop it below threshold,
+     promote hover to peach-500 and reserve peach-700 for active/pressed.
+     See PALETTE-MAPPING §4.7. */
+  --color-cta-bg: var(--peach-500);
+  --color-cta-bg-hover: var(--peach-700);            /* watch: 4.55:1 — see comment above */
+  --color-cta-text: var(--bg-base);                  /* INVERTED from white — guardrail #3 */
 
   /* Bordes */
-  --color-border: var(--border);
-  --color-border-accent: var(--copper-border-soft);
-  --color-border-on-dark: rgba(255, 255, 255, 0.5);
+  --color-border: var(--gray-700);                   /* #5C5B57 hairline */
+  --color-border-accent: var(--peach-border-soft);   /* rgba(212,158,134,0.25) */
+  --color-border-on-dark: var(--cream-border);       /* rgba(235,231,221,0.5) */
 
   /* Estado / utilidades */
-  --color-link: var(--copper);
-  --color-link-hover: var(--copper-dark);
-  --color-focus-ring: var(--copper);
+  --color-link: var(--peach-500);                    /* body links MUST be peach — guardrail #1 */
+  --color-link-hover: var(--peach-300);
+  --color-focus-ring: var(--peach-500);              /* visible against bg-base (7.18:1) */
 
-  /* Sucesos puntuales (registro/CTA verde — heredado del hackathon) */
+  /* Sucesos puntuales (registro/CTA verde — heredado del hackathon)
+     Kept verbatim per PALETTE-MAPPING §1 / §2 ("Special-case unchanged").
+     Already passes (~12:1 on bg-base — intentionally electric). */
   --color-cta-register: #3df284;
   --color-cta-register-hover: #33e37d;
   --color-cta-register-text: #06110c;
@@ -113,22 +207,16 @@
    * ------------------------------------------------------------
    * Polish-rand pass (RAND-DIFF §8): RAND uses solid surfaces with
    * hairline rules — never decorative gradient ornaments. The tokens
-   * below have been flattened to solid color references so any
-   * remaining consumers degrade to a flat surface. Preferred path
-   * for new code: consume `--color-bg-*`, `--color-border`, etc.
-   * directly and treat these tokens as deprecated.
+   * below are flattened to solid color references. In dark-mode subtle
+   * they resolve to the dark semantic tokens above. Preferred path for
+   * new code: consume `--color-bg-*`, `--color-border`, etc. directly
+   * and treat these tokens as deprecated.
    * ============================================================ */
-  /* Navy impact band (StatBar / CtaSection): solid navy, no 135° wash. */
-  --gradient-navy-impact: var(--navy);
-  /* Cream paper wash: collapsed to flat warm surface. */
-  --gradient-cream-paper: var(--color-bg-warm);
-  /* Decorative copper→gold→copper hairline: flattened to neutral hairline. */
-  --gradient-edge-accent: var(--color-border);
-  /* Project / heading badge gradient: flattened to solid copper. Consumers
-     should switch to type-only labels per RAND-DIFF §8.2. */
-  --gradient-badge-warm: var(--copper);
-  /* Event-promo navy wash: flattened to navy overlay token. */
-  --gradient-event-promo: var(--navy-overlay);
+  --gradient-navy-impact: var(--color-bg-impact);    /* indigo-900 dark band */
+  --gradient-cream-paper: var(--color-bg-warm);      /* bg-elevated warm surface */
+  --gradient-edge-accent: var(--color-border);       /* neutral hairline */
+  --gradient-badge-warm: var(--color-accent);        /* peach-500 (was copper) */
+  --gradient-event-promo: var(--color-bg-overlay-dark); /* near-black image overlay */
 
   /* ============================================================
    * 2.1 Familias tipográficas (frozen)
