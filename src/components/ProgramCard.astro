@@ -91,21 +91,14 @@ const certSrc = certificateImage
 </article>
 
 <style>
+  /* RAND editorial — flat surface, square edges, hairline border. */
   .program-card {
     display: flex;
     flex-direction: column;
     background: var(--color-bg-elevated);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    border-radius: 0;
+    border: 1px solid var(--color-border);
     overflow: hidden;
-    transition:
-      transform var(--transition),
-      box-shadow var(--transition);
-  }
-
-  .program-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
   }
 
   .program-card__body {
@@ -205,8 +198,7 @@ const certSrc = certificateImage
     max-width: 100%;
     height: auto;
     max-height: 180px;
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-sm);
+    border-radius: 0;
     background: var(--color-bg-warm);
   }
 
@@ -218,8 +210,5 @@ const certSrc = certificateImage
     letter-spacing: var(--ls-wide);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .program-card { transition: none; }
-    .program-card:hover { transform: none; }
-  }
+  /* No transitions / hover transforms remain on .program-card itself. */
 </style>

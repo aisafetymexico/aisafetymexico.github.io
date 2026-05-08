@@ -156,8 +156,9 @@ const ctaTarget = (cta?: { external?: boolean }) =>
   .hero__image img {
     width: 100%;
     height: auto;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-hero);
+    /* Polish-rand (RAND-DIFF §2.5): RAND home photo is square-edge editorial,
+       no radius, no drop shadow. */
+    border-radius: 0;
   }
 
   .hero__content {
@@ -200,7 +201,9 @@ const ctaTarget = (cta?: { external?: boolean }) =>
     justify-content: center;
   }
 
-  /* Hero CTAs — token-only treatment matching .btn-hero from style.css */
+  /* Hero CTAs — token-only treatment matching .btn-hero from style.css.
+     Polish-rand (RAND-DIFF §6.1, §6.2): no shadow-cta, no transform on
+     hover; only background/border colour shifts. */
   .hero__cta {
     display: inline-flex;
     align-items: center;
@@ -216,8 +219,7 @@ const ctaTarget = (cta?: { external?: boolean }) =>
     transition:
       background var(--transition),
       border-color var(--transition),
-      color var(--transition),
-      transform var(--transition);
+      color var(--transition);
   }
 
   .hero__cta--primary {
@@ -226,7 +228,6 @@ const ctaTarget = (cta?: { external?: boolean }) =>
     background: var(--color-cta-bg);
     color: var(--color-cta-text);
     border-color: var(--color-cta-bg);
-    box-shadow: var(--shadow-cta);
   }
   .hero__cta--primary:hover,
   .hero__cta--primary:focus-visible {

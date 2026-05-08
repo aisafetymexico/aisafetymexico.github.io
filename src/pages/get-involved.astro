@@ -85,7 +85,6 @@ const aliados = [
   <Header slot="header" currentPath={pathname} />
 
   <PageHero
-    eyebrow="Colabora"
     title="Colabora con nosotros"
     description="Buscamos aliados estratégicos para impulsar la investigación, educación y gobernanza en seguridad de IA en México y América Latina. Si tu organización comparte estos objetivos, nos encantará explorar formas de trabajar juntos."
     breadcrumb={breadcrumb}
@@ -226,13 +225,13 @@ const aliados = [
     background: var(--color-bg-base);
   }
   .page-section--vias {
-    background: var(--color-bg-warm);
+    background: var(--color-bg-base);
   }
   .page-section--allies {
     background: var(--color-bg-base);
   }
   .page-section--form {
-    background: var(--color-bg-warm);
+    background: var(--color-bg-base);
   }
   .page-section--direct {
     background: var(--color-bg-base);
@@ -257,7 +256,7 @@ const aliados = [
   .collab-vias {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-5);
+    gap: var(--space-8);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -323,7 +322,7 @@ const aliados = [
   @media (min-width: 768px) {
     .collab-vias {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--space-6);
+      gap: var(--space-9);
     }
     .collab-vias__card {
       padding: var(--space-7);
@@ -376,7 +375,7 @@ const aliados = [
     flex-direction: column;
     gap: var(--space-1);
     padding: var(--space-4) var(--space-5);
-    background: var(--color-bg-warm);
+    background: var(--color-bg-base);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
   }

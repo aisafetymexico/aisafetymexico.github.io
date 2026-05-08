@@ -194,8 +194,8 @@ const isActive = (href: string): boolean => {
         if (target.closest('a')) close();
       });
 
-      // Auto-close on resize past the mobile breakpoint.
-      const mql = window.matchMedia('(min-width: 768px)');
+      // Auto-close on resize past the mobile/tablet breakpoint (≥1024px).
+      const mql = window.matchMedia('(min-width: 1024px)');
       const onChange = () => { if (mql.matches && isOpen()) close(); };
       if (mql.addEventListener) mql.addEventListener('change', onChange);
       else (mql as any).addListener(onChange);
@@ -364,11 +364,12 @@ const isActive = (href: string): boolean => {
     outline-offset: 3px;
   }
 
-  /* Visibility logic by breakpoint */
-  @media (max-width: 767.98px) {
+  /* Visibility logic by breakpoint — drawer covers tablet (≤1023.98) too,
+     matching RAND which only shows inline nav at ≥1024px. */
+  @media (max-width: 1023.98px) {
     .mobile-toggle { display: inline-flex; }
   }
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     /* Force-hide drawer & backdrop on desktop even if state was left dirty. */
     .mobile-toggle,
     .mobile-backdrop,

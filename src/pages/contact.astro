@@ -52,7 +52,6 @@ const breadcrumb = {
   <Header slot="header" currentPath={pathname} />
 
   <PageHero
-    eyebrow="Contacto"
     title="Escríbenos"
     description="Si tienes una pregunta, una propuesta o quieres saber más sobre nuestros programas e investigaciones, puedes contactarnos por cualquiera de los canales abajo."
     breadcrumb={breadcrumb}
@@ -160,7 +159,7 @@ const breadcrumb = {
   .contact__list {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-5);
+    gap: var(--space-8);
     margin: 0 0 var(--space-9);
     padding: 0;
     list-style: none;
@@ -171,7 +170,7 @@ const breadcrumb = {
     flex-direction: column;
     gap: var(--space-2);
     padding: var(--space-5) var(--space-6);
-    background: var(--color-bg-warm);
+    background: var(--color-bg-base);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-xs);

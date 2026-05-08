@@ -176,11 +176,11 @@ const columns = DEFAULT_COLUMNS;
 </footer>
 
 <style>
+  /* Polish-rand (RAND-DIFF §1.5): no inset-section-impact shadow. */
   .site-footer {
     background: var(--color-bg-impact);
     color: var(--color-text-on-dark-muted);
     padding: var(--space-12) 0 var(--space-8);
-    box-shadow: var(--inset-section-impact);
   }
 
   .site-footer__inner {
@@ -269,12 +269,12 @@ const columns = DEFAULT_COLUMNS;
     height: 20px;
   }
 
-  /* Edge divider — subtle warm accent */
+  /* Edge divider — Polish-rand (RAND-DIFF §1.4): copper→gold gradient
+     replaced by a 1px neutral hairline on the dark band. */
   .site-footer__divider {
     height: 1px;
-    background: var(--gradient-edge-accent);
+    background: rgba(255, 255, 255, 0.10);
     margin: 0 0 var(--space-8);
-    opacity: 0.55;
   }
 
   /* Columns */

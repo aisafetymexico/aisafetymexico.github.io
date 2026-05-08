@@ -89,14 +89,13 @@ const criteria = [
   <Header slot="header" currentPath="/projects" />
 
   <PageHero
-    eyebrow="Trabajo aplicado"
     title="Proyectos"
     description="Iniciativas propias y colaborativas que reflejan el trabajo de AI Safety Mexico en investigación aplicada, gobernanza y comunidad."
     breadcrumb={breadcrumb}
   />
 
   {/* Intro */}
-  <section class="section section--cream">
+  <section class="section section--base">
     <div class="container container--narrow">
       <SectionHeading
         eyebrow="Qué entendemos por proyecto"
@@ -139,7 +138,7 @@ const criteria = [
   </section>
 
   {/* Criteria */}
-  <section class="section section--warm" aria-labelledby="projects-criteria-heading">
+  <section class="section section--base" aria-labelledby="projects-criteria-heading">
     <div class="container container--narrow">
       <SectionHeading
         eyebrow="Cómo elegimos"
@@ -173,19 +172,19 @@ const criteria = [
   .projects-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-7);
+    gap: var(--space-8);
   }
 
   @media (min-width: 768px) {
     .projects-grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-8);
+      gap: var(--space-10);
     }
   }
 
   @media (min-width: 1024px) {
     .projects-grid {
-      gap: var(--space-9);
+      gap: var(--space-12);
     }
   }
 

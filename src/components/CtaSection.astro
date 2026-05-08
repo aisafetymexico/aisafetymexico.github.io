@@ -39,24 +39,16 @@ const externalAttrs = ctaExternal
 </section>
 
 <style>
+  /* Polish-rand (RAND-DIFF §1.5, §6.3, §8.4):
+   *  - Solid navy band (no 135° gradient wash).
+   *  - No inset-section-impact box-shadow.
+   *  - Decorative copper→gold ::before edge bar removed entirely. */
   .cta-section {
     position: relative;
-    background: var(--gradient-navy-impact);
+    background: var(--color-bg-impact);
     color: var(--color-text-on-dark);
     padding-block: var(--space-12);
-    box-shadow: var(--inset-section-impact);
     overflow: hidden;
-  }
-
-  .cta-section::before {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    top: 0;
-    height: 1px;
-    background: var(--gradient-edge-accent);
-    z-index: var(--z-decoration);
-    pointer-events: none;
   }
 
   .cta-section__inner {
@@ -91,6 +83,8 @@ const externalAttrs = ctaExternal
     max-width: 56ch;
   }
 
+  /* Polish-rand (RAND-DIFF §6.1, §6.2): no shadow-cta, no translateY hover,
+     no shadow-lg on hover — only a colour shift. */
   .cta-section__cta {
     display: inline-flex;
     align-items: center;
@@ -107,19 +101,13 @@ const externalAttrs = ctaExternal
     text-decoration: none;
     letter-spacing: var(--ls-wide);
     border-radius: var(--radius-pill);
-    box-shadow: var(--shadow-cta);
-    transition:
-      background var(--transition),
-      transform var(--transition),
-      box-shadow var(--transition);
+    transition: background var(--transition);
   }
 
   .cta-section__cta:hover,
   .cta-section__cta:focus-visible {
     background: var(--color-cta-bg-hover);
     color: var(--color-cta-text);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
   }
 
   .cta-section__cta-arrow {
@@ -159,7 +147,7 @@ const externalAttrs = ctaExternal
     .cta-section__cta-arrow {
       transition: none;
     }
-    .cta-section__cta:hover {
+    .cta-section__cta:hover .cta-section__cta-arrow {
       transform: none;
     }
   }

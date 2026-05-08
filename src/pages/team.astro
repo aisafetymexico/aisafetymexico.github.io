@@ -168,7 +168,6 @@ const pageDescription =
   <Header slot="header" currentPath="/team" />
 
   <PageHero
-    eyebrow="Equipo"
     title="Las personas detrás de AI Safety Mexico"
     description="Un colectivo multidisciplinario —ingenieras, investigadores, docentes y profesionales de gobernanza— que trabaja para que la seguridad de la IA sea una conversación regional, rigurosa y pública."
     breadcrumb={breadcrumb}
@@ -260,7 +259,7 @@ const pageDescription =
   }
 
   .team-section--alt {
-    background: var(--color-bg-warm, var(--color-bg-base));
+    background: var(--color-bg-base);
   }
 
   .team-section__inner {
@@ -286,19 +285,20 @@ const pageDescription =
   .team-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-6);
+    gap: var(--space-8);
   }
 
   @media (min-width: 600px) {
     .team-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-9);
     }
   }
 
   @media (min-width: 960px) {
     .team-grid {
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-7);
+      gap: var(--space-10);
     }
   }
 

@@ -79,21 +79,14 @@ const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : 
 </article>
 
 <style>
+  /* RAND editorial card — square edges, no shadow, no hover lift, no image
+     scale. Affordance lives on the title underline + CTA color shift. */
   .project-card {
     display: flex;
     flex-direction: column;
     background: var(--color-bg-elevated);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    border-radius: 0;
     overflow: hidden;
-    transition:
-      transform var(--transition),
-      box-shadow var(--transition);
-  }
-
-  .project-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
   }
 
   /* Media */
@@ -101,7 +94,7 @@ const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : 
     display: block;
     color: inherit;
     text-decoration: none;
-    border-radius: var(--radius) var(--radius) 0 0;
+    border-radius: 0;
   }
   .project-card__media-link:focus-visible {
     outline: 2px solid var(--color-focus-ring);
@@ -120,11 +113,6 @@ const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : 
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform var(--transition-slow);
-  }
-
-  .project-card:hover .project-card__img {
-    transform: scale(1.04);
   }
 
   .project-card__media-placeholder {
@@ -140,14 +128,16 @@ const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : 
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    padding: var(--space-6);
+    padding: var(--space-6) 0 0;
     flex: 1;
   }
 
   @media (min-width: 768px) {
-    .project-card__body { padding: var(--space-7); }
+    .project-card__body { padding: var(--space-6) 0 0; }
   }
 
+  /* Type-only eyebrow label — no fill, no pill, just an uppercase tag in
+     muted grey (RAND editorial pattern). */
   .project-card__badge {
     align-self: flex-start;
     font-family: var(--font-body);
@@ -155,10 +145,10 @@ const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : 
     font-weight: var(--fw-bold);
     letter-spacing: var(--ls-uppercase);
     text-transform: uppercase;
-    color: var(--color-text-on-dark);
-    background: var(--gradient-badge-warm);
-    padding: 4px var(--space-3);
-    border-radius: var(--radius-pill);
+    color: var(--color-text-muted);
+    background: none;
+    padding: 0;
+    border-radius: 0;
     line-height: 1;
   }
 
@@ -221,10 +211,6 @@ const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : 
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .project-card,
-    .project-card__img,
     .project-card__cta { transition: none; }
-    .project-card:hover { transform: none; }
-    .project-card:hover .project-card__img { transform: none; }
   }
 </style>

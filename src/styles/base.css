@@ -67,12 +67,13 @@ body {
   font-family: var(--font-body);
   font-size: var(--fs-body);
   font-weight: var(--fw-regular);
-  line-height: var(--lh-relaxed);
+  line-height: var(--lh-loose);
   color: var(--color-text-primary);
   background: var(--color-bg-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1, 'liga' 1;
 }
 
 img,
@@ -154,16 +155,21 @@ h6 {
   font-family: var(--font-display);
   color: var(--color-text-heading);
   font-weight: var(--fw-bold);
-  line-height: var(--lh-snug);
-  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-normal);
 }
 
 h1 {
   font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  font-weight: var(--fw-extrabold);
 }
 
 h2 {
   font-size: var(--fs-h2);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--ls-snug);
 }
 
 h3 {
@@ -192,9 +198,12 @@ small {
   font-size: var(--fs-small);
 }
 
+/* RAND-DIFF §10: restrict to two body weights — 400 (regular) + 700 (bold).
+ * `strong`/`b` jump straight to bold; 600 (semibold) is reserved for the
+ * narrow set of UI affordances that already declare it explicitly. */
 strong,
 b {
-  font-weight: var(--fw-semibold);
+  font-weight: var(--fw-bold);
 }
 
 /* ============================================================
@@ -214,8 +223,8 @@ b {
 .role-h1 {
   font-family: var(--font-display);
   font-size: var(--fs-h1);
-  font-weight: var(--fw-bold);
-  line-height: var(--lh-snug);
+  font-weight: var(--fw-extrabold);
+  line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
   color: var(--color-text-heading);
 }
@@ -225,7 +234,7 @@ b {
   font-size: var(--fs-h2);
   font-weight: var(--fw-bold);
   line-height: var(--lh-snug);
-  letter-spacing: var(--ls-tight);
+  letter-spacing: var(--ls-snug);
   color: var(--color-text-heading);
 }
 
@@ -233,7 +242,8 @@ b {
   font-family: var(--font-display);
   font-size: var(--fs-h3);
   font-weight: var(--fw-bold);
-  line-height: var(--lh-snug);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-normal);
   color: var(--color-text-heading);
 }
 
@@ -241,7 +251,8 @@ b {
   font-family: var(--font-display);
   font-size: var(--fs-h4);
   font-weight: var(--fw-bold);
-  line-height: var(--lh-snug);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-normal);
   color: var(--color-text-heading);
 }
 
@@ -249,7 +260,8 @@ b {
   font-family: var(--font-display);
   font-size: var(--fs-h5);
   font-weight: var(--fw-bold);
-  line-height: var(--lh-snug);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-normal);
   color: var(--color-text-heading);
 }
 
@@ -257,7 +269,8 @@ b {
   font-family: var(--font-display);
   font-size: var(--fs-h6);
   font-weight: var(--fw-bold);
-  line-height: var(--lh-snug);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-normal);
   color: var(--color-text-heading);
 }
 
@@ -266,7 +279,7 @@ b {
   font-size: var(--fs-lead);
   font-weight: var(--fw-regular);
   line-height: var(--lh-loose);
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
 }
 
 .role-body {
@@ -293,18 +306,25 @@ b {
   color: var(--color-text-muted);
 }
 
+/* RAND-DIFF §10.3 + §10.5: eyebrow drops from 700/copper/0.35em to a
+ * restrained 500/text-secondary/0.10em — close enough to RAND's "tiny grey
+ * caption" pattern that it stops competing with the H2 for focal weight. */
 .role-eyebrow {
   font-family: var(--font-body);
   font-size: var(--fs-eyebrow);
-  font-weight: var(--fw-bold);
-  line-height: 1;
+  font-weight: var(--fw-medium);
+  line-height: 1.1;
   letter-spacing: var(--ls-uppercase);
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-text-secondary);
 }
 
 .role-eyebrow--xl {
   letter-spacing: var(--ls-uppercase-xl);
+}
+
+.role-eyebrow--accent {
+  color: var(--color-accent);
 }
 
 .role-stat {
@@ -358,7 +378,13 @@ b {
 
 @media (min-width: 768px) {
   .section {
-    padding-block: var(--space-14);
+    padding-block: var(--space-16);
+  }
+}
+
+@media (min-width: 1024px) {
+  .section {
+    padding-block: var(--space-20);
   }
 }
 
@@ -368,7 +394,7 @@ b {
 
 @media (min-width: 768px) {
   .section--compact {
-    padding-block: var(--space-12);
+    padding-block: var(--space-14);
   }
 }
 
@@ -431,14 +457,17 @@ b {
   color: var(--color-text-primary);
 }
 
-/* Optional decorative top edge accent */
+/* Optional decorative top edge accent
+ * Polish-rand (RAND-DIFF §1.4, §8.1): copper→gold→copper gradient flattened
+ * to a 1px neutral hairline. The class still exists so existing markup keeps
+ * rendering a separator; color-restrainer may strip the class outright. */
 .section--edge-accent::before {
   content: '';
   position: absolute;
   inset-inline: 0;
   top: 0;
   height: 1px;
-  background: var(--gradient-edge-accent);
+  background: var(--color-border);
   z-index: var(--z-decoration);
   pointer-events: none;
 }

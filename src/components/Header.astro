@@ -46,8 +46,8 @@ const {
         class="site-header__logo-img"
         src={logoSrc}
         alt={logoAlt}
-        width="70"
-        height="70"
+        width="48"
+        height="48"
         loading="eager"
         decoding="async"
       />
@@ -110,15 +110,16 @@ const {
     z-index: var(--z-sticky);
     background: var(--color-bg-impact);
     color: var(--color-text-on-dark);
-    padding: var(--space-4) 0; /* 16px y */
+    padding: var(--space-3) 0; /* 12px y — RAND-style compact chrome */
     transition:
       padding var(--transition),
-      box-shadow var(--transition);
+      border-color var(--transition);
+    border-bottom: 1px solid transparent;
   }
 
   .site-header--scrolled {
-    padding: 10px 0;
-    box-shadow: var(--shadow-header);
+    padding: 8px 0;
+    border-bottom-color: rgba(255, 255, 255, 0.10);
   }
 
   .site-header__inner {
@@ -151,19 +152,19 @@ const {
   }
 
   .site-header__logo-img {
-    height: 70px;
+    height: 48px;
     width: auto;
     transition: height var(--transition);
   }
 
   .site-header--scrolled .site-header__logo-img {
-    height: 56px;
+    height: 40px;
   }
 
   .site-header__wordmark {
     font-family: var(--font-display);
     font-weight: var(--fw-bold);
-    font-size: 1.45rem;
+    font-size: 1.15rem;
     letter-spacing: 1.5px;
     color: var(--color-text-on-dark);
     line-height: 1;
@@ -175,10 +176,10 @@ const {
     .site-header__inner {
       padding-inline: var(--container-padding);
     }
-    .site-header__logo-img { height: 52px; }
-    .site-header--scrolled .site-header__logo-img { height: 44px; }
+    .site-header__logo-img { height: 42px; }
+    .site-header--scrolled .site-header__logo-img { height: 36px; }
     .site-header__wordmark {
-      font-size: 1.05rem;
+      font-size: 1.0rem;
       letter-spacing: 1px;
     }
   }

@@ -116,7 +116,6 @@ const breadcrumb = {
   <Header slot="header" currentPath={pathname} />
 
   <PageHero
-    eyebrow="Investigación"
     title="Investigación rigurosa, situada en la región"
     description="Producimos investigación abierta en seguridad técnica de IA, gobernanza y estudios regionales, en colaboración con instituciones nacionales e internacionales."
     breadcrumb={breadcrumb}
@@ -238,7 +237,7 @@ const breadcrumb = {
   }
 
   .research-section--publications {
-    background: var(--color-bg-warm);
+    background: var(--color-bg-base);
   }
 
   .research-section--ongoing {
@@ -246,7 +245,7 @@ const breadcrumb = {
   }
 
   .research-section--collabs {
-    background: var(--color-bg-warm);
+    background: var(--color-bg-base);
   }
 
   @media (min-width: 768px) {
@@ -272,13 +271,13 @@ const breadcrumb = {
   .publication-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-6);
+    gap: var(--space-8);
   }
 
   @media (min-width: 768px) {
     .publication-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-7);
+      gap: var(--space-10);
     }
   }
 
@@ -286,13 +285,13 @@ const breadcrumb = {
   .ongoing-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-6);
+    gap: var(--space-8);
   }
 
   @media (min-width: 768px) {
     .ongoing-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-7);
+      gap: var(--space-10);
     }
   }
 

@@ -1,8 +1,7 @@
 ---
 /**
- * SectionHeading — H2 with optional eyebrow + supporting description and a
- * decorative copper underline accent. Single canonical title block used
- * across all sections in pages.
+ * SectionHeading — H2 with optional eyebrow + supporting description.
+ * Single canonical title block used across all sections in pages.
  *
  * Spec:
  *  - Task #10 props: `{ eyebrow?, title, description? }`.
@@ -10,6 +9,8 @@
  *  - Tonal variants `light` (default, on warm/base surfaces) and `dark`
  *    (on navy / impact surfaces). Alignment defaults to `left`.
  *  - Mobile-first; description max-measure caps at 60ch on desktop.
+ *  - RAND-DIFF §3.1: decorative copper-gold underline pill removed; the H2
+ *    carries focal weight on its own (RAND-style editorial heading).
  */
 
 export type SectionHeadingTone = 'light' | 'dark';
@@ -48,10 +49,7 @@ const Heading = as;
   id={id}
 >
   {eyebrow && <p class="section-heading__eyebrow">{eyebrow}</p>}
-  <Heading class="section-heading__title">
-    {title}
-    <span class="section-heading__underline" aria-hidden="true"></span>
-  </Heading>
+  <Heading class="section-heading__title">{title}</Heading>
   {description && <p class="section-heading__description">{description}</p>}
 </header>
 
@@ -80,31 +78,13 @@ const Heading = as;
   }
 
   .section-heading__title {
-    position: relative;
-    display: inline-block;
     font-family: var(--font-display);
     font-size: var(--fs-h2);
     font-weight: var(--fw-bold);
     line-height: var(--lh-snug);
-    letter-spacing: var(--ls-tight);
+    letter-spacing: var(--ls-snug);
     color: var(--color-text-heading);
     margin: 0;
-    padding-bottom: var(--space-3);
-  }
-
-  .section-heading__underline {
-    position: absolute;
-    bottom: 0;
-    inset-inline-start: 0;
-    width: 56px;
-    height: 3px;
-    border-radius: var(--radius-pill);
-    background: var(--gradient-badge-warm);
-  }
-
-  .section-heading--center .section-heading__underline {
-    inset-inline-start: 50%;
-    transform: translateX(-50%);
   }
 
   .section-heading__description {
@@ -135,13 +115,6 @@ const Heading = as;
     .section-heading {
       gap: var(--space-4);
       margin-bottom: var(--space-9);
-    }
-    .section-heading__title {
-      padding-bottom: var(--space-4);
-    }
-    .section-heading__underline {
-      width: 64px;
-      height: 4px;
     }
   }
 </style>

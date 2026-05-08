@@ -98,32 +98,27 @@ const imageSrc = image && (typeof image.src === 'string' ? image.src : image.src
 </Tag>
 
 <style>
+  /* RAND editorial card — square edges, no shadow, no hover lift.
+     Hover affordance lives on the title/CTA inside, not on the card itself. */
   .card {
     display: flex;
     flex-direction: column;
     background: var(--color-bg-elevated);
-    border-radius: var(--radius);
+    border-radius: 0;
     color: var(--color-text-primary);
     text-decoration: none;
     overflow: hidden;
-    transition:
-      transform var(--transition),
-      box-shadow var(--transition),
-      border-color var(--transition);
+    transition: border-color var(--transition);
   }
 
+  /* `elevated` is now a no-op: kept for prop compatibility but never paints
+     a shadow. RAND surfaces never carry box-shadow. */
   .card--elevated {
-    box-shadow: var(--shadow);
+    box-shadow: none;
   }
 
   .card--bordered {
     border: 1px solid var(--color-border);
-  }
-
-  .card--interactive:hover,
-  .card--interactive:focus-visible {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
   }
 
   .card--link:focus-visible {
@@ -144,11 +139,6 @@ const imageSrc = image && (typeof image.src === 'string' ? image.src : image.src
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform var(--transition-slow);
-  }
-
-  .card--interactive:hover .card__img {
-    transform: scale(1.03);
   }
 
   /* Body */
@@ -205,12 +195,8 @@ const imageSrc = image && (typeof image.src === 'string' ? image.src : image.src
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .card,
-    .card__img {
+    .card {
       transition: none;
-    }
-    .card--interactive:hover {
-      transform: none;
     }
   }
 </style>

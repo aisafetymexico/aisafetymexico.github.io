@@ -95,14 +95,13 @@ const breadcrumb = {
   <Header slot="header" currentPath="/projects" />
 
   <PageHero
-    eyebrow="Proyecto insignia"
     title="VIGÍA"
     description="Plataforma para el análisis de gobernanza de IA y soberanía digital en México y América Latina."
     breadcrumb={breadcrumb}
   />
 
   {/* Meta bar */}
-  <section class="section section--compact section--cream" aria-label="Información del proyecto">
+  <section class="section section--compact section--base" aria-label="Información del proyecto">
     <div class="container">
       <KeyFacts facts={metaChips} />
     </div>
@@ -137,7 +136,7 @@ const breadcrumb = {
   </section>
 
   {/* Recognition */}
-  <section class="section section--warm" aria-labelledby="vigia-recognition-heading">
+  <section class="section section--base" aria-labelledby="vigia-recognition-heading">
     <div class="container container--narrow">
       <SectionHeading
         eyebrow="Reconocimiento"
@@ -186,7 +185,7 @@ const breadcrumb = {
   </section>
 
   {/* Team */}
-  <section class="section section--cream" aria-labelledby="vigia-team-heading">
+  <section class="section section--base" aria-labelledby="vigia-team-heading">
     <div class="container container--narrow">
       <SectionHeading
         eyebrow="Equipo"
@@ -221,7 +220,7 @@ const breadcrumb = {
 
   {/* Related projects */}
   {related.length > 0 && (
-    <section class="section section--warm" aria-labelledby="vigia-related-heading">
+    <section class="section section--base" aria-labelledby="vigia-related-heading">
       <div class="container">
         <SectionHeading
           eyebrow="Sigue explorando"

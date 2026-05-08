@@ -65,6 +65,7 @@ const photoSrc = typeof photo.src === 'string' ? photo.src : photo.src.src;
 </article>
 
 <style>
+  /* RAND editorial — circular photo, name, role. No chrome on the card. */
   .team-card {
     display: flex;
     flex-direction: column;
@@ -72,24 +73,17 @@ const photoSrc = typeof photo.src === 'string' ? photo.src : photo.src.src;
     text-align: center;
     padding: var(--space-6) var(--space-4);
     background: var(--color-bg-elevated);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
-    transition:
-      transform var(--transition),
-      box-shadow var(--transition);
+    border-radius: 0;
   }
 
-  .team-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow);
-  }
-
+  /* Photo wrap drops the copper gradient ring — RAND uses unframed circular
+     portraits. We keep the neutral inner border for visual separation. */
   .team-card__photo-wrap {
     width: 140px;
     height: 140px;
     border-radius: var(--radius-full);
-    padding: 4px;
-    background: var(--gradient-badge-warm);
+    padding: 0;
+    background: transparent;
     margin-bottom: var(--space-4);
   }
 
@@ -99,7 +93,6 @@ const photoSrc = typeof photo.src === 'string' ? photo.src : photo.src.src;
     height: 100%;
     border-radius: var(--radius-full);
     object-fit: cover;
-    border: 3px solid var(--color-bg-elevated);
     background: var(--color-bg-warm);
   }
 
@@ -129,14 +122,12 @@ const photoSrc = typeof photo.src === 'string' ? photo.src : photo.src.src;
     width: 36px;
     height: 36px;
     border-radius: var(--radius-full);
-    background: var(--color-accent-soft);
-    color: var(--color-accent);
-    transition: background var(--transition), color var(--transition), transform var(--transition);
+    background: transparent;
+    color: var(--color-text-muted);
+    transition: color var(--transition);
   }
   .team-card__social:hover {
-    background: var(--color-accent);
-    color: var(--color-text-on-dark);
-    transform: translateY(-1px);
+    color: var(--color-accent);
   }
   .team-card__social:focus-visible {
     outline: 2px solid var(--color-focus-ring);
@@ -158,9 +149,6 @@ const photoSrc = typeof photo.src === 'string' ? photo.src : photo.src.src;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .team-card,
     .team-card__social { transition: none; }
-    .team-card:hover { transform: none; }
-    .team-card__social:hover { transform: none; }
   }
 </style>

@@ -106,14 +106,13 @@ const breadcrumb = {
   <Header slot="header" currentPath="/projects" />
 
   <PageHero
-    eyebrow="Proyecto insignia"
     title="AI Safety Connect"
     description="Plataforma para mapear sistemáticamente la investigación en seguridad de IA y reducir la brecha entre academia y comunidad."
     breadcrumb={breadcrumb}
   />
 
   {/* Meta bar */}
-  <section class="section section--compact section--cream" aria-label="Información del proyecto">
+  <section class="section section--compact section--base" aria-label="Información del proyecto">
     <div class="container">
       <KeyFacts facts={metaChips} />
     </div>
@@ -155,7 +154,7 @@ const breadcrumb = {
   </section>
 
   {/* Methodology */}
-  <section class="section section--warm" aria-labelledby="aisc-methodology-heading">
+  <section class="section section--base" aria-labelledby="aisc-methodology-heading">
     <div class="container container--narrow">
       <SectionHeading
         eyebrow="Metodología"
@@ -216,7 +215,7 @@ const breadcrumb = {
   </section>
 
   {/* Team */}
-  <section class="section section--cream" aria-labelledby="aisc-team-heading">
+  <section class="section section--base" aria-labelledby="aisc-team-heading">
     <div class="container container--narrow">
       <SectionHeading
         eyebrow="Equipo internacional"
@@ -256,7 +255,7 @@ const breadcrumb = {
 
   {/* Related projects */}
   {related.length > 0 && (
-    <section class="section section--warm" aria-labelledby="aisc-related-heading">
+    <section class="section section--base" aria-labelledby="aisc-related-heading">
       <div class="container">
         <SectionHeading
           eyebrow="Sigue explorando"

@@ -289,7 +289,10 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
     max-height: 80vh;
     object-fit: contain;
     border-radius: var(--radius-sm, 6px);
-    box-shadow: var(--shadow-hero, 0 24px 60px rgba(0, 0, 0, 0.18));
+    /* Polish-rand (RAND-DIFF §1.5, tokens.css §4.2): kept-modal shadow.
+       --shadow-modal is one of the two functional shadow tokens that
+       survive the chrome-strip (the other is --shadow-header). */
+    box-shadow: var(--shadow-modal, 0 24px 60px rgba(0, 0, 0, 0.30));
     background: var(--color-bg-base, var(--white, #fff));
   }
 

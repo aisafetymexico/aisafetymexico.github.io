@@ -85,7 +85,6 @@ const keyFacts = [
   <Header slot="header" currentPath="/about" />
 
   <PageHero
-    eyebrow="Sobre nosotros"
     title="Quiénes somos"
     description="Una organización sin fines de lucro que articula investigación, educación y gobernanza de IA desde México hacia América Latina."
     breadcrumb={breadcrumb}
@@ -133,7 +132,7 @@ const keyFacts = [
   </section>
 
   <!-- 3. Visión -->
-  <section class="section section--warm">
+  <section class="section section--base">
     <div class="container container--narrow">
       <SectionHeading
         eyebrow="Visión"
@@ -180,7 +179,7 @@ const keyFacts = [
   </section>
 
   <!-- 5. Historia / Origen -->
-  <section class="section section--warm">
+  <section class="section section--base">
     <div class="container container--narrow">
       <SectionHeading
         eyebrow="Origen"
@@ -219,7 +218,7 @@ const keyFacts = [
   </section>
 
   <!-- 6. KeyFacts -->
-  <section class="section section--cream section--compact">
+  <section class="section section--base section--compact">
     <div class="container container--narrow">
       <SectionHeading
         eyebrow="Identidad"
@@ -267,20 +266,20 @@ const keyFacts = [
   .pillar-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-5);
+    gap: var(--space-8);
   }
 
   @media (min-width: 640px) {
     .pillar-grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-6);
+      gap: var(--space-9);
     }
   }
 
   @media (min-width: 1024px) {
     .pillar-grid {
       grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-6);
+      gap: var(--space-9);
     }
   }
 </style>

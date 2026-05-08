@@ -117,7 +117,6 @@ const carouselSlides: CarouselSlide[] = [
   <Header slot="header" currentPath="/activities" />
 
   <PageHero
-    eyebrow="Actividades"
     title="Actividades en curso y pasadas"
     description="Trayectoria pública de AI Safety Mexico: eventos vigentes, mesas recurrentes, conferencias, talleres y programas de formación que han marcado nuestro recorrido."
     breadcrumb={breadcrumb}
@@ -226,7 +225,7 @@ const carouselSlides: CarouselSlide[] = [
   }
 
   .page-section--alt {
-    background: var(--color-bg-warm, var(--color-bg-elevated));
+    background: var(--color-bg-base);
   }
 
   .page-section--spotlight {
@@ -281,19 +280,20 @@ const carouselSlides: CarouselSlide[] = [
   .conf-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-6);
+    gap: var(--space-8);
   }
 
   @media (min-width: 640px) {
     .conf-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-9);
     }
   }
 
   @media (min-width: 1024px) {
     .conf-grid {
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-7);
+      gap: var(--space-10);
     }
   }
 

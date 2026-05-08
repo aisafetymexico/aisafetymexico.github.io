@@ -36,12 +36,13 @@ const { stats } = Astro.props;
 </section>
 
 <style>
+  /* Polish-rand (RAND-DIFF §1.5, §7.2, §8.4): solid navy surface (no 135°
+     gradient wash) and no inset-section-stats box-shadow. */
   .stat-bar {
     position: relative;
-    background: var(--gradient-navy-impact);
+    background: var(--color-bg-impact);
     color: var(--color-text-on-dark);
     padding-block: var(--space-12);
-    box-shadow: var(--inset-section-stats);
   }
 
   .stat-bar__inner {

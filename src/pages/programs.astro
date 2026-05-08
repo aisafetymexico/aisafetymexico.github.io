@@ -115,7 +115,6 @@ const arenaFacts = [
   <Header slot="header" currentPath={pathname} />
 
   <PageHero
-    eyebrow="Programas"
     title="Programas educativos"
     description="Diseñamos e impartimos cursos abiertos y a la medida —para comunidades, universidades y centros de investigación— que adaptan los marcos contemporáneos de AI safety al contexto mexicano y latinoamericano."
     breadcrumb={breadcrumb}
@@ -309,26 +308,26 @@ const arenaFacts = [
     background: var(--color-bg-base);
   }
   .programs-section--institutional {
-    background: var(--color-bg-warm);
+    background: var(--color-bg-base);
   }
   .programs-section--gallery {
     background: var(--color-bg-base);
   }
   .programs-section--trayectoria {
-    background: var(--color-bg-warm);
+    background: var(--color-bg-base);
   }
 
   /* ── Program cards grid ─────────────────────────────────────────── */
   .programs-section__grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-6);
+    gap: var(--space-8);
   }
 
   @media (min-width: 768px) {
     .programs-section__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-7);
+      gap: var(--space-10);
     }
   }
 

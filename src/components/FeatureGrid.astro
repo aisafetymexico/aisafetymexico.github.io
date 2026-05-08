@@ -59,7 +59,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .feature-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-5);
+    gap: var(--space-8);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -69,6 +69,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
     display: flex;
   }
 
+  /* RAND editorial tile — flat surface, hairline border, square edges.
+     Affordance lives on the chevron (color shift + slight slide). */
   .feature-grid__card {
     position: relative;
     display: flex;
@@ -78,14 +80,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
     padding: var(--space-6);
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    border-radius: 0;
     color: var(--color-text-primary);
     text-decoration: none;
-    transition:
-      transform var(--transition),
-      box-shadow var(--transition),
-      border-color var(--transition);
+    transition: border-color var(--transition);
   }
 
   .feature-grid__card--linked {
@@ -96,8 +94,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
   .feature-grid__card--linked:hover,
   .feature-grid__card--linked:focus-visible {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
     border-color: var(--color-border-accent);
     color: var(--color-text-primary);
   }
@@ -187,10 +183,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
   @media (prefers-reduced-motion: reduce) {
     .feature-grid__card {
       transition: none;
-    }
-    .feature-grid__card--linked:hover,
-    .feature-grid__card--linked:focus-visible {
-      transform: none;
     }
     .feature-grid__chevron {
       transition: none;

@@ -101,7 +101,6 @@ const roles = [
   <Header slot="header" currentPath={pathname} />
 
   <PageHero
-    eyebrow="Evento · Junio 2026"
     title="The Global South AI Safety Challenge"
     description="Hackathon internacional convocado por Apart Research y AI Safety Mexico. Reúne a investigadoras, builders y profesionales de policy de América Latina, África y Asia para producir trabajo concreto en seguridad de IA, anclado en el contexto regional."
     breadcrumb={breadcrumb}
@@ -263,7 +262,7 @@ const roles = [
   }
 
   .gsh-section--alt {
-    background: var(--color-bg-warm);
+    background: var(--color-bg-base);
   }
 
   @media (min-width: 768px) {
@@ -324,24 +323,24 @@ const roles = [
   .gsh-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-5);
+    gap: var(--space-8);
   }
 
   @media (min-width: 640px) {
     .gsh-grid--2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-6);
+      gap: var(--space-9);
     }
     .gsh-grid--3 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-6);
+      gap: var(--space-9);
     }
   }
 
   @media (min-width: 1024px) {
     .gsh-grid--3 {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--space-7);
+      gap: var(--space-10);
     }
   }
 

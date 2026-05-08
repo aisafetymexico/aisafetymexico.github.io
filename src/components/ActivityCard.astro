@@ -77,18 +77,15 @@ const linkAttrs = link
 </Tag>
 
 <style>
+  /* RAND editorial — flat photo + label + headline, no chrome. */
   .activity-card {
     display: flex;
     flex-direction: column;
     background: var(--color-bg-elevated);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
+    border-radius: 0;
     overflow: hidden;
     color: var(--color-text-primary);
     text-decoration: none;
-    transition:
-      transform var(--transition),
-      box-shadow var(--transition);
   }
 
   .activity-card--link:focus-visible {
@@ -96,10 +93,9 @@ const linkAttrs = link
     outline-offset: 3px;
   }
 
-  .activity-card:hover,
-  .activity-card--link:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow);
+  /* Hover affordance lives on the title color shift only — no card lift. */
+  .activity-card--link:hover .activity-card__title {
+    color: var(--color-accent);
   }
 
   /* Media — A5 uses 4:5 portrait for "browse all" galleries */
@@ -115,11 +111,6 @@ const linkAttrs = link
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform var(--transition-slow);
-  }
-
-  .activity-card:hover .activity-card__img {
-    transform: scale(1.04);
   }
 
   .activity-card__media-placeholder {
@@ -156,6 +147,7 @@ const linkAttrs = link
     font-weight: var(--fw-bold);
     line-height: var(--lh-snug);
     color: var(--color-text-heading);
+    transition: color var(--transition);
   }
 
   .activity-card__description {
@@ -173,9 +165,6 @@ const linkAttrs = link
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .activity-card,
-    .activity-card__img { transition: none; }
-    .activity-card:hover { transform: none; }
-    .activity-card:hover .activity-card__img { transform: none; }
+    .activity-card__title { transition: none; }
   }
 </style>

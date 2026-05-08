@@ -110,19 +110,25 @@
 
   /* ============================================================
    * 1.4 Gradientes canónicos (DESIGN-SYSTEM §1.4)
+   * ------------------------------------------------------------
+   * Polish-rand pass (RAND-DIFF §8): RAND uses solid surfaces with
+   * hairline rules — never decorative gradient ornaments. The tokens
+   * below have been flattened to solid color references so any
+   * remaining consumers degrade to a flat surface. Preferred path
+   * for new code: consume `--color-bg-*`, `--color-border`, etc.
+   * directly and treat these tokens as deprecated.
    * ============================================================ */
-  --gradient-navy-impact: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-  --gradient-cream-paper: linear-gradient(180deg, rgba(250, 243, 232, 0.92), rgba(255, 255, 255, 0.94));
-  --gradient-edge-accent: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--copper) 20%,
-    var(--gold) 50%,
-    var(--copper) 80%,
-    transparent 100%
-  );
-  --gradient-badge-warm: linear-gradient(135deg, var(--gold), var(--copper));
-  --gradient-event-promo: linear-gradient(180deg, rgba(27, 35, 64, 0.95), rgba(27, 35, 64, 0.85));
+  /* Navy impact band (StatBar / CtaSection): solid navy, no 135° wash. */
+  --gradient-navy-impact: var(--navy);
+  /* Cream paper wash: collapsed to flat warm surface. */
+  --gradient-cream-paper: var(--color-bg-warm);
+  /* Decorative copper→gold→copper hairline: flattened to neutral hairline. */
+  --gradient-edge-accent: var(--color-border);
+  /* Project / heading badge gradient: flattened to solid copper. Consumers
+     should switch to type-only labels per RAND-DIFF §8.2. */
+  --gradient-badge-warm: var(--copper);
+  /* Event-promo navy wash: flattened to navy overlay token. */
+  --gradient-event-promo: var(--navy-overlay);
 
   /* ============================================================
    * 2.1 Familias tipográficas (frozen)
@@ -144,38 +150,47 @@
    * Min ≈ ≤480px, max ≈ ≥1280px.
    * ============================================================ */
 
-  /* Display / titulares — Playfair */
-  --fs-display: clamp(2.0rem, 1.30rem + 3.20vw, 3.20rem); /* hero-title  ~32→51.2px */
-  --fs-h1: clamp(1.55rem, 1.10rem + 2.05vw, 2.40rem);     /* page-hero-title ~24.8→38.4px */
-  --fs-h2: clamp(1.60rem, 1.25rem + 1.55vw, 2.00rem);     /* section-heading ~25.6→32px */
-  --fs-h3: clamp(1.30rem, 1.10rem + 0.85vw, 1.75rem);     /* event-promo h3 / project-spotlight */
-  --fs-h4: clamp(1.20rem, 1.05rem + 0.55vw, 1.40rem);     /* team-subheading */
-  --fs-h5: clamp(1.10rem, 1.00rem + 0.45vw, 1.30rem);     /* program-card / event-hub-card titles */
-  --fs-h6: clamp(1.05rem, 0.98rem + 0.30vw, 1.20rem);     /* collab-title, pillar-title */
+  /* Display / titulares — Playfair
+   * RAND-DIFF §10.1: H1 max bumped from 38.4px → 56–72px to make page-hero
+   * titles the focal weight. Display (home hero) bumped to ~64px max. */
+  --fs-display: clamp(2.25rem, 1.50rem + 3.40vw, 4.00rem); /* hero-title  ~36→64px */
+  --fs-h1: clamp(2.25rem, 1.40rem + 3.80vw, 4.50rem);      /* page-hero-title ~36→72px */
+  --fs-h2: clamp(1.75rem, 1.30rem + 2.00vw, 2.50rem);      /* section-heading ~28→40px */
+  --fs-h3: clamp(1.30rem, 1.10rem + 0.85vw, 1.75rem);      /* event-promo h3 / project-spotlight */
+  --fs-h4: clamp(1.20rem, 1.05rem + 0.55vw, 1.40rem);      /* team-subheading */
+  --fs-h5: clamp(1.10rem, 1.00rem + 0.45vw, 1.30rem);      /* program-card / event-hub-card titles */
+  --fs-h6: clamp(1.05rem, 0.98rem + 0.30vw, 1.20rem);      /* collab-title, pillar-title */
 
-  /* Cuerpo y soporte — Inter */
-  --fs-lead: clamp(1.05rem, 1.00rem + 0.30vw, 1.15rem);   /* hero-subtitle, page-hero-subtitle */
-  --fs-body: clamp(0.95rem, 0.92rem + 0.15vw, 1.00rem);   /* body por defecto = 16px desktop */
-  --fs-small: clamp(0.85rem, 0.83rem + 0.10vw, 0.92rem);  /* fact-list, card secondary */
-  --fs-caption: clamp(0.78rem, 0.76rem + 0.10vw, 0.85rem);/* footer copy, partner labels */
-  --fs-eyebrow: clamp(0.72rem, 0.70rem + 0.10vw, 0.82rem);/* hero-overline, section-eyebrow */
+  /* Cuerpo y soporte — Inter
+   * RAND body reads ~17px. Bumped from 16→18px max for editorial weight. */
+  --fs-lead: clamp(1.10rem, 1.05rem + 0.25vw, 1.25rem);   /* hero-subtitle, page-hero-subtitle */
+  --fs-body: clamp(1.00rem, 0.95rem + 0.25vw, 1.125rem);  /* body 16→18px desktop */
+  --fs-small: clamp(0.88rem, 0.85rem + 0.12vw, 0.95rem);  /* fact-list, card secondary */
+  --fs-caption: clamp(0.80rem, 0.78rem + 0.10vw, 0.88rem);/* footer copy, partner labels */
+  --fs-eyebrow: clamp(0.78rem, 0.74rem + 0.15vw, 0.82rem);/* hero-overline, section-eyebrow ~12.5→13.1px */
 
   /* Numérico de impacto */
   --fs-stat: clamp(1.70rem, 1.20rem + 2.20vw, 2.80rem);   /* stat-number */
 
-  /* Line-heights */
-  --lh-tight: 1.10;
-  --lh-snug: 1.20;
+  /* Line-heights
+   * RAND-DIFF §10.6: tight 1.05 on heavy display H1; snug 1.10 on H2; 1.15
+   * on smaller headings. Body keeps relaxed (1.65) for editorial breathing. */
+  --lh-tight: 1.05;
+  --lh-snug: 1.10;
+  --lh-heading: 1.15;
   --lh-normal: 1.50;
-  --lh-relaxed: 1.70;
+  --lh-relaxed: 1.65;
   --lh-loose: 1.75;
 
-  /* Letter-spacing */
+  /* Letter-spacing
+   * RAND-DIFF §10.3: eyebrow tracking pulled from 0.35em → 0.10em (RAND
+   * eyebrows are tight). H1 keeps -0.01em; H2 uses subtle -0.005em. */
   --ls-tight: -0.01em;
+  --ls-snug: -0.005em;
   --ls-normal: 0;
   --ls-wide: 0.3px;
-  --ls-uppercase: 0.35em;
-  --ls-uppercase-xl: 0.40em;
+  --ls-uppercase: 0.10em;
+  --ls-uppercase-xl: 0.14em;
 
   /* ============================================================
    * 3. Sistema de espaciado (8-base; DESIGN-SYSTEM §3)
@@ -209,22 +224,38 @@
 
   /* ============================================================
    * 4.2 Sombras (DESIGN-SYSTEM §4.2)
+   * ------------------------------------------------------------
+   * Polish-rand pass (RAND-DIFF §1.5, §5, §6, §13.3): RAND is a flat
+   * editorial surface — no card shadows, no hover lifts, no inset
+   * shadows on coloured bands, no shadow-cta on buttons, no shadow on
+   * hero photos. The decorative shadow tokens below are flattened to
+   * `none`. Only TWO shadow tokens stay live:
+   *   --shadow-header  → subtle drop on the sticky header (functional)
+   *   --shadow-modal   → modal/lightbox elevation (functional)
+   *   --shadow-mobile-nav → side drawer (functional)
+   * Any component still consuming the deprecated tokens will resolve
+   * to `none` (a valid box-shadow value) until it's migrated away.
    * ============================================================ */
-  --shadow-xs: 0 2px 10px rgba(27, 35, 64, 0.06);
-  --shadow-sm: 0 2px 12px rgba(27, 35, 64, 0.04);
-  --shadow: 0 4px 24px rgba(27, 35, 64, 0.08);
-  --shadow-lg: 0 8px 40px rgba(27, 35, 64, 0.12);
-  --shadow-hero: 0 24px 60px rgba(0, 0, 0, 0.18);
-  --shadow-cta: 0 16px 28px rgba(27, 35, 64, 0.16);
-  --shadow-spotlight: 0 12px 50px rgba(27, 35, 64, 0.16);
-  --shadow-event-note: 0 20px 40px rgba(27, 35, 64, 0.08);
+  /* Decorative shadow tokens — DEPRECATED, kept for back-compat as `none` */
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow: none;
+  --shadow-lg: none;
+  --shadow-hero: none;
+  --shadow-cta: none;
+  --shadow-spotlight: none;
+  --shadow-event-note: none;
+
+  /* Functional / kept shadows */
   --shadow-header: 0 2px 20px rgba(0, 0, 0, 0.25);
   --shadow-mobile-nav: -4px 0 30px rgba(0, 0, 0, 0.30);
+  --shadow-modal: 0 24px 60px rgba(0, 0, 0, 0.30);
 
-  /* Insets — refuerzan jerarquía sin objeto físico */
-  --inset-section-warm: inset 0 8px 16px rgba(27, 35, 64, 0.05);
-  --inset-section-impact: inset 0 8px 16px rgba(0, 0, 0, 0.18);
-  --inset-section-stats: inset 0 8px 16px rgba(0, 0, 0, 0.22);
+  /* Insets on coloured bands — DEPRECATED (RAND-DIFF §1.5: zero inset
+     shadows site-wide). Tokens kept as `none` for back-compat. */
+  --inset-section-warm: none;
+  --inset-section-impact: none;
+  --inset-section-stats: none;
 
   /* ============================================================
    * 4.3 Transitions (DESIGN-SYSTEM §4.3)

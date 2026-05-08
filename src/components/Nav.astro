@@ -102,23 +102,29 @@ const isActive = (href: string): boolean => {
     background: rgba(196, 133, 74, 0.25);
   }
 
-  /* CTA-styled link (pill, copper-dark para WCAG AA contra blanco) */
+  /* "Colabora" link — demoted from pill to plain text-only nav link
+     (RAND nav has no filled CTAs in the bar). Slightly heavier weight
+     than peers to subtly hint it's the action item, but no fill / radius. */
   .main-nav__link--cta {
     margin-left: 6px;
-    padding: 8px 18px;
-    border-radius: 999px;
-    background: var(--color-cta-bg, var(--copper-dark, #8B5A2B));
-    color: var(--color-cta-text, var(--white, #fff));
-    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--color-text-on-dark, var(--white, #fff));
+    font-weight: 600;
   }
-  .main-nav__link--cta:hover,
+  .main-nav__link--cta:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-on-dark, var(--white, #fff));
+  }
   .main-nav__link--cta.is-active {
-    background: var(--color-cta-bg-hover, #6F4621);
-    color: var(--color-cta-text, var(--white, #fff));
+    background: rgba(196, 133, 74, 0.25);
+    color: var(--color-text-on-dark, var(--white, #fff));
   }
 
-  /* Hide desktop list on mobile (MobileMenu takes over) */
-  @media (max-width: 767.98px) {
+  /* Hide desktop list on tablet + mobile (MobileMenu takes over).
+     RAND only shows the full inline nav at ≥1024px. */
+  @media (max-width: 1023.98px) {
     .main-nav__list { display: none; }
   }
 </style>

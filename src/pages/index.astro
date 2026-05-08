@@ -81,7 +81,7 @@ const stats = [
   />
 
   <!-- 2 · Featured pillars (gateway de 4) -->
-  <section class="section section--warm section--edge-accent">
+  <section class="section section--base section--edge-accent">
     <div class="container">
       <SectionHeading
         eyebrow="Qué hacemos"
@@ -151,20 +151,20 @@ const stats = [
   .home-highlights {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-5);
+    gap: var(--space-8);
   }
 
   @media (min-width: 768px) {
     .home-highlights {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-6);
+      gap: var(--space-9);
     }
   }
 
   @media (min-width: 1024px) {
     .home-highlights {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--space-7);
+      gap: var(--space-10);
     }
   }
 </style>

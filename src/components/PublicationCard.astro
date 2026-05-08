@@ -84,23 +84,24 @@ const authorString = Array.isArray(authors) ? authors.join(', ') : authors;
 </article>
 
 <style>
+  /* RAND editorial card — square edges, no shadow, no copper stripe.
+     Stacked publications separate via a top hairline rule (the parent grid
+     can opt into this; standalone cards still read as a single block). */
   .publication-card {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    padding: var(--space-7) var(--space-6);
+    padding: var(--space-7) 0;
     background: var(--color-bg-elevated);
-    border-radius: var(--radius);
-    border-left: 3px solid var(--color-accent);
-    box-shadow: var(--shadow-sm);
-    transition:
-      transform var(--transition),
-      box-shadow var(--transition);
+    border-radius: 0;
+    border-top: 1px solid var(--color-border);
   }
 
-  .publication-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow);
+  /* If the publication-card lives inside a `.publication-card-list` (or any
+     parent that wants a clean leading edge), the first card drops its top
+     hairline. Most consumers already use grid `gap` so this is harmless. */
+  .publication-card:first-child {
+    border-top: 0;
   }
 
   .publication-card__head {
@@ -208,13 +209,11 @@ const authorString = Array.isArray(authors) ? authors.join(', ') : authors;
 
   @media (min-width: 768px) {
     .publication-card {
-      padding: var(--space-8) var(--space-7);
+      padding: var(--space-8) 0;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .publication-card,
     .publication-card__link { transition: none; }
-    .publication-card:hover { transform: none; }
   }
 </style>
