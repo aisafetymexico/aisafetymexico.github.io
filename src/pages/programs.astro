@@ -1,0 +1,465 @@
+---
+/**
+ * /programs — Educational offerings (cursos abiertos + institucionales).
+ *
+ * Sources:
+ *  - docs/ARCHITECTURE.md §2 (`/programs` IndexPage spec).
+ *  - docs/CONTENT-MAP.md §1.8 (Programas educativos → cursos abiertos /
+ *    institucionales) + §3 (Assets disponibles en
+ *    /public/images/Certificados/).
+ *  - Task #15 spec.
+ *
+ * Layout (top → bottom):
+ *  1. PageHero (eyebrow · h1 · description · breadcrumb)
+ *  2. SectionHeading "Cursos abiertos a la comunidad" + ProgramCard ×2
+ *     (Fundamentos + Gobernanza; Curso Técnico ARENA)
+ *  3. SectionHeading "Programas para instituciones" + ProgramCard ×2
+ *     (Centro Geo; UADY · Facultad de Matemáticas)
+ *  4. Galería de certificados — small grid; Lightbox group on click.
+ *  5. Trayectoria de formación (mini cards: ML4Good, EAGxCDMX).
+ *  6. CtaSection → /get-involved#training.
+ *
+ * Components used: PageHero, SectionHeading, ProgramCard, FactList, Card,
+ * Lightbox, CtaSection, Header, Footer.
+ *
+ * Certificates live in /public/images/Certificados/. Filenames contain
+ * spaces — the URL-encoded form is used in `src` so HTML and the lightbox
+ * trigger can resolve correctly.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProgramCard from '../components/ProgramCard.astro';
+import FactList from '../components/FactList.astro';
+import Card from '../components/Card.astro';
+import Lightbox from '../components/Lightbox.astro';
+import CtaSection from '../components/CtaSection.astro';
+
+const pathname = '/programs';
+
+const breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Programas' },
+  ],
+};
+
+// Certificate assets in /public/images/Certificados/.
+// `src` values use URL-encoded spaces so the browser resolves them as files.
+const certFundamentosAtlas = {
+  src: '/images/Certificados/AI%20Safety%20Atlas%20Angel.jpeg',
+  alt: 'Certificado AI Safety Atlas — Angel Cervantes',
+};
+const certFundamentosEnais = {
+  src: '/images/Certificados/ENAIS%20Janeth.png',
+  alt: 'Certificado ENAIS — Janeth Valdivia',
+};
+const certCentroGeo = {
+  src: '/images/Certificados/Centro%20Geo%20Angel.jpeg',
+  alt: 'Constancia Centro GEO — Angel Cervantes',
+};
+const certUady = {
+  src: '/images/Certificados/UADY%20Angel.jpeg',
+  alt: 'Constancia UADY · Facultad de Matemáticas — Angel Cervantes',
+};
+const certSpar = {
+  src: '/images/Certificados/SPAR%20Janeth.png',
+  alt: 'Certificado SPAR — Janeth Valdivia',
+};
+const certAiSafetyConnect = {
+  src: '/images/Certificados/AI%20Safety%20Connect.png',
+  alt: 'Reconocimiento AI Safety Connect',
+};
+
+const certificates = [
+  certFundamentosAtlas,
+  certFundamentosEnais,
+  certCentroGeo,
+  certUady,
+  certSpar,
+  certAiSafetyConnect,
+];
+
+// Open-course factual highlights (rendered next to each ProgramCard via
+// FactList — type-only label/value rows; see docs/RAND-AESTHETIC.md §8).
+const fundamentosFacts = [
+  {
+    label: 'Material',
+    value: 'BlueDot Impact · AI Safety Atlas',
+  },
+  {
+    label: 'Facilitadores',
+    value: 'Janeth Valdivia · Angel Cervantes',
+  },
+];
+
+const arenaFacts = [
+  {
+    label: 'Material',
+    value: 'ARENA · Alignment Research Engineer Accelerator',
+  },
+  {
+    label: 'Facilitadores',
+    value: 'Jason Pinelo · Angel Cervantes',
+  },
+];
+---
+
+<BaseLayout
+  title="Programas educativos | AI Safety Mexico"
+  description="Cursos abiertos a la comunidad y programas a la medida para instituciones en seguridad y gobernanza de inteligencia artificial."
+  pathname={pathname}
+>
+  <Header slot="header" currentPath={pathname} />
+
+  <PageHero
+    eyebrow="Programas"
+    title="Programas educativos"
+    description="Diseñamos e impartimos cursos abiertos y a la medida —para comunidades, universidades y centros de investigación— que adaptan los marcos contemporáneos de AI safety al contexto mexicano y latinoamericano."
+    breadcrumb={breadcrumb}
+  />
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       Cursos abiertos a la comunidad
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="programs-section programs-section--open">
+    <div class="programs-section__inner">
+      <SectionHeading
+        eyebrow="Comunidad"
+        title="Cursos abiertos a la comunidad"
+        description="Programas disponibles para personas interesadas en formarse en seguridad y gobernanza de IA, sin requisitos institucionales."
+      />
+
+      <div class="programs-section__grid">
+        <article class="program-block">
+          <ProgramCard
+            title="Curso de Fundamentos de Seguridad y Gobernanza en IA"
+            description="Curso introductorio que cubre los marcos conceptuales contemporáneos en alineación, riesgos sistémicos y gobernanza, con enfoque en el contexto regional latinoamericano."
+            facilitators={['Janeth Valdivia', 'Angel Cervantes']}
+            materials={['BlueDot Impact', 'AI Safety Atlas']}
+          />
+          <FactList items={fundamentosFacts} />
+        </article>
+
+        <article class="program-block">
+          <ProgramCard
+            title="Curso Técnico de Seguridad en IA (ARENA)"
+            description="Programa técnico orientado a investigación en alineación e ingeniería: red-teaming, evaluaciones de modelos y prácticas de research engineering, basado en el currículo de ARENA."
+            facilitators={['Jason Pinelo', 'Angel Cervantes']}
+            materials={['ARENA']}
+          />
+          <FactList items={arenaFacts} />
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       Programas para instituciones
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="programs-section programs-section--institutional">
+    <div class="programs-section__inner">
+      <SectionHeading
+        eyebrow="Instituciones"
+        title="Programas para instituciones"
+        description="Cursos diseñados a la medida para universidades, centros de investigación y organismos públicos. Casos recientes:"
+      />
+
+      <div class="programs-section__grid">
+        <ProgramCard
+          institution="Centro GEO"
+          title="Seguridad en IA · Centro GEO"
+          description="Curso especializado para investigadoras e investigadores del Centro de Investigación en Ciencias de Información Geoespacial, con énfasis en evaluaciones de seguridad y gobernanza técnica."
+          facilitators={['Angel Cervantes']}
+          certificateImage={certCentroGeo}
+        />
+
+        <ProgramCard
+          institution="UADY · Facultad de Matemáticas"
+          title="Seguridad en IA · UADY"
+          description="Programa abierto al público universitario impartido en la Universidad Autónoma de Yucatán, en colaboración con la Facultad de Matemáticas."
+          facilitators={['Angel Cervantes']}
+          certificateImage={certUady}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       Galería de certificados (lightbox)
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="programs-section programs-section--gallery">
+    <div class="programs-section__inner">
+      <SectionHeading
+        eyebrow="Acreditaciones"
+        title="Galería de certificados"
+        description="Acreditaciones obtenidas y emitidas por el equipo en programas internacionales y colaboraciones institucionales."
+      />
+
+      <ul class="cert-grid" role="list">
+        {certificates.map((cert) => (
+          <li class="cert-grid__item">
+            <button
+              type="button"
+              class="cert-grid__trigger"
+              data-lightbox
+              data-lightbox-group="certificates"
+              data-lightbox-src={cert.src}
+              data-lightbox-alt={cert.alt}
+              data-lightbox-caption={cert.alt}
+              aria-label={`Ampliar imagen: ${cert.alt}`}
+            >
+              <img
+                class="cert-grid__img"
+                src={cert.src}
+                alt={cert.alt}
+                loading="lazy"
+                decoding="async"
+              />
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       Trayectoria de formación (mini)
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="programs-section programs-section--trayectoria">
+    <div class="programs-section__inner">
+      <SectionHeading
+        eyebrow="Trayectoria"
+        title="Formación recibida por el equipo"
+        description="Programas internacionales en los que miembros del equipo han participado como egresadas y egresados."
+      />
+
+      <div class="trayectoria-grid">
+        <Card
+          padding="md"
+          bordered={true}
+          interactive={false}
+          elevated={false}
+          title="ML4Good"
+          description="Campamento internacional de formación en machine learning aplicado a seguridad de IA. Egresados del equipo: Angel, Max, Isabel, Janeth."
+        >
+          <span slot="footer" class="trayectoria-tag">Formación avanzada</span>
+        </Card>
+
+        <Card
+          padding="md"
+          bordered={true}
+          interactive={false}
+          elevated={false}
+          title="EAGxCDMX"
+          description="Conferencia regional de Effective Altruism. El equipo participó con el taller «Not so speedy AI Safety» (Silvia Fernández, Angel Cervantes, Jason Pinelo)."
+        >
+          <span slot="footer" class="trayectoria-tag">Conferencia · Taller</span>
+        </Card>
+      </div>
+
+      <p class="trayectoria-note">
+        Más detalles y calendario completo en
+        <a class="trayectoria-link" href="/activities">Actividades</a>.
+      </p>
+    </div>
+  </section>
+
+  <CtaSection
+    title="¿Quieres llevar un curso a tu institución?"
+    description="Diseñamos programas a la medida para universidades, centros de investigación y organismos públicos. Escríbenos para explorar formatos, alcance y calendario."
+    ctaLabel="Solicita un programa institucional"
+    ctaHref="/get-involved#training"
+  />
+
+  <!-- Single global lightbox overlay; auto-wires to data-lightbox triggers. -->
+  <Lightbox />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .programs-section {
+    padding-block: var(--space-10);
+  }
+
+  @media (min-width: 768px) {
+    .programs-section {
+      padding-block: var(--space-12);
+    }
+  }
+
+  .programs-section__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 480px) {
+    .programs-section__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  /* Alternating surfaces help separate sections without extra dividers. */
+  .programs-section--open {
+    background: var(--color-bg-base);
+  }
+  .programs-section--institutional {
+    background: var(--color-bg-warm);
+  }
+  .programs-section--gallery {
+    background: var(--color-bg-base);
+  }
+  .programs-section--trayectoria {
+    background: var(--color-bg-warm);
+  }
+
+  /* ── Program cards grid ─────────────────────────────────────────── */
+  .programs-section__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .programs-section__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-7);
+    }
+  }
+
+  /* Open-course block: ProgramCard + sibling FactList stacked.
+     The FactList sits below the card on mobile and tablets and aligned
+     within the same column on desktop for compact reading. */
+  .program-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  /* ── Certificate gallery ────────────────────────────────────────── */
+  .cert-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 480px) {
+    .cert-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 768px) {
+    .cert-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-5);
+    }
+  }
+  @media (min-width: 1024px) {
+    .cert-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+
+  .cert-grid__item {
+    margin: 0;
+  }
+
+  .cert-grid__trigger {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    cursor: zoom-in;
+    overflow: hidden;
+    transition:
+      transform var(--transition),
+      box-shadow var(--transition),
+      border-color var(--transition);
+  }
+
+  .cert-grid__trigger:hover,
+  .cert-grid__trigger:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-border-accent);
+  }
+
+  .cert-grid__trigger:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+  }
+
+  .cert-grid__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: var(--color-bg-warm);
+  }
+
+  /* ── Trayectoria mini cards ─────────────────────────────────────── */
+  .trayectoria-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 640px) {
+    .trayectoria-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .trayectoria-tag {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent);
+    line-height: 1;
+  }
+
+  .trayectoria-note {
+    margin-top: var(--space-6);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  .trayectoria-link {
+    color: var(--color-accent);
+    font-weight: var(--fw-semibold);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 1px;
+  }
+
+  .trayectoria-link:hover,
+  .trayectoria-link:focus-visible {
+    color: var(--color-accent-hover);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cert-grid__trigger {
+      transition: none;
+    }
+    .cert-grid__trigger:hover,
+    .cert-grid__trigger:focus-visible {
+      transform: none;
+    }
+  }
+</style>

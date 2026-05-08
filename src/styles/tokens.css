@@ -1,0 +1,266 @@
+/*
+ * AI Safety Mexico — Design Tokens
+ *
+ * Single source of truth for color, typography, spacing, radii, shadows,
+ * transitions, z-index, breakpoints, and container widths.
+ *
+ * Per docs/DESIGN-SYSTEM.md §0 ("Restricciones inviolables"):
+ *   - Palette is FROZEN: only Navy / Copper / Cream / Gold and the derived
+ *     alpha mixes already in use. NO new hues.
+ *   - Typography is FROZEN: Playfair Display + Inter only.
+ *
+ * Component CSS MUST consume the semantic tokens (§1.3). The primitives in
+ * §1.1 / §1.2 live here exclusively.
+ */
+
+:root {
+  /* ============================================================
+   * 1.1 Color primitives (frozen — DESIGN-SYSTEM §1.1)
+   * ============================================================ */
+  --navy: #1B2340;
+  --navy-light: #2A3456;
+  --copper: #C4854A;
+  /* --copper-dark: darkened from #A86E3A → #8B5A2B to reach WCAG AA 4.5:1
+     for white text on the active CTA / link-hover state. Used as the
+     consumed "CTA background" via --color-cta-bg below. */
+  --copper-dark: #8B5A2B;
+  /* --gold: lightened from #D4A853 → #E8BD68 to reach WCAG AA 4.5:1 for
+     eyebrow text on slate / navy-light surfaces. The shift is small enough
+     that the brand reading stays "warm gold". */
+  --gold: #E8BD68;
+  --cream: #FAF3E8;
+  --white: #FFFFFF;
+  --text: #3A3A4A;
+  --text-light: #6A6A7A;
+  --text-muted: #8A8A9A;
+  --border: #E2DED6;
+
+  /* ============================================================
+   * 1.2 Derived alpha / overlay primitives (DESIGN-SYSTEM §1.2)
+   * ============================================================ */
+  --navy-overlay-strong: rgba(27, 35, 64, 0.85);
+  --navy-overlay: rgba(27, 35, 64, 0.75);
+  --navy-overlay-soft: rgba(27, 35, 64, 0.55);
+  --surface-cream-overlay: rgba(250, 243, 232, 0.85);
+  --surface-white-overlay: rgba(255, 255, 255, 0.92);
+  --copper-tint: rgba(196, 133, 74, 0.08);
+  --copper-tint-strong: rgba(196, 133, 74, 0.10);
+  --copper-border-soft: rgba(196, 133, 74, 0.25);
+  --copper-border: rgba(196, 133, 74, 0.30);
+  --white-text-strong: rgba(255, 255, 255, 0.85);
+  --white-text: rgba(255, 255, 255, 0.80);
+  --white-text-soft: rgba(255, 255, 255, 0.70);
+  --white-text-muted: rgba(255, 255, 255, 0.60);
+  --white-text-faint: rgba(255, 255, 255, 0.40);
+
+  /* ============================================================
+   * 1.3 Semantic color tokens (DESIGN-SYSTEM §1.3)
+   * Components consume THESE, never the primitives directly.
+   * ============================================================ */
+
+  /* Texto */
+  --color-text-primary: var(--text);
+  --color-text-secondary: var(--text-light);
+  --color-text-muted: var(--text-muted);
+  --color-text-heading: var(--navy);
+  --color-text-on-dark: var(--white);
+  --color-text-on-dark-muted: var(--white-text);
+  --color-text-inverse: var(--white);
+
+  /* Superficies */
+  --color-bg-base: var(--white);
+  --color-bg-warm: var(--cream);
+  --color-bg-elevated: var(--white);
+  --color-bg-section-warm: var(--surface-cream-overlay);
+  --color-bg-section-base: var(--surface-white-overlay);
+  --color-bg-impact: var(--navy);
+  --color-bg-overlay-dark: var(--navy-overlay);
+
+  /* Acentos */
+  --color-accent: var(--copper);
+  --color-accent-hover: var(--copper-dark);
+  --color-accent-soft: var(--copper-tint);
+  --color-accent-secondary: var(--gold);
+
+  /* CTA backgrounds — usan copper-dark (4.5:1 con texto blanco) en lugar
+     del copper base, que falla WCAG AA cuando se combina con #fff. Las
+     tarjetas y los chips siguen usando --color-accent (copper) para
+     conservar la lectura cromática de marca; solo los botones primarios
+     pasan por estos tokens. */
+  --color-cta-bg: var(--copper-dark);
+  --color-cta-bg-hover: #6F4621; /* aún más oscuro para reforzar el hover */
+  --color-cta-text: var(--white);
+
+  /* Bordes */
+  --color-border: var(--border);
+  --color-border-accent: var(--copper-border-soft);
+  --color-border-on-dark: rgba(255, 255, 255, 0.5);
+
+  /* Estado / utilidades */
+  --color-link: var(--copper);
+  --color-link-hover: var(--copper-dark);
+  --color-focus-ring: var(--copper);
+
+  /* Sucesos puntuales (registro/CTA verde — heredado del hackathon) */
+  --color-cta-register: #3df284;
+  --color-cta-register-hover: #33e37d;
+  --color-cta-register-text: #06110c;
+  --color-prize-badge-bg: #80ffca;
+  --color-prize-badge-text: #0f2b20;
+
+  /* ============================================================
+   * 1.4 Gradientes canónicos (DESIGN-SYSTEM §1.4)
+   * ============================================================ */
+  --gradient-navy-impact: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  --gradient-cream-paper: linear-gradient(180deg, rgba(250, 243, 232, 0.92), rgba(255, 255, 255, 0.94));
+  --gradient-edge-accent: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--copper) 20%,
+    var(--gold) 50%,
+    var(--copper) 80%,
+    transparent 100%
+  );
+  --gradient-badge-warm: linear-gradient(135deg, var(--gold), var(--copper));
+  --gradient-event-promo: linear-gradient(180deg, rgba(27, 35, 64, 0.95), rgba(27, 35, 64, 0.85));
+
+  /* ============================================================
+   * 2.1 Familias tipográficas (frozen)
+   * ============================================================ */
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* ============================================================
+   * 2.2 Pesos canónicos
+   * ============================================================ */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+
+  /* ============================================================
+   * 2.3 Escala fluida tipográfica (clamp — mobile-first)
+   * Min ≈ ≤480px, max ≈ ≥1280px.
+   * ============================================================ */
+
+  /* Display / titulares — Playfair */
+  --fs-display: clamp(2.0rem, 1.30rem + 3.20vw, 3.20rem); /* hero-title  ~32→51.2px */
+  --fs-h1: clamp(1.55rem, 1.10rem + 2.05vw, 2.40rem);     /* page-hero-title ~24.8→38.4px */
+  --fs-h2: clamp(1.60rem, 1.25rem + 1.55vw, 2.00rem);     /* section-heading ~25.6→32px */
+  --fs-h3: clamp(1.30rem, 1.10rem + 0.85vw, 1.75rem);     /* event-promo h3 / project-spotlight */
+  --fs-h4: clamp(1.20rem, 1.05rem + 0.55vw, 1.40rem);     /* team-subheading */
+  --fs-h5: clamp(1.10rem, 1.00rem + 0.45vw, 1.30rem);     /* program-card / event-hub-card titles */
+  --fs-h6: clamp(1.05rem, 0.98rem + 0.30vw, 1.20rem);     /* collab-title, pillar-title */
+
+  /* Cuerpo y soporte — Inter */
+  --fs-lead: clamp(1.05rem, 1.00rem + 0.30vw, 1.15rem);   /* hero-subtitle, page-hero-subtitle */
+  --fs-body: clamp(0.95rem, 0.92rem + 0.15vw, 1.00rem);   /* body por defecto = 16px desktop */
+  --fs-small: clamp(0.85rem, 0.83rem + 0.10vw, 0.92rem);  /* fact-list, card secondary */
+  --fs-caption: clamp(0.78rem, 0.76rem + 0.10vw, 0.85rem);/* footer copy, partner labels */
+  --fs-eyebrow: clamp(0.72rem, 0.70rem + 0.10vw, 0.82rem);/* hero-overline, section-eyebrow */
+
+  /* Numérico de impacto */
+  --fs-stat: clamp(1.70rem, 1.20rem + 2.20vw, 2.80rem);   /* stat-number */
+
+  /* Line-heights */
+  --lh-tight: 1.10;
+  --lh-snug: 1.20;
+  --lh-normal: 1.50;
+  --lh-relaxed: 1.70;
+  --lh-loose: 1.75;
+
+  /* Letter-spacing */
+  --ls-tight: -0.01em;
+  --ls-normal: 0;
+  --ls-wide: 0.3px;
+  --ls-uppercase: 0.35em;
+  --ls-uppercase-xl: 0.40em;
+
+  /* ============================================================
+   * 3. Sistema de espaciado (8-base; DESIGN-SYSTEM §3)
+   * ============================================================ */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 40px;
+  --space-10: 48px;
+  --space-12: 64px;
+  --space-14: 80px;
+  --space-16: 96px;
+  --space-20: 112px;
+
+  /* ============================================================
+   * 4.1 Border radius (DESIGN-SYSTEM §4.1)
+   * ============================================================ */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-pill: 999px;
+  --radius-full: 50%;
+
+  /* ============================================================
+   * 4.2 Sombras (DESIGN-SYSTEM §4.2)
+   * ============================================================ */
+  --shadow-xs: 0 2px 10px rgba(27, 35, 64, 0.06);
+  --shadow-sm: 0 2px 12px rgba(27, 35, 64, 0.04);
+  --shadow: 0 4px 24px rgba(27, 35, 64, 0.08);
+  --shadow-lg: 0 8px 40px rgba(27, 35, 64, 0.12);
+  --shadow-hero: 0 24px 60px rgba(0, 0, 0, 0.18);
+  --shadow-cta: 0 16px 28px rgba(27, 35, 64, 0.16);
+  --shadow-spotlight: 0 12px 50px rgba(27, 35, 64, 0.16);
+  --shadow-event-note: 0 20px 40px rgba(27, 35, 64, 0.08);
+  --shadow-header: 0 2px 20px rgba(0, 0, 0, 0.25);
+  --shadow-mobile-nav: -4px 0 30px rgba(0, 0, 0, 0.30);
+
+  /* Insets — refuerzan jerarquía sin objeto físico */
+  --inset-section-warm: inset 0 8px 16px rgba(27, 35, 64, 0.05);
+  --inset-section-impact: inset 0 8px 16px rgba(0, 0, 0, 0.18);
+  --inset-section-stats: inset 0 8px 16px rgba(0, 0, 0, 0.22);
+
+  /* ============================================================
+   * 4.3 Transitions (DESIGN-SYSTEM §4.3)
+   * ============================================================ */
+  --transition-fast: 0.15s ease;
+  --transition: 0.25s ease;
+  --transition-slow: 0.35s ease;
+  --transition-carousel: 0.5s ease;
+
+  /* ============================================================
+   * 4.4 Z-index scale (DESIGN-SYSTEM §4.4)
+   * ============================================================ */
+  --z-base: 1;
+  --z-decoration: 2;
+  --z-mobile-nav: 999;
+  --z-sticky: 1000;
+  --z-mobile-toggle: 1001;
+  --z-lightbox: 9999;
+
+  /* ============================================================
+   * 5. Breakpoints (referencia — usados como min-width en media queries)
+   * Mobile-first: defaults aplican <480px; cada breakpoint añade.
+   * ============================================================ */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-2xl: 1440px;
+
+  /* ============================================================
+   * Container widths (DESIGN-SYSTEM §5)
+   * ============================================================ */
+  --container-max: 1200px;
+  --container-narrow: 800px;
+  --container-hero: 1080px;
+  --container-carousel: 860px;
+  --container-padding: 12px;       /* mobile ≤480 */
+  --container-padding-md: 20px;    /* desktop default */
+}

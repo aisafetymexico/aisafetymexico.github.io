@@ -1,0 +1,421 @@
+---
+/**
+ * /projects/ai-safety-connect — AI Safety Connect deep-dive (ProjectPage template).
+ *
+ * Spec:
+ *   - docs/ARCHITECTURE.md §2 (`/projects/ai-safety-connect` purpose, sections, CTA).
+ *   - docs/ARCHITECTURE.md §6 (ProjectPage template).
+ *   - docs/CONTENT-MAP.md §1.6 — promote spotlight to subpage; preserves the
+ *     PDF embed pattern from the existing `ai-safety-connect.html` page so the
+ *     final report stays viewable inline.
+ *
+ * Sections:
+ *   1. PageHero (with breadcrumb).
+ *   2. ProjectMetaBar (chips: SPAR program, focus, team size, status).
+ *   3. Overview & objective.
+ *   4. Methodology — taxonomy, semantic search, pipelines.
+ *   5. Paper / publication block — embed + download CTA.
+ *   6. International team.
+ *   7. Acknowledgements.
+ *   8. RelatedProjects.
+ *   9. CtaSection — read the paper.
+ */
+import { getEntry, getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import Callout from '../../components/Callout.astro';
+import FactList from '../../components/FactList.astro';
+import KeyFacts from '../../components/KeyFacts.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import CtaSection from '../../components/CtaSection.astro';
+
+const project = await getEntry('projects', 'ai-safety-connect');
+if (!project) {
+  throw new Error('AI Safety Connect entry missing in src/content/projects/ai-safety-connect.md');
+}
+const data = project.data;
+
+const paperPath = data.paperUrl ?? '/Papers/AI_Safety_Connect_Final_Report.pdf';
+
+// Meta bar chips — type-only, no leading glyph.
+const metaChips = [
+  { text: 'SPAR · Supervised Program for Alignment Research' },
+  { text: 'Equipo internacional' },
+  { text: 'Reporte final disponible' },
+  { text: `${data.team.length} co-investigadores` },
+];
+
+// Methodology fact list — eyebrow label / value pairs.
+const methodologyItems = [
+  {
+    label: 'Objetivo',
+    value:
+      'Minimizar la brecha estructural de coordinación entre la investigación académica y las comunidades de seguridad en IA.',
+  },
+  {
+    label: 'Metodología',
+    value:
+      'Plataforma integrada que mapea autores, publicaciones y áreas temáticas mediante taxonomía estructurada, búsqueda semántica y pipelines de datos escalables.',
+  },
+  {
+    label: 'Equipo internacional',
+    value: data.team.map((p) => p.name).join(', '),
+  },
+];
+
+// Team list
+const teamItems = data.team.map((person) => ({
+  label: person.role ?? 'Co-investigador/a',
+  value: person.name,
+}));
+
+// Related projects
+const allProjects = await getCollection('projects', ({ data: d }: { data: { draft?: boolean } }) => d.draft !== true);
+const related = allProjects
+  .filter((p) => (p.data.slug ?? p.slug) !== 'ai-safety-connect')
+  .slice(0, 1)
+  .map((p) => {
+    const slug = p.data.slug ?? p.slug;
+    return {
+      title: p.data.title,
+      badge: p.data.badge,
+      description: p.data.summary,
+      image: p.data.cover,
+      href: `/projects/${slug}`,
+    };
+  });
+
+const breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Proyectos', href: '/projects' },
+    { label: 'AI Safety Connect' },
+  ],
+};
+---
+
+<BaseLayout
+  title="AI Safety Connect · Proyecto · AI Safety Mexico"
+  description="AI Safety Connect: plataforma desarrollada en el marco de SPAR para mapear sistemáticamente la investigación en seguridad de IA y reducir la brecha entre academia y comunidad."
+  pathname="/projects/ai-safety-connect"
+  ogImage={data.poster?.src as string | undefined}
+>
+  <Header slot="header" currentPath="/projects" />
+
+  <PageHero
+    eyebrow="Proyecto insignia"
+    title="AI Safety Connect"
+    description="Plataforma para mapear sistemáticamente la investigación en seguridad de IA y reducir la brecha entre academia y comunidad."
+    breadcrumb={breadcrumb}
+  />
+
+  {/* Meta bar */}
+  <section class="section section--compact section--cream" aria-label="Información del proyecto">
+    <div class="container">
+      <KeyFacts facts={metaChips} />
+    </div>
+  </section>
+
+  {/* Overview */}
+  <section class="section section--base" aria-labelledby="aisc-overview-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Resumen"
+        title="¿Qué es AI Safety Connect?"
+        id="aisc-overview-heading"
+      />
+      <Callout tone="highlight">
+        <p>
+          <strong>AI Safety Connect</strong> es una plataforma para mapear
+          sistemáticamente la investigación en seguridad de IA y reducir la brecha
+          entre la academia y las comunidades de práctica.
+        </p>
+      </Callout>
+      <div class="prose">
+        <p>
+          El proyecto fue desarrollado en el marco del <strong>Supervised
+          Program for Alignment Research (SPAR)</strong>, programa internacional
+          que conecta talento emergente con investigadores establecidos en
+          alineamiento. AI Safety Mexico participó como sede latinoamericana de la
+          colaboración que produjo este reporte final.
+        </p>
+        <p>
+          La hipótesis central del proyecto es que existe una <strong>brecha
+          estructural de coordinación</strong> entre quienes producen investigación
+          en seguridad de IA y quienes la consumen para diseñar políticas, productos
+          o programas formativos. Una plataforma con taxonomía consistente y
+          búsqueda semántica reduce el costo de descubrimiento y abre la
+          posibilidad de articular agendas compartidas.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* Methodology */}
+  <section class="section section--warm" aria-labelledby="aisc-methodology-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Metodología"
+        title="Cómo está construido"
+        description="La plataforma se apoya en tres componentes complementarios: taxonomía estructurada, búsqueda semántica y pipelines de datos escalables."
+        id="aisc-methodology-heading"
+      />
+      <FactList items={methodologyItems} />
+    </div>
+  </section>
+
+  {/* Paper / Publication */}
+  <section class="section section--base section--edge-accent" aria-labelledby="aisc-paper-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Publicación"
+        title="Reporte final"
+        description="El documento sintetiza los hallazgos, decisiones de diseño y trabajo a futuro de la colaboración SPAR."
+        id="aisc-paper-heading"
+      />
+
+      <div class="aisc-paper-actions">
+        <a
+          class="aisc-paper-cta aisc-paper-cta--primary"
+          href={paperPath}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Abrir PDF en pestaña nueva
+          <span aria-hidden="true">↗</span>
+        </a>
+        <a
+          class="aisc-paper-cta aisc-paper-cta--secondary"
+          href={paperPath}
+          download
+        >
+          Descargar reporte
+          <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+
+      <div class="aisc-pdf-viewer" aria-label="Visor del reporte final de AI Safety Connect">
+        <object
+          data={paperPath}
+          type="application/pdf"
+          width="100%"
+          height="800"
+        >
+          <p class="aisc-pdf-fallback">
+            Tu navegador no puede mostrar el PDF embebido.
+            <a href={paperPath} target="_blank" rel="noopener noreferrer">
+              Abre el reporte en una pestaña nueva
+            </a>.
+          </p>
+        </object>
+      </div>
+    </div>
+  </section>
+
+  {/* Team */}
+  <section class="section section--cream" aria-labelledby="aisc-team-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Equipo internacional"
+        title="Co-investigadores"
+        description="La colaboración SPAR articuló a un equipo distribuido geográficamente con experiencia en alineamiento, evaluaciones e infraestructura de datos."
+        id="aisc-team-heading"
+      />
+      <FactList items={teamItems} />
+    </div>
+  </section>
+
+  {/* Acknowledgements */}
+  <section class="section section--base" aria-labelledby="aisc-ack-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Agradecimientos"
+        title="Programas y aliados"
+        id="aisc-ack-heading"
+      />
+      <div class="prose">
+        <p>
+          AI Safety Connect existe gracias al programa <strong>SPAR — Supervised
+          Program for Alignment Research</strong>, que articuló al equipo
+          internacional y proveyó la mentoría académica. Agradecemos a las
+          mentoras y mentores que acompañaron el diseño metodológico y la
+          revisión de resultados, así como a las comunidades de práctica que
+          aportaron retroalimentación durante el desarrollo.
+        </p>
+        <p>
+          AI Safety Mexico participó como sede regional, conectando al equipo con
+          aliados locales y aportando perspectiva latinoamericana al diseño del
+          mapeo.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* Related projects */}
+  {related.length > 0 && (
+    <section class="section section--warm" aria-labelledby="aisc-related-heading">
+      <div class="container">
+        <SectionHeading
+          eyebrow="Sigue explorando"
+          title="Otros proyectos"
+          id="aisc-related-heading"
+        />
+        <div class="aisc-related-grid">
+          {related.map((card) => (
+            <ProjectCard
+              title={card.title}
+              badge={card.badge}
+              description={card.description}
+              image={card.image}
+              href={card.href}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <CtaSection
+    title="Lee el reporte completo"
+    description="El reporte final documenta hallazgos, decisiones de diseño y trabajo a futuro."
+    ctaLabel="Abrir el PDF"
+    ctaHref={paperPath}
+    ctaExternal={true}
+  />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .prose p {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--space-4);
+  }
+
+  .prose p:last-child {
+    margin-bottom: 0;
+  }
+
+  .prose strong {
+    color: var(--color-text-heading);
+    font-weight: var(--fw-semibold);
+  }
+
+  /* Paper actions */
+  .aisc-paper-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-7);
+  }
+
+  .aisc-paper-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-semibold);
+    text-decoration: none;
+    letter-spacing: var(--ls-wide);
+    border-radius: var(--radius-pill);
+    transition:
+      background var(--transition),
+      color var(--transition),
+      transform var(--transition),
+      box-shadow var(--transition);
+  }
+
+  .aisc-paper-cta--primary {
+    background: var(--color-accent);
+    color: var(--color-text-on-dark);
+    box-shadow: var(--shadow-cta);
+  }
+  .aisc-paper-cta--primary:hover,
+  .aisc-paper-cta--primary:focus-visible {
+    background: var(--color-accent-hover);
+    color: var(--color-text-on-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .aisc-paper-cta--secondary {
+    background: transparent;
+    color: var(--color-link);
+    border: 1px solid var(--color-border-accent);
+  }
+  .aisc-paper-cta--secondary:hover,
+  .aisc-paper-cta--secondary:focus-visible {
+    background: var(--color-accent-soft);
+    color: var(--color-link-hover);
+    transform: translateY(-2px);
+  }
+
+  /* PDF viewer */
+  .aisc-pdf-viewer {
+    width: 100%;
+    background: var(--color-bg-warm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .aisc-pdf-viewer object {
+    display: block;
+    width: 100%;
+    min-height: 480px;
+  }
+
+  @media (min-width: 768px) {
+    .aisc-pdf-viewer object {
+      min-height: 800px;
+    }
+  }
+
+  .aisc-pdf-fallback {
+    padding: var(--space-6);
+    margin: 0;
+    font-family: var(--font-body);
+    color: var(--color-text-secondary);
+  }
+
+  .aisc-pdf-fallback a {
+    color: var(--color-link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .aisc-pdf-fallback a:hover {
+    color: var(--color-link-hover);
+  }
+
+  /* Related grid */
+  .aisc-related-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+  }
+
+  @media (min-width: 768px) {
+    .aisc-related-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-8);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aisc-paper-cta {
+      transition: none;
+    }
+    .aisc-paper-cta:hover {
+      transform: none;
+    }
+  }
+</style>

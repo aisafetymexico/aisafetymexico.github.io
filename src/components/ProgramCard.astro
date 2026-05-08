@@ -1,0 +1,225 @@
+---
+/**
+ * ProgramCard — course / program card for /programs.
+ *
+ * Spec: docs/DESIGN-SYSTEM.md §6.3 (ProgramCard).
+ *
+ * Layout:
+ *   ┌────────────────────────────────────────┐
+ *   │ Title                                  │
+ *   │ Description                            │
+ *   │ ── facilitators (chips) ─────────────  │
+ *   │ ── materials (chips) ────────────────  │
+ *   │ ── institución (small) ──────────────  │
+ *   │ certificate thumbnail                  │
+ *   └────────────────────────────────────────┘
+ *
+ * Props:
+ *  - title:              Program / course name (h5).
+ *  - description:        Summary copy (1–3 sentences).
+ *  - facilitators?:      Array of facilitator names.
+ *  - materials?:         Array of material/topic tags.
+ *  - institution?:       Institutional partner (e.g. "UADY", "Centro GEO").
+ *  - certificateImage?:  Optional ImgRef of the certificate (e.g. logo, badge).
+ */
+import type { ImgRef } from '../lib/types';
+
+export interface Props {
+  title: string;
+  description: string;
+  facilitators?: string[];
+  materials?: string[];
+  institution?: string;
+  certificateImage?: ImgRef;
+}
+
+const {
+  title,
+  description,
+  facilitators = [],
+  materials = [],
+  institution,
+  certificateImage,
+} = Astro.props;
+
+const certSrc = certificateImage
+  && (typeof certificateImage.src === 'string' ? certificateImage.src : certificateImage.src.src);
+---
+
+<article class="program-card">
+  <div class="program-card__body">
+    {institution && <span class="program-card__institution">{institution}</span>}
+
+    <h3 class="program-card__title">{title}</h3>
+    <p class="program-card__description">{description}</p>
+
+    {facilitators.length > 0 && (
+      <div class="program-card__group">
+        <span class="program-card__group-label">Facilitadores</span>
+        <ul class="program-card__chips" role="list">
+          {facilitators.map(name => (
+            <li class="program-card__chip">{name}</li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {materials.length > 0 && (
+      <div class="program-card__group">
+        <span class="program-card__group-label">Materiales</span>
+        <ul class="program-card__chips program-card__chips--soft" role="list">
+          {materials.map(item => (
+            <li class="program-card__chip program-card__chip--soft">{item}</li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {certSrc && (
+      <figure class="program-card__certificate">
+        <img
+          class="program-card__certificate-img"
+          src={certSrc}
+          alt={certificateImage!.alt}
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption class="program-card__certificate-caption">Certificado</figcaption>
+      </figure>
+    )}
+  </div>
+</article>
+
+<style>
+  .program-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-elevated);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition:
+      transform var(--transition),
+      box-shadow var(--transition);
+  }
+
+  .program-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .program-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    flex: 1;
+  }
+
+  @media (min-width: 768px) {
+    .program-card__body { padding: var(--space-8); }
+  }
+
+  .program-card__institution {
+    align-self: flex-start;
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent);
+    line-height: 1;
+  }
+
+  .program-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+  }
+
+  .program-card__description {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+  }
+
+  /* Chip groups */
+  .program-card__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .program-card__group-label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    line-height: 1;
+  }
+
+  .program-card__chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .program-card__chip {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-semibold);
+    color: var(--color-text-primary);
+    background: var(--color-accent-soft);
+    border: 1px solid var(--color-border-accent);
+    padding: 4px var(--space-3);
+    border-radius: var(--radius-pill);
+    line-height: 1.3;
+  }
+
+  .program-card__chip--soft {
+    background: var(--color-bg-warm);
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
+  }
+
+  /* Certificate */
+  .program-card__certificate {
+    margin: var(--space-3) 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .program-card__certificate-img {
+    max-width: 100%;
+    height: auto;
+    max-height: 180px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    background: var(--color-bg-warm);
+  }
+
+  .program-card__certificate-caption {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-medium);
+    color: var(--color-text-muted);
+    letter-spacing: var(--ls-wide);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .program-card { transition: none; }
+    .program-card:hover { transform: none; }
+  }
+</style>

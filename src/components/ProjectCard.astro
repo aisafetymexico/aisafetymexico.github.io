@@ -1,0 +1,230 @@
+---
+/**
+ * ProjectCard — portfolio card for /projects (VIGÍA, AI Safety Connect, etc.).
+ *
+ * Spec: docs/DESIGN-SYSTEM.md §6.3 (ProjectCard).
+ *
+ * Visual recipe (INSPIRATION A4):
+ *   ┌──────────────────┐
+ *   │      image       │   16:9 cover, copper-tint placeholder if missing
+ *   ├──────────────────┤
+ *   │ [BADGE]          │   gradient-warm gold→copper
+ *   │ Title (Playfair) │
+ *   │ Description …    │
+ *   │ → cta            │
+ *   └──────────────────┘
+ *
+ * Props:
+ *  - title:        Project name (h3 scale).
+ *  - badge?:       Short status / category tag (e.g. "ACTIVO", "PUBLICADO").
+ *  - description:  1–3 sentence summary.
+ *  - image?:       ImgRef for the hero photo.
+ *  - href:         Destination URL. The card title links here.
+ *  - ctaLabel?:    CTA copy (defaults to "Conocer más →").
+ */
+import type { ImgRef } from '../lib/types';
+
+export interface Props {
+  title: string;
+  badge?: string;
+  description: string;
+  image?: ImgRef;
+  href: string;
+  ctaLabel?: string;
+  external?: boolean;
+}
+
+const {
+  title,
+  badge,
+  description,
+  image,
+  href,
+  ctaLabel = 'Conocer más',
+  external = false,
+} = Astro.props;
+
+const imageSrc = image && (typeof image.src === 'string' ? image.src : image.src.src);
+const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+
+<article class={`project-card${imageSrc ? '' : ' project-card--no-media'}`}>
+  {imageSrc && (
+    <a class="project-card__media-link" href={href} aria-label={title} {...linkAttrs}>
+      <div class="project-card__media">
+        <img
+          class="project-card__img"
+          src={imageSrc}
+          alt={image!.alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </a>
+  )}
+
+  <div class="project-card__body">
+    {badge && <span class="project-card__badge">{badge}</span>}
+    <h3 class="project-card__title">
+      <a class="project-card__title-link" href={href} {...linkAttrs}>
+        {title}
+      </a>
+    </h3>
+    <p class="project-card__description">{description}</p>
+    <a class="project-card__cta" href={href} {...linkAttrs}>
+      {ctaLabel}
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-elevated);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition:
+      transform var(--transition),
+      box-shadow var(--transition);
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Media */
+  .project-card__media-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+  .project-card__media-link:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .project-card__media {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    background: var(--color-bg-warm);
+    overflow: hidden;
+  }
+
+  .project-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-slow);
+  }
+
+  .project-card:hover .project-card__img {
+    transform: scale(1.04);
+  }
+
+  .project-card__media-placeholder {
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(circle at 30% 30%, var(--copper-tint), transparent 60%),
+      var(--color-bg-warm);
+  }
+
+  /* Body */
+  .project-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    flex: 1;
+  }
+
+  @media (min-width: 768px) {
+    .project-card__body { padding: var(--space-7); }
+  }
+
+  .project-card__badge {
+    align-self: flex-start;
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-text-on-dark);
+    background: var(--gradient-badge-warm);
+    padding: 4px var(--space-3);
+    border-radius: var(--radius-pill);
+    line-height: 1;
+  }
+
+  .project-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+  }
+
+  .project-card__title-link {
+    color: inherit;
+    text-decoration: none;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size var(--transition);
+  }
+  .project-card__title-link:hover {
+    background-size: 100% 1px;
+  }
+  .project-card__title-link:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+
+  .project-card__description {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+  }
+
+  .project-card__cta {
+    margin-top: auto;
+    padding-top: var(--space-2);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-semibold);
+    color: var(--color-link);
+    text-decoration: none;
+    transition: color var(--transition), gap var(--transition);
+  }
+  .project-card__cta:hover {
+    color: var(--color-link-hover);
+    gap: var(--space-3);
+  }
+  .project-card__cta:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-card,
+    .project-card__img,
+    .project-card__cta { transition: none; }
+    .project-card:hover { transform: none; }
+    .project-card:hover .project-card__img { transform: none; }
+  }
+</style>

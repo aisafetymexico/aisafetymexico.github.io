@@ -1,0 +1,286 @@
+---
+/*
+ * /about — Quiénes somos
+ *
+ * Spec: Task #13 + docs/ARCHITECTURE.md §2 (`/about`) + docs/CONTENT-MAP.md
+ * (sección 1.3 + sugerencias §4 para placeholders editoriales).
+ *
+ * Template: ContentPage (ARCHITECTURE.md §6).
+ *
+ * Estructura:
+ *   1. PageHero (eyebrow + h1 + lede + breadcrumb)
+ *   2. Misión — párrafo expandido + Callout con la frase central
+ *   3. Visión — párrafo + PullQuote
+ *   4. Pilares — grid de 4 PillarCard con descripciones expandidas
+ *   5. Historia / Origen — narrativa de fundación 2025
+ *   6. KeyFacts — chips identitarios
+ *   7. CtaSection — "Conoce al equipo" → /team
+ *
+ * Editor-in-chief notes (placeholders editoriales que requieren validación):
+ *   - [GAP-4] Historia / Origen — narrativa de fundación basada en
+ *     CONTENT-MAP §4 ("Para [GAP-4]"). Pendiente de validar nombres de
+ *     personas fundadoras y momento exacto de fundación.
+ *   - [GAP-5] Misión y visión formales — adaptadas de CONTENT-MAP §4.
+ *   - [GAP-6] Descripción ampliada de los 4 pilares — adaptada de
+ *     CONTENT-MAP §4.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Callout from '../components/Callout.astro';
+import PullQuote from '../components/PullQuote.astro';
+import PillarCard from '../components/PillarCard.astro';
+import KeyFacts from '../components/KeyFacts.astro';
+import CtaSection from '../components/CtaSection.astro';
+
+const breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Sobre nosotros' },
+  ],
+};
+
+const pillars = [
+  {
+    number: '01',
+    title: 'Investigación',
+    description:
+      'Producimos trabajo original y colaborativo en alineación, interpretabilidad mecánica, evaluaciones de seguridad y gobernanza técnica, en colaboración con instituciones nacionales e internacionales.',
+  },
+  {
+    number: '02',
+    title: 'Educación',
+    description:
+      'Diseñamos e impartimos cursos abiertos y a la medida —para comunidades, universidades y centros de investigación— que adaptan los marcos contemporáneos de AI safety al contexto regional.',
+  },
+  {
+    number: '03',
+    title: 'Gobernanza',
+    description:
+      'Acompañamos procesos de consulta y diseño de políticas públicas con análisis técnicos, participaciones en mesas de trabajo y producción de documentos especializados.',
+  },
+  {
+    number: '04',
+    title: 'Comunidad',
+    description:
+      'Sostenemos espacios recurrentes de diálogo —mesas de trabajo, talleres, conferencias— que conectan a quienes investigan, desarrollan y regulan IA en la región.',
+  },
+];
+
+const keyFacts = [
+  { text: 'Fundada en 2025' },
+  { text: 'Sin fines de lucro' },
+  { text: 'Equipo multidisciplinario' },
+  { text: 'Base México · alcance LATAM' },
+];
+---
+
+<BaseLayout
+  title="Quiénes somos · AI Safety Mexico"
+  description="AI Safety Mexico es una organización sin fines de lucro fundada en 2025 que promueve la investigación, educación y gobernanza responsable de la inteligencia artificial en México y América Latina."
+  pathname="/about"
+>
+  <Header slot="header" currentPath="/about" />
+
+  <PageHero
+    eyebrow="Sobre nosotros"
+    title="Quiénes somos"
+    description="Una organización sin fines de lucro que articula investigación, educación y gobernanza de IA desde México hacia América Latina."
+    breadcrumb={breadcrumb}
+  />
+
+  <!-- 2. Misión -->
+  <section class="section section--base">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Misión"
+        title="Por qué existimos"
+        description="Nuestro propósito articulado en una sola declaración."
+      />
+
+      <div class="prose">
+        <p>
+          AI Safety Mexico es una organización sin fines de lucro fundada en
+          2025 que promueve la investigación, la educación y la gobernanza
+          responsable de la inteligencia artificial en México y América
+          Latina. Trabajamos en la intersección de tres comunidades
+          —investigadoras y investigadores, educadores y responsables de
+          política pública— para asegurar que los sistemas de IA se
+          desarrollen y desplieguen de forma segura, alineada con valores
+          humanos y atenta a los contextos locales.
+        </p>
+        <p>
+          Nuestra labor combina producción científica original, formación
+          abierta y diálogo institucional. Operamos con un equipo
+          multidisciplinario y en alianza con organizaciones nacionales e
+          internacionales que comparten el compromiso de hacer del sur global
+          un actor con voz propia en la conversación sobre seguridad de la IA.
+        </p>
+      </div>
+
+      <Callout tone="highlight">
+        <p>
+          <strong>Misión.</strong> Promover la investigación, la educación y la
+          gobernanza responsable de la inteligencia artificial en México y
+          América Latina, asegurando que los sistemas de IA se desarrollen y
+          desplieguen de forma segura, alineada con valores humanos y atenta a
+          los contextos locales.
+        </p>
+      </Callout>
+    </div>
+  </section>
+
+  <!-- 3. Visión -->
+  <section class="section section--warm">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Visión"
+        title="Hacia dónde apuntamos"
+      />
+
+      <div class="prose">
+        <p>
+          Imaginamos una región donde la voz del sur global tenga peso propio
+          en la definición técnica y normativa de la seguridad de la IA. Una
+          comunidad consolidada de investigadoras, educadoras y responsables
+          políticos que produzcan conocimiento situado, formen a nuevas
+          generaciones y participen activamente en la construcción de marcos
+          regulatorios sensibles a las realidades latinoamericanas.
+        </p>
+      </div>
+
+      <PullQuote
+        quote="Una región en la que la voz del sur global tenga peso propio en la definición técnica y normativa de la seguridad de la IA."
+        attribution="Visión · AI Safety Mexico"
+      />
+    </div>
+  </section>
+
+  <!-- 4. Pilares profundizados -->
+  <section class="section section--base">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Cuatro ejes"
+        title="Nuestros pilares de trabajo"
+        description="Las áreas en las que concentramos esfuerzos. No son compartimentos estancos: cada proyecto suele cruzar varias de ellas."
+      />
+
+      <div class="pillar-grid">
+        {pillars.map((pillar) => (
+          <PillarCard
+            number={pillar.number}
+            title={pillar.title}
+            description={pillar.description}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Historia / Origen -->
+  <section class="section section--warm">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Origen"
+        title="Cómo nació AI Safety Mexico"
+      />
+
+      <div class="prose">
+        <p>
+          AI Safety Mexico nace en 2025 como respuesta a una observación
+          compartida por un grupo de investigadoras, ingenieros y
+          profesionales en México: el debate sobre la seguridad de la
+          inteligencia artificial avanza a una velocidad acelerada en el
+          norte global, mientras que las preocupaciones, valores y contextos
+          del sur global rara vez se incorporan en esa conversación.
+        </p>
+        <p>
+          Decidimos articularnos para acortar esa distancia desde una región
+          concreta —México y América Latina— y desde una práctica concreta:
+          investigación rigurosa, formación abierta y diálogo con quienes
+          diseñan políticas públicas. La organización se constituyó
+          formalmente en 2025 con un equipo fundador multidisciplinario que
+          combina experiencia en machine learning, ciencias sociales,
+          políticas públicas y matemáticas aplicadas.
+        </p>
+        <p>
+          Desde entonces hemos impartido cursos abiertos e institucionales,
+          publicado en venues nacionales, participado en eventos
+          internacionales (EAGxCDMX, ML4Good, SPAR) y acompañado a
+          organizaciones aliadas como Centro Geo, UADY, ENAIS y Apart
+          Research. Cada actividad responde al mismo principio: producir
+          conocimiento situado y útil para quienes investigan, regulan o
+          despliegan IA en la región.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. KeyFacts -->
+  <section class="section section--cream section--compact">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Identidad"
+        title="Datos esenciales"
+        description="Lo mínimo que conviene saber sobre nosotros antes de explorar el resto del sitio."
+      />
+
+      <KeyFacts facts={keyFacts} />
+    </div>
+  </section>
+
+  <!-- 7. CTA -->
+  <CtaSection
+    title="¿Quieres conocer al equipo?"
+    description="Detrás de AI Safety Mexico hay un grupo multidisciplinario de investigadoras, ingenieros y educadores comprometidos con la seguridad de la IA en la región."
+    ctaLabel="Conoce al equipo"
+    ctaHref="/team"
+  />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* Local prose tuning for the About narrative blocks. The site uses Inter
+     for body and Playfair for display headings; here we set comfortable
+     line-height and bottom margin between paragraphs. */
+  .prose {
+    max-width: 64ch;
+    margin-inline: auto;
+  }
+
+  .prose p {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--space-4);
+  }
+
+  .prose p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Pillar grid: 1-up mobile → 2-up tablet → 4-up desktop. */
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 640px) {
+    .pillar-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-6);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .pillar-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-6);
+    }
+  }
+</style>

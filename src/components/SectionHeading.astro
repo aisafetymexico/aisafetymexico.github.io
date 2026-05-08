@@ -1,0 +1,147 @@
+---
+/**
+ * SectionHeading — H2 with optional eyebrow + supporting description and a
+ * decorative copper underline accent. Single canonical title block used
+ * across all sections in pages.
+ *
+ * Spec:
+ *  - Task #10 props: `{ eyebrow?, title, description? }`.
+ *  - docs/DESIGN-SYSTEM.md §6.4 — SectionHeading.
+ *  - Tonal variants `light` (default, on warm/base surfaces) and `dark`
+ *    (on navy / impact surfaces). Alignment defaults to `left`.
+ *  - Mobile-first; description max-measure caps at 60ch on desktop.
+ */
+
+export type SectionHeadingTone = 'light' | 'dark';
+export type SectionHeadingAlign = 'left' | 'center';
+
+export interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  tone?: SectionHeadingTone;
+  align?: SectionHeadingAlign;
+  /** Heading level — defaults to h2. Use 'h1' on hero pages where appropriate. */
+  as?: 'h1' | 'h2' | 'h3';
+  id?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  tone = 'light',
+  align = 'left',
+  as = 'h2',
+  id,
+} = Astro.props;
+
+const Heading = as;
+---
+
+<header
+  class:list={[
+    'section-heading',
+    `section-heading--${tone}`,
+    `section-heading--${align}`,
+  ]}
+  id={id}
+>
+  {eyebrow && <p class="section-heading__eyebrow">{eyebrow}</p>}
+  <Heading class="section-heading__title">
+    {title}
+    <span class="section-heading__underline" aria-hidden="true"></span>
+  </Heading>
+  {description && <p class="section-heading__description">{description}</p>}
+</header>
+
+<style>
+  .section-heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-7);
+  }
+
+  .section-heading--center {
+    text-align: center;
+    align-items: center;
+  }
+
+  .section-heading__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 0;
+  }
+
+  .section-heading__title {
+    position: relative;
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-tight);
+    color: var(--color-text-heading);
+    margin: 0;
+    padding-bottom: var(--space-3);
+  }
+
+  .section-heading__underline {
+    position: absolute;
+    bottom: 0;
+    inset-inline-start: 0;
+    width: 56px;
+    height: 3px;
+    border-radius: var(--radius-pill);
+    background: var(--gradient-badge-warm);
+  }
+
+  .section-heading--center .section-heading__underline {
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+  }
+
+  .section-heading__description {
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    margin: var(--space-2) 0 0;
+    max-width: 60ch;
+  }
+
+  .section-heading--center .section-heading__description {
+    margin-inline: auto;
+  }
+
+  /* Dark tone (on navy/impact surfaces) */
+  .section-heading--dark .section-heading__title {
+    color: var(--color-text-on-dark);
+  }
+  .section-heading--dark .section-heading__description {
+    color: var(--color-text-on-dark-muted);
+  }
+  .section-heading--dark .section-heading__eyebrow {
+    color: var(--color-accent-secondary);
+  }
+
+  @media (min-width: 768px) {
+    .section-heading {
+      gap: var(--space-4);
+      margin-bottom: var(--space-9);
+    }
+    .section-heading__title {
+      padding-bottom: var(--space-4);
+    }
+    .section-heading__underline {
+      width: 64px;
+      height: 4px;
+    }
+  }
+</style>

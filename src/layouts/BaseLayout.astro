@@ -1,0 +1,110 @@
+---
+/*
+ * BaseLayout — root HTML shell for every page.
+ *
+ * Responsibilities:
+ *   - <head> meta: charset, viewport, title, description, canonical, OpenGraph
+ *   - Google Fonts: Playfair Display + Inter (preconnect, display=swap)
+ *   - Loads global tokens.css + base.css (base imports tokens)
+ *   - Provides slots for SiteHeader / SiteFooter (Task #7) and main content
+ *   - Skip-to-content link for a11y baseline
+ *
+ * Slots (consumed by Task #7 — Shell components):
+ *   - "head"   → extra <head> markup (per-page JSON-LD, additional meta)
+ *   - "header" → SiteHeader (sticky)
+ *   - default  → page content (wrapped in <main id="main">)
+ *   - "footer" → SiteFooter
+ *
+ * Props:
+ *   - title       (required)  page <title>
+ *   - description (optional)  meta description + og:description
+ *   - lang        (optional)  'es' (default) | 'en'
+ *   - ogImage     (optional)  absolute or site-relative path for og:image
+ *   - pathname    (optional)  used to derive canonical URL
+ */
+
+import '../styles/base.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  lang?: 'es' | 'en';
+  ogImage?: string;
+  pathname?: string;
+}
+
+const {
+  title,
+  description = 'AI Safety Mexico — Investigación, educación y gobernanza de IA en México y América Latina.',
+  lang = 'es',
+  ogImage,
+  pathname,
+} = Astro.props;
+
+// Site-wide default OG image (used when a page does not pass its own).
+// Picked because it is the most identity-rich asset shipped today.
+// TODO(content): replace with a 1200×630 social card optimised for OG.
+const DEFAULT_OG_IMAGE = '/images/observatorio.png';
+
+const canonicalUrl = pathname ? new URL(pathname, Astro.site) : Astro.url;
+const resolvedOgImage = ogImage ?? DEFAULT_OG_IMAGE;
+const ogImageUrl = resolvedOgImage.startsWith('http')
+  ? resolvedOgImage
+  : new URL(resolvedOgImage, Astro.site).toString();
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl.toString()} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl.toString()} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
+    <meta property="og:site_name" content="AI Safety Mexico" />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content={ogImageUrl ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+
+    <!-- Google Fonts: Playfair Display + Inter (preconnect + display=swap) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap"
+    />
+
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Saltar al contenido</a>
+
+    <slot name="header" />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <slot name="footer" />
+  </body>
+</html>

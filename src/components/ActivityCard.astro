@@ -1,0 +1,181 @@
+---
+/**
+ * ActivityCard — past / current activity card for /activities and home strip.
+ *
+ * Spec: docs/DESIGN-SYSTEM.md §6.3 (ActivityCard).
+ * Pattern: INSPIRATION A4 (eyebrow + 16:9 image + title) + A5 (photo grid 4-up).
+ * Activities are one of the few card types where dates ARE legitimate signal
+ * (chronological gallery, see INSPIRATION X5).
+ *
+ * Props:
+ *  - title:        Activity name (h6 scale).
+ *  - date?:        ISO string ("2026-03-05") OR human-readable (e.g. "Marzo 2026").
+ *  - description:  Short blurb.
+ *  - image?:       ImgRef hero image.
+ *  - link?:        Optional URL — when present, the entire card becomes a link.
+ */
+import type { ImgRef } from '../lib/types';
+
+export interface Props {
+  title: string;
+  date?: string;
+  description: string;
+  image?: ImgRef;
+  link?: string;
+  external?: boolean;
+}
+
+const { title, date, description, image, link, external = false } = Astro.props;
+
+const imageSrc = image && (typeof image.src === 'string' ? image.src : image.src.src);
+
+// Format date defensively: if it parses as an ISO date, format Spanish-style;
+// otherwise pass through whatever the caller gave us.
+function formatDate(d?: string): string | undefined {
+  if (!d) return undefined;
+  const parsed = new Date(d);
+  if (Number.isNaN(parsed.getTime()) || !/^\d{4}-\d{2}/.test(d)) return d;
+  return parsed.toLocaleDateString('es-MX', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+const formattedDate = formatDate(date);
+const dateAttr = date && /^\d{4}-\d{2}/.test(date) ? date : undefined;
+
+const Tag = (link ? 'a' : 'article') as any;
+const linkAttrs = link
+  ? {
+      href: link,
+      ...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
+    }
+  : {};
+---
+
+<Tag class={`activity-card${link ? ' activity-card--link' : ''}${imageSrc ? '' : ' activity-card--no-media'}`} {...linkAttrs}>
+  {imageSrc && (
+    <div class="activity-card__media">
+      <img
+        class="activity-card__img"
+        src={imageSrc}
+        alt={image!.alt}
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  )}
+
+  <div class="activity-card__body">
+    {formattedDate && (
+      <time class="activity-card__date" datetime={dateAttr}>{formattedDate}</time>
+    )}
+    <h3 class="activity-card__title">{title}</h3>
+    <p class="activity-card__description">{description}</p>
+  </div>
+</Tag>
+
+<style>
+  .activity-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-elevated);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition:
+      transform var(--transition),
+      box-shadow var(--transition);
+  }
+
+  .activity-card--link:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+  }
+
+  .activity-card:hover,
+  .activity-card--link:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+
+  /* Media — A5 uses 4:5 portrait for "browse all" galleries */
+  .activity-card__media {
+    aspect-ratio: 4 / 3;
+    width: 100%;
+    background: var(--color-bg-warm);
+    overflow: hidden;
+  }
+
+  .activity-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-slow);
+  }
+
+  .activity-card:hover .activity-card__img {
+    transform: scale(1.04);
+  }
+
+  .activity-card__media-placeholder {
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(circle at 70% 30%, var(--copper-tint), transparent 60%),
+      var(--color-bg-warm);
+  }
+
+  /* Body */
+  .activity-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-5) var(--space-6) var(--space-6);
+    flex: 1;
+  }
+
+  .activity-card__date {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent);
+    line-height: 1;
+  }
+
+  .activity-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+  }
+
+  .activity-card__description {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+  }
+
+  @media (min-width: 768px) {
+    .activity-card__body {
+      padding: var(--space-6) var(--space-7) var(--space-7);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .activity-card,
+    .activity-card__img { transition: none; }
+    .activity-card:hover { transform: none; }
+    .activity-card:hover .activity-card__img { transform: none; }
+  }
+</style>

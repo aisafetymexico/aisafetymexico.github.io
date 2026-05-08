@@ -1,0 +1,203 @@
+---
+/**
+ * FeatureGrid — responsive grid of feature/pillar cards.
+ *
+ * Spec:
+ *  - Task #10 props: `{ items: Array<{icon?, title, description, href?}> }`
+ *    — `icon` is now ignored; numbering carries the visual anchor.
+ *  - docs/DESIGN-SYSTEM.md §6.4 — feature/pillar tile pattern.
+ *  - docs/RAND-AESTHETIC.md §8 — typographic numeral + chevron affordance,
+ *    no decorative emoji disc.
+ *  - Mobile-first: 1 column → 2 cols at 768 → 4 cols at 1024.
+ *  - When `href` is provided the whole tile becomes a link with hover state
+ *    and a copper chevron (›) at the bottom acts as the affordance.
+ *
+ * Visual anchor: each card carries a 2-digit numeral (`01` … `04`) in the
+ * display serif. The numeral is generated automatically from the item's
+ * 1-based index, so callers no longer need to provide an icon.
+ */
+
+export interface FeatureItem {
+  /** @deprecated kept for backwards compatibility; not rendered. */
+  icon?: string;
+  title: string;
+  description: string;
+  href?: string;
+}
+
+export interface Props {
+  items: FeatureItem[];
+}
+
+const { items } = Astro.props;
+
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<ul class="feature-grid" role="list">
+  {items.map((item, idx) => (
+    <li class="feature-grid__item">
+      {item.href ? (
+        <a class="feature-grid__card feature-grid__card--linked" href={item.href}>
+          <span class="feature-grid__number" aria-hidden="true">{pad(idx + 1)}</span>
+          <h3 class="feature-grid__title">{item.title}</h3>
+          <p class="feature-grid__description">{item.description}</p>
+          <span class="feature-grid__chevron" aria-hidden="true">›</span>
+        </a>
+      ) : (
+        <div class="feature-grid__card">
+          <span class="feature-grid__number" aria-hidden="true">{pad(idx + 1)}</span>
+          <h3 class="feature-grid__title">{item.title}</h3>
+          <p class="feature-grid__description">{item.description}</p>
+        </div>
+      )}
+    </li>
+  ))}
+</ul>
+
+<style>
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .feature-grid__item {
+    display: flex;
+  }
+
+  .feature-grid__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-6);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition:
+      transform var(--transition),
+      box-shadow var(--transition),
+      border-color var(--transition);
+  }
+
+  .feature-grid__card--linked {
+    /* Reserve space below for the chevron affordance so descriptions never
+       collide with it. */
+    padding-bottom: calc(var(--space-6) + 1.6rem);
+  }
+
+  .feature-grid__card--linked:hover,
+  .feature-grid__card--linked:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-border-accent);
+    color: var(--color-text-primary);
+  }
+
+  /* Display-serif numeral that anchors the card visually. Replaces the
+     previous emoji disc. */
+  .feature-grid__number {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    color: var(--color-accent);
+    letter-spacing: -0.02em;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  .feature-grid__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+    margin: 0;
+  }
+
+  .feature-grid__description {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* Chevron affordance for linked cards — replaces the embedded "Saber más →"
+     marker that used to live in the description. Pinned to the bottom-right
+     so the type stack stays uncluttered. */
+  .feature-grid__chevron {
+    position: absolute;
+    right: var(--space-6);
+    bottom: var(--space-5);
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    color: var(--color-accent);
+    transition: transform var(--transition);
+  }
+
+  .feature-grid__card--linked:hover .feature-grid__chevron,
+  .feature-grid__card--linked:focus-visible .feature-grid__chevron {
+    transform: translateX(4px);
+  }
+
+  @media (min-width: 768px) {
+    .feature-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-6);
+    }
+    .feature-grid__card {
+      padding: var(--space-7);
+    }
+    .feature-grid__card--linked {
+      padding-bottom: calc(var(--space-7) + 1.6rem);
+    }
+    .feature-grid__number {
+      font-size: 2.8rem;
+    }
+    .feature-grid__chevron {
+      right: var(--space-7);
+      bottom: var(--space-6);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .feature-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-7);
+    }
+    .feature-grid__card {
+      padding: var(--space-8);
+    }
+    .feature-grid__card--linked {
+      padding-bottom: calc(var(--space-8) + 1.6rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .feature-grid__card {
+      transition: none;
+    }
+    .feature-grid__card--linked:hover,
+    .feature-grid__card--linked:focus-visible {
+      transform: none;
+    }
+    .feature-grid__chevron {
+      transition: none;
+    }
+    .feature-grid__card--linked:hover .feature-grid__chevron,
+    .feature-grid__card--linked:focus-visible .feature-grid__chevron {
+      transform: none;
+    }
+  }
+</style>

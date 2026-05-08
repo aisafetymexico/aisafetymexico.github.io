@@ -1,0 +1,328 @@
+---
+/**
+ * /projects/vigia — VIGÍA project deep-dive (ProjectPage template).
+ *
+ * Spec:
+ *   - docs/ARCHITECTURE.md §2 (`/projects/vigia` purpose, sections, CTA).
+ *   - docs/ARCHITECTURE.md §6 (ProjectPage template — hero, meta bar,
+ *     content sections, related projects, CTA).
+ *   - docs/CONTENT-MAP.md §1.6 — promote spotlight to full subpage.
+ *
+ * Sections (per ARCHITECTURE):
+ *   1. PageHero (with breadcrumb).
+ *   2. ProjectMetaBar (chips: badge, focus, status, team size).
+ *   3. Overview — what VIGÍA is, problem it solves.
+ *   4. Recognition — Special Recognition · AI Safety Collab 2025 callout.
+ *   5. Methodology / approach.
+ *   6. Team — 5 collaborators with roles.
+ *   7. External resources.
+ *   8. RelatedProjects — link to AI Safety Connect.
+ *   9. CtaSection — visit the platform.
+ */
+import { getEntry, getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import Callout from '../../components/Callout.astro';
+import FactList from '../../components/FactList.astro';
+import KeyFacts from '../../components/KeyFacts.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import CtaSection from '../../components/CtaSection.astro';
+
+const project = await getEntry('projects', 'vigia');
+if (!project) {
+  throw new Error('VIGÍA project entry missing in src/content/projects/vigia.md');
+}
+const data = project.data;
+
+// Meta bar chips (KeyFacts component) — type-only, no leading glyph.
+const metaChips = [
+  { text: 'Special Recognition · AI Safety Collab 2025' },
+  { text: 'Gobernanza · Soberanía digital' },
+  { text: 'México · Latinoamérica' },
+  { text: `Equipo de ${data.team.length} colaboradores` },
+  { text: 'En desarrollo activo' },
+];
+
+// Team as FactList — eyebrow label / value pairs.
+const teamItems = data.team.map((person) => ({
+  label: person.role ?? 'Colaborador/a',
+  value: person.name,
+}));
+
+// External resources — same label/value treatment as the team list.
+const resourceItems = [
+  data.externalUrl
+    ? { label: 'Plataforma', value: 'vigia-observatorio.github.io' }
+    : null,
+  { label: 'Aliado fundacional', value: 'ENAIS — curso AI Governance' },
+  { label: 'Reconocimiento', value: 'AI Safety Collab 2025' },
+].filter(Boolean) as { label: string; value: string }[];
+
+// Related project — AI Safety Connect
+const allProjects = await getCollection('projects', ({ data: d }: { data: { draft?: boolean } }) => d.draft !== true);
+const related = allProjects
+  .filter((p) => (p.data.slug ?? p.slug) !== 'vigia')
+  .slice(0, 1)
+  .map((p) => {
+    const slug = p.data.slug ?? p.slug;
+    return {
+      title: p.data.title,
+      badge: p.data.badge,
+      description: p.data.summary,
+      image: p.data.cover,
+      href: `/projects/${slug}`,
+    };
+  });
+
+const breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Proyectos', href: '/projects' },
+    { label: 'VIGÍA' },
+  ],
+};
+---
+
+<BaseLayout
+  title="VIGÍA · Proyecto · AI Safety Mexico"
+  description="VIGÍA es la plataforma de AI Safety Mexico para el análisis de gobernanza de IA y soberanía digital en México y América Latina. Special Recognition · AI Safety Collab 2025."
+  pathname="/projects/vigia"
+  ogImage={data.cover?.src as string | undefined}
+>
+  <Header slot="header" currentPath="/projects" />
+
+  <PageHero
+    eyebrow="Proyecto insignia"
+    title="VIGÍA"
+    description="Plataforma para el análisis de gobernanza de IA y soberanía digital en México y América Latina."
+    breadcrumb={breadcrumb}
+  />
+
+  {/* Meta bar */}
+  <section class="section section--compact section--cream" aria-label="Información del proyecto">
+    <div class="container">
+      <KeyFacts facts={metaChips} />
+    </div>
+  </section>
+
+  {/* Overview */}
+  <section class="section section--base" aria-labelledby="vigia-overview-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Resumen"
+        title="¿Qué es VIGÍA?"
+        id="vigia-overview-heading"
+      />
+      <div class="prose">
+        <p>
+          <strong>VIGÍA</strong> — <em>Valoración de Impactos Gubernamentales de
+          Inteligencia Artificial</em> — es una plataforma en desarrollo que mapea,
+          analiza y comunica decisiones públicas sobre inteligencia artificial en
+          México y América Latina. Surge como parte de los proyectos del curso de
+          AI Governance impartido por <strong>ENAIS</strong> y AI Safety Mexico, y
+          se ha consolidado como una iniciativa propia con proyección regional.
+        </p>
+        <p>
+          El observatorio busca cerrar una brecha concreta: no existe una fuente
+          pública, sistemática y auditable que documente cómo los gobiernos
+          latinoamericanos toman decisiones sobre IA — qué adquieren, qué regulan,
+          qué despliegan y bajo qué supervisión. VIGÍA articula esa información
+          para investigadores, periodistas, sociedad civil y tomadores de decisión.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* Recognition */}
+  <section class="section section--warm" aria-labelledby="vigia-recognition-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Reconocimiento"
+        title="Special Recognition · AI Safety Collab 2025"
+        id="vigia-recognition-heading"
+      />
+      <Callout tone="highlight">
+        <p>
+          VIGÍA recibió el <strong>Special Recognition</strong> en
+          <strong>AI Safety Collab 2025</strong>, programa global de proyectos de
+          investigación en seguridad de IA. El reconocimiento valida el enfoque
+          regional del proyecto y abre puertas para futuras colaboraciones
+          internacionales.
+        </p>
+      </Callout>
+    </div>
+  </section>
+
+  {/* Methodology */}
+  <section class="section section--base" aria-labelledby="vigia-methodology-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Metodología"
+        title="Cómo trabajamos"
+        description="VIGÍA combina rastreo documental, análisis cualitativo y comunicación estructurada."
+        id="vigia-methodology-heading"
+      />
+      <div class="prose">
+        <p>
+          La plataforma articula tres capas de trabajo: (1) <strong>rastreo
+          documental</strong> de adquisiciones, regulaciones, consultas públicas y
+          despliegues gubernamentales que involucran sistemas de IA; (2)
+          <strong>análisis cualitativo</strong> de cada caso bajo categorías de
+          gobernanza, riesgo y rendición de cuentas; y (3) <strong>comunicación
+          estructurada</strong> en formatos accesibles para audiencias técnicas y
+          no técnicas — fichas, líneas de tiempo y resúmenes interpretativos.
+        </p>
+        <p>
+          El enfoque privilegia la <strong>verificabilidad</strong>: cada caso
+          documentado en VIGÍA enlaza a su fuente primaria (boletines oficiales,
+          actas, comunicados) y se acompaña de una nota metodológica sobre cómo se
+          obtuvo y clasificó la información.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* Team */}
+  <section class="section section--cream" aria-labelledby="vigia-team-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Equipo"
+        title="Quiénes lo construyen"
+        description="VIGÍA es un esfuerzo colaborativo de cinco personas con trayectorias en políticas públicas, ingeniería de datos e investigación en seguridad de IA."
+        id="vigia-team-heading"
+      />
+      <FactList items={teamItems} />
+    </div>
+  </section>
+
+  {/* Resources */}
+  <section class="section section--base" aria-labelledby="vigia-resources-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Recursos"
+        title="Enlaces y referencias"
+        id="vigia-resources-heading"
+      />
+      <FactList items={resourceItems} />
+
+      {data.externalUrl && (
+        <p class="vigia-link">
+          <a class="vigia-link__cta" href={data.externalUrl} target="_blank" rel="noopener noreferrer">
+            Visitar la plataforma VIGÍA
+            <span aria-hidden="true">↗</span>
+          </a>
+        </p>
+      )}
+    </div>
+  </section>
+
+  {/* Related projects */}
+  {related.length > 0 && (
+    <section class="section section--warm" aria-labelledby="vigia-related-heading">
+      <div class="container">
+        <SectionHeading
+          eyebrow="Sigue explorando"
+          title="Otros proyectos"
+          id="vigia-related-heading"
+        />
+        <div class="vigia-related-grid">
+          {related.map((card) => (
+            <ProjectCard
+              title={card.title}
+              badge={card.badge}
+              description={card.description}
+              image={card.image}
+              href={card.href}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <CtaSection
+    title="Conoce VIGÍA en vivo"
+    description="La plataforma se actualiza con cada nuevo caso documentado. Visítala para explorar el observatorio."
+    ctaLabel="Ir a vigia-observatorio.github.io"
+    ctaHref={data.externalUrl ?? 'https://vigia-observatorio.github.io/index-en.html'}
+    ctaExternal={true}
+  />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .prose p {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--space-4);
+  }
+
+  .prose p:last-child {
+    margin-bottom: 0;
+  }
+
+  .prose strong {
+    color: var(--color-text-heading);
+    font-weight: var(--fw-semibold);
+  }
+
+  .vigia-link {
+    margin: var(--space-6) 0 0;
+  }
+
+  .vigia-link__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-accent);
+    color: var(--color-text-on-dark);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-semibold);
+    text-decoration: none;
+    letter-spacing: var(--ls-wide);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-cta);
+    transition:
+      background var(--transition),
+      transform var(--transition),
+      box-shadow var(--transition);
+  }
+
+  .vigia-link__cta:hover,
+  .vigia-link__cta:focus-visible {
+    background: var(--color-accent-hover);
+    color: var(--color-text-on-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .vigia-related-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+  }
+
+  @media (min-width: 768px) {
+    .vigia-related-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-8);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vigia-link__cta {
+      transition: none;
+    }
+    .vigia-link__cta:hover {
+      transform: none;
+    }
+  }
+</style>

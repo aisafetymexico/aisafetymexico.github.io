@@ -1,0 +1,114 @@
+---
+/**
+ * StatBar — full-width row of impact stats. Each stat = a big Playfair number
+ * + a small uppercase label underneath.
+ *
+ * Spec:
+ *  - Task #10 props: `{ stats: Array<{number, label}> }`.
+ *  - docs/DESIGN-SYSTEM.md §6.4 / §2.4 — `--fs-stat` for numbers.
+ *  - Surface: navy gradient (`--gradient-navy-impact`) — Type C impact band.
+ *  - Mobile-first: 2 columns on phones, 4 columns on desktop.
+ */
+
+export interface Stat {
+  number: string;
+  label: string;
+}
+
+export interface Props {
+  stats: Stat[];
+}
+
+const { stats } = Astro.props;
+---
+
+<section class="stat-bar" role="region" aria-label="Indicadores de impacto">
+  <div class="stat-bar__inner">
+    <ul class="stat-bar__grid" role="list">
+      {stats.map((stat) => (
+        <li class="stat-bar__item">
+          <span class="stat-bar__number">{stat.number}</span>
+          <span class="stat-bar__label">{stat.label}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .stat-bar {
+    position: relative;
+    background: var(--gradient-navy-impact);
+    color: var(--color-text-on-dark);
+    padding-block: var(--space-12);
+    box-shadow: var(--inset-section-stats);
+  }
+
+  .stat-bar__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  .stat-bar__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6) var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .stat-bar__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-2);
+  }
+
+  .stat-bar__number {
+    font-family: var(--font-display);
+    font-size: var(--fs-stat);
+    font-weight: var(--fw-extrabold);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-tight);
+    color: var(--color-accent-secondary);
+  }
+
+  .stat-bar__label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-medium);
+    line-height: 1.3;
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-text-on-dark-muted);
+    max-width: 22ch;
+  }
+
+  @media (min-width: 480px) {
+    .stat-bar__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .stat-bar {
+      padding-block: var(--space-14);
+    }
+    .stat-bar__grid {
+      gap: var(--space-8);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .stat-bar {
+      padding-block: var(--space-16);
+    }
+    .stat-bar__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -1,0 +1,190 @@
+---
+/**
+ * Tabs — accessible tab interface (WAI-ARIA Authoring Practices, "Tabs").
+ *
+ * Spec:
+ *  - docs/DESIGN-SYSTEM.md §6.5 (interactive components, vanilla JS only).
+ *
+ * A11y guarantees:
+ *  - role="tablist" / role="tab" / role="tabpanel".
+ *  - aria-selected on the active tab; tabindex -1 on inactive tabs (roving).
+ *  - aria-controls / aria-labelledby pair tabs to panels.
+ *  - Keyboard: ArrowLeft/ArrowRight cycle, Home/End jump, automatic activation.
+ *  - Inactive panels are `hidden`.
+ *  - Focus ring respects `:focus-visible`.
+ *
+ * Usage:
+ *   <Tabs tabs={[{ id: 'a', label: 'Tab A' }, { id: 'b', label: 'Tab B' }]}>
+ *     <Fragment slot="a">Content A</Fragment>
+ *     <Fragment slot="b">Content B</Fragment>
+ *   </Tabs>
+ *
+ * Props:
+ *  - tabs: Array<{ id: string, label: string }>
+ *  - label?: string (aria-label for the tablist)
+ *  - id?: string
+ */
+export interface Props {
+  tabs: Array<{ id: string; label: string }>;
+  label?: string;
+  id?: string;
+}
+
+const { tabs, label = 'Pestañas', id } = Astro.props;
+const rootId = id || `tabs-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+{tabs.length > 0 && (
+  <div class="tabs" id={rootId} data-tabs>
+    <div class="tabs__list" role="tablist" aria-label={label}>
+      {tabs.map((tab, idx) => (
+        <button
+          type="button"
+          role="tab"
+          id={`${rootId}-tab-${tab.id}`}
+          class:list={['tabs__tab', { 'is-active': idx === 0 }]}
+          aria-selected={idx === 0 ? 'true' : 'false'}
+          aria-controls={`${rootId}-panel-${tab.id}`}
+          tabindex={idx === 0 ? 0 : -1}
+          data-tab-id={tab.id}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+
+    <div class="tabs__panels">
+      {tabs.map((tab, idx) => (
+        <div
+          role="tabpanel"
+          id={`${rootId}-panel-${tab.id}`}
+          class="tabs__panel"
+          aria-labelledby={`${rootId}-tab-${tab.id}`}
+          tabindex="0"
+          data-panel-id={tab.id}
+          hidden={idx !== 0}
+        >
+          <slot name={tab.id} />
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+<script>
+  (() => {
+    const ATTR = 'data-tabs-bound';
+
+    const init = (root: HTMLElement) => {
+      if (root.getAttribute(ATTR) === '1') return;
+      root.setAttribute(ATTR, '1');
+
+      const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+      const panels = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+      if (tabs.length === 0 || panels.length === 0) return;
+
+      const activate = (idx: number, focus = true) => {
+        const n = ((idx % tabs.length) + tabs.length) % tabs.length;
+        tabs.forEach((tab, i) => {
+          const active = i === n;
+          tab.classList.toggle('is-active', active);
+          tab.setAttribute('aria-selected', active ? 'true' : 'false');
+          tab.setAttribute('tabindex', active ? '0' : '-1');
+          if (active && focus) tab.focus();
+        });
+        const activeId = tabs[n].getAttribute('data-tab-id');
+        panels.forEach((panel) => {
+          const match = panel.getAttribute('data-panel-id') === activeId;
+          panel.hidden = !match;
+        });
+      };
+
+      tabs.forEach((tab, idx) => {
+        tab.addEventListener('click', () => activate(idx, false));
+        tab.addEventListener('keydown', (e: KeyboardEvent) => {
+          switch (e.key) {
+            case 'ArrowRight':
+              e.preventDefault();
+              activate(idx + 1);
+              break;
+            case 'ArrowLeft':
+              e.preventDefault();
+              activate(idx - 1);
+              break;
+            case 'Home':
+              e.preventDefault();
+              activate(0);
+              break;
+            case 'End':
+              e.preventDefault();
+              activate(tabs.length - 1);
+              break;
+          }
+        });
+      });
+    };
+
+    const bootstrap = () => {
+      document.querySelectorAll<HTMLElement>('[data-tabs]').forEach(init);
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootstrap);
+    } else {
+      bootstrap();
+    }
+  })();
+</script>
+
+<style>
+  .tabs {
+    width: 100%;
+  }
+
+  .tabs__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1, 4px);
+    border-bottom: 1px solid var(--color-border, var(--border, #E2DED6));
+    margin-bottom: var(--space-6, 24px);
+  }
+
+  .tabs__tab {
+    appearance: none;
+    background: transparent;
+    border: none;
+    padding: var(--space-3, 12px) var(--space-5, 20px);
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: var(--fs-body, 1rem);
+    font-weight: var(--fw-semibold, 600);
+    color: var(--color-text-secondary, var(--text-light, #6A6A7A));
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px; /* overlap the list border */
+    transition: color var(--transition, 0.25s ease), border-color var(--transition, 0.25s ease), background var(--transition, 0.25s ease);
+    border-radius: var(--radius-sm, 6px) var(--radius-sm, 6px) 0 0;
+  }
+  .tabs__tab:hover {
+    color: var(--color-text-heading, var(--navy, #1B2340));
+    background: var(--color-accent-soft, var(--copper-tint, rgba(196, 133, 74, 0.08)));
+  }
+  .tabs__tab:focus-visible {
+    outline: 2px solid var(--color-focus-ring, var(--copper, #C4854A));
+    outline-offset: 2px;
+  }
+  .tabs__tab.is-active {
+    color: var(--color-text-heading, var(--navy, #1B2340));
+    border-bottom-color: var(--color-accent, var(--copper, #C4854A));
+  }
+
+  .tabs__panel {
+    color: var(--color-text-primary, var(--text, #3A3A4A));
+    line-height: var(--lh-relaxed, 1.7);
+  }
+  .tabs__panel:focus-visible {
+    outline: 2px solid var(--color-focus-ring, var(--copper, #C4854A));
+    outline-offset: 4px;
+    border-radius: var(--radius-sm, 6px);
+  }
+  .tabs__panel[hidden] { display: none; }
+</style>

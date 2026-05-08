@@ -1,0 +1,362 @@
+---
+/**
+ * Footer — global site footer.
+ *
+ * Spec: docs/ARCHITECTURE.md §4.
+ *
+ * Layout:
+ *   ┌────────────────────────────────────────────────────────┐
+ *   │  Brand row: logo + name + tagline + social icons       │
+ *   ├────────────────────────────────────────────────────────┤
+ *   │  Col 1: Explora │ Col 2: Trabajo │ Col 3: Conecta      │
+ *   ├────────────────────────────────────────────────────────┤
+ *   │  Legal row: © year · org name                          │
+ *   └────────────────────────────────────────────────────────┘
+ *
+ * Props:
+ *  - social: optional override of social icons (default: LinkedIn + Instagram).
+ *  - tagline: short institutional tagline shown below the wordmark.
+ *  - year: override displayed copyright year (defaults to current year).
+ *
+ * A11y:
+ *  - <footer role="contentinfo"> via the implicit role.
+ *  - Each column nav has its own aria-label.
+ *  - Social icons have aria-label; SVGs are aria-hidden.
+ */
+import type { SocialLink } from '../lib/types';
+
+export interface FooterColumn {
+  heading: string;
+  items: { label: string; href: string; external?: boolean }[];
+}
+
+export interface Props {
+  social?: SocialLink[];
+  tagline?: string;
+  year?: number;
+  logoSrc?: string;
+  logoAlt?: string;
+  siteName?: string;
+}
+
+const DEFAULT_COLUMNS: FooterColumn[] = [
+  {
+    heading: 'Explora',
+    items: [
+      { label: 'Inicio', href: '/' },
+      { label: 'Sobre nosotros', href: '/about' },
+      { label: 'Equipo', href: '/team' },
+      { label: 'Actividades', href: '/activities' },
+    ],
+  },
+  {
+    heading: 'Trabajo',
+    items: [
+      { label: 'Investigación', href: '/research' },
+      { label: 'Programas', href: '/programs' },
+      { label: 'Proyectos', href: '/projects' },
+      { label: 'Global South Challenge', href: '/global-south-challenge' },
+    ],
+  },
+  {
+    heading: 'Conecta',
+    items: [
+      { label: 'Colabora', href: '/get-involved' },
+      { label: 'Contacto', href: '/contact' },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/company/ai-safety-mexico/', external: true },
+      { label: 'Instagram', href: 'https://www.instagram.com/aisafetymx/', external: true },
+    ],
+  },
+];
+
+const DEFAULT_SOCIAL: SocialLink[] = [
+  { name: 'LinkedIn', href: 'https://www.linkedin.com/company/ai-safety-mexico/', icon: 'linkedin' },
+  { name: 'Instagram', href: 'https://www.instagram.com/aisafetymx/', icon: 'instagram' },
+];
+
+const {
+  social = DEFAULT_SOCIAL,
+  tagline = 'Investigación, educación y gobernanza de IA en México y América Latina.',
+  year = new Date().getFullYear(),
+  logoSrc = '/images/aisafetymx_logo.webp',
+  logoAlt = 'AI Safety Mexico',
+  siteName = 'AI Safety Mexico',
+} = Astro.props;
+
+const columns = DEFAULT_COLUMNS;
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+
+    <!-- Brand row -->
+    <div class="site-footer__brand">
+      <a class="site-footer__brand-link" href="/" aria-label={`${siteName} — Inicio`}>
+        <img
+          class="site-footer__logo"
+          src={logoSrc}
+          alt={logoAlt}
+          width="40"
+          height="40"
+          loading="lazy"
+          decoding="async"
+        />
+        <span class="site-footer__name">{siteName}</span>
+      </a>
+
+      {tagline && <p class="site-footer__tagline">{tagline}</p>}
+
+      {social.length > 0 && (
+        <ul class="site-footer__social" aria-label="Redes sociales">
+          {social.map(s => (
+            <li>
+              <a
+                class="site-footer__social-icon"
+                href={s.href}
+                aria-label={s.name}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {s.icon === 'linkedin' && (
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      fill="currentColor"
+                      d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5.001zM3 9h4v12H3V9zm7 0h3.84v1.64h.05c.53-1 1.85-2.05 3.81-2.05 4.07 0 4.82 2.68 4.82 6.16V21h-4v-5.34c0-1.27-.02-2.91-1.77-2.91-1.77 0-2.04 1.39-2.04 2.82V21h-4V9z"
+                    />
+                  </svg>
+                )}
+                {s.icon === 'instagram' && (
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      fill="currentColor"
+                      d="M12 2.2c3.2 0 3.58.012 4.85.07 1.17.054 1.8.249 2.22.413.56.217.96.477 1.38.896.42.42.679.819.896 1.38.164.42.36 1.05.413 2.22.058 1.27.07 1.65.07 4.85s-.012 3.58-.07 4.85c-.054 1.17-.249 1.8-.413 2.22-.217.56-.477.96-.896 1.38-.42.42-.819.679-1.38.896-.42.164-1.05.36-2.22.413-1.27.058-1.65.07-4.85.07s-3.58-.012-4.85-.07c-1.17-.054-1.8-.249-2.22-.413-.56-.217-.96-.477-1.38-.896-.42-.42-.679-.819-.896-1.38-.164-.42-.36-1.05-.413-2.22C2.212 15.58 2.2 15.2 2.2 12s.012-3.58.07-4.85c.054-1.17.249-1.8.413-2.22.217-.56.477-.96.896-1.38.42-.42.819-.679 1.38-.896.42-.164 1.05-.36 2.22-.413C8.42 2.212 8.8 2.2 12 2.2zm0 1.8c-3.146 0-3.498.012-4.73.068-1.022.046-1.578.217-1.948.36-.49.19-.84.418-1.207.785-.367.367-.595.717-.785 1.207-.143.37-.314.926-.36 1.948C2.812 8.502 2.8 8.854 2.8 12s.012 3.498.068 4.73c.046 1.022.217 1.578.36 1.948.19.49.418.84.785 1.207.367.367.717.595 1.207.785.37.143.926.314 1.948.36 1.232.056 1.584.068 4.73.068s3.498-.012 4.73-.068c1.022-.046 1.578-.217 1.948-.36.49-.19.84-.418 1.207-.785.367-.367.595-.717.785-1.207.143-.37.314-.926.36-1.948.056-1.232.068-1.584.068-4.73s-.012-3.498-.068-4.73c-.046-1.022-.217-1.578-.36-1.948-.19-.49-.418-.84-.785-1.207-.367-.367-.717-.595-1.207-.785-.37-.143-.926-.314-1.948-.36C15.498 4.012 15.146 4 12 4zm0 3.2a4.8 4.8 0 1 1 0 9.6 4.8 4.8 0 0 1 0-9.6zm0 1.8a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.05-3.05a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3z"
+                    />
+                  </svg>
+                )}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+
+    <!-- Edge divider -->
+    <div class="site-footer__divider" aria-hidden="true"></div>
+
+    <!-- 3-column nav -->
+    <div class="site-footer__cols">
+      {columns.map(col => (
+        <nav class="site-footer__col" aria-label={col.heading}>
+          <h2 class="site-footer__col-heading">{col.heading}</h2>
+          <ul class="site-footer__col-list">
+            {col.items.map(item => (
+              <li>
+                <a
+                  class="site-footer__link"
+                  href={item.href}
+                  {...(item.external
+                    ? { target: '_blank', rel: 'noopener noreferrer' }
+                    : {})}
+                >{item.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))}
+    </div>
+
+    <!-- Legal row -->
+    <div class="site-footer__legal">
+      <p class="site-footer__copy">
+        © {year} {siteName}. Todos los derechos reservados.
+      </p>
+    </div>
+
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-bg-impact);
+    color: var(--color-text-on-dark-muted);
+    padding: var(--space-12) 0 var(--space-8);
+    box-shadow: var(--inset-section-impact);
+  }
+
+  .site-footer__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding-inline: var(--container-padding-md);
+  }
+
+  /* Brand row */
+  .site-footer__brand {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    column-gap: var(--space-5);
+    row-gap: var(--space-3);
+    margin-bottom: var(--space-8);
+  }
+
+  .site-footer__brand-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-on-dark);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+  }
+  .site-footer__brand-link:hover { color: var(--color-text-on-dark); }
+  .site-footer__brand-link:focus-visible {
+    outline: 2px solid var(--color-accent-secondary);
+    outline-offset: 4px;
+  }
+
+  .site-footer__logo {
+    height: 40px;
+    width: auto;
+  }
+
+  .site-footer__name {
+    font-family: var(--font-display);
+    font-weight: var(--fw-bold);
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    color: var(--color-text-on-dark);
+    white-space: nowrap;
+  }
+
+  .site-footer__tagline {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    color: var(--white-text-soft);
+    line-height: var(--lh-normal);
+    max-width: 56ch;
+  }
+
+  .site-footer__social {
+    display: flex;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-footer__social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+    transition: background var(--transition), color var(--transition);
+  }
+  .site-footer__social-icon:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: var(--color-text-on-dark);
+  }
+  .site-footer__social-icon:focus-visible {
+    outline: 2px solid var(--color-accent-secondary);
+    outline-offset: 3px;
+  }
+  .site-footer__social-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Edge divider — subtle warm accent */
+  .site-footer__divider {
+    height: 1px;
+    background: var(--gradient-edge-accent);
+    margin: 0 0 var(--space-8);
+    opacity: 0.55;
+  }
+
+  /* Columns */
+  .site-footer__cols {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    margin-bottom: var(--space-9);
+  }
+
+  @media (min-width: 768px) {
+    .site-footer__cols {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-10);
+    }
+  }
+
+  .site-footer__col-heading {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent-secondary);
+    margin: 0 0 var(--space-4);
+  }
+
+  .site-footer__col-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .site-footer__link {
+    color: var(--white-text-muted);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    text-decoration: none;
+    transition: color var(--transition);
+    border-radius: var(--radius-xs);
+  }
+  .site-footer__link:hover {
+    color: var(--color-text-on-dark);
+  }
+  .site-footer__link:focus-visible {
+    outline: 2px solid var(--color-accent-secondary);
+    outline-offset: 3px;
+  }
+
+  /* Legal row */
+  .site-footer__legal {
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    padding-top: var(--space-5);
+  }
+  .site-footer__copy {
+    margin: 0;
+    color: var(--white-text-faint);
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    line-height: var(--lh-normal);
+  }
+
+  /* Mobile brand row stacks vertically */
+  @media (max-width: 767.98px) {
+    .site-footer__brand {
+      grid-template-columns: 1fr;
+      justify-items: start;
+    }
+    .site-footer__tagline {
+      grid-column: 1;
+    }
+    .site-footer__social {
+      grid-column: 1;
+    }
+  }
+
+  @media (max-width: 479.98px) {
+    .site-footer__inner {
+      padding-inline: var(--container-padding);
+    }
+  }
+</style>

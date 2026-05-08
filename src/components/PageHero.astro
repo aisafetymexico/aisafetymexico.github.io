@@ -1,0 +1,145 @@
+---
+/**
+ * PageHero — Interior page variant.
+ *
+ * Spec: docs/DESIGN-SYSTEM.md §6.2; Task #8.
+ *
+ * Pattern reference (docs/INSPIRATION.md):
+ *  - A1 (single editorial headline + supporting paragraph)
+ *  - A8 (solid navy band — high contrast for wayfinding on sub-pages)
+ *
+ * Compact navy band for sub-pages. Renders the optional Breadcrumb above
+ * the eyebrow → h1 → description stack. No CTAs, no image.
+ *
+ * Props:
+ *  - eyebrow?:     small uppercase wayfinding label (e.g. section name)
+ *  - title:        page H1 (Playfair, --fs-h1)
+ *  - description?: lead paragraph
+ *  - breadcrumb?:  ordered list of breadcrumb items; rendered via Breadcrumb
+ *
+ * Tokens only — no literal hex values, no new hues introduced.
+ */
+import Breadcrumb from './Breadcrumb.astro';
+import type { Breadcrumb as BreadcrumbProp } from '../lib/types';
+
+export interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  breadcrumb?: BreadcrumbProp;
+}
+
+const { eyebrow, title, description, breadcrumb } = Astro.props;
+
+if (!title) throw new Error('PageHero: `title` is required.');
+
+const hasBreadcrumb = breadcrumb && breadcrumb.items && breadcrumb.items.length > 0;
+---
+
+<section class="page-hero" aria-labelledby="page-hero-title">
+  {hasBreadcrumb && (
+    <div class="page-hero__breadcrumb">
+      <Breadcrumb items={breadcrumb!.items} />
+    </div>
+  )}
+
+  <div class="page-hero__inner">
+    {eyebrow && (
+      <p class="page-hero__eyebrow role-eyebrow">{eyebrow}</p>
+    )}
+
+    <h1 id="page-hero-title" class="page-hero__title">{title}</h1>
+
+    {description && (
+      <p class="page-hero__description">{description}</p>
+    )}
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    background-color: var(--color-bg-overlay-dark);
+    color: var(--color-text-on-dark);
+    padding-block: var(--space-9) var(--space-8);
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .page-hero {
+      padding-block: var(--space-12) var(--space-10);
+    }
+  }
+
+  /* Breadcrumb sits above the eyebrow band; keep it within the same
+     container width and align to the left for natural reading order. */
+  .page-hero__breadcrumb {
+    text-align: start;
+    margin-bottom: var(--space-4);
+  }
+
+  /* Override breadcrumb tones for use on the dark navy band. */
+  .page-hero__breadcrumb :global(.breadcrumb) {
+    color: var(--color-text-on-dark-muted);
+    padding-block: 0;
+  }
+  .page-hero__breadcrumb :global(.breadcrumb__link) {
+    color: var(--color-accent-secondary);
+  }
+  .page-hero__breadcrumb :global(.breadcrumb__link:hover),
+  .page-hero__breadcrumb :global(.breadcrumb__link:focus-visible) {
+    color: var(--color-text-on-dark);
+  }
+  .page-hero__breadcrumb :global(.breadcrumb__current) {
+    color: var(--color-text-on-dark);
+  }
+  .page-hero__breadcrumb :global(.breadcrumb__sep) {
+    color: var(--color-text-on-dark-muted);
+  }
+  .page-hero__breadcrumb :global(.breadcrumb__back) {
+    color: var(--color-accent-secondary);
+  }
+  .page-hero__breadcrumb :global(.breadcrumb__back:hover),
+  .page-hero__breadcrumb :global(.breadcrumb__back:focus-visible) {
+    color: var(--color-text-on-dark);
+  }
+
+  .page-hero__inner {
+    width: 100%;
+    max-width: var(--container-narrow);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 480px) {
+    .page-hero__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  .page-hero__eyebrow {
+    /* Gold reads stronger than copper on navy (per §1.3) */
+    color: var(--color-accent-secondary);
+    margin-bottom: var(--space-3);
+  }
+
+  .page-hero__title {
+    font-family: var(--font-display);
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-h1);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-tight);
+    color: var(--color-text-on-dark);
+    margin-bottom: var(--space-3);
+  }
+
+  .page-hero__description {
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-regular);
+    line-height: var(--lh-loose);
+    color: var(--white-text-strong);
+    max-width: 640px;
+    margin-inline: auto;
+    margin-bottom: 0;
+  }
+</style>

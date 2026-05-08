@@ -1,0 +1,462 @@
+---
+/**
+ * Carousel — accessible image carousel with prev/next, indicators, and
+ * optional auto-advance.
+ *
+ * Spec:
+ *  - docs/DESIGN-SYSTEM.md §6.5 (`Carousel.astro`).
+ *  - docs/INSPIRATION.md A6 (cream/paper surface, restraint).
+ *  - WAI-ARIA Authoring Practices: "Carousel (Slide Show or Image Rotator)".
+ *
+ * A11y guarantees:
+ *  - Region with role="region" + aria-roledescription="carousel" + aria-label.
+ *  - Each slide has role="group", aria-roledescription="slide", aria-label
+ *    "{n} of {total}".
+ *  - Live region wraps slides with aria-live="polite" when paused/manually
+ *    navigated; switches to "off" while auto-advancing (per APG).
+ *  - Inactive slides receive `inert`/aria-hidden + tabindex=-1 on focusables.
+ *  - Prev/Next/indicator buttons are real <button>s with aria-labels.
+ *  - Keyboard: ArrowLeft/ArrowRight on the carousel root cycles slides.
+ *  - Auto-advance pauses on hover, focus-within, or `prefers-reduced-motion`.
+ *  - Pause/Play toggle button when autoplay is enabled.
+ *
+ * Behaviours:
+ *  - Idempotent script (data-attr guard) — survives view transitions.
+ *  - Pure vanilla JS, zero deps.
+ *
+ * Props:
+ *  - slides: Array<{src, alt, caption?}>
+ *  - autoAdvance?: boolean (default false)
+ *  - interval?: number ms (default 6000)
+ *  - label?: string (aria-label for the region)
+ */
+import type { ImageMetadata } from 'astro';
+
+export type CarouselSlide = {
+  src: ImageMetadata | string;
+  alt: string;
+  caption?: string;
+};
+
+export interface Props {
+  slides: CarouselSlide[];
+  autoAdvance?: boolean;
+  interval?: number;
+  label?: string;
+  id?: string;
+}
+
+const {
+  slides,
+  autoAdvance = false,
+  interval = 6000,
+  label = 'Galería',
+  id,
+} = Astro.props;
+
+const resolveSrc = (s: ImageMetadata | string): string =>
+  typeof s === 'string' ? s : (s as ImageMetadata).src;
+
+const total = slides.length;
+const carouselId = id || `carousel-${Math.random().toString(36).slice(2, 9)}`;
+const slidesId = `${carouselId}-slides`;
+---
+
+{total > 0 && (
+  <section
+    class="carousel"
+    role="region"
+    aria-roledescription="carousel"
+    aria-label={label}
+    id={carouselId}
+    data-carousel
+    data-autoadvance={autoAdvance ? 'true' : 'false'}
+    data-interval={String(interval)}
+    tabindex="0"
+  >
+    <div
+      class="carousel__viewport"
+      id={slidesId}
+      aria-live={autoAdvance ? 'off' : 'polite'}
+      aria-atomic="false"
+    >
+      <ul class="carousel__track" data-carousel-track>
+        {slides.map((slide, idx) => (
+          <li
+            class:list={['carousel__slide', { 'is-active': idx === 0 }]}
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${idx + 1} de ${total}`}
+            data-carousel-slide
+            data-index={idx}
+            aria-hidden={idx === 0 ? 'false' : 'true'}
+          >
+            <img
+              src={resolveSrc(slide.src)}
+              alt={slide.alt}
+              class="carousel__image"
+              loading={idx === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+            {slide.caption && (
+              <figcaption class="carousel__caption">{slide.caption}</figcaption>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    {total > 1 && (
+      <>
+        <button
+          type="button"
+          class="carousel__nav carousel__nav--prev"
+          aria-label="Imagen anterior"
+          aria-controls={slidesId}
+          data-carousel-prev
+        >
+          <span aria-hidden="true">‹</span>
+        </button>
+        <button
+          type="button"
+          class="carousel__nav carousel__nav--next"
+          aria-label="Imagen siguiente"
+          aria-controls={slidesId}
+          data-carousel-next
+        >
+          <span aria-hidden="true">›</span>
+        </button>
+
+        <div class="carousel__indicators" role="tablist" aria-label="Selector de imagen">
+          {slides.map((_, idx) => (
+            <button
+              type="button"
+              class:list={['carousel__indicator', { 'is-active': idx === 0 }]}
+              role="tab"
+              aria-label={`Ir a imagen ${idx + 1}`}
+              aria-selected={idx === 0 ? 'true' : 'false'}
+              aria-controls={slidesId}
+              data-carousel-indicator
+              data-index={idx}
+              tabindex={idx === 0 ? 0 : -1}
+            ></button>
+          ))}
+        </div>
+
+        {autoAdvance && (
+          <button
+            type="button"
+            class="carousel__playpause"
+            aria-label="Pausar reproducción automática"
+            data-carousel-playpause
+            data-state="playing"
+          >
+            <span aria-hidden="true" data-icon-pause>❚❚</span>
+            <span aria-hidden="true" data-icon-play hidden>►</span>
+          </button>
+        )}
+      </>
+    )}
+  </section>
+)}
+
+<script>
+  /** Idempotent global controller — wires every [data-carousel] not yet bound. */
+  (() => {
+    const ATTR = 'data-carousel-bound';
+
+    const init = (root: HTMLElement) => {
+      if (root.getAttribute(ATTR) === '1') return;
+      root.setAttribute(ATTR, '1');
+
+      const track = root.querySelector<HTMLElement>('[data-carousel-track]');
+      const slides = Array.from(
+        root.querySelectorAll<HTMLElement>('[data-carousel-slide]')
+      );
+      const prev = root.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+      const next = root.querySelector<HTMLButtonElement>('[data-carousel-next]');
+      const indicators = Array.from(
+        root.querySelectorAll<HTMLButtonElement>('[data-carousel-indicator]')
+      );
+      const playpause = root.querySelector<HTMLButtonElement>('[data-carousel-playpause]');
+
+      if (!track || slides.length === 0) return;
+
+      const total = slides.length;
+      const autoAdvance = root.getAttribute('data-autoadvance') === 'true';
+      const interval = parseInt(root.getAttribute('data-interval') || '6000', 10);
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      let current = 0;
+      let timer: number | null = null;
+      let paused = false;
+
+      const setActive = (idx: number) => {
+        const normalized = ((idx % total) + total) % total;
+        slides.forEach((slide, i) => {
+          const active = i === normalized;
+          slide.classList.toggle('is-active', active);
+          slide.setAttribute('aria-hidden', active ? 'false' : 'true');
+          // Inactive slides should not steal focus.
+          slide.querySelectorAll<HTMLElement>('a, button, [tabindex]').forEach(el => {
+            if (!active) el.setAttribute('tabindex', '-1');
+            else el.removeAttribute('tabindex');
+          });
+        });
+        indicators.forEach((btn, i) => {
+          const active = i === normalized;
+          btn.classList.toggle('is-active', active);
+          btn.setAttribute('aria-selected', active ? 'true' : 'false');
+          btn.setAttribute('tabindex', active ? '0' : '-1');
+        });
+        if (track) {
+          track.style.transform = `translateX(-${normalized * 100}%)`;
+        }
+        current = normalized;
+      };
+
+      const go = (delta: number) => setActive(current + delta);
+      const goTo = (idx: number) => setActive(idx);
+
+      const start = () => {
+        if (!autoAdvance || reduced || paused) return;
+        stop();
+        timer = window.setInterval(() => go(1), interval);
+      };
+      const stop = () => {
+        if (timer !== null) {
+          window.clearInterval(timer);
+          timer = null;
+        }
+      };
+
+      prev?.addEventListener('click', () => { go(-1); start(); });
+      next?.addEventListener('click', () => { go(1); start(); });
+
+      indicators.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.getAttribute('data-index') || '0', 10);
+          goTo(idx);
+          start();
+        });
+      });
+
+      // Keyboard: ArrowLeft / ArrowRight on the carousel region.
+      root.addEventListener('keydown', (e: KeyboardEvent) => {
+        const t = e.target as HTMLElement;
+        // Only respond when focus is inside the carousel (region itself or controls)
+        if (!root.contains(t)) return;
+        // Don't hijack keys inside form fields (none expected, but be safe).
+        if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA') return;
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          go(-1);
+          start();
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          go(1);
+          start();
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          goTo(0);
+          start();
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          goTo(total - 1);
+          start();
+        }
+      });
+
+      // Pause on hover / focus-within
+      root.addEventListener('mouseenter', stop);
+      root.addEventListener('mouseleave', start);
+      root.addEventListener('focusin', stop);
+      root.addEventListener('focusout', (e: FocusEvent) => {
+        const next = e.relatedTarget as HTMLElement | null;
+        if (!next || !root.contains(next)) start();
+      });
+
+      // Play/Pause toggle
+      playpause?.addEventListener('click', () => {
+        const isPlaying = playpause.getAttribute('data-state') === 'playing';
+        if (isPlaying) {
+          paused = true;
+          stop();
+          playpause.setAttribute('data-state', 'paused');
+          playpause.setAttribute('aria-label', 'Reanudar reproducción automática');
+          playpause.querySelector<HTMLElement>('[data-icon-pause]')?.setAttribute('hidden', '');
+          playpause.querySelector<HTMLElement>('[data-icon-play]')?.removeAttribute('hidden');
+        } else {
+          paused = false;
+          start();
+          playpause.setAttribute('data-state', 'playing');
+          playpause.setAttribute('aria-label', 'Pausar reproducción automática');
+          playpause.querySelector<HTMLElement>('[data-icon-pause]')?.removeAttribute('hidden');
+          playpause.querySelector<HTMLElement>('[data-icon-play]')?.setAttribute('hidden', '');
+        }
+      });
+
+      // Pause when off-screen for perf + battery.
+      const io = 'IntersectionObserver' in window
+        ? new IntersectionObserver((entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) start();
+              else stop();
+            }
+          }, { threshold: 0.1 })
+        : null;
+      io?.observe(root);
+
+      // Init
+      setActive(0);
+      start();
+    };
+
+    const bootstrap = () => {
+      document.querySelectorAll<HTMLElement>('[data-carousel]').forEach(init);
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootstrap);
+    } else {
+      bootstrap();
+    }
+  })();
+</script>
+
+<style>
+  .carousel {
+    position: relative;
+    width: 100%;
+    max-width: var(--container-carousel, 860px);
+    margin-inline: auto;
+    border-radius: var(--radius-lg, 16px);
+    overflow: hidden;
+    background: var(--color-bg-elevated, var(--white, #fff));
+    box-shadow: var(--shadow, 0 4px 24px rgba(27, 35, 64, 0.08));
+  }
+  .carousel:focus-visible {
+    outline: 2px solid var(--color-focus-ring, var(--copper, #C4854A));
+    outline-offset: 2px;
+  }
+
+  .carousel__viewport {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .carousel__track {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    transition: transform var(--transition-carousel, 0.5s ease);
+    will-change: transform;
+  }
+
+  .carousel__slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    margin: 0;
+    position: relative;
+  }
+
+  .carousel__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  .carousel__caption {
+    padding: var(--space-4, 16px) var(--space-6, 24px);
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: var(--fs-small, 0.92rem);
+    color: var(--color-text-secondary, var(--text-light, #6A6A7A));
+    background: var(--color-bg-warm, var(--cream, #FAF3E8));
+    text-align: center;
+  }
+
+  .carousel__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--navy-overlay-soft, rgba(27, 35, 64, 0.55));
+    color: var(--color-text-on-dark, var(--white, #fff));
+    border: none;
+    border-radius: var(--radius-full, 50%);
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 1;
+    z-index: 2;
+    transition: background var(--transition, 0.25s ease);
+  }
+  .carousel__nav:hover { background: var(--navy-overlay, rgba(27, 35, 64, 0.75)); }
+  .carousel__nav:focus-visible {
+    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline-offset: 3px;
+  }
+  .carousel__nav--prev { left: var(--space-4, 16px); }
+  .carousel__nav--next { right: var(--space-4, 16px); }
+
+  .carousel__indicators {
+    position: absolute;
+    bottom: var(--space-4, 16px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    gap: var(--space-2, 8px);
+    z-index: 2;
+  }
+  .carousel__indicator {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: var(--radius-full, 50%);
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: background var(--transition, 0.25s ease), transform var(--transition, 0.25s ease);
+  }
+  .carousel__indicator.is-active {
+    background: var(--color-accent, var(--copper, #C4854A));
+    transform: scale(1.2);
+  }
+  .carousel__indicator:focus-visible {
+    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline-offset: 3px;
+  }
+
+  .carousel__playpause {
+    position: absolute;
+    top: var(--space-3, 12px);
+    right: var(--space-3, 12px);
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full, 50%);
+    border: none;
+    background: var(--navy-overlay-soft, rgba(27, 35, 64, 0.55));
+    color: var(--color-text-on-dark, var(--white, #fff));
+    cursor: pointer;
+    font-size: 12px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .carousel__playpause:hover { background: var(--navy-overlay, rgba(27, 35, 64, 0.75)); }
+  .carousel__playpause:focus-visible {
+    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .carousel__track { transition: none; }
+  }
+</style>

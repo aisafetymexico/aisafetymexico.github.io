@@ -1,0 +1,361 @@
+---
+/**
+ * /research — Publications and ongoing research index.
+ *
+ * Spec:
+ *  - Task #14 (P4 · Page Research).
+ *  - docs/ARCHITECTURE.md §2 `/research`, §6 IndexPage template.
+ *  - docs/CONTENT-MAP.md §1.7.
+ *
+ * Sections:
+ *  1. PageHero (eyebrow · h1 · description · breadcrumb)
+ *  2. Áreas de investigación (FeatureGrid 4 ejes temáticos)
+ *  3. Publicaciones (PublicationCard grid; sourced from publications collection)
+ *  4. Investigación en curso (ProjectCard for ongoing projects, including
+ *     cross-link to /projects/ai-safety-connect)
+ *  5. Colaboraciones (chips for partner orgs in research)
+ *  6. CtaSection — colaboración → /get-involved#research
+ *
+ * Tokens / surfaces / typography only via design-system tokens.
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import FeatureGrid from '../components/FeatureGrid.astro';
+import PublicationCard from '../components/PublicationCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import CtaSection from '../components/CtaSection.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+const pathname = '/research';
+
+// --- Publications collection ---------------------------------------------
+// Pulls all non-draft entries; sorts featured first, then by year desc.
+const allPublications = await getCollection('publications', ({ data }) => !data.draft);
+const publications = allPublications.sort(
+  (a: CollectionEntry<'publications'>, b: CollectionEntry<'publications'>) => {
+    if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+    return b.data.year - a.data.year;
+  },
+);
+
+// --- Áreas de investigación (taxonomy) ------------------------------------
+// Source: ARCHITECTURE.md §2 /research §4 + CONTENT-MAP §4 (line ed. agenda).
+const researchAreas = [
+  {
+    title: 'AI Safety técnica',
+    description:
+      'Evaluaciones de seguridad, alineación e interpretabilidad mecánica aplicadas a modelos desplegados.',
+  },
+  {
+    title: 'Gobernanza',
+    description:
+      'Análisis técnico e instrumentos de política pública para el desarrollo y despliegue responsable de IA.',
+  },
+  {
+    title: 'Política regional',
+    description:
+      'Estudios situados en México y América Latina: percepciones, riesgos y prioridades del sur global.',
+  },
+  {
+    title: 'Educación e investigación abierta',
+    description:
+      'Materiales, currículos y publicaciones abiertas que conectan la investigación con la formación regional.',
+  },
+];
+
+// --- Investigación en curso -----------------------------------------------
+// Two ongoing items: the Peñaloza evaluations project (no dedicated page yet)
+// and the AI Safety Connect cross-link to /projects/ai-safety-connect.
+const ongoingProjects = [
+  {
+    title: 'Evaluación de Seguridad en Modelos de IA',
+    badge: 'EN CURSO',
+    description:
+      'Miguel Ángel Peñaloza desarrolla evaluaciones para medir el comportamiento de los modelos en cuanto a seguridad. El proyecto busca métricas y herramientas para la evaluación sistemática de riesgos en sistemas de IA.',
+    href: '/get-involved#research',
+    ctaLabel: 'Colaborar en el proyecto',
+  },
+  {
+    title: 'AI Safety Connect',
+    badge: 'COLABORACIÓN SPAR',
+    description:
+      'Plataforma y paper que mapean a la comunidad internacional de AI safety mediante taxonomía y búsqueda semántica. Output del programa SPAR con equipo internacional.',
+    href: '/projects/ai-safety-connect',
+    ctaLabel: 'Ver el proyecto',
+  },
+];
+
+// --- Colaboraciones (chips) -----------------------------------------------
+const researchPartners = [
+  { name: 'SPAR Research', href: 'https://supervisedprogramforalignment.org/' },
+  { name: 'ENAIS', href: undefined },
+  { name: 'AI Safety Collab', href: undefined },
+  { name: 'Centro Geo', href: undefined },
+  { name: 'Apart Research', href: 'https://apartresearch.com/' },
+];
+
+// --- Breadcrumb -----------------------------------------------------------
+const breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Investigación' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Investigación · AI Safety Mexico"
+  description="Publicaciones, proyectos en curso y agenda de investigación de AI Safety Mexico en seguridad, gobernanza y política regional de IA."
+  pathname={pathname}
+>
+  <Header slot="header" currentPath={pathname} />
+
+  <PageHero
+    eyebrow="Investigación"
+    title="Investigación rigurosa, situada en la región"
+    description="Producimos investigación abierta en seguridad técnica de IA, gobernanza y estudios regionales, en colaboración con instituciones nacionales e internacionales."
+    breadcrumb={breadcrumb}
+  />
+
+  <!-- 1 · Áreas de investigación -->
+  <section class="research-section research-section--areas">
+    <div class="research-section__inner">
+      <SectionHeading
+        eyebrow="Líneas de trabajo"
+        title="Áreas de investigación"
+        description="Cuatro frentes en los que concentramos preguntas, métodos y publicaciones."
+      />
+      <FeatureGrid items={researchAreas} />
+    </div>
+  </section>
+
+  <!-- 2 · Publicaciones -->
+  <section class="research-section research-section--publications">
+    <div class="research-section__inner">
+      <SectionHeading
+        eyebrow="Publicaciones"
+        title="Papers y trabajos publicados"
+        description="Resultados que el equipo y sus colaboradores hacen públicos en venues abiertos."
+      />
+
+      {publications.length > 0 ? (
+        <div class="publication-grid">
+          {publications.map((pub: CollectionEntry<'publications'>) => (
+            <PublicationCard
+              title={pub.data.title}
+              authors={pub.data.authors}
+              year={pub.data.year}
+              journal={pub.data.venue}
+              paperUrl={pub.data.paperUrl}
+              podcastUrl={pub.data.podcastUrl}
+              abstract={pub.data.abstract}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="research-empty">
+          Estamos preparando próximas publicaciones. Mientras tanto, escríbenos
+          si te interesa colaborar en investigación.
+        </p>
+      )}
+    </div>
+  </section>
+
+  <!-- 3 · Investigación en curso -->
+  <section class="research-section research-section--ongoing">
+    <div class="research-section__inner">
+      <SectionHeading
+        eyebrow="En curso"
+        title="Investigación en desarrollo"
+        description="Proyectos activos del equipo y colaboraciones internacionales en marcha."
+      />
+      <div class="ongoing-grid">
+        {ongoingProjects.map((p) => (
+          <ProjectCard
+            title={p.title}
+            badge={p.badge}
+            description={p.description}
+            href={p.href}
+            ctaLabel={p.ctaLabel}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Colaboraciones (chips) -->
+  <section class="research-section research-section--collabs">
+    <div class="research-section__inner">
+      <SectionHeading
+        eyebrow="Colaboraciones"
+        title="Trabajamos con"
+        description="Organizaciones aliadas que sostienen y enriquecen nuestra agenda de investigación."
+      />
+      <ul class="partner-chips" role="list">
+        {researchPartners.map((partner) => (
+          <li class="partner-chips__item">
+            {partner.href ? (
+              <a
+                class="partner-chips__chip partner-chips__chip--link"
+                href={partner.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {partner.name}
+              </a>
+            ) : (
+              <span class="partner-chips__chip">{partner.name}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5 · CTA final -->
+  <CtaSection
+    title="Trabajemos juntos en investigación"
+    description="¿Tienes una pregunta de investigación, un dataset o una colaboración en mente? Conectemos para explorar cómo trabajar juntos."
+    ctaLabel="Propón una colaboración"
+    ctaHref="/get-involved#research"
+  />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .research-section {
+    padding-block: var(--space-12);
+  }
+
+  .research-section--areas {
+    background: var(--color-bg-base);
+  }
+
+  .research-section--publications {
+    background: var(--color-bg-warm);
+  }
+
+  .research-section--ongoing {
+    background: var(--color-bg-base);
+  }
+
+  .research-section--collabs {
+    background: var(--color-bg-warm);
+  }
+
+  @media (min-width: 768px) {
+    .research-section {
+      padding-block: var(--space-14);
+    }
+  }
+
+  .research-section__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 480px) {
+    .research-section__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  /* Publication grid: single column on mobile, 2 cols ≥768px. */
+  .publication-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .publication-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-7);
+    }
+  }
+
+  /* Ongoing-projects grid: matches publication grid breakpoints. */
+  .ongoing-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .ongoing-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-7);
+    }
+  }
+
+  .research-empty {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    max-width: 60ch;
+  }
+
+  /* Partner chips */
+  .partner-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .partner-chips__item {
+    display: inline-flex;
+  }
+
+  .partner-chips__chip {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-5);
+    background: var(--color-bg-elevated);
+    color: var(--color-text-heading);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--ls-wide);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    line-height: 1.4;
+    transition:
+      transform var(--transition),
+      border-color var(--transition),
+      color var(--transition);
+  }
+
+  .partner-chips__chip--link:hover,
+  .partner-chips__chip--link:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--color-border-accent);
+    color: var(--color-link-hover);
+  }
+
+  .partner-chips__chip--link:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .partner-chips__chip { transition: none; }
+    .partner-chips__chip--link:hover,
+    .partner-chips__chip--link:focus-visible {
+      transform: none;
+    }
+  }
+</style>

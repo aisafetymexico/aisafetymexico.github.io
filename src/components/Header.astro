@@ -1,0 +1,197 @@
+---
+/**
+ * Header — sticky site header (navy background) with logo + primary nav.
+ *
+ * Spec:
+ *  - docs/ARCHITECTURE.md §3 (sticky + scrolled state, hamburger <768px).
+ *  - docs/INSPIRATION.md A7 (flat horizontal nav, no mega menu).
+ *  - docs/DESIGN-SYSTEM.md §6.1 (`SiteHeader` props: `currentPath:string`).
+ *
+ * Behaviours:
+ *  - Sticks to top with --z-sticky.
+ *  - Adds `.site-header--scrolled` after the user has scrolled past 80px,
+ *    which compresses padding and applies --shadow-header.
+ *  - Logo top-left → `/`. Visually distinct as a link with focus ring.
+ *  - Nav (incl. mobile drawer) lives in <Nav />.
+ *
+ * Props:
+ *  - currentPath: string — required, used by Nav to compute active state.
+ *  - logoSrc / logoAlt: optional overrides.
+ *  - siteName: optional override for the wordmark next to the logo.
+ */
+import Nav from './Nav.astro';
+import type { NavItem } from '../lib/types';
+
+export interface Props {
+  currentPath: string;
+  navItems?: NavItem[];
+  logoSrc?: string;
+  logoAlt?: string;
+  siteName?: string;
+}
+
+const {
+  currentPath,
+  navItems,
+  logoSrc = '/images/aisafetymx_logo.webp',
+  logoAlt = 'AI Safety Mexico',
+  siteName = 'AI Safety Mexico',
+} = Astro.props;
+---
+
+<header class="site-header" data-site-header>
+  <div class="site-header__inner">
+    <a class="site-header__logo" href="/" aria-label={`${siteName} — Inicio`}>
+      <img
+        class="site-header__logo-img"
+        src={logoSrc}
+        alt={logoAlt}
+        width="70"
+        height="70"
+        loading="eager"
+        decoding="async"
+      />
+      <span class="site-header__wordmark">{siteName}</span>
+    </a>
+
+    <Nav currentPath={currentPath} items={navItems} />
+  </div>
+</header>
+
+<script>
+  /**
+   * Toggles `.site-header--scrolled` after the user crosses 80px of scroll.
+   * Uses a throttled rAF loop to avoid layout thrashing. Idempotent.
+   */
+  (() => {
+    if ((window as any).__aismxHeaderScrollBound) return;
+    (window as any).__aismxHeaderScrollBound = true;
+
+    const init = () => {
+      const header = document.querySelector<HTMLElement>('[data-site-header]');
+      if (!header) return;
+
+      const SCROLLED_THRESHOLD = 80;
+      let ticking = false;
+      let scrolled = false;
+
+      const sync = () => {
+        const next = window.scrollY > SCROLLED_THRESHOLD;
+        if (next !== scrolled) {
+          scrolled = next;
+          header.classList.toggle('site-header--scrolled', scrolled);
+        }
+        ticking = false;
+      };
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(sync);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      // Initial sync (handles deep-link / refreshed-mid-page cases).
+      sync();
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    background: var(--color-bg-impact);
+    color: var(--color-text-on-dark);
+    padding: var(--space-4) 0; /* 16px y */
+    transition:
+      padding var(--transition),
+      box-shadow var(--transition);
+  }
+
+  .site-header--scrolled {
+    padding: 10px 0;
+    box-shadow: var(--shadow-header);
+  }
+
+  .site-header__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding-inline: var(--container-padding-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .site-header__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-on-dark);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: opacity var(--transition);
+  }
+  .site-header__logo:hover {
+    opacity: 0.9;
+    color: var(--color-text-on-dark);
+  }
+  .site-header__logo:focus-visible {
+    outline: 2px solid var(--color-accent-secondary);
+    outline-offset: 4px;
+  }
+
+  .site-header__logo-img {
+    height: 70px;
+    width: auto;
+    transition: height var(--transition);
+  }
+
+  .site-header--scrolled .site-header__logo-img {
+    height: 56px;
+  }
+
+  .site-header__wordmark {
+    font-family: var(--font-display);
+    font-weight: var(--fw-bold);
+    font-size: 1.45rem;
+    letter-spacing: 1.5px;
+    color: var(--color-text-on-dark);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* Tighter mobile padding */
+  @media (max-width: 479.98px) {
+    .site-header__inner {
+      padding-inline: var(--container-padding);
+    }
+    .site-header__logo-img { height: 52px; }
+    .site-header--scrolled .site-header__logo-img { height: 44px; }
+    .site-header__wordmark {
+      font-size: 1.05rem;
+      letter-spacing: 1px;
+    }
+  }
+
+  /* Wordmark hides on very small viewports (logo + name overflow risk) */
+  @media (max-width: 359.98px) {
+    .site-header__wordmark { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header,
+    .site-header__logo-img {
+      transition: none;
+    }
+  }
+</style>

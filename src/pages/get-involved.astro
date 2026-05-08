@@ -1,0 +1,414 @@
+---
+/**
+ * /get-involved — Colabora con nosotros.
+ *
+ * Spec: docs/ARCHITECTURE.md §2 (`/get-involved`) + Task #19.
+ *
+ * Page composition (ContentPage template):
+ *   1. SiteHeader (sticky)
+ *   2. PageHero — eyebrow + h1 + lede + breadcrumb
+ *   3. Intro / KeyFacts (chips de aliados / contexto colaborativo)
+ *   4. 3 vías de colaboración — feature cards with anchorable ids
+ *      (#research, #training, #events) so other pages can deep-link.
+ *   5. Aliados y colaboradores — SectionHeading + KeyFacts chips.
+ *   6. ContactForm (sección "Escríbenos") con id="contacto".
+ *   7. Contact info directa — email canónico + LinkedIn + Instagram.
+ *   8. CtaSection — cierre con email canónico contact@aismx.org.
+ *   9. SiteFooter
+ *
+ * Note on the 3 vías cards:
+ *   FeatureGrid does not expose per-item ids on its <li>. Since the spec
+ *   requires deep-linkable anchors per card (`/get-involved#research`, etc.),
+ *   the 3 cards are rendered with markup that mirrors FeatureGrid visually
+ *   (4-up tile pattern from docs/DESIGN-SYSTEM.md §6.4) but adds an `id` per
+ *   <li>. See `.collab-vias__item` styles below.
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import KeyFacts from '../components/KeyFacts.astro';
+import ContactForm from '../components/ContactForm.astro';
+import CtaSection from '../components/CtaSection.astro';
+
+const pathname = '/get-involved';
+
+const breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Colabora' },
+  ],
+};
+
+const vias = [
+  {
+    id: 'research',
+    number: '01',
+    title: 'Investigación conjunta',
+    description:
+      'Sumamos esfuerzos con grupos académicos y laboratorios para co-desarrollar proyectos de investigación en seguridad y alineación de IA, con énfasis en preguntas relevantes para México y América Latina.',
+  },
+  {
+    id: 'training',
+    number: '02',
+    title: 'Programas educativos para instituciones',
+    description:
+      'Diseñamos cursos y talleres a la medida para universidades, centros de investigación y equipos técnicos que quieran integrar la seguridad de IA en sus programas, en formato presencial, híbrido o remoto.',
+  },
+  {
+    id: 'events',
+    number: '03',
+    title: 'Eventos y advisory',
+    description:
+      'Participamos como ponentes, panelistas y asesores en eventos, mesas de trabajo y procesos de consulta sobre políticas públicas y gobernanza de IA en la región.',
+  },
+];
+
+const aliados = [
+  { text: 'AI Safety Collab' },
+  { text: 'ENAIS' },
+  { text: 'Centro Geo' },
+  { text: 'UADY' },
+  { text: 'SPAR Research' },
+  { text: 'Apart Research' },
+];
+---
+
+<BaseLayout
+  title="Colabora con nosotros — AI Safety Mexico"
+  description="Investigación conjunta, programas educativos para instituciones y advisory. Escríbenos a contact@aismx.org para explorar formas de trabajar juntos en seguridad de IA."
+  pathname={pathname}
+  ogImage="/images/aisafetymx_logo.webp"
+>
+  <Header slot="header" currentPath={pathname} />
+
+  <PageHero
+    eyebrow="Colabora"
+    title="Colabora con nosotros"
+    description="Buscamos aliados estratégicos para impulsar la investigación, educación y gobernanza en seguridad de IA en México y América Latina. Si tu organización comparte estos objetivos, nos encantará explorar formas de trabajar juntos."
+    breadcrumb={breadcrumb}
+  />
+
+  <section class="page-section page-section--intro" aria-labelledby="intro-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Quiénes colaboran con nosotros"
+        title="Trabajamos con organizaciones académicas, laboratorios, gobierno y comunidades"
+        description="Nuestras colaboraciones suelen materializarse en proyectos de investigación conjuntos, cursos a la medida, mesas de trabajo y producción de documentos técnicos. Si tienes una propuesta concreta, escríbenos."
+        id="intro-heading"
+      />
+    </div>
+  </section>
+
+  <section class="page-section page-section--vias" aria-labelledby="vias-heading">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Formas de colaborar"
+        title="Tres vías para trabajar con AI Safety Mexico"
+        description="Cada modalidad puede adaptarse en alcance y duración según el proyecto. Escríbenos describiendo tu interés y exploraremos en conjunto la forma de colaboración que mejor se ajuste."
+        id="vias-heading"
+      />
+
+      <ul class="collab-vias" role="list">
+        {vias.map((via) => (
+          <li id={via.id} class="collab-vias__item">
+            <article class="collab-vias__card">
+              <span class="collab-vias__number" aria-hidden="true">{via.number}</span>
+              <h3 class="collab-vias__title">{via.title}</h3>
+              <p class="collab-vias__description">{via.description}</p>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="page-section page-section--allies" aria-labelledby="allies-heading">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Aliados y colaboradores"
+        title="Quiénes han trabajado con nosotros"
+        description="Estas son algunas de las organizaciones con las que hemos co-creado cursos, proyectos de investigación, eventos y procesos de formación."
+        id="allies-heading"
+      />
+      <KeyFacts facts={aliados} />
+    </div>
+  </section>
+
+  <section
+    id="contacto"
+    class="page-section page-section--form"
+    aria-labelledby="form-heading"
+  >
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Escríbenos"
+        title="Cuéntanos sobre tu organización y tu propuesta"
+        description="Completa el formulario y te responderemos al correo que indiques. Si prefieres, también puedes escribirnos directamente a contact@aismx.org."
+        id="form-heading"
+      />
+
+      <ContactForm
+        endpoint="mailto:contact@aismx.org"
+        successMessage="¡Gracias! Hemos recibido tu mensaje y te responderemos pronto."
+        id="get-involved-form"
+      />
+    </div>
+  </section>
+
+  <section class="page-section page-section--direct" aria-labelledby="direct-heading">
+    <div class="container container--narrow">
+      <h2 id="direct-heading" class="direct__heading">Contacto directo</h2>
+      <p class="direct__lede">
+        Si tu mensaje es breve o prefieres no usar el formulario, escríbenos por
+        cualquiera de estos canales.
+      </p>
+
+      <ul class="direct__list" role="list">
+        <li class="direct__item">
+          <span class="direct__label">Correo electrónico</span>
+          <a class="direct__value" href="mailto:contact@aismx.org">
+            contact@aismx.org
+          </a>
+        </li>
+        <li class="direct__item">
+          <span class="direct__label">LinkedIn</span>
+          <a
+            class="direct__value"
+            href="https://www.linkedin.com/company/ai-safety-mexico/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            linkedin.com/company/ai-safety-mexico
+          </a>
+        </li>
+        <li class="direct__item">
+          <span class="direct__label">Instagram</span>
+          <a
+            class="direct__value"
+            href="https://www.instagram.com/aisafetymx/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @aisafetymx
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <CtaSection
+    title="¿Tienes una propuesta concreta?"
+    description="Escríbenos a contact@aismx.org con una breve descripción de tu organización y la línea de trabajo que te interesa explorar."
+    ctaLabel="Escríbenos a contact@aismx.org"
+    ctaHref="mailto:contact@aismx.org"
+  />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* Page-level layout primitives ------------------------------------------- */
+  .page-section {
+    padding-block: var(--space-10);
+  }
+
+  @media (min-width: 768px) {
+    .page-section {
+      padding-block: var(--space-12);
+    }
+  }
+
+  /* Alternating tonal surfaces for rhythm ---------------------------------- */
+  .page-section--intro {
+    background: var(--color-bg-base);
+  }
+  .page-section--vias {
+    background: var(--color-bg-warm);
+  }
+  .page-section--allies {
+    background: var(--color-bg-base);
+  }
+  .page-section--form {
+    background: var(--color-bg-warm);
+  }
+  .page-section--direct {
+    background: var(--color-bg-base);
+  }
+
+  .container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+  .container--narrow {
+    max-width: var(--container-narrow);
+  }
+  @media (min-width: 480px) {
+    .container {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  /* 3 vías cards (FeatureGrid pattern + per-card anchor ids) --------------- */
+  .collab-vias {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .collab-vias__item {
+    display: flex;
+    /* Offset the in-page anchor scroll so the sticky header doesn't cover the card */
+    scroll-margin-top: 100px;
+  }
+
+  .collab-vias__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-6);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    color: var(--color-text-primary);
+    transition:
+      transform var(--transition),
+      box-shadow var(--transition),
+      border-color var(--transition);
+  }
+
+  /* Highlight a card when its anchor is the active hash target */
+  .collab-vias__item:target .collab-vias__card {
+    border-color: var(--color-border-accent);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+  }
+
+  .collab-vias__number {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    color: var(--color-accent);
+    letter-spacing: -0.02em;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  .collab-vias__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+    margin: 0;
+  }
+
+  .collab-vias__description {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .collab-vias {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-6);
+    }
+    .collab-vias__card {
+      padding: var(--space-7);
+    }
+    .collab-vias__number {
+      font-size: 2.8rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .collab-vias__card {
+      transition: none;
+    }
+    .collab-vias__item:target .collab-vias__card {
+      transform: none;
+    }
+  }
+
+  /* Direct-contact list ---------------------------------------------------- */
+  .direct__heading {
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-tight);
+    color: var(--color-text-heading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .direct__lede {
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-7);
+    max-width: 60ch;
+  }
+
+  .direct__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .direct__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+    background: var(--color-bg-warm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+
+  .direct__label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .direct__value {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color var(--transition), border-color var(--transition);
+    word-break: break-word;
+  }
+  .direct__value:hover,
+  .direct__value:focus-visible {
+    color: var(--color-link-hover);
+    border-bottom-color: var(--color-link-hover);
+  }
+
+  @media (min-width: 768px) {
+    .direct__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-5);
+    }
+  }
+</style>

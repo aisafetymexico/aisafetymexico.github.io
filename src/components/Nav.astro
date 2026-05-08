@@ -1,0 +1,124 @@
+---
+/**
+ * Nav — primary site navigation.
+ *
+ * Spec: docs/ARCHITECTURE.md §3.
+ *  - Flat horizontal nav, 6 items max (no mega menu — pattern A7 in
+ *    docs/INSPIRATION.md).
+ *  - Order: About, Research, Programs, Projects, Activities, Get involved.
+ *  - "Get involved" rendered as CTA button (visually distinct).
+ *  - On <768px the desktop list hides and the MobileMenu drawer takes over.
+ *  - Active state: exact match on currentPath, OR currentPath is a child of
+ *    the link href (so /projects/vigia highlights /projects).
+ *
+ * Default labels are Spanish-first per ARCHITECTURE.md §7. Pass `items`
+ * explicitly to override (e.g., for English landings).
+ */
+import type { NavItem } from '../lib/types';
+import MobileMenu from './MobileMenu.astro';
+
+export interface Props {
+  currentPath: string;
+  items?: NavItem[];
+}
+
+const DEFAULT_ITEMS: NavItem[] = [
+  { label: 'Sobre nosotros', href: '/about' },
+  { label: 'Investigación', href: '/research' },
+  { label: 'Programas', href: '/programs' },
+  { label: 'Proyectos', href: '/projects' },
+  { label: 'Actividades', href: '/activities' },
+  { label: 'Colabora', href: '/get-involved', cta: true },
+];
+
+const { currentPath, items = DEFAULT_ITEMS } = Astro.props;
+
+const isActive = (href: string): boolean => {
+  if (!currentPath) return false;
+  if (href === '/') return currentPath === '/';
+  return currentPath === href || currentPath.startsWith(href + '/');
+};
+---
+
+<nav class="main-nav" aria-label="Navegación principal">
+  {/* Desktop horizontal list — hidden on mobile via media query */}
+  <ul class="main-nav__list">
+    {items.map((item: NavItem) => (
+      <li>
+        <a
+          class:list={[
+            'main-nav__link',
+            { 'main-nav__link--cta': item.cta },
+            { 'is-active': isActive(item.href) },
+          ]}
+          href={item.href}
+          aria-current={isActive(item.href) ? 'page' : undefined}
+        >{item.label}</a>
+      </li>
+    ))}
+  </ul>
+
+  {/* Mobile drawer + hamburger toggle (renders only <768px) */}
+  <MobileMenu items={items} currentPath={currentPath} />
+</nav>
+
+<style>
+  .main-nav {
+    display: flex;
+    align-items: center;
+  }
+
+  .main-nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .main-nav__link {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: var(--color-text-on-dark-muted, rgba(255, 255, 255, 0.80));
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .main-nav__link:hover {
+    color: var(--color-text-on-dark, var(--white, #fff));
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .main-nav__link:focus-visible {
+    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline-offset: 2px;
+  }
+  .main-nav__link.is-active {
+    color: var(--color-text-on-dark, var(--white, #fff));
+    background: rgba(196, 133, 74, 0.25);
+  }
+
+  /* CTA-styled link (pill, copper-dark para WCAG AA contra blanco) */
+  .main-nav__link--cta {
+    margin-left: 6px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: var(--color-cta-bg, var(--copper-dark, #8B5A2B));
+    color: var(--color-cta-text, var(--white, #fff));
+    font-weight: 700;
+  }
+  .main-nav__link--cta:hover,
+  .main-nav__link--cta.is-active {
+    background: var(--color-cta-bg-hover, #6F4621);
+    color: var(--color-cta-text, var(--white, #fff));
+  }
+
+  /* Hide desktop list on mobile (MobileMenu takes over) */
+  @media (max-width: 767.98px) {
+    .main-nav__list { display: none; }
+  }
+</style>

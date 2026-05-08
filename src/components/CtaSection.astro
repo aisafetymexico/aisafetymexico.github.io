@@ -1,0 +1,166 @@
+---
+/**
+ * CtaSection — large navy band with a centered title, optional supporting
+ * paragraph, and a single primary CTA. Used as the closing module of pages
+ * (Home, About, Get-Involved, etc.).
+ *
+ * Spec:
+ *  - Task #10 props: `{ title, description?, ctaLabel, ctaHref }`.
+ *  - docs/DESIGN-SYSTEM.md §6.4 / §1.4 — navy impact surface, copper accent.
+ *  - docs/INSPIRATION.md A8 — solid brand band hero pattern.
+ *  - Mobile-first: stacked + comfortable touch target on phones.
+ */
+
+export interface Props {
+  title: string;
+  description?: string;
+  ctaLabel: string;
+  ctaHref: string;
+  ctaExternal?: boolean;
+}
+
+const { title, description, ctaLabel, ctaHref, ctaExternal = false } =
+  Astro.props;
+
+const externalAttrs = ctaExternal
+  ? { target: '_blank', rel: 'noopener noreferrer' }
+  : {};
+---
+
+<section class="cta-section" role="region" aria-label={title}>
+  <div class="cta-section__inner">
+    <h2 class="cta-section__title">{title}</h2>
+    {description && <p class="cta-section__description">{description}</p>}
+    <a class="cta-section__cta" href={ctaHref} {...externalAttrs}>
+      {ctaLabel}
+      <span class="cta-section__cta-arrow" aria-hidden="true">&rarr;</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .cta-section {
+    position: relative;
+    background: var(--gradient-navy-impact);
+    color: var(--color-text-on-dark);
+    padding-block: var(--space-12);
+    box-shadow: var(--inset-section-impact);
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: var(--gradient-edge-accent);
+    z-index: var(--z-decoration);
+    pointer-events: none;
+  }
+
+  .cta-section__inner {
+    width: 100%;
+    max-width: var(--container-narrow);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .cta-section__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h1);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-tight);
+    color: var(--color-text-on-dark);
+    margin: 0;
+    max-width: 24ch;
+  }
+
+  .cta-section__description {
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-loose);
+    color: var(--color-text-on-dark-muted);
+    margin: 0;
+    max-width: 56ch;
+  }
+
+  .cta-section__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding: var(--space-3) var(--space-7);
+    /* CTA tokens (--color-cta-bg = copper-dark) garantizan WCAG AA 4.5:1
+       contra texto blanco. */
+    background: var(--color-cta-bg);
+    color: var(--color-cta-text);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-semibold);
+    text-decoration: none;
+    letter-spacing: var(--ls-wide);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-cta);
+    transition:
+      background var(--transition),
+      transform var(--transition),
+      box-shadow var(--transition);
+  }
+
+  .cta-section__cta:hover,
+  .cta-section__cta:focus-visible {
+    background: var(--color-cta-bg-hover);
+    color: var(--color-cta-text);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .cta-section__cta-arrow {
+    display: inline-block;
+    transition: transform var(--transition);
+  }
+  .cta-section__cta:hover .cta-section__cta-arrow {
+    transform: translateX(3px);
+  }
+
+  @media (min-width: 480px) {
+    .cta-section__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .cta-section {
+      padding-block: var(--space-14);
+    }
+    .cta-section__inner {
+      gap: var(--space-5);
+    }
+    .cta-section__cta {
+      padding: var(--space-4) var(--space-9);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .cta-section {
+      padding-block: var(--space-16);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-section__cta,
+    .cta-section__cta-arrow {
+      transition: none;
+    }
+    .cta-section__cta:hover {
+      transform: none;
+    }
+  }
+</style>

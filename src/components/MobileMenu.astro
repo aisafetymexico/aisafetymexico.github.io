@@ -1,0 +1,385 @@
+---
+/**
+ * MobileMenu — accessible right-side drawer for primary navigation.
+ *
+ * Spec: docs/ARCHITECTURE.md §3 (mobile behaviour) + DESIGN-SYSTEM.md
+ * (token references). Renders:
+ *   1. A hamburger toggle button (visible <768px only).
+ *   2. A backdrop layer that closes the drawer on click.
+ *   3. A right-side slide-in drawer with all primary nav items + the
+ *      Get-involved CTA rendered as a full-width button at the bottom.
+ *
+ * A11y guarantees:
+ *   - Toggle: role=button (native), aria-controls, aria-expanded, aria-label.
+ *   - Drawer: role=dialog, aria-modal=true, aria-label.
+ *   - ESC closes; backdrop click closes; clicking any link closes.
+ *   - Focus moves to first focusable inside drawer on open and returns to
+ *     toggle on close.
+ *   - Tab cycles within drawer while open (basic focus trap).
+ *   - <body> scroll is locked while open.
+ *   - prefers-reduced-motion disables the slide transition.
+ *
+ * Renders nothing visible on desktop (≥768px) thanks to the media query.
+ */
+import type { NavItem } from '../lib/types';
+
+export interface Props {
+  items: NavItem[];
+  currentPath: string;
+  /** id used to wire aria-controls between toggle and drawer. */
+  drawerId?: string;
+}
+
+const { items, currentPath, drawerId = 'mobile-nav-drawer' } = Astro.props;
+
+/** Mark a link active when its href matches `currentPath` exactly, OR when
+ *  `currentPath` is a child of href (e.g. `/projects/vigia` highlights
+ *  Projects). Skip the root match-everything trap. */
+const isActive = (href: string): boolean => {
+  if (!currentPath) return false;
+  if (href === '/') return currentPath === '/';
+  return currentPath === href || currentPath.startsWith(href + '/');
+};
+---
+
+<button
+  type="button"
+  class="mobile-toggle"
+  aria-controls={drawerId}
+  aria-expanded="false"
+  aria-label="Abrir menú principal"
+  data-mobile-toggle
+>
+  <span aria-hidden="true"></span>
+  <span aria-hidden="true"></span>
+  <span aria-hidden="true"></span>
+</button>
+
+<div class="mobile-backdrop" data-mobile-backdrop hidden></div>
+
+<aside
+  id={drawerId}
+  class="mobile-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menú principal"
+  data-mobile-drawer
+  hidden
+>
+  <button
+    type="button"
+    class="mobile-drawer__close"
+    aria-label="Cerrar menú"
+    data-mobile-close
+  >
+    <span aria-hidden="true">×</span>
+  </button>
+
+  <nav aria-label="Navegación principal (móvil)">
+    <ul class="mobile-drawer__list">
+      {items.filter((i: NavItem) => !i.cta).map((item: NavItem) => (
+        <li>
+          <a
+            class:list={['mobile-drawer__link', { 'is-active': isActive(item.href) }]}
+            href={item.href}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >{item.label}</a>
+        </li>
+      ))}
+    </ul>
+
+    {items.filter((i: NavItem) => i.cta).map((item: NavItem) => (
+      <a
+        class="mobile-drawer__cta"
+        href={item.href}
+        aria-current={isActive(item.href) ? 'page' : undefined}
+      >{item.label}</a>
+    ))}
+  </nav>
+</aside>
+
+<script>
+  /**
+   * Inline controller — runs once per page load. Idempotent (guarded with
+   * a global flag to survive Astro view transitions).
+   */
+  (() => {
+    if ((window as any).__aismxMobileMenuBound) return;
+    (window as any).__aismxMobileMenuBound = true;
+
+    const init = () => {
+      const toggle = document.querySelector<HTMLButtonElement>('[data-mobile-toggle]');
+      const drawer = document.querySelector<HTMLElement>('[data-mobile-drawer]');
+      const backdrop = document.querySelector<HTMLElement>('[data-mobile-backdrop]');
+      const closeBtn = document.querySelector<HTMLButtonElement>('[data-mobile-close]');
+
+      if (!toggle || !drawer || !backdrop) return;
+
+      let lastFocus: HTMLElement | null = null;
+
+      const focusables = (root: HTMLElement) =>
+        Array.from(
+          root.querySelectorAll<HTMLElement>(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter(el => !el.hasAttribute('hidden'));
+
+      const open = () => {
+        lastFocus = document.activeElement as HTMLElement;
+        drawer.hidden = false;
+        backdrop.hidden = false;
+        // Allow CSS transition to pick up the class on the next frame.
+        requestAnimationFrame(() => {
+          drawer.classList.add('is-open');
+          backdrop.classList.add('is-open');
+        });
+        toggle.classList.add('is-open');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'Cerrar menú principal');
+        document.body.style.overflow = 'hidden';
+        const first = focusables(drawer)[0];
+        first?.focus();
+      };
+
+      const close = () => {
+        drawer.classList.remove('is-open');
+        backdrop.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Abrir menú principal');
+        document.body.style.overflow = '';
+        // Hide after transition to keep tab order clean.
+        const finalize = () => {
+          drawer.hidden = true;
+          backdrop.hidden = true;
+        };
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduced) finalize();
+        else setTimeout(finalize, 350);
+        lastFocus?.focus();
+      };
+
+      const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+
+      toggle.addEventListener('click', () => (isOpen() ? close() : open()));
+      backdrop.addEventListener('click', close);
+      closeBtn?.addEventListener('click', close);
+
+      // ESC closes; tab traps focus inside drawer.
+      document.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (!isOpen()) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          close();
+          return;
+        }
+        if (e.key === 'Tab') {
+          const list = focusables(drawer);
+          if (list.length === 0) return;
+          const first = list[0];
+          const last = list[list.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      });
+
+      // Close drawer when any link inside is activated (smooth nav UX).
+      drawer.addEventListener('click', (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (target.closest('a')) close();
+      });
+
+      // Auto-close on resize past the mobile breakpoint.
+      const mql = window.matchMedia('(min-width: 768px)');
+      const onChange = () => { if (mql.matches && isOpen()) close(); };
+      if (mql.addEventListener) mql.addEventListener('change', onChange);
+      else (mql as any).addListener(onChange);
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+<style>
+  /* Hamburger toggle — hidden on desktop. */
+  .mobile-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    padding: 6px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--color-text-on-dark, var(--white, #fff));
+    z-index: 1001; /* above drawer */
+    transition: background 0.15s ease;
+  }
+  .mobile-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .mobile-toggle:focus-visible {
+    outline: 2px solid var(--color-focus-ring, var(--copper, #C4854A));
+    outline-offset: 2px;
+  }
+  .mobile-toggle span {
+    display: block;
+    width: 26px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .mobile-toggle.is-open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .mobile-toggle.is-open span:nth-child(2) { opacity: 0; }
+  .mobile-toggle.is-open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Backdrop */
+  .mobile-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    z-index: 998;
+    transition: opacity 0.3s ease;
+  }
+  .mobile-backdrop.is-open { opacity: 1; }
+  .mobile-backdrop[hidden] { display: none; }
+
+  /* Drawer */
+  .mobile-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(320px, 88vw);
+    height: 100vh;
+    height: 100dvh;
+    padding: 80px 28px 32px;
+    background: var(--color-bg-impact, var(--navy, #1B2340));
+    color: var(--color-text-on-dark, var(--white, #fff));
+    box-shadow: -4px 0 30px rgba(0, 0, 0, 0.30);
+    transform: translateX(100%);
+    transition: transform 0.35s ease;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .mobile-drawer.is-open { transform: translateX(0); }
+  .mobile-drawer[hidden] { display: none; }
+
+  .mobile-drawer__close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    color: var(--color-text-on-dark, var(--white, #fff));
+    font-size: 28px;
+    line-height: 1;
+    transition: background 0.15s ease;
+  }
+  .mobile-drawer__close:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .mobile-drawer__close:focus-visible {
+    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline-offset: 2px;
+  }
+
+  .mobile-drawer__list {
+    list-style: none;
+    margin: 0 0 24px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mobile-drawer__link {
+    display: block;
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: var(--color-text-on-dark-muted, rgba(255, 255, 255, 0.80));
+    text-decoration: none;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .mobile-drawer__link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-on-dark, var(--white, #fff));
+  }
+  .mobile-drawer__link:focus-visible {
+    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline-offset: 2px;
+  }
+  .mobile-drawer__link.is-active {
+    background: rgba(196, 133, 74, 0.25);
+    color: var(--color-text-on-dark, var(--white, #fff));
+  }
+
+  /* Get-involved CTA — usa --color-cta-bg (copper-dark) para WCAG AA AAA */
+  .mobile-drawer__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
+    padding: 14px 18px;
+    border-radius: 999px;
+    background: var(--color-cta-bg, var(--copper-dark, #8B5A2B));
+    color: var(--color-cta-text, var(--white, #fff));
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .mobile-drawer__cta:hover {
+    background: var(--color-cta-bg-hover, #6F4621);
+  }
+  .mobile-drawer__cta:focus-visible {
+    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline-offset: 3px;
+  }
+
+  /* Visibility logic by breakpoint */
+  @media (max-width: 767.98px) {
+    .mobile-toggle { display: inline-flex; }
+  }
+  @media (min-width: 768px) {
+    /* Force-hide drawer & backdrop on desktop even if state was left dirty. */
+    .mobile-toggle,
+    .mobile-backdrop,
+    .mobile-drawer { display: none !important; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-drawer,
+    .mobile-backdrop,
+    .mobile-toggle span {
+      transition: none;
+    }
+  }
+</style>

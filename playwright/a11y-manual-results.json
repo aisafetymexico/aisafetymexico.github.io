@@ -1,0 +1,915 @@
+{
+  "base": "http://localhost:5022",
+  "timestamp": "2026-05-08T01:59:19.300Z",
+  "routeCount": 11,
+  "totals": {
+    "issues": 0,
+    "serious": 0,
+    "moderate": 0
+  },
+  "results": [
+    {
+      "route": "/",
+      "url": "http://localhost:5022/",
+      "issues": [],
+      "info": {
+        "landmarks": {
+          "header": 3,
+          "nav": 5,
+          "main": 1,
+          "footer": 1,
+          "skipLink": {
+            "href": "#main",
+            "text": "Saltar al contenido",
+            "firstFocusable": true
+          },
+          "mainId": "main"
+        },
+        "headings": [
+          {
+            "level": 1,
+            "text": "Seguridad y gobernanza de la IA, desde México hacia Latinoamérica."
+          },
+          {
+            "level": 2,
+            "text": "Cuatro frentes, una sola misión."
+          },
+          {
+            "level": 3,
+            "text": "Investigación"
+          },
+          {
+            "level": 3,
+            "text": "Programas"
+          },
+          {
+            "level": 3,
+            "text": "Proyectos"
+          },
+          {
+            "level": 3,
+            "text": "Equipo"
+          },
+          {
+            "level": 2,
+            "text": "Trabajo reciente."
+          },
+          {
+            "level": 3,
+            "text": "Global South AIS Challenge"
+          },
+          {
+            "level": 3,
+            "text": "VIGÍA"
+          },
+          {
+            "level": 3,
+            "text": "A Pilot Survey on AI Safety in Yucatan"
+          },
+          {
+            "level": 2,
+            "text": "¿Buscas colaborar?"
+          },
+          {
+            "level": 2,
+            "text": "Explora"
+          },
+          {
+            "level": 2,
+            "text": "Trabajo"
+          },
+          {
+            "level": 2,
+            "text": "Conecta"
+          }
+        ],
+        "imgCount": 3,
+        "focusableCount": 41,
+        "focusSample": {
+          "sample": 8,
+          "withVisibleFocus": 8
+        },
+        "lang": "es",
+        "title": "AI Safety Mexico — Investigación, educación y gobernanza de IA"
+      }
+    },
+    {
+      "route": "/about",
+      "url": "http://localhost:5022/about",
+      "issues": [],
+      "info": {
+        "landmarks": {
+          "header": 6,
+          "nav": 6,
+          "main": 1,
+          "footer": 1,
+          "skipLink": {
+            "href": "#main",
+            "text": "Saltar al contenido",
+            "firstFocusable": true
+          },
+          "mainId": "main"
+        },
+        "headings": [
+          {
+            "level": 1,
+            "text": "Quiénes somos"
+          },
+          {
+            "level": 2,
+            "text": "Por qué existimos"
+          },
+          {
+            "level": 2,
+            "text": "Hacia dónde apuntamos"
+          },
+          {
+            "level": 2,
+            "text": "Nuestros pilares de trabajo"
+          },
+          {
+            "level": 3,
+            "text": "Investigación"
+          },
+          {
+            "level": 3,
+            "text": "Educación"
+          },
+          {
+            "level": 3,
+            "text": "Gobernanza"
+          },
+          {
+            "level": 3,
+            "text": "Comunidad"
+          },
+          {
+            "level": 2,
+            "text": "Cómo nació AI Safety Mexico"
+          },
+          {
+            "level": 2,
+            "text": "Datos esenciales"
+          },
+          {
+            "level": 2,
+            "text": "¿Quieres conocer al equipo?"
+          },
+          {
+            "level": 2,
+            "text": "Explora"
+          },
+          {
+            "level": 2,
+            "text": "Trabajo"
+          },
+          {
+            "level": 2,
+            "text": "Conecta"
+          }
+        ],
+        "imgCount": 2,
+        "focusableCount": 34,
+        "focusSample": {
+          "sample": 8,
+          "withVisibleFocus": 8
+        },
+        "lang": "es",
+        "title": "Quiénes somos · AI Safety Mexico"
+      }
+    },
+    {
+      "route": "/research",
+      "url": "http://localhost:5022/research",
+      "issues": [],
+      "info": {
+        "landmarks": {
+          "header": 5,
+          "nav": 6,
+          "main": 1,
+          "footer": 1,
+          "skipLink": {
+            "href": "#main",
+            "text": "Saltar al contenido",
+            "firstFocusable": true
+          },
+          "mainId": "main"
+        },
+        "headings": [
+          {
+            "level": 1,
+            "text": "Investigación rigurosa, situada en la región"
+          },
+          {
+            "level": 2,
+            "text": "Áreas de investigación"
+          },
+          {
+            "level": 3,
+            "text": "AI Safety técnica"
+          },
+          {
+            "level": 3,
+            "text": "Gobernanza"
+          },
+          {
+            "level": 3,
+            "text": "Política regional"
+          },
+          {
+            "level": 3,
+            "text": "Educación e investigación abierta"
+          },
+          {
+            "level": 2,
+            "text": "Papers y trabajos publicados"
+          },
+          {
+            "level": 3,
+            "text": "AI Safety in Mexico: A Pilot Survey in Yucatan"
+          },
+          {
+            "level": 2,
+            "text": "Investigación en desarrollo"
+          },
+          {
+            "level": 3,
+            "text": "Evaluación de Seguridad en Modelos de IA"
+          },
+          {
+            "level": 3,
+            "text": "AI Safety Connect"
+          },
+          {
+            "level": 2,
+            "text": "Trabajamos con"
+          },
+          {
+            "level": 2,
+            "text": "Trabajemos juntos en investigación"
+          },
+          {
+            "level": 2,
+            "text": "Explora"
+          },
+          {
+            "level": 2,
+            "text": "Trabajo"
+          },
+          {
+            "level": 2,
+            "text": "Conecta"
+          }
+        ],
+        "imgCount": 2,
+        "focusableCount": 45,
+        "focusSample": {
+          "sample": 8,
+          "withVisibleFocus": 8
+        },
+        "lang": "es",
+        "title": "Investigación · AI Safety Mexico"
+      }
+    },
+    {
+      "route": "/programs",
+      "url": "http://localhost:5022/programs",
+      "issues": [],
+      "info": {
+        "landmarks": {
+          "header": 5,
+          "nav": 6,
+          "main": 1,
+          "footer": 1,
+          "skipLink": {
+            "href": "#main",
+            "text": "Saltar al contenido",
+            "firstFocusable": true
+          },
+          "mainId": "main"
+        },
+        "headings": [
+          {
+            "level": 1,
+            "text": "Programas educativos"
+          },
+          {
+            "level": 2,
+            "text": "Cursos abiertos a la comunidad"
+          },
+          {
+            "level": 3,
+            "text": "Curso de Fundamentos de Seguridad y Gobernanza en IA"
+          },
+          {
+            "level": 3,
+            "text": "Curso Técnico de Seguridad en IA (ARENA)"
+          },
+          {
+            "level": 2,
+            "text": "Programas para instituciones"
+          },
+          {
+            "level": 3,
+            "text": "Seguridad en IA · Centro GEO"
+          },
+          {
+            "level": 3,
+            "text": "Seguridad en IA · UADY"
+          },
+          {
+            "level": 2,
+            "text": "Galería de certificados"
+          },
+          {
+            "level": 2,
+            "text": "Formación recibida por el equipo"
+          },
+          {
+            "level": 3,
+            "text": "ML4Good"
+          },
+          {
+            "level": 3,
+            "text": "EAGxCDMX"
+          },
+          {
+            "level": 2,
+            "text": "¿Quieres llevar un curso a tu institución?"
+          },
+          {
+            "level": 2,
+            "text": "Explora"
+          },
+          {
+            "level": 2,
+            "text": "Trabajo"
+          },
+          {
+            "level": 2,
+            "text": "Conecta"
+          }
+        ],
+        "imgCount": 11,
+        "focusableCount": 44,
+        "focusSample": {
+          "sample": 8,
+          "withVisibleFocus": 8
+        },
+        "lang": "es",
+        "title": "Programas educativos | AI Safety Mexico"
+      }
+    },
+    {
+      "route": "/projects",
+      "url": "http://localhost:5022/projects",
+      "issues": [],
+      "info": {
+        "landmarks": {
+          "header": 4,
+          "nav": 6,
+          "main": 1,
+          "footer": 1,
+          "skipLink": {
+            "href": "#main",
+            "text": "Saltar al contenido",
+            "firstFocusable": true
+          },
+          "mainId": "main"
+        },
+        "headings": [
+          {
+            "level": 1,
+            "text": "Proyectos"
+          },
+          {
+            "level": 2,
+            "text": "Investigación aplicada con vocación pública"
+          },
+          {
+            "level": 2,
+            "text": "Proyectos insignia"
+          },
+          {
+            "level": 3,
+            "text": "VIGÍA"
+          },
+          {
+            "level": 3,
+            "text": "AI Safety Connect"
+          },
+          {
+            "level": 2,
+            "text": "Criterios de selección"
+          },
+          {
+            "level": 3,
+            "text": "Pregunta concreta"
+          },
+          {
+            "level": 3,
+            "text": "Capacidad técnica"
+          },
+          {
+            "level": 3,
+            "text": "Compromiso de apertura"
+          },
+          {
+            "level": 2,
+            "text": "¿Tienes un proyecto en mente?"
+          },
+          {
+            "level": 2,
+            "text": "Explora"
+          },
+          {
+            "level": 2,
+            "text": "Trabajo"
+          },
+          {
+            "level": 2,
+            "text": "Conecta"
+          }
+        ],
+        "imgCount": 4,
+        "focusableCount": 40,
+        "focusSample": {
+          "sample": 8,
+          "withVisibleFocus": 8
+        },
+        "lang": "es",
+        "title": "Proyectos · AI Safety Mexico"
+      }
+    },
+    {
+      "route": "/projects/vigia",
+      "url": "http://localhost:5022/projects/vigia",
+      "issues": [],
+      "info": {
+        "landmarks": {
+          "header": 7,
+          "nav": 6,
+          "main": 1,
+          "footer": 1,
+          "skipLink": {
+            "href": "#main",
+            "text": "Saltar al contenido",
+            "firstFocusable": true
+          },
+          "mainId": "main"
+        },
+        "headings": [
+          {
+            "level": 1,
+            "text": "VIGÍA"
+          },
+          {
+            "level": 2,
+            "text": "¿Qué es VIGÍA?"
+          },
+          {
+            "level": 2,
+            "text": "Special Recognition · AI Safety Collab 2025"
+          },
+          {
+            "level": 2,
+            "text": "Cómo trabajamos"
+          },
+          {
+            "level": 2,
+            "text": "Quiénes lo construyen"
+          },
+          {
+            "level": 2,
+            "text": "Enlaces y referencias"
+          },
+          {
+            "level": 2,
+            "text": "Otros proyectos"
+          },
+          {
+            "level": 3,
+            "text": "AI Safety Connect"
+          },
+          {
+            "level": 2,
+            "text": "Conoce VIGÍA en vivo"
+          },
+          {
+            "level": 2,
+            "text": "Explora"
+          },
+          {
+            "level": 2,
+            "text": "Trabajo"
+          },
+          {
+            "level": 2,
+            "text": "Conecta"
+          }
+        ],
+        "imgCount": 3,
+        "focusableCount": 39,
+        "focusSample": {
+          "sample": 8,
+          "withVisibleFocus": 8
+        },
+        "lang": "es",
+        "title": "VIGÍA · Proyecto · AI Safety Mexico"
+      }
+    },
+    {
+      "route": "/projects/ai-safety-connect",
+      "url": "http://localhost:5022/projects/ai-safety-connect",
+      "issues": [],
+      "info": {
+        "landmarks": {
+          "header": 7,
+          "nav": 6,
+          "main": 1,
+          "footer": 1,
+          "skipLink": {
+            "href": "#main",
+            "text": "Saltar al contenido",
+            "firstFocusable": true
+          },
+          "mainId": "main"
+        },
+        "headings": [
+          {
+            "level": 1,
+            "text": "AI Safety Connect"
+          },
+          {
+            "level": 2,
+            "text": "¿Qué es AI Safety Connect?"
+          },
+          {
+            "level": 2,
+            "text": "Cómo está construido"
+          },
+          {
+            "level": 2,
+            "text": "Reporte final"
+          },
+          {
+            "level": 2,
+            "text": "Co-investigadores"
+          },
+          {
+            "level": 2,
+            "text": "Programas y aliados"
+          },
+          {
+            "level": 2,
+            "text": "Otros proyectos"
+          },
+          {
+            "level": 3,
+            "text": "VIGÍA"
+          },
+          {
+            "level": 2,
+            "text": "Lee el reporte completo"
+          },
+          {
+            "level": 2,
+            "text": "Explora"
+          },
+          {
+            "level": 2,
+            "text": "Trabajo"
+          },
+          {
+            "level": 2,
+            "text": "Conecta"
+          }
+        ],
+        "imgCount": 3,
+        "focusableCount": 41,
+        "focusSample": {
+          "sample": 8,
+          "withVisibleFocus": 8
+        },
+        "lang": "es",
+        "title": "AI Safety Connect · Proyecto · AI Safety Mexico"
+      }
+    },
+    {
+      "route": "/team",
+      "url": "http://localhost:5022/team",
+      "issues": [],
+      "info": {
+        "landmarks": {
+          "header": 4,
+          "nav": 6,
+          "main": 1,
+          "footer": 1,
+          "skipLink": {
+            "href": "#main",
+            "text": "Saltar al contenido",
+            "firstFocusable": true
+          },
+          "mainId": "main"
+        },
+        "headings": [
+          {
+            "level": 1,
+            "text": "Las personas detrás de AI Safety Mexico"
+          },
+          {
+            "level": 2,
+            "text": "Equipo principal"
+          },
+          {
+            "level": 3,
+            "text": "Janeth Valdivia"
+          },
+          {
+            "level": 3,
+            "text": "Angel Tenorio"
+          },
+          {
+            "level": 3,
+            "text": "Jason Pinelo"
+          },
+          {
+            "level": 3,
+            "text": "Isabel Cámara"
+          },
+          {
+            "level": 3,
+            "text": "Dexter Gómez"
+          },
+          {
+            "level": 3,
+            "text": "Karime Pacheco"
+          },
+          {
+            "level": 2,
+            "text": "Advisors"
+          },
+          {
+            "level": 3,
+            "text": "Dra. Silvia Fernández"
+          },
+          {
+            "level": 2,
+            "text": "Colaboradores destacados"
+          },
+          {
+            "level": 3,
+            "text": "Investigación y proyectos en México"
+          },
+          {
+            "level": 3,
+            "text": "Equipo internacional · SPAR / AI Safety Connect"
+          },
+          {
+            "level": 2,
+            "text": "¿Quieres unirte al equipo?"
+          },
+          {
+            "level": 2,
+            "text": "Explora"
+          },
+          {
+            "level": 2,
+            "text": "Trabajo"
+          },
+          {
+            "level": 2,
+            "text": "Conecta"
+          }
+        ],
+        "imgCount": 9,
+        "focusableCount": 40,
+        "focusSample": {
+          "sample": 8,
+          "withVisibleFocus": 8
+        },
+        "lang": "es",
+        "title": "Equipo · AI Safety Mexico"
+      }
+    },
+    {
+      "route": "/activities",
+      "url": "http://localhost:5022/activities",
+      "issues": [],
+      "info": {
+        "landmarks": {
+          "header": 5,
+          "nav": 6,
+          "main": 1,
+          "footer": 1,
+          "skipLink": {
+            "href": "#main",
+            "text": "Saltar al contenido",
+            "firstFocusable": true
+          },
+          "mainId": "main"
+        },
+        "headings": [
+          {
+            "level": 1,
+            "text": "Actividades en curso y pasadas"
+          },
+          {
+            "level": 2,
+            "text": "Global South AIS Challenge"
+          },
+          {
+            "level": 3,
+            "text": "Apart × AI Safety México · The Global South AIS Challenge"
+          },
+          {
+            "level": 2,
+            "text": "Mesas de trabajo recurrentes"
+          },
+          {
+            "level": 3,
+            "text": "Mesas de trabajo · Primer viernes del mes"
+          },
+          {
+            "level": 2,
+            "text": "Conferencias, talleres y formación"
+          },
+          {
+            "level": 3,
+            "text": "Workshop · Your AI Agent Is Not You"
+          },
+          {
+            "level": 3,
+            "text": "EAGxCDMX · Not so speedy AI Safety"
+          },
+          {
+            "level": 3,
+            "text": "Formación avanzada · ML4Good"
+          },
+          {
+            "level": 2,
+            "text": "Imágenes de nuestras actividades"
+          },
+          {
+            "level": 2,
+            "text": "¿Quieres organizar un evento con nosotros?"
+          },
+          {
+            "level": 2,
+            "text": "Explora"
+          },
+          {
+            "level": 2,
+            "text": "Trabajo"
+          },
+          {
+            "level": 2,
+            "text": "Conecta"
+          }
+        ],
+        "imgCount": 15,
+        "focusableCount": 53,
+        "focusSample": {
+          "sample": 8,
+          "withVisibleFocus": 8
+        },
+        "lang": "es",
+        "title": "Actividades — AI Safety Mexico"
+      }
+    },
+    {
+      "route": "/get-involved",
+      "url": "http://localhost:5022/get-involved",
+      "issues": [],
+      "info": {
+        "landmarks": {
+          "header": 5,
+          "nav": 6,
+          "main": 1,
+          "footer": 1,
+          "skipLink": {
+            "href": "#main",
+            "text": "Saltar al contenido",
+            "firstFocusable": true
+          },
+          "mainId": "main"
+        },
+        "headings": [
+          {
+            "level": 1,
+            "text": "Colabora con nosotros"
+          },
+          {
+            "level": 2,
+            "text": "Trabajamos con organizaciones académicas, laboratorios, gobierno y comunidades"
+          },
+          {
+            "level": 2,
+            "text": "Tres vías para trabajar con AI Safety Mexico"
+          },
+          {
+            "level": 3,
+            "text": "Investigación conjunta"
+          },
+          {
+            "level": 3,
+            "text": "Programas educativos para instituciones"
+          },
+          {
+            "level": 3,
+            "text": "Eventos y advisory"
+          },
+          {
+            "level": 2,
+            "text": "Quiénes han trabajado con nosotros"
+          },
+          {
+            "level": 2,
+            "text": "Cuéntanos sobre tu organización y tu propuesta"
+          },
+          {
+            "level": 2,
+            "text": "Contacto directo"
+          },
+          {
+            "level": 2,
+            "text": "¿Tienes una propuesta concreta?"
+          },
+          {
+            "level": 2,
+            "text": "Explora"
+          },
+          {
+            "level": 2,
+            "text": "Trabajo"
+          },
+          {
+            "level": 2,
+            "text": "Conecta"
+          }
+        ],
+        "imgCount": 2,
+        "focusableCount": 44,
+        "focusSample": {
+          "sample": 8,
+          "withVisibleFocus": 8
+        },
+        "lang": "es",
+        "title": "Colabora con nosotros — AI Safety Mexico"
+      }
+    },
+    {
+      "route": "/contact",
+      "url": "http://localhost:5022/contact",
+      "issues": [],
+      "info": {
+        "landmarks": {
+          "header": 1,
+          "nav": 6,
+          "main": 1,
+          "footer": 1,
+          "skipLink": {
+            "href": "#main",
+            "text": "Saltar al contenido",
+            "firstFocusable": true
+          },
+          "mainId": "main"
+        },
+        "headings": [
+          {
+            "level": 1,
+            "text": "Escríbenos"
+          },
+          {
+            "level": 2,
+            "text": "Canales"
+          },
+          {
+            "level": 2,
+            "text": "¿Quieres colaborar con nosotros?"
+          },
+          {
+            "level": 2,
+            "text": "Explora"
+          },
+          {
+            "level": 2,
+            "text": "Trabajo"
+          },
+          {
+            "level": 2,
+            "text": "Conecta"
+          }
+        ],
+        "imgCount": 2,
+        "focusableCount": 37,
+        "focusSample": {
+          "sample": 8,
+          "withVisibleFocus": 8
+        },
+        "lang": "es",
+        "title": "Contacto — AI Safety Mexico"
+      }
+    }
+  ]
+}

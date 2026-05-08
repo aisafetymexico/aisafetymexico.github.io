@@ -1,0 +1,216 @@
+---
+/**
+ * Card — base card primitive (DESIGN-SYSTEM §6.3, INSPIRATION A4).
+ *
+ * Reusable container with hover lift + shadow. All other *Card components
+ * compose on top of this primitive when convenient, but each card variant
+ * also ships its own scoped styles so they can deviate freely.
+ *
+ * Props:
+ *  - title?:       optional H3 displayed at the top of the card
+ *  - description?: optional supporting paragraph
+ *  - href?:        if present, the entire card becomes a link (anchor wrap)
+ *  - image?:       optional ImgRef shown above the title (16:9)
+ *  - badge?:       optional eyebrow / tag string shown above the title
+ *  - footer?:      slot for CTAs / metadata at the bottom
+ *  - default slot: arbitrary body content placed between description and footer
+ *  - elevated?:    apply default shadow (defaults true)
+ *  - interactive?: enable hover lift + shadow upgrade (defaults true)
+ *  - bordered?:    add subtle 1px border (defaults false)
+ *  - padding?:     'sm' | 'md' | 'lg' (defaults 'md')
+ *  - as?:          element override when not a link (defaults 'article')
+ */
+import type { ImgRef } from '../lib/types';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  href?: string;
+  image?: ImgRef;
+  badge?: string;
+  elevated?: boolean;
+  interactive?: boolean;
+  bordered?: boolean;
+  padding?: 'sm' | 'md' | 'lg';
+  as?: string;
+  external?: boolean;
+}
+
+const {
+  title,
+  description,
+  href,
+  image,
+  badge,
+  elevated = true,
+  interactive = true,
+  bordered = false,
+  padding = 'md',
+  as = 'article',
+  external = false,
+} = Astro.props;
+
+const Tag = (href ? 'a' : as) as any;
+
+const classes = [
+  'card',
+  `card--pad-${padding}`,
+  elevated && 'card--elevated',
+  interactive && 'card--interactive',
+  bordered && 'card--bordered',
+  href && 'card--link',
+].filter(Boolean).join(' ');
+
+const linkAttrs = href
+  ? {
+      href,
+      ...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
+    }
+  : {};
+
+const imageSrc = image && (typeof image.src === 'string' ? image.src : image.src.src);
+---
+
+<Tag class={classes} {...linkAttrs}>
+  {image && imageSrc && (
+    <div class="card__media">
+      <img
+        class="card__img"
+        src={imageSrc}
+        alt={image.alt}
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  )}
+
+  <div class="card__body">
+    {badge && <span class="card__badge">{badge}</span>}
+    {title && <h3 class="card__title">{title}</h3>}
+    {description && <p class="card__description">{description}</p>}
+
+    <slot />
+
+    {Astro.slots.has('footer') && (
+      <div class="card__footer"><slot name="footer" /></div>
+    )}
+  </div>
+</Tag>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-elevated);
+    border-radius: var(--radius);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+      transform var(--transition),
+      box-shadow var(--transition),
+      border-color var(--transition);
+  }
+
+  .card--elevated {
+    box-shadow: var(--shadow);
+  }
+
+  .card--bordered {
+    border: 1px solid var(--color-border);
+  }
+
+  .card--interactive:hover,
+  .card--interactive:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .card--link:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+  }
+
+  /* Media area — fixed 16:9 to keep grids aligned */
+  .card__media {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    overflow: hidden;
+    background: var(--color-bg-warm);
+  }
+
+  .card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-slow);
+  }
+
+  .card--interactive:hover .card__img {
+    transform: scale(1.03);
+  }
+
+  /* Body */
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    flex: 1;
+  }
+
+  .card--pad-sm .card__body { padding: var(--space-5); }
+  .card--pad-md .card__body { padding: var(--space-6); }
+  .card--pad-lg .card__body { padding: var(--space-8); }
+
+  @media (min-width: 768px) {
+    .card--pad-md .card__body { padding: var(--space-7); }
+    .card--pad-lg .card__body { padding: var(--space-8); }
+  }
+
+  .card__badge {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent);
+    line-height: 1;
+  }
+
+  .card__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+    margin: 0;
+  }
+
+  .card__description {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+  }
+
+  .card__footer {
+    margin-top: auto;
+    padding-top: var(--space-3);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card,
+    .card__img {
+      transition: none;
+    }
+    .card--interactive:hover {
+      transform: none;
+    }
+  }
+</style>

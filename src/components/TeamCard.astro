@@ -1,0 +1,166 @@
+---
+/**
+ * TeamCard — member card for /team and home Equipo strip.
+ *
+ * Spec: docs/DESIGN-SYSTEM.md §6.3 (TeamCard).
+ *
+ * Visual: circular portrait with copper border (matches the existing
+ * style.css convention for /images/Equipo/*), name in Playfair, role in
+ * Inter small. Optional LinkedIn icon link below.
+ *
+ * Photos are served from /images/Equipo/<file>.{jpeg,png} (already in /public).
+ *
+ * Props:
+ *  - name:      Full name (h6 scale).
+ *  - role:      Role / title (small Inter).
+ *  - photo:     ImgRef pointing to /images/Equipo/<file>.
+ *  - linkedin?: Optional LinkedIn profile URL.
+ */
+import type { ImgRef } from '../lib/types';
+
+export interface Props {
+  name: string;
+  role: string;
+  photo: ImgRef;
+  linkedin?: string;
+}
+
+const { name, role, photo, linkedin } = Astro.props;
+
+const photoSrc = typeof photo.src === 'string' ? photo.src : photo.src.src;
+---
+
+<article class="team-card">
+  <div class="team-card__photo-wrap">
+    <img
+      class="team-card__photo"
+      src={photoSrc}
+      alt={photo.alt || name}
+      loading="lazy"
+      decoding="async"
+      width="160"
+      height="160"
+    />
+  </div>
+
+  <h3 class="team-card__name">{name}</h3>
+  <p class="team-card__role">{role}</p>
+
+  {linkedin && (
+    <a
+      class="team-card__social"
+      href={linkedin}
+      aria-label={`${name} en LinkedIn`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          fill="currentColor"
+          d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5.001zM3 9h4v12H3V9zm7 0h3.84v1.64h.05c.53-1 1.85-2.05 3.81-2.05 4.07 0 4.82 2.68 4.82 6.16V21h-4v-5.34c0-1.27-.02-2.91-1.77-2.91-1.77 0-2.04 1.39-2.04 2.82V21h-4V9z"
+        />
+      </svg>
+    </a>
+  )}
+</article>
+
+<style>
+  .team-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--space-6) var(--space-4);
+    background: var(--color-bg-elevated);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform var(--transition),
+      box-shadow var(--transition);
+  }
+
+  .team-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+
+  .team-card__photo-wrap {
+    width: 140px;
+    height: 140px;
+    border-radius: var(--radius-full);
+    padding: 4px;
+    background: var(--gradient-badge-warm);
+    margin-bottom: var(--space-4);
+  }
+
+  .team-card__photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    border: 3px solid var(--color-bg-elevated);
+    background: var(--color-bg-warm);
+  }
+
+  .team-card__name {
+    margin: 0 0 var(--space-1);
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+  }
+
+  .team-card__role {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-normal);
+    color: var(--color-text-secondary);
+  }
+
+  .team-card__social {
+    margin-top: var(--space-3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    transition: background var(--transition), color var(--transition), transform var(--transition);
+  }
+  .team-card__social:hover {
+    background: var(--color-accent);
+    color: var(--color-text-on-dark);
+    transform: translateY(-1px);
+  }
+  .team-card__social:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+  }
+  .team-card__social svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  @media (min-width: 768px) {
+    .team-card {
+      padding: var(--space-7) var(--space-5);
+    }
+    .team-card__photo-wrap {
+      width: 160px;
+      height: 160px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .team-card,
+    .team-card__social { transition: none; }
+    .team-card:hover { transform: none; }
+    .team-card__social:hover { transform: none; }
+  }
+</style>

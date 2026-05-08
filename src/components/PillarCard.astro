@@ -1,0 +1,116 @@
+---
+/**
+ * PillarCard — used to render the four "pilares" on the About / Home pages.
+ *
+ * Spec: docs/DESIGN-SYSTEM.md §6.3 (PillarCard) + docs/RAND-AESTHETIC.md §8
+ * (numeral-as-anchor pattern adapted from RAND.org).
+ *
+ * Visual: a typographic numeral (e.g. `01`) in Playfair display sits above the
+ * h6 serif title — it replaces the previous decorative emoji disc. The card
+ * sits on a cream surface with a copper top accent line. No CTA; pillars
+ * describe the organisation's pillars of work, not destinations.
+ *
+ * Props:
+ *  - number:      optional 2-digit string (e.g. "01") shown as the typographic
+ *                 anchor above the title. Falls back to no anchor.
+ *  - title:       short pillar name (Playfair, h6 scale).
+ *  - description: optional 1–2 sentence body.
+ *
+ * Backwards-compat: legacy callers passing `icon` (emoji) are silently
+ * ignored — emoji decoration is no longer rendered (Task #26 / RAND-ify).
+ */
+export interface Props {
+  number?: string;
+  title: string;
+  description?: string;
+  /** @deprecated kept for backwards compatibility; not rendered. */
+  icon?: string;
+}
+
+const { number, title, description } = Astro.props;
+---
+
+<article class="pillar-card">
+  {number && (
+    <span class="pillar-card__number" aria-hidden="true">{number}</span>
+  )}
+  <h3 class="pillar-card__title">{title}</h3>
+  {description && <p class="pillar-card__text">{description}</p>}
+</article>
+
+<style>
+  .pillar-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-7) var(--space-6);
+    background: var(--color-bg-elevated);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform var(--transition),
+      box-shadow var(--transition);
+    overflow: hidden;
+  }
+
+  /* Top copper accent line — subtle institutional accent */
+  .pillar-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: var(--gradient-edge-accent);
+    opacity: 0.85;
+  }
+
+  .pillar-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+
+  /* Numeral anchor: Playfair display, copper, large — replaces the old icon
+     disc. Sits above the title with tight line-height so it doesn't add
+     vertical noise. */
+  .pillar-card__number {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    color: var(--color-accent);
+    letter-spacing: -0.02em;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  .pillar-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+  }
+
+  .pillar-card__text {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+  }
+
+  @media (min-width: 768px) {
+    .pillar-card {
+      padding: var(--space-8) var(--space-7);
+    }
+    .pillar-card__number {
+      font-size: 2.8rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pillar-card { transition: none; }
+    .pillar-card:hover { transform: none; }
+  }
+</style>

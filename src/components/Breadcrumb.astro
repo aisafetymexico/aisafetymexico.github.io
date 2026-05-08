@@ -1,0 +1,203 @@
+---
+/**
+ * Breadcrumb — orientation trail for interior pages.
+ *
+ * Spec: docs/ARCHITECTURE.md §5.
+ *  - Show on every page EXCEPT `/`.
+ *  - Format: `Inicio › <Section> › <Page>` with `›` separator.
+ *  - Final item is the current page (not linked, bold-ish).
+ *  - Mobile: when path depth ≥ 2 AND viewport <500px, collapse to a
+ *    "‹ <Parent>" back-link (handled in CSS).
+ *  - Emits BreadcrumbList JSON-LD for SEO.
+ *
+ * Props:
+ *  - items: ordered list, including the current page as last entry.
+ *           Set `href` on every entry except the last (current).
+ *
+ * Example:
+ *   <Breadcrumb items={[
+ *     { label: 'Inicio', href: '/' },
+ *     { label: 'Proyectos', href: '/projects' },
+ *     { label: 'VIGÍA' }
+ *   ]} />
+ */
+import type { BreadcrumbItem } from '../lib/types';
+
+export interface Props {
+  items: BreadcrumbItem[];
+  /** Optional override for the back-link label shown on small mobile. */
+  backLabel?: string;
+}
+
+const { items, backLabel } = Astro.props;
+
+if (!items || items.length === 0) {
+  throw new Error('Breadcrumb: `items` must contain at least one entry.');
+}
+
+const lastIndex = items.length - 1;
+
+// Parent for the mobile back-link (penultimate entry, fallback to first).
+const parent =
+  items.length >= 2 ? items[lastIndex - 1] : items[0];
+const parentHref = parent?.href ?? '/';
+const parentLabel = backLabel ?? parent?.label ?? 'Atrás';
+
+// Resolve absolute URL for JSON-LD (BreadcrumbList requires URLs).
+const site = Astro.site ?? new URL('https://aisafetymexico.github.io/');
+const resolveUrl = (href?: string): string | undefined => {
+  if (!href) return undefined;
+  try {
+    return new URL(href, site).toString();
+  } catch {
+    return href;
+  }
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((item: BreadcrumbItem, idx: number) => {
+    const url = resolveUrl(item.href);
+    return {
+      '@type': 'ListItem',
+      position: idx + 1,
+      name: item.label,
+      ...(url ? { item: url } : {}),
+    };
+  }),
+};
+---
+
+<nav class="breadcrumb" aria-label="Migas de pan">
+  {/* Mobile back-link (only renders on small screens with depth ≥ 2). */}
+  {items.length >= 2 && (
+    <a class="breadcrumb__back" href={parentHref} rel="up">
+      <span aria-hidden="true">‹</span>
+      <span>{parentLabel}</span>
+    </a>
+  )}
+
+  {/* Full ordered trail (hidden on small mobile when depth ≥ 2). */}
+  <ol class="breadcrumb__trail">
+    {items.map((item: BreadcrumbItem, idx: number) => {
+      const isLast = idx === lastIndex;
+      return (
+        <li class="breadcrumb__item">
+          {item.href && !isLast ? (
+            <a class="breadcrumb__link" href={item.href}>{item.label}</a>
+          ) : (
+            <span
+              class="breadcrumb__current"
+              aria-current={isLast ? 'page' : undefined}
+            >{item.label}</span>
+          )}
+          {!isLast && (
+            <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          )}
+        </li>
+      );
+    })}
+  </ol>
+
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify(jsonLd)}
+  />
+</nav>
+
+<style>
+  .breadcrumb {
+    width: 100%;
+    max-width: var(--container-max, 1200px);
+    margin: 0 auto;
+    padding: 16px 20px 0;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--color-text-secondary, var(--text-light, #6A6A7A));
+  }
+
+  .breadcrumb__trail {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .breadcrumb__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .breadcrumb__link {
+    color: var(--color-link, var(--copper, #C4854A));
+    text-decoration: none;
+    border-radius: 4px;
+    transition: color 0.15s ease;
+  }
+  .breadcrumb__link:hover,
+  .breadcrumb__link:focus-visible {
+    color: var(--color-link-hover, var(--copper-dark, #A86E3A));
+    text-decoration: underline;
+  }
+  .breadcrumb__link:focus-visible {
+    outline: 2px solid var(--color-focus-ring, var(--copper, #C4854A));
+    outline-offset: 2px;
+  }
+
+  .breadcrumb__current {
+    color: var(--color-text-heading, var(--navy, #1B2340));
+    font-weight: 600;
+    /* Truncate gracefully on tight rows */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 60ch;
+  }
+
+  .breadcrumb__sep {
+    color: var(--color-text-muted, var(--text-muted, #8A8A9A));
+    font-size: 14px;
+    line-height: 1;
+    user-select: none;
+  }
+
+  /* Mobile back-link — hidden by default; shown only on tight viewports
+     when path depth ≥ 2. */
+  .breadcrumb__back {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-link, var(--copper, #C4854A));
+    text-decoration: none;
+    font-weight: 600;
+    padding: 4px 0;
+  }
+  .breadcrumb__back:hover,
+  .breadcrumb__back:focus-visible {
+    color: var(--color-link-hover, var(--copper-dark, #A86E3A));
+    text-decoration: underline;
+  }
+  .breadcrumb__back:focus-visible {
+    outline: 2px solid var(--color-focus-ring, var(--copper, #C4854A));
+    outline-offset: 2px;
+  }
+
+  /* Tight-mobile collapse: when the trail is multi-level, swap full trail
+     for a single back-link to free vertical space. */
+  @media (max-width: 499px) {
+    .breadcrumb:has(.breadcrumb__back) .breadcrumb__trail {
+      display: none;
+    }
+    .breadcrumb__back {
+      display: inline-flex;
+    }
+  }
+</style>

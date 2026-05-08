@@ -1,0 +1,436 @@
+---
+/**
+ * ContactForm — accessible contact / collaboration form.
+ *
+ * Spec:
+ *  - docs/DESIGN-SYSTEM.md §6.5 (`ContactForm.astro`).
+ *  - INSPIRATION.md A8 (Get Involved page = solid brand band, single CTA).
+ *
+ * A11y guarantees:
+ *  - Every <input> has a <label for=…>.
+ *  - Required fields use `required` (HTML5) and `aria-required="true"`.
+ *  - Inline error region with role="alert" / aria-live="polite".
+ *  - Success region with role="status" / aria-live="polite".
+ *  - Honeypot field (hidden) for spam, not relied on for a11y.
+ *  - Submit button has accessible name; button gets `aria-busy` while sending.
+ *  - All controls reachable by keyboard with visible :focus-visible ring.
+ *
+ * Behaviours:
+ *  - Vanilla HTML5 validation (novalidate is intentionally NOT set).
+ *  - When `endpoint` is a URL → POST as JSON. Falls back to mailto:.
+ *  - On 2xx response → show success message + reset form.
+ *  - On error → show error message; form remains editable.
+ *  - Idempotent script (data-attr guard).
+ *
+ * Props:
+ *  - endpoint?: string  — a URL ("https://…") or "mailto:contacto@…".
+ *  - successMessage?: string
+ *  - id?: string
+ */
+export interface Props {
+  endpoint?: string;
+  successMessage?: string;
+  id?: string;
+}
+
+const {
+  endpoint = 'mailto:contacto@aisafetymexico.org',
+  successMessage = '¡Gracias! Hemos recibido tu mensaje y te responderemos pronto.',
+  id,
+} = Astro.props;
+
+const formId = id || `contact-form-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<form
+  class="contact-form"
+  id={formId}
+  data-contact-form
+  data-endpoint={endpoint}
+  data-success-message={successMessage}
+  novalidate={false}
+  aria-describedby={`${formId}-status`}
+>
+  <div class="contact-form__grid">
+    <div class="contact-form__field">
+      <label for={`${formId}-name`} class="contact-form__label">
+        Nombre <span aria-hidden="true" class="contact-form__required">*</span>
+      </label>
+      <input
+        type="text"
+        id={`${formId}-name`}
+        name="name"
+        class="contact-form__input"
+        autocomplete="name"
+        required
+        aria-required="true"
+        minlength="2"
+        maxlength="120"
+      />
+    </div>
+
+    <div class="contact-form__field">
+      <label for={`${formId}-email`} class="contact-form__label">
+        Correo electrónico <span aria-hidden="true" class="contact-form__required">*</span>
+      </label>
+      <input
+        type="email"
+        id={`${formId}-email`}
+        name="email"
+        class="contact-form__input"
+        autocomplete="email"
+        required
+        aria-required="true"
+        maxlength="254"
+      />
+    </div>
+
+    <div class="contact-form__field">
+      <label for={`${formId}-org`} class="contact-form__label">Organización</label>
+      <input
+        type="text"
+        id={`${formId}-org`}
+        name="organization"
+        class="contact-form__input"
+        autocomplete="organization"
+        maxlength="200"
+      />
+    </div>
+
+    <div class="contact-form__field">
+      <label for={`${formId}-type`} class="contact-form__label">
+        Tipo de colaboración <span aria-hidden="true" class="contact-form__required">*</span>
+      </label>
+      <select
+        id={`${formId}-type`}
+        name="collaboration_type"
+        class="contact-form__input contact-form__select"
+        required
+        aria-required="true"
+      >
+        <option value="">Selecciona una opción</option>
+        <option value="research">Investigación</option>
+        <option value="education">Educación / Programas</option>
+        <option value="policy">Políticas públicas</option>
+        <option value="institutional">Colaboración institucional</option>
+        <option value="volunteer">Voluntariado</option>
+        <option value="other">Otro</option>
+      </select>
+    </div>
+
+    <div class="contact-form__field contact-form__field--full">
+      <label for={`${formId}-message`} class="contact-form__label">
+        Mensaje <span aria-hidden="true" class="contact-form__required">*</span>
+      </label>
+      <textarea
+        id={`${formId}-message`}
+        name="message"
+        class="contact-form__input contact-form__textarea"
+        required
+        aria-required="true"
+        rows="5"
+        minlength="10"
+        maxlength="3000"
+      ></textarea>
+    </div>
+
+    {/* Honeypot — bots fill, humans skip (visually + a11y hidden) */}
+    <div class="contact-form__honeypot" aria-hidden="true">
+      <label for={`${formId}-website`}>No completar este campo</label>
+      <input type="text" id={`${formId}-website`} name="website" tabindex="-1" autocomplete="off" />
+    </div>
+  </div>
+
+  <div class="contact-form__actions">
+    <button type="submit" class="contact-form__submit" data-contact-submit>
+      <span data-submit-label>Enviar mensaje</span>
+      <span data-submit-loading hidden>Enviando…</span>
+    </button>
+  </div>
+
+  <p
+    id={`${formId}-status`}
+    class="contact-form__status"
+    role="status"
+    aria-live="polite"
+    data-contact-status
+  ></p>
+  <p
+    class="contact-form__error"
+    role="alert"
+    aria-live="polite"
+    data-contact-error
+    hidden
+  ></p>
+</form>
+
+<script>
+  (() => {
+    const ATTR = 'data-contact-bound';
+
+    const init = (form: HTMLFormElement) => {
+      if (form.getAttribute(ATTR) === '1') return;
+      form.setAttribute(ATTR, '1');
+
+      const endpoint = form.getAttribute('data-endpoint') || '';
+      const successMessage =
+        form.getAttribute('data-success-message') ||
+        '¡Gracias! Hemos recibido tu mensaje.';
+      const status = form.querySelector<HTMLElement>('[data-contact-status]');
+      const errorEl = form.querySelector<HTMLElement>('[data-contact-error]');
+      const submit = form.querySelector<HTMLButtonElement>('[data-contact-submit]');
+      const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]');
+      const submitLoading = form.querySelector<HTMLElement>('[data-submit-loading]');
+
+      const setError = (msg: string) => {
+        if (!errorEl) return;
+        errorEl.textContent = msg;
+        errorEl.hidden = false;
+      };
+      const clearError = () => {
+        if (!errorEl) return;
+        errorEl.textContent = '';
+        errorEl.hidden = true;
+      };
+      const setStatus = (msg: string) => {
+        if (status) status.textContent = msg;
+      };
+      const setBusy = (busy: boolean) => {
+        if (!submit) return;
+        submit.disabled = busy;
+        submit.setAttribute('aria-busy', busy ? 'true' : 'false');
+        if (submitLabel) submitLabel.hidden = busy;
+        if (submitLoading) submitLoading.hidden = !busy;
+      };
+
+      form.addEventListener('submit', async (e: SubmitEvent) => {
+        clearError();
+        setStatus('');
+
+        // HTML5 validity → show native errors and focus first invalid.
+        if (!form.checkValidity()) {
+          e.preventDefault();
+          form.reportValidity();
+          const invalid = form.querySelector<HTMLElement>(':invalid');
+          invalid?.focus();
+          return;
+        }
+
+        // Honeypot: if filled, silently "succeed" without sending.
+        const honey = (form.elements.namedItem('website') as HTMLInputElement | null)?.value;
+        if (honey) {
+          e.preventDefault();
+          setStatus(successMessage);
+          form.reset();
+          return;
+        }
+
+        const data = {
+          name: (form.elements.namedItem('name') as HTMLInputElement).value.trim(),
+          email: (form.elements.namedItem('email') as HTMLInputElement).value.trim(),
+          organization:
+            (form.elements.namedItem('organization') as HTMLInputElement)?.value.trim() || '',
+          collaboration_type:
+            (form.elements.namedItem('collaboration_type') as HTMLSelectElement).value,
+          message: (form.elements.namedItem('message') as HTMLTextAreaElement).value.trim(),
+        };
+
+        // mailto: fallback (no JS submit) — let the browser handle it.
+        if (endpoint.startsWith('mailto:')) {
+          e.preventDefault();
+          const subject = encodeURIComponent(
+            `Contacto AISMX — ${data.collaboration_type || 'general'}`
+          );
+          const body = encodeURIComponent(
+            `Nombre: ${data.name}\n` +
+              `Correo: ${data.email}\n` +
+              `Organización: ${data.organization}\n` +
+              `Tipo de colaboración: ${data.collaboration_type}\n\n` +
+              data.message
+          );
+          window.location.href = `${endpoint}?subject=${subject}&body=${body}`;
+          setStatus(successMessage);
+          return;
+        }
+
+        // HTTP endpoint — JSON POST with fetch.
+        if (/^https?:\/\//i.test(endpoint)) {
+          e.preventDefault();
+          setBusy(true);
+          try {
+            const res = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+              body: JSON.stringify(data),
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            setStatus(successMessage);
+            form.reset();
+          } catch (err) {
+            setError(
+              'No pudimos enviar tu mensaje en este momento. Por favor, intenta de nuevo o escríbenos directamente a contacto@aisafetymexico.org.'
+            );
+          } finally {
+            setBusy(false);
+          }
+          return;
+        }
+
+        // Unknown endpoint scheme: don't intercept, let HTML default action run.
+      });
+
+      // Clear error/status as the user edits.
+      form.addEventListener('input', () => {
+        if (errorEl && !errorEl.hidden) clearError();
+      });
+    };
+
+    const bootstrap = () => {
+      document
+        .querySelectorAll<HTMLFormElement>('[data-contact-form]')
+        .forEach(init);
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootstrap);
+    } else {
+      bootstrap();
+    }
+  })();
+</script>
+
+<style>
+  .contact-form {
+    width: 100%;
+    max-width: var(--container-narrow, 800px);
+    margin-inline: auto;
+    font-family: var(--font-body, 'Inter', sans-serif);
+  }
+
+  .contact-form__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5, 20px);
+  }
+  @media (min-width: 768px) {
+    .contact-form__grid { grid-template-columns: 1fr 1fr; }
+    .contact-form__field--full { grid-column: 1 / -1; }
+  }
+
+  .contact-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2, 8px);
+  }
+
+  .contact-form__label {
+    font-size: var(--fs-small, 0.92rem);
+    font-weight: var(--fw-semibold, 600);
+    color: var(--color-text-heading, var(--navy, #1B2340));
+    letter-spacing: var(--ls-wide, 0.3px);
+  }
+
+  .contact-form__required {
+    color: var(--color-accent, var(--copper, #C4854A));
+    font-weight: var(--fw-bold, 700);
+  }
+
+  .contact-form__input {
+    appearance: none;
+    width: 100%;
+    padding: var(--space-3, 12px) var(--space-4, 16px);
+    background: var(--color-bg-base, var(--white, #fff));
+    border: 1px solid var(--color-border, var(--border, #E2DED6));
+    border-radius: var(--radius-sm, 6px);
+    color: var(--color-text-primary, var(--text, #3A3A4A));
+    font-family: inherit;
+    font-size: var(--fs-body, 1rem);
+    line-height: var(--lh-normal, 1.5);
+    transition: border-color var(--transition, 0.25s ease), box-shadow var(--transition, 0.25s ease);
+  }
+  .contact-form__input:hover {
+    border-color: var(--color-accent, var(--copper, #C4854A));
+  }
+  .contact-form__input:focus-visible,
+  .contact-form__input:focus {
+    outline: none;
+    border-color: var(--color-accent, var(--copper, #C4854A));
+    box-shadow: 0 0 0 3px var(--copper-border-soft, rgba(196, 133, 74, 0.25));
+  }
+  .contact-form__input:invalid:not(:placeholder-shown):not(:focus) {
+    border-color: #b3261e;
+  }
+
+  .contact-form__textarea {
+    min-height: 7rem;
+    resize: vertical;
+  }
+
+  .contact-form__select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 5l5 6 5-6' fill='none' stroke='%23C4854A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 14px;
+    padding-right: 40px;
+  }
+
+  /* Honeypot — visually + a11y hidden but still focusable for bots that ignore tabindex */
+  .contact-form__honeypot {
+    position: absolute !important;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .contact-form__actions {
+    margin-top: var(--space-6, 24px);
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .contact-form__submit {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3, 12px) var(--space-7, 28px);
+    border: none;
+    border-radius: var(--radius-pill, 999px);
+    background: var(--color-accent, var(--copper, #C4854A));
+    color: var(--color-text-inverse, var(--white, #fff));
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: var(--fs-body, 1rem);
+    font-weight: var(--fw-semibold, 600);
+    cursor: pointer;
+    transition: background var(--transition, 0.25s ease), transform var(--transition, 0.25s ease);
+  }
+  .contact-form__submit:hover {
+    background: var(--color-accent-hover, var(--copper-dark, #A86E3A));
+  }
+  .contact-form__submit:focus-visible {
+    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline-offset: 3px;
+  }
+  .contact-form__submit:disabled {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  .contact-form__status {
+    margin-top: var(--space-4, 16px);
+    color: var(--color-accent-hover, var(--copper-dark, #A86E3A));
+    font-weight: var(--fw-semibold, 600);
+    min-height: 1.2em;
+  }
+  .contact-form__status:empty { display: none; }
+
+  .contact-form__error {
+    margin-top: var(--space-3, 12px);
+    padding: var(--space-3, 12px) var(--space-4, 16px);
+    background: rgba(179, 38, 30, 0.08);
+    border-left: 3px solid #b3261e;
+    color: #b3261e;
+    border-radius: var(--radius-xs, 4px);
+  }
+</style>

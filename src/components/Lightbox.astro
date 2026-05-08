@@ -1,0 +1,341 @@
+---
+/**
+ * Lightbox — accessible image lightbox/zoom for galleries (e.g. certificates).
+ *
+ * Spec:
+ *  - docs/DESIGN-SYSTEM.md §6.5 (`Lightbox.astro`).
+ *  - WAI-ARIA Authoring Practices: "Dialog (Modal)".
+ *
+ * Behaviour:
+ *  - Renders a single global overlay (role="dialog", aria-modal=true) per page.
+ *  - Wires every <img> matched by `triggerSelector` (default '[data-lightbox]')
+ *    plus any image inside an element with that attribute. Clicking the image
+ *    opens the lightbox with the high-res src + alt.
+ *  - Keyboard: Escape closes; ArrowLeft / ArrowRight cycle through siblings
+ *    (same `data-lightbox-group` value, or all triggers if no group).
+ *  - Focus trap inside the overlay; focus returns to the trigger on close.
+ *  - Background scroll is locked while open.
+ *  - Respects `prefers-reduced-motion`.
+ *  - Idempotent (data-attr guard, single overlay reused).
+ *
+ * Usage:
+ *   1. Drop <Lightbox /> ONCE in the layout (or at the bottom of any page that
+ *      needs it).
+ *   2. Mark images you want zoomable:
+ *        <img src="/cert.jpg" alt="..." data-lightbox data-lightbox-group="certs" />
+ *      Or wrap with any element carrying [data-lightbox]; the first <img>
+ *      inside is used.
+ *   3. Optionally provide `data-lightbox-src` for a higher-res alternative.
+ *
+ * Props:
+ *  - triggerSelector?: string  (default '[data-lightbox]')
+ */
+export interface Props {
+  triggerSelector?: string;
+}
+
+const { triggerSelector = '[data-lightbox]' } = Astro.props;
+---
+
+<div
+  class="lightbox"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Imagen ampliada"
+  data-lightbox-overlay
+  data-trigger-selector={triggerSelector}
+  hidden
+>
+  <button
+    type="button"
+    class="lightbox__close"
+    aria-label="Cerrar imagen"
+    data-lightbox-close
+  >
+    <span aria-hidden="true">×</span>
+  </button>
+  <button
+    type="button"
+    class="lightbox__nav lightbox__nav--prev"
+    aria-label="Imagen anterior"
+    data-lightbox-prev
+    hidden
+  >
+    <span aria-hidden="true">‹</span>
+  </button>
+  <button
+    type="button"
+    class="lightbox__nav lightbox__nav--next"
+    aria-label="Imagen siguiente"
+    data-lightbox-next
+    hidden
+  >
+    <span aria-hidden="true">›</span>
+  </button>
+  <figure class="lightbox__figure">
+    <img class="lightbox__image" alt="" data-lightbox-image />
+    <figcaption class="lightbox__caption" data-lightbox-caption></figcaption>
+  </figure>
+</div>
+
+<script>
+  (() => {
+    if ((window as any).__aismxLightboxBound) return;
+    (window as any).__aismxLightboxBound = true;
+
+    const init = () => {
+      const overlay = document.querySelector<HTMLElement>('[data-lightbox-overlay]');
+      if (!overlay) return;
+
+      const selector = overlay.getAttribute('data-trigger-selector') || '[data-lightbox]';
+      const img = overlay.querySelector<HTMLImageElement>('[data-lightbox-image]');
+      const caption = overlay.querySelector<HTMLElement>('[data-lightbox-caption]');
+      const closeBtn = overlay.querySelector<HTMLButtonElement>('[data-lightbox-close]');
+      const prevBtn = overlay.querySelector<HTMLButtonElement>('[data-lightbox-prev]');
+      const nextBtn = overlay.querySelector<HTMLButtonElement>('[data-lightbox-next]');
+
+      if (!img || !closeBtn || !prevBtn || !nextBtn) return;
+
+      let lastFocus: HTMLElement | null = null;
+      let currentGroup: HTMLElement[] = [];
+      let currentIndex = 0;
+
+      const collectTriggers = (): HTMLElement[] =>
+        Array.from(document.querySelectorAll<HTMLElement>(selector));
+
+      const resolveImg = (trigger: HTMLElement): HTMLImageElement | null => {
+        if (trigger instanceof HTMLImageElement) return trigger;
+        return trigger.querySelector<HTMLImageElement>('img');
+      };
+
+      const groupOf = (trigger: HTMLElement): string | null => {
+        const own = trigger.getAttribute('data-lightbox-group');
+        if (own) return own;
+        const parent = trigger.closest<HTMLElement>('[data-lightbox-group]');
+        return parent?.getAttribute('data-lightbox-group') || null;
+      };
+
+      const showAt = (idx: number) => {
+        const trigger = currentGroup[idx];
+        if (!trigger) return;
+        const sourceImg = resolveImg(trigger);
+        if (!sourceImg) return;
+        const hires = trigger.getAttribute('data-lightbox-src') || sourceImg.src;
+        const alt =
+          trigger.getAttribute('data-lightbox-alt') ||
+          sourceImg.alt ||
+          'Imagen ampliada';
+        const captionText =
+          trigger.getAttribute('data-lightbox-caption') ||
+          sourceImg.getAttribute('data-caption') ||
+          '';
+        img.src = hires;
+        img.alt = alt;
+        if (caption) {
+          caption.textContent = captionText;
+          caption.hidden = !captionText;
+        }
+        currentIndex = idx;
+        const showNav = currentGroup.length > 1;
+        prevBtn.hidden = !showNav;
+        nextBtn.hidden = !showNav;
+      };
+
+      const open = (trigger: HTMLElement) => {
+        lastFocus = document.activeElement as HTMLElement;
+        const group = groupOf(trigger);
+        const all = collectTriggers();
+        currentGroup = group
+          ? all.filter(t => groupOf(t) === group)
+          : [trigger];
+        currentIndex = Math.max(0, currentGroup.indexOf(trigger));
+        showAt(currentIndex);
+        overlay.hidden = false;
+        requestAnimationFrame(() => overlay.classList.add('is-open'));
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
+      };
+
+      const close = () => {
+        overlay.classList.remove('is-open');
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const finalize = () => {
+          overlay.hidden = true;
+          if (img) img.src = '';
+        };
+        if (reduced) finalize();
+        else setTimeout(finalize, 200);
+        document.body.style.overflow = '';
+        lastFocus?.focus();
+      };
+
+      const next = () => showAt((currentIndex + 1) % currentGroup.length);
+      const prev = () =>
+        showAt((currentIndex - 1 + currentGroup.length) % currentGroup.length);
+
+      // Delegate clicks so dynamically added triggers are picked up too.
+      document.addEventListener('click', (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        const trigger = target.closest<HTMLElement>(selector);
+        if (!trigger) return;
+        // Don't hijack normal anchor navigation if author wants a real link.
+        if (trigger.tagName === 'A' && trigger.hasAttribute('href') &&
+            !trigger.hasAttribute('data-lightbox')) return;
+        e.preventDefault();
+        open(trigger);
+      });
+
+      // Make non-button triggers keyboard-accessible.
+      document.addEventListener('keydown', (e: KeyboardEvent) => {
+        const target = e.target as HTMLElement;
+        const trigger = target.closest<HTMLElement>(selector);
+        if (trigger && (e.key === 'Enter' || e.key === ' ')) {
+          // Native buttons/links handle Enter themselves; only assist others.
+          if (trigger.tagName !== 'BUTTON' && trigger.tagName !== 'A') {
+            e.preventDefault();
+            open(trigger);
+          }
+        }
+      });
+
+      // Ensure non-interactive triggers expose the right semantics.
+      collectTriggers().forEach(t => {
+        if (t.tagName === 'BUTTON' || t.tagName === 'A') return;
+        if (!t.hasAttribute('tabindex')) t.setAttribute('tabindex', '0');
+        if (!t.hasAttribute('role')) t.setAttribute('role', 'button');
+        if (!t.hasAttribute('aria-label') && !t.textContent?.trim()) {
+          const im = resolveImg(t);
+          if (im?.alt) t.setAttribute('aria-label', `Ampliar imagen: ${im.alt}`);
+        }
+      });
+
+      closeBtn.addEventListener('click', close);
+      nextBtn.addEventListener('click', next);
+      prevBtn.addEventListener('click', prev);
+
+      overlay.addEventListener('click', (e: MouseEvent) => {
+        if (e.target === overlay) close();
+      });
+
+      document.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (overlay.hidden) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          close();
+        } else if (e.key === 'ArrowRight' && currentGroup.length > 1) {
+          e.preventDefault();
+          next();
+        } else if (e.key === 'ArrowLeft' && currentGroup.length > 1) {
+          e.preventDefault();
+          prev();
+        } else if (e.key === 'Tab') {
+          // Trap focus inside overlay.
+          const focusables = Array.from(
+            overlay.querySelectorAll<HTMLElement>(
+              'button:not([hidden]):not([disabled]), [tabindex]:not([tabindex="-1"])'
+            )
+          );
+          if (focusables.length === 0) return;
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+<style>
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6, 24px);
+    background: rgba(0, 0, 0, 0.85);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .lightbox.is-open { opacity: 1; }
+  .lightbox[hidden] { display: none; }
+
+  .lightbox__figure {
+    margin: 0;
+    max-width: min(95vw, 1200px);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3, 12px);
+  }
+
+  .lightbox__image {
+    display: block;
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: var(--radius-sm, 6px);
+    box-shadow: var(--shadow-hero, 0 24px 60px rgba(0, 0, 0, 0.18));
+    background: var(--color-bg-base, var(--white, #fff));
+  }
+
+  .lightbox__caption {
+    color: var(--white-text-strong, rgba(255, 255, 255, 0.85));
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: var(--fs-small, 0.92rem);
+    text-align: center;
+    max-width: 60ch;
+  }
+  .lightbox__caption[hidden] { display: none; }
+
+  .lightbox__close,
+  .lightbox__nav {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full, 50%);
+    border: none;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--white, #fff);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+  }
+  .lightbox__close:hover,
+  .lightbox__nav:hover { background: rgba(255, 255, 255, 0.22); }
+  .lightbox__close:focus-visible,
+  .lightbox__nav:focus-visible {
+    outline: 2px solid var(--color-accent-secondary, var(--gold, #D4A853));
+    outline-offset: 3px;
+  }
+
+  .lightbox__close {
+    top: var(--space-4, 16px);
+    right: var(--space-4, 16px);
+    font-size: 28px;
+  }
+  .lightbox__nav--prev { left: var(--space-4, 16px); top: 50%; transform: translateY(-50%); }
+  .lightbox__nav--next { right: var(--space-4, 16px); top: 50%; transform: translateY(-50%); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lightbox { transition: none; }
+  }
+</style>

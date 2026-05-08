@@ -1,0 +1,263 @@
+---
+/**
+ * /projects — Projects index (IndexPage template).
+ *
+ * Spec:
+ *   - docs/ARCHITECTURE.md §2 (`/projects` purpose, sections, CTA).
+ *   - docs/CONTENT-MAP.md §1.6 (Promote/Demote — VIGÍA & AI Safety Connect
+ *     get dedicated subpages; this index surfaces both as cards).
+ *
+ * Sections (per ARCHITECTURE):
+ *   1. PageHero (compact navy band with breadcrumb).
+ *   2. Intro paragraph — what we mean by "projects" vs. "research".
+ *      Uses the editorial placeholder authored in CONTENT-MAP §4 (GAP-17).
+ *   3. ProjectCard grid (sourced from src/content/projects/*).
+ *   4. "How we choose projects" criteria block (3-column FeatureGrid-like).
+ *   5. CtaSection — propose a project (mailto contact@aismx.org).
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import CtaSection from '../../components/CtaSection.astro';
+
+const allProjects = await getCollection(
+  'projects',
+  ({ data }: { data: { draft?: boolean } }) => data.draft !== true,
+);
+
+// Order by `order` ascending, then alphabetically by title.
+const projects = allProjects.sort((a, b) => {
+  const ao = a.data.order ?? 100;
+  const bo = b.data.order ?? 100;
+  if (ao !== bo) return ao - bo;
+  return a.data.title.localeCompare(b.data.title);
+});
+
+// Map each entry to ProjectCard props. Internal slugs always resolve to
+// /projects/<slug> (subpages), unless the project is external-only.
+const cards = projects.map((p) => {
+  const slug = p.data.slug ?? p.slug;
+  return {
+    title: p.data.title,
+    badge: p.data.badge,
+    description: p.data.summary,
+    image: p.data.cover,
+    href: `/projects/${slug}`,
+    external: false,
+  };
+});
+
+const breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Proyectos' },
+  ],
+};
+
+const criteria = [
+  {
+    number: '01',
+    title: 'Pregunta concreta',
+    description:
+      'Cada proyecto parte de una pregunta investigable sobre seguridad o gobernanza de IA, no de una tecnología en busca de un problema.',
+  },
+  {
+    number: '02',
+    title: 'Capacidad técnica',
+    description:
+      'El equipo —propio o aliado— cuenta con la formación y los recursos para abordarla con rigor metodológico.',
+  },
+  {
+    number: '03',
+    title: 'Compromiso de apertura',
+    description:
+      'Los hallazgos, materiales y código se publican abiertamente siempre que la naturaleza del trabajo lo permita.',
+  },
+];
+---
+
+<BaseLayout
+  title="Proyectos · AI Safety Mexico"
+  description="Iniciativas insignia de AI Safety Mexico — VIGÍA, AI Safety Connect y proyectos colaborativos en gobernanza, alineamiento y comunidad."
+  pathname="/projects"
+  ogImage="/images/aisafetymx_logo.webp"
+>
+  <Header slot="header" currentPath="/projects" />
+
+  <PageHero
+    eyebrow="Trabajo aplicado"
+    title="Proyectos"
+    description="Iniciativas propias y colaborativas que reflejan el trabajo de AI Safety Mexico en investigación aplicada, gobernanza y comunidad."
+    breadcrumb={breadcrumb}
+  />
+
+  {/* Intro */}
+  <section class="section section--cream">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Qué entendemos por proyecto"
+        title="Investigación aplicada con vocación pública"
+        description="Los proyectos de AI Safety Mexico nacen en la intersección de tres condiciones: una pregunta concreta sobre seguridad o gobernanza de IA, un equipo técnico capaz de abordarla con rigor, y un compromiso de hacer públicos los hallazgos. Algunos surgen como tesis de cohortes formativas; otros como colaboraciones con organizaciones aliadas. Todos son auditables, abiertos y orientados a producir conocimiento utilizable por quienes investigan, regulan o despliegan IA en la región."
+      />
+    </div>
+  </section>
+
+  {/* Project grid */}
+  <section class="section section--base section--edge-accent" aria-labelledby="projects-grid-heading">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Portafolio"
+        title="Proyectos insignia"
+        description="Cada tarjeta enlaza a la subpágina del proyecto con el detalle completo: equipo, metodología y enlaces a paper o plataforma externa."
+        id="projects-grid-heading"
+      />
+
+      {cards.length === 0 ? (
+        <p class="projects-empty">
+          Próximamente publicaremos los detalles de los proyectos en curso. Mientras
+          tanto, escríbenos a <a href="mailto:contact@aismx.org">contact@aismx.org</a>.
+        </p>
+      ) : (
+        <div class="projects-grid">
+          {cards.map((card) => (
+            <ProjectCard
+              title={card.title}
+              badge={card.badge}
+              description={card.description}
+              image={card.image}
+              href={card.href}
+              external={card.external}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  {/* Criteria */}
+  <section class="section section--warm" aria-labelledby="projects-criteria-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Cómo elegimos"
+        title="Criterios de selección"
+        description="Un proyecto entra al portafolio cuando cumple las tres condiciones siguientes."
+        id="projects-criteria-heading"
+      />
+      <ul class="projects-criteria">
+        {criteria.map((c) => (
+          <li class="projects-criteria__item">
+            <span class="projects-criteria__number" aria-hidden="true">{c.number}</span>
+            <h3 class="projects-criteria__title">{c.title}</h3>
+            <p class="projects-criteria__description">{c.description}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <CtaSection
+    title="¿Tienes un proyecto en mente?"
+    description="Si tu pregunta de investigación se alinea con nuestra agenda y buscas un equipo con quien colaborar, nos interesa escucharla."
+    ctaLabel="Escríbenos a contact@aismx.org"
+    ctaHref="mailto:contact@aismx.org?subject=Propuesta%20de%20proyecto"
+  />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+  }
+
+  @media (min-width: 768px) {
+    .projects-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-8);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .projects-grid {
+      gap: var(--space-9);
+    }
+  }
+
+  .projects-empty {
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .projects-empty a {
+    color: var(--color-link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .projects-empty a:hover {
+    color: var(--color-link-hover);
+  }
+
+  /* Criteria list */
+  .projects-criteria {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (min-width: 768px) {
+    .projects-criteria {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-7);
+    }
+  }
+
+  .projects-criteria__item {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-xs);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .projects-criteria__number {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    color: var(--color-accent);
+    letter-spacing: -0.02em;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  .projects-criteria__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-bold);
+    color: var(--color-text-heading);
+    line-height: var(--lh-snug);
+  }
+
+  .projects-criteria__description {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+  }
+</style>
