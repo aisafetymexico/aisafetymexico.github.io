@@ -1,6 +1,6 @@
 ---
 title: "AI Safety in Mexico: A Pilot Survey in Yucatan"
-abstract: "Trabajo destinado a capturar preocupaciones locales acerca de la seguridad en inteligencia artificial en Mérida, Yucatán. La encuesta piloto explora percepciones, riesgos y prioridades regionales como insumo para la agenda de AI safety en México."
+abstract: "Trabajo destinado a capturar preocupaciones locales acerca de la seguridad en inteligencia artificial en Mérida, Yucatán. La encuesta piloto explora percepciones, riesgos y prioridades locales como insumo para la agenda de AI safety en México."
 authors:
   - "Janet Valdivia"
   - "Silvia Fernández"
@@ -18,4 +18,4 @@ status: published
 featured: true
 ---
 
-Encuesta piloto sobre percepciones de seguridad en IA en Yucatán, publicada en *Research in Computing Science* (Centro de Investigación en Computación, IPN). Documenta preocupaciones locales y abre la línea de investigación regional de AI Safety Mexico.
+Encuesta piloto sobre percepciones de seguridad en IA en Yucatán, publicada en *Research in Computing Science* (Centro de Investigación en Computación, IPN). Documenta preocupaciones locales y abre la línea de investigación de AI Safety Mexico en estudios situados en México.
