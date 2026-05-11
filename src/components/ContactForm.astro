@@ -34,7 +34,7 @@ export interface Props {
 }
 
 const {
-  endpoint = 'mailto:contacto@aisafetymexico.org',
+  endpoint = 'mailto:contact@aismx.org',
   successMessage = '¡Gracias! Hemos recibido tu mensaje y te responderemos pronto.',
   id,
 } = Astro.props;
@@ -268,7 +268,7 @@ const formId = id || `contact-form-${Math.random().toString(36).slice(2, 9)}`;
             form.reset();
           } catch (err) {
             setError(
-              'No pudimos enviar tu mensaje en este momento. Por favor, intenta de nuevo o escríbenos directamente a contacto@aisafetymexico.org.'
+              'No pudimos enviar tu mensaje en este momento. Por favor, intenta de nuevo o escríbenos directamente a contact@aismx.org.'
             );
           } finally {
             setBusy(false);
