@@ -41,6 +41,10 @@ const collabFormUrl = 'https://forms.gle/GkjtskKMJemQZDgw9';
 const apartUrl =
   'https://apartresearch.com/sprints/global-south-ais-hackathon-2026-06-19-to-2026-06-21';
 
+// TODO: replace with actual Luma URL when available — currently a placeholder.
+// The real registration URL must be supplied by AI Safety Mexico / Apart Research.
+const lumaRegisterUrl = 'https://luma.com/global-south-ais-challenge';
+
 const reasons = [
   {
     title: 'Impulsar talento',
@@ -105,6 +109,25 @@ const roles = [
     description="Hackathon internacional convocado por Apart Research y AI Safety Mexico. Reúne a investigadoras, builders y profesionales de policy de América Latina, África y Asia para producir trabajo concreto en seguridad de IA, anclado en el contexto regional."
     breadcrumb={breadcrumb}
   />
+
+  <!-- 0 · CTA de registro (Luma) -->
+  <!-- TODO: replace href with actual Luma URL when available — current value is a placeholder. -->
+  <section class="gsh-register" aria-labelledby="gsh-register-heading">
+    <div class="gsh-register__inner">
+      <p id="gsh-register-heading" class="gsh-register__lead">
+        Inscripciones abiertas para participantes y colaboradores.
+      </p>
+      <a
+        class="gsh-register__cta"
+        href={lumaRegisterUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Regístrate en Luma
+        <span class="gsh-register__cta-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
 
   <!-- 1 · Misión -->
   <section class="gsh-section gsh-section--base" aria-labelledby="gsh-mission-heading">
@@ -286,6 +309,90 @@ const roles = [
 
   .gsh-section__inner--narrow {
     max-width: var(--container-narrow);
+  }
+
+  /* ── Registration CTA (Luma) ─────────────────────────────────────── */
+  .gsh-register {
+    background: var(--color-bg-base);
+    padding-block: var(--space-4) var(--space-10);
+  }
+
+  @media (min-width: 768px) {
+    .gsh-register {
+      padding-block: var(--space-6) var(--space-12);
+    }
+  }
+
+  .gsh-register__inner {
+    width: 100%;
+    max-width: var(--container-narrow);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 480px) {
+    .gsh-register__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  .gsh-register__lead {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent-hover);
+  }
+
+  .gsh-register__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-9);
+    background: var(--color-cta-bg);
+    color: var(--color-cta-text);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-semibold);
+    text-decoration: none;
+    letter-spacing: var(--ls-wide);
+    border-radius: var(--radius-pill);
+    transition: background var(--transition);
+  }
+
+  .gsh-register__cta:hover,
+  .gsh-register__cta:focus-visible {
+    background: var(--color-cta-bg-hover);
+    color: var(--color-cta-text);
+  }
+
+  .gsh-register__cta:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+  }
+
+  .gsh-register__cta-arrow {
+    display: inline-block;
+    transition: transform var(--transition);
+  }
+  .gsh-register__cta:hover .gsh-register__cta-arrow {
+    transform: translateX(3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gsh-register__cta,
+    .gsh-register__cta-arrow {
+      transition: none;
+    }
+    .gsh-register__cta:hover .gsh-register__cta-arrow {
+      transform: none;
+    }
   }
 
   /* ── Mission block ───────────────────────────────────────────────── */

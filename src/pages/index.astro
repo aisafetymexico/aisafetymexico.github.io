@@ -11,11 +11,15 @@
  *
  * Sections:
  *   1. Hero — full-bleed navy, image + overline + h1 + subtitle + 2 CTAs.
- *   2. Featured pillars — FeatureGrid (4 entries: Investigación, Programas,
+ *   2. GSH spotlight — full-width ActivityCard for the Global South AIS
+ *      Challenge, surfaced immediately after the hero.
+ *   3. Featured pillars — FeatureGrid (4 entries: Investigación, Programas,
  *      Proyectos, Equipo) on warm surface.
- *   3. StatBar — 4 impact stats on navy.
- *   4. Highlights curados — 3 cards (1 actividad, 1 proyecto, 1 publicación).
- *   5. CtaSection — navy closing band, single CTA → /get-involved.
+ *   4. StatBar — 4 impact stats on navy.
+ *   5. Highlights curados — 2 cards (proyecto insignia + publicación). GSH
+ *      vive arriba en el spotlight, así que aquí dejamos solo dos destacados
+ *      bien curados (RAND-editorial: 2 fuertes > 3 forzados).
+ *   6. CtaSection — navy closing band, single CTA → /get-involved.
  */
 
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -26,6 +30,7 @@ import SectionHeading from '../components/SectionHeading.astro';
 import FeatureGrid from '../components/FeatureGrid.astro';
 import StatBar from '../components/StatBar.astro';
 import Card from '../components/Card.astro';
+import ActivityCard from '../components/ActivityCard.astro';
 import CtaSection from '../components/CtaSection.astro';
 
 const pillars = [
@@ -61,6 +66,22 @@ const stats = [
   { number: '1', label: 'Publicación revisada por pares' },
   { number: '7', label: 'Personas en el equipo' },
 ];
+
+// -------- GSH spotlight (sección 2) --------
+// Mirrors the spotlight on /activities (single ActivityCard, side-by-side at
+// md+). Keeping copy aligned with that page so the two surfaces tell the same
+// story.
+const gshSpotlight = {
+  title: 'The Global South AIS Challenge',
+  date: 'Marzo 2026',
+  description:
+    'Hackatón regional de seguridad en IA organizado con Apart Research. Convoca a investigadoras, ingenieros y profesionales del sur global a producir prototipos, evaluaciones y propuestas de gobernanza durante un fin de semana intensivo.',
+  link: '/global-south-challenge',
+  image: {
+    src: '/images/gsh-event-card.png',
+    alt: 'Imagen promocional del Global South AIS Challenge.',
+  },
+};
 ---
 
 <BaseLayout
@@ -80,7 +101,29 @@ const stats = [
     secondaryCta={{ label: 'Colabora', href: '/get-involved' }}
   />
 
-  <!-- 2 · Featured pillars (gateway de 4) -->
+  <!-- 2 · GSH spotlight (Global South AIS Challenge) -->
+  <section class="section section--base section--compact" aria-labelledby="home-gsh-spotlight">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Evento destacado"
+        title="Global South AIS Challenge"
+        description="Nuestra iniciativa regional más visible: un hackatón abierto que convoca a la comunidad del sur global a producir trabajo concreto en seguridad de IA."
+        align="center"
+        id="home-gsh-spotlight"
+      />
+      <div class="home-spotlight">
+        <ActivityCard
+          title={gshSpotlight.title}
+          date={gshSpotlight.date}
+          description={gshSpotlight.description}
+          image={gshSpotlight.image}
+          link={gshSpotlight.link}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Featured pillars (gateway de 4) -->
   <section class="section section--base section--edge-accent">
     <div class="container">
       <SectionHeading
@@ -93,28 +136,20 @@ const stats = [
     </div>
   </section>
 
-  <!-- 3 · Stat bar -->
+  <!-- 4 · Stat bar -->
   <StatBar stats={stats} />
 
-  <!-- 4 · Highlights curados -->
+  <!-- 5 · Highlights curados (GSH ya vive arriba en el spotlight) -->
   <section class="section section--base">
     <div class="container">
       <SectionHeading
         eyebrow="Destacados"
         title="Trabajo reciente."
-        description="Una actividad, un proyecto y una publicación para asomarse al pulso de la organización."
+        description="Un proyecto y una publicación para asomarse al pulso de la organización."
         align="center"
       />
 
       <div class="home-highlights">
-        <Card
-          href="/global-south-challenge"
-          badge="Evento activo"
-          title="Global South AIS Challenge"
-          description="Hackathon regional organizado con Apart Research para articular las voces del sur global en seguridad de IA."
-          padding="md"
-          bordered
-        />
         <Card
           href="/projects/vigia"
           badge="Proyecto insignia"
@@ -135,7 +170,7 @@ const stats = [
     </div>
   </section>
 
-  <!-- 5 · CTA closing band -->
+  <!-- 6 · CTA closing band -->
   <CtaSection
     title="¿Buscas colaborar?"
     description="Investigadores, instituciones y aliados: hay múltiples vías para sumarse al trabajo de AI Safety Mexico."
@@ -147,11 +182,15 @@ const stats = [
 </BaseLayout>
 
 <style>
-  /* 3-up highlights grid: stack on mobile → 3 cols on desktop. */
+  /* Highlights grid — 2 curated cards: stack on mobile → side-by-side at md+.
+     (Was 3-up; GSH moved to the top spotlight in §2, so we deliberately keep
+     only two well-curated highlights to avoid forcing a filler card.) */
   .home-highlights {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-8);
+    max-width: var(--container-narrow, 860px);
+    margin-inline: auto;
   }
 
   @media (min-width: 768px) {
@@ -163,8 +202,33 @@ const stats = [
 
   @media (min-width: 1024px) {
     .home-highlights {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: var(--space-10);
+    }
+  }
+
+  /* GSH spotlight — single full-width ActivityCard, mirrored from
+     /activities .spotlight (RAND editorial; no shadow / no lift). On md+,
+     switch the card to a 50/50 image-left, body-right layout. */
+  .home-spotlight :global(.activity-card) {
+    max-width: var(--container-narrow, 860px);
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .home-spotlight :global(.activity-card) {
+      flex-direction: row;
+      align-items: stretch;
+    }
+    .home-spotlight :global(.activity-card__media) {
+      flex: 0 0 50%;
+      aspect-ratio: auto;
+    }
+    .home-spotlight :global(.activity-card__body) {
+      flex: 1 1 50%;
+      justify-content: center;
+    }
+    .home-spotlight :global(.activity-card__title) {
+      font-size: var(--fs-h4);
     }
   }
 </style>
