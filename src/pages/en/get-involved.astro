@@ -1,0 +1,368 @@
+---
+/**
+ * /en/get-involved — English mirror of /get-involved.
+ *
+ * Spec: docs/I18N-ARCHITECTURE.md §2 (Strategy B) + §7 row 10.
+ * Sibling: src/pages/get-involved.astro (structure source-of-truth).
+ *
+ * Notes for the translator (per Task #8):
+ *  - Page-title verb: "Colabora con nosotros" → "Get involved".
+ *  - The anchor ids on the three vías (#research, #training, #events) are
+ *    PRESERVED — other pages deep-link to them and i18n only changes prose,
+ *    not the URL fragment surface.
+ *  - The canonical contact email `contact@aismx.org` is preserved unchanged.
+ *  - Ally names (AI Safety Collab, ENAIS, Centro Geo, UADY, SPAR Research,
+ *    Apart Research) are proper names — kept untranslated.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import KeyFacts from '../../components/KeyFacts.astro';
+import CtaSection from '../../components/CtaSection.astro';
+import { t } from '../../lib/i18n';
+
+const pathname = '/en/get-involved';
+
+const breadcrumb = {
+  items: [
+    { label: t('en', 'breadcrumb.home'), href: '/en' },
+    { label: 'Get involved' },
+  ],
+};
+
+const vias = [
+  {
+    id: 'research',
+    number: '01',
+    title: 'Joint research',
+    description:
+      'We join forces with academic groups and labs to co-develop research projects on AI safety and alignment, with an emphasis on questions relevant to Mexico.',
+  },
+  {
+    id: 'training',
+    number: '02',
+    title: 'Educational programs for institutions',
+    description:
+      'We design tailored courses and workshops for universities, research centers, and technical teams that want to integrate AI safety into their programs — in person, hybrid, or remote.',
+  },
+  {
+    id: 'events',
+    number: '03',
+    title: 'Events and advisory',
+    description:
+      'We participate as speakers, panelists, and advisors at events, working sessions, and conversations on AI governance in Mexico.',
+  },
+];
+
+const allies = [
+  { text: 'AI Safety Collab' },
+  { text: 'ENAIS' },
+  { text: 'Centro Geo' },
+  { text: 'UADY' },
+  { text: 'SPAR Research' },
+  { text: 'Apart Research' },
+];
+---
+
+<BaseLayout
+  title="Get involved — AI Safety Mexico"
+  description="Joint research, educational programs for institutions, and advisory. Write to contact@aismx.org to explore ways of working together on AI safety."
+  pathname={pathname}
+  lang="en"
+  ogImage="/images/aisafetymx_logo.webp"
+>
+  <Header slot="header" currentPath={pathname} lang="en" />
+
+  <PageHero
+    title="Get involved"
+    description="We're looking for strategic allies to advance AI safety research, education, and governance in Mexico. If your organization shares these goals, we'd love to explore ways to work together."
+    breadcrumb={breadcrumb}
+    lang="en"
+  />
+
+  <section class="page-section page-section--intro" aria-labelledby="intro-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Who collaborates with us"
+        title="We work with academic organizations, labs, government, and communities"
+        description="Our collaborations typically take shape as joint research projects, custom courses, working sessions, and the production of technical documents. If you have a concrete proposal, write to us."
+        id="intro-heading"
+      />
+    </div>
+  </section>
+
+  <section class="page-section page-section--vias" aria-labelledby="vias-heading">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Ways to collaborate"
+        title="Three paths to work with AI Safety Mexico"
+        description="Each path can be adapted in scope and duration to fit the project. Write to us describing your interest and we'll work out together which form of collaboration fits best."
+        id="vias-heading"
+      />
+
+      <ul class="collab-vias" role="list">
+        {vias.map((via) => (
+          <li id={via.id} class="collab-vias__item">
+            <article class="collab-vias__card">
+              <span class="collab-vias__number" aria-hidden="true">{via.number}</span>
+              <h3 class="collab-vias__title">{via.title}</h3>
+              <p class="collab-vias__description">{via.description}</p>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="page-section page-section--allies" aria-labelledby="allies-heading">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Allies and collaborators"
+        title="Who has worked with us"
+        description="A selection of the organizations we've co-created courses, research projects, events, and training programs with."
+        id="allies-heading"
+      />
+      <KeyFacts facts={allies} />
+    </div>
+  </section>
+
+  <section
+    id="contacto"
+    class="page-section page-section--direct"
+    aria-labelledby="contacto-heading"
+  >
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Get in touch"
+        title="Tell us about your organization and your proposal"
+        description="Reach us directly through any of the channels below with a brief description of your organization and the line of work you'd like to explore. We'll respond as soon as we can."
+        id="contacto-heading"
+      />
+
+      <ul class="direct__list" role="list">
+        <li class="direct__item">
+          <span class="direct__label">Email</span>
+          <a class="direct__value" href="mailto:contact@aismx.org">
+            contact@aismx.org
+          </a>
+        </li>
+        <li class="direct__item">
+          <span class="direct__label">LinkedIn</span>
+          <a
+            class="direct__value"
+            href="https://www.linkedin.com/company/ai-safety-mexico/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            linkedin.com/company/ai-safety-mexico
+          </a>
+        </li>
+        <li class="direct__item">
+          <span class="direct__label">Instagram</span>
+          <a
+            class="direct__value"
+            href="https://www.instagram.com/aisafetymx/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @aisafetymx
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <CtaSection
+    title="Have a concrete proposal?"
+    description="Write to contact@aismx.org with a brief description of your organization and the line of work you would like to explore."
+    ctaLabel="Email contact@aismx.org"
+    ctaHref="mailto:contact@aismx.org"
+  />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  /* Page-level layout primitives ------------------------------------------- */
+  .page-section {
+    padding-block: var(--space-10);
+  }
+
+  @media (min-width: 768px) {
+    .page-section {
+      padding-block: var(--space-12);
+    }
+  }
+
+  /* Alternating tonal surfaces for rhythm ---------------------------------- */
+  .page-section--intro {
+    background: var(--color-bg-base);
+  }
+  .page-section--vias {
+    background: var(--color-bg-base);
+  }
+  .page-section--allies {
+    background: var(--color-bg-base);
+  }
+  .page-section--direct {
+    background: var(--color-bg-base);
+  }
+
+  .container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+  .container--narrow {
+    max-width: var(--container-narrow);
+  }
+  @media (min-width: 480px) {
+    .container {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  /* 3 vías cards (FeatureGrid pattern + per-card anchor ids) --------------- */
+  .collab-vias {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .collab-vias__item {
+    display: flex;
+    /* Offset the in-page anchor scroll so the sticky header doesn't cover the card */
+    scroll-margin-top: 100px;
+  }
+
+  .collab-vias__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-6);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    color: var(--color-text-primary);
+    transition:
+      transform var(--transition),
+      box-shadow var(--transition),
+      border-color var(--transition);
+  }
+
+  /* Highlight a card when its anchor is the active hash target */
+  .collab-vias__item:target .collab-vias__card {
+    border-color: var(--color-border-accent);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+  }
+
+  .collab-vias__number {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    color: var(--color-accent);
+    letter-spacing: -0.02em;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  .collab-vias__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+    margin: 0;
+  }
+
+  .collab-vias__description {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .collab-vias {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-9);
+    }
+    .collab-vias__card {
+      padding: var(--space-7);
+    }
+    .collab-vias__number {
+      font-size: 2.8rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .collab-vias__card {
+      transition: none;
+    }
+    .collab-vias__item:target .collab-vias__card {
+      transform: none;
+    }
+  }
+
+  /* Direct-contact list ---------------------------------------------------- */
+  .direct__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .direct__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+    background: var(--color-bg-base);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+
+  .direct__label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .direct__value {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color var(--transition), border-color var(--transition);
+    word-break: break-word;
+  }
+  .direct__value:hover,
+  .direct__value:focus-visible {
+    color: var(--color-link-hover);
+    border-bottom-color: var(--color-link-hover);
+  }
+
+  @media (min-width: 768px) {
+    .direct__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-5);
+    }
+  }
+</style>

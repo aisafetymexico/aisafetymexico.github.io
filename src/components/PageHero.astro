@@ -22,6 +22,7 @@
  */
 import Breadcrumb from './Breadcrumb.astro';
 import type { Breadcrumb as BreadcrumbProp } from '../lib/types';
+import type { Locale } from '../lib/i18n';
 
 export interface Props {
   /** @deprecated No longer rendered (RAND-DIFF §2.2). Kept for prop compatibility. */
@@ -29,9 +30,10 @@ export interface Props {
   title: string;
   description?: string;
   breadcrumb?: BreadcrumbProp;
+  lang?: Locale;
 }
 
-const { title, description, breadcrumb } = Astro.props;
+const { title, description, breadcrumb, lang = 'es' } = Astro.props;
 
 if (!title) throw new Error('PageHero: `title` is required.');
 
@@ -42,7 +44,7 @@ const hasBreadcrumb = breadcrumb && breadcrumb.items && breadcrumb.items.length 
   <div class="page-hero__inner">
     {hasBreadcrumb && (
       <div class="page-hero__breadcrumb">
-        <Breadcrumb items={breadcrumb!.items} />
+        <Breadcrumb items={breadcrumb!.items} lang={lang} />
       </div>
     )}
 

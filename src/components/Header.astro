@@ -15,33 +15,53 @@
  *  - Nav (incl. mobile drawer) lives in <Nav />.
  *
  * Props:
- *  - currentPath: string — required, used by Nav to compute active state.
+ *  - currentPath: string — optional. Defaults to `Astro.url.pathname`. This is
+ *    the *real* current pathname (including deep paths like `/projects/vigia`)
+ *    and is the value forwarded to <LanguageSwitcher> so it can compute the
+ *    cross-locale equivalent (`/en/projects/vigia`) and preserve deep links.
+ *  - navActivePath: string — optional. When passed, <Nav> uses this path to
+ *    compute its active-link highlight instead of `currentPath`. Use this on
+ *    sub-pages whose parent section should glow in the nav (e.g. on
+ *    `/projects/vigia` pass `navActivePath="/projects"` so the "Projects" nav
+ *    item highlights). When omitted, Nav falls back to `currentPath` (which
+ *    already handles parent-child matches via startsWith).
  *  - logoSrc / logoAlt: optional overrides.
  *  - siteName: optional override for the wordmark next to the logo.
  */
 import Nav from './Nav.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
 import type { NavItem } from '../lib/types';
+import { t, localizedPath, type Locale } from '../lib/i18n';
 
 export interface Props {
-  currentPath: string;
+  currentPath?: string;
+  navActivePath?: string;
   navItems?: NavItem[];
   logoSrc?: string;
   logoAlt?: string;
   siteName?: string;
+  lang?: Locale;
 }
 
 const {
-  currentPath,
+  currentPath = Astro.url.pathname,
+  navActivePath,
   navItems,
   logoSrc = '/images/aisafetymx_logo.webp',
   logoAlt = 'AI Safety Mexico',
   siteName = 'AI Safety Mexico',
+  lang = 'es',
 } = Astro.props;
+
+const navPath = navActivePath ?? currentPath;
+
+const brandHref = localizedPath(lang, '/');
+const brandAria = t(lang, 'header.aria.brandHome');
 ---
 
 <header class="site-header" data-site-header>
   <div class="site-header__inner">
-    <a class="site-header__logo" href="/" aria-label={`${siteName} — Inicio`}>
+    <a class="site-header__logo" href={brandHref} aria-label={brandAria}>
       <img
         class="site-header__logo-img"
         src={logoSrc}
@@ -54,7 +74,10 @@ const {
       <span class="site-header__wordmark">{siteName}</span>
     </a>
 
-    <Nav currentPath={currentPath} items={navItems} />
+    <div class="site-header__cluster">
+      <Nav currentPath={navPath} items={navItems} lang={lang} />
+      <LanguageSwitcher currentPath={currentPath} />
+    </div>
   </div>
 </header>
 
@@ -131,6 +154,21 @@ const {
     align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
+  }
+
+  /* Right-side cluster: primary nav + language switcher sit together.
+     Spec: docs/I18N-ARCHITECTURE.md §4.5. Inline at every viewport — the
+     switcher does not collapse into the mobile drawer. */
+  .site-header__cluster {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  @media (max-width: 1023.98px) {
+    .site-header__cluster {
+      gap: 8px;
+    }
   }
 
   .site-header__logo {

@@ -24,6 +24,7 @@
  */
 
 import '../styles/base.css';
+import { hreflangAlternates, t } from '../lib/i18n';
 
 export interface Props {
   title: string;
@@ -33,10 +34,18 @@ export interface Props {
   pathname?: string;
 }
 
+// Locale resolution order:
+//   1. Explicit `lang` prop (translators pass `<BaseLayout lang="en" ...>` per architecture §2).
+//   2. `Astro.currentLocale` from the i18n routing config (derived from the URL).
+//   3. Spanish default — preserves existing behavior on Spanish pages.
+// Falling back to `Astro.currentLocale` makes the lang attribute robust if a page forgets
+// to pass the prop, so a page at `/en/...` still emits `<html lang="en">` automatically.
+const detectedLocale = (Astro.currentLocale as 'es' | 'en' | undefined) ?? 'es';
+
 const {
   title,
   description = 'AI Safety Mexico — Investigación, educación y gobernanza de IA en México.',
-  lang = 'es',
+  lang = detectedLocale,
   ogImage,
   pathname,
 } = Astro.props;
@@ -51,6 +60,14 @@ const resolvedOgImage = ogImage ?? DEFAULT_OG_IMAGE;
 const ogImageUrl = resolvedOgImage.startsWith('http')
   ? resolvedOgImage
   : new URL(resolvedOgImage, Astro.site).toString();
+
+// hreflang alternates — emit <link rel="alternate"> for both locales plus
+// `x-default` (points to Spanish, the canonical locale). Requires a usable
+// pathname; falls back to Astro.url.pathname when `pathname` is omitted.
+// Spec: docs/I18N-ARCHITECTURE.md §6.
+const alternatePath = pathname ?? Astro.url.pathname;
+const alternates =
+  Astro.site != null ? hreflangAlternates(alternatePath, Astro.site) : null;
 ---
 
 <!doctype html>
@@ -60,9 +77,47 @@ const ogImageUrl = resolvedOgImage.startsWith('http')
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
 
+    {/*
+      Browser-language detection — runs ONLY on the Spanish home (`/`).
+      Spec: docs/I18N-ARCHITECTURE.md §5. Placed before fonts/CSS so the
+      redirect fires synchronously, minimising flash-of-Spanish-content.
+      Reads localStorage('aismx_locale'); on first visit with `en*` navigator
+      language, writes the pref and `location.replace('/en')`. Never runs on
+      deep links or interior pages. Storage failures are swallowed.
+    */}
+    {pathname === '/' && (
+      <script is:inline set:html={`
+        (function () {
+          try {
+            var stored = null;
+            try { stored = localStorage.getItem('aismx_locale'); } catch (e) {}
+            if (stored === 'es' || stored === 'en') return;
+
+            var nav = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+            var prefersEn = /^en\\b/i.test(nav);
+
+            if (prefersEn) {
+              try { localStorage.setItem('aismx_locale', 'en'); } catch (e) {}
+              location.replace('/en');
+            } else {
+              try { localStorage.setItem('aismx_locale', 'es'); } catch (e) {}
+            }
+          } catch (e) { /* swallow */ }
+        })();
+      `} />
+    )}
+
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl.toString()} />
+
+    {alternates && (
+      <>
+        <link rel="alternate" hreflang="es" href={alternates.es} />
+        <link rel="alternate" hreflang="en" href={alternates.en} />
+        <link rel="alternate" hreflang="x-default" href={alternates.xDefault} />
+      </>
+    )}
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
@@ -97,7 +152,7 @@ const ogImageUrl = resolvedOgImage.startsWith('http')
     <slot name="head" />
   </head>
   <body>
-    <a href="#main" class="skip-link">Saltar al contenido</a>
+    <a href="#main" class="skip-link">{t(lang, 'a11y.skipToContent')}</a>
 
     <slot name="header" />
 

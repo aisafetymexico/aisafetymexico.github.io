@@ -1,0 +1,422 @@
+---
+/**
+ * /en/team — English mirror of /team.
+ *
+ * Spec: docs/I18N-ARCHITECTURE.md §2, §7. Sibling-page strategy: same
+ * components, same composition, English prose. Spanish sibling source of
+ * truth: src/pages/team.astro.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import TeamCard from '../../components/TeamCard.astro';
+import CtaSection from '../../components/CtaSection.astro';
+import { t } from '../../lib/i18n';
+
+import type { ImgRef } from '../../lib/types';
+
+// ---------- Data ----------
+
+interface Member {
+  name: string;
+  role: string;
+  photo: ImgRef;
+  linkedin?: string;
+}
+
+const coreTeam: Member[] = [
+  {
+    name: 'Janeth Valdivia',
+    role: 'Researcher in Technical AI Governance and facilitator',
+    photo: { src: '/images/Equipo/Janeth.jpeg', alt: 'Janeth Valdivia' },
+    linkedin: 'https://www.linkedin.com/in/janeth-valdivia-b90087111/',
+  },
+  {
+    name: 'Angel Tenorio',
+    role: 'Software Engineer, Researcher in Mech Interp and facilitator',
+    photo: { src: '/images/Equipo/Angel.jpeg', alt: 'Angel Tenorio' },
+    linkedin: 'https://www.linkedin.com/in/angel-tenorio-vazquez/',
+  },
+  {
+    name: 'Max Pinelo',
+    role: 'AI Engineer and Professor at Universidad Politécnica de Yucatán',
+    photo: { src: '/images/Equipo/Jason.jpeg', alt: 'Max Pinelo' },
+    linkedin: 'https://www.linkedin.com/in/jason-pinelo-14a6a81a5/',
+  },
+  {
+    name: 'Isabel Cámara',
+    role: 'Data Engineer and AI Governance facilitator',
+    photo: { src: '/images/Equipo/Isabel.jpeg', alt: 'Isabel Cámara' },
+    linkedin: 'https://www.linkedin.com/in/isabel-montalvo/',
+  },
+  {
+    name: 'Dexter Gómez',
+    role: 'AI Engineer and Professor at Universidad Politécnica de Yucatán',
+    photo: { src: '/images/Equipo/Dexter.png', alt: 'Dexter Gómez' },
+    linkedin: 'https://www.linkedin.com/in/dextergmez/',
+  },
+  {
+    name: 'Karime Pacheco',
+    role: 'Director of AIS UPY',
+    photo: { src: '/images/Equipo/Karime.jpeg', alt: 'Karime Pacheco' },
+    linkedin: 'https://www.linkedin.com/in/karime-pacheco-217368230/',
+  },
+  {
+    name: 'Marco Guzmán',
+    role: 'Director of AIS UdeG',
+    photo: { src: '/images/Equipo/Marco.png', alt: 'Marco Guzmán' },
+  },
+];
+
+interface AdvisorEntry {
+  name: string;
+  role: string;
+  affiliation: string;
+}
+
+const advisors: AdvisorEntry[] = [
+  {
+    name: 'Dr. Silvia Fernández',
+    role: 'Advisor',
+    affiliation: 'Researcher · Centro Geo',
+  },
+];
+
+interface Collaborator {
+  name: string;
+  role: string;
+}
+
+interface CollaboratorGroup {
+  heading: string;
+  description: string;
+  people: Collaborator[];
+}
+
+const collaboratorGroups: CollaboratorGroup[] = [
+  {
+    heading: 'Research and projects in Mexico',
+    description:
+      'People who have contributed to publications and projects led from AI Safety Mexico.',
+    people: [
+      {
+        name: 'Pilar Carolina Moncada',
+        role: 'VIGÍA · Platform co-creator',
+      },
+      {
+        name: 'Axel Pinelo',
+        role: 'VIGÍA · Development and data',
+      },
+      {
+        name: 'Valeria Ramírez',
+        role: 'Co-author · AI Safety in Mexico: A Pilot Survey in Yucatan',
+      },
+    ],
+  },
+  {
+    heading: 'International team · SPAR / AI Safety Connect',
+    description:
+      'Researchers we collaborate with through the SPAR program to produce AI Safety Connect.',
+    people: [
+      { name: 'Julius A. Odai', role: 'Co-author · AI Safety Connect' },
+      { name: 'Ihor Kendiukhov', role: 'Co-author · AI Safety Connect' },
+      { name: 'Tim Sankara', role: 'Co-author · AI Safety Connect' },
+      { name: 'Jakub K. Nowak', role: 'Co-author · AI Safety Connect' },
+      { name: 'Kailer Laino', role: 'Co-author · AI Safety Connect' },
+    ],
+  },
+];
+
+const breadcrumb = {
+  items: [
+    { label: t('en', 'breadcrumb.home'), href: '/en' },
+    { label: 'Team' },
+  ],
+};
+
+const pageTitle = 'Team · AI Safety Mexico';
+const pageDescription =
+  'Meet the people behind AI Safety Mexico: core team, advisors, and collaborators sustaining AI research, training, and governance in Mexico.';
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  lang="en"
+  pathname="/en/team"
+>
+  <Header slot="header" currentPath="/en/team" lang="en" />
+
+  <PageHero
+    title="The people behind AI Safety Mexico"
+    description="A multidisciplinary collective — engineers, researchers, educators, and governance professionals — working to make AI safety a rigorous, public, national conversation."
+    breadcrumb={breadcrumb}
+    lang="en"
+  />
+
+  <section class="team-section" aria-labelledby="core-team-heading">
+    <div class="team-section__inner">
+      <SectionHeading
+        id="core-team-heading"
+        eyebrow="Our team"
+        title="Core team"
+        description="People who sustain the operations, research and training of AI Safety Mexico on an ongoing basis."
+      />
+      <div class="team-grid">
+        {coreTeam.map(member => (
+          <TeamCard
+            name={member.name}
+            role={member.role}
+            photo={member.photo}
+            linkedin={member.linkedin}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="team-section team-section--alt" aria-labelledby="advisors-heading">
+    <div class="team-section__inner">
+      <SectionHeading
+        id="advisors-heading"
+        eyebrow="Board"
+        title="Advisors"
+        description="Researchers who guide our lines of work and open doors to academic collaborations."
+      />
+      <ul class="advisors-list">
+        {advisors.map(advisor => (
+          <li class="advisors-list__item">
+            <span class="advisors-list__name">{advisor.name}</span>
+            <span class="advisors-list__role">{advisor.role}</span>
+            <span class="advisors-list__affiliation">{advisor.affiliation}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="team-section" aria-labelledby="collaborators-heading">
+    <div class="team-section__inner">
+      <SectionHeading
+        id="collaborators-heading"
+        eyebrow="Allies"
+        title="Featured collaborators"
+        description="We recognize the work of people who have contributed to specific projects, publications and initiatives, in Mexico and beyond."
+      />
+
+      <div class="collab-groups">
+        {collaboratorGroups.map(group => (
+          <article class="collab-group">
+            <h3 class="collab-group__heading">{group.heading}</h3>
+            <p class="collab-group__description">{group.description}</p>
+            <ul class="collab-list">
+              {group.people.map(p => (
+                <li class="collab-item">
+                  <span class="collab-item__name">{p.name}</span>
+                  <span class="collab-item__role">{p.role}</span>
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaSection
+    title="Want to join the team?"
+    description="We welcome targeted collaborations, research residencies, and institutional partners. If your work aligns with our agenda, write to us and tell us which thread you'd like to pursue."
+    ctaLabel="Collaborate with us"
+    ctaHref="/en/get-involved#join"
+  />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  .team-section {
+    padding-block: var(--space-12);
+    background: var(--color-bg-base);
+  }
+
+  .team-section--alt {
+    background: var(--color-bg-base);
+  }
+
+  .team-section__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 480px) {
+    .team-section__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .team-section {
+      padding-block: var(--space-14);
+    }
+  }
+
+  /* ---- Team grid ---- */
+  .team-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 600px) {
+    .team-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-9);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .team-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-10);
+    }
+  }
+
+  /* Advisors — text-only block while official photos are pending. */
+  .advisors-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+    max-width: 56rem;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 600px) {
+    .advisors-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .advisors-list__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-5) var(--space-6);
+    background: var(--color-bg-elevated);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .advisors-list__name {
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+  }
+
+  .advisors-list__role {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent-hover);
+  }
+
+  .advisors-list__affiliation {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-secondary);
+  }
+
+  /* ---- Collaborators ---- */
+  .collab-groups {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 768px) {
+    .collab-groups {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-9);
+    }
+  }
+
+  .collab-group {
+    background: var(--color-bg-elevated);
+    border-radius: var(--radius);
+    padding: var(--space-6) var(--space-5);
+    box-shadow: var(--shadow-sm);
+  }
+
+  @media (min-width: 768px) {
+    .collab-group {
+      padding: var(--space-7) var(--space-6);
+    }
+  }
+
+  .collab-group__heading {
+    font-family: var(--font-display);
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+    margin: 0 0 var(--space-2);
+  }
+
+  .collab-group__description {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-5);
+  }
+
+  .collab-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .collab-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-block: var(--space-2);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .collab-item:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .collab-item__name {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-semibold);
+    color: var(--color-text-heading);
+    line-height: var(--lh-snug);
+  }
+
+  .collab-item__role {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-regular);
+    color: var(--color-text-secondary);
+    line-height: var(--lh-normal);
+  }
+</style>

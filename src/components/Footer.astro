@@ -24,6 +24,7 @@
  *  - Social icons have aria-label; SVGs are aria-hidden.
  */
 import type { SocialLink } from '../lib/types';
+import { t, localizedPath, type Locale } from '../lib/i18n';
 
 export interface FooterColumn {
   heading: string;
@@ -37,33 +38,44 @@ export interface Props {
   logoSrc?: string;
   logoAlt?: string;
   siteName?: string;
+  lang?: Locale;
 }
 
-const DEFAULT_COLUMNS: FooterColumn[] = [
+const {
+  social,
+  tagline,
+  year = new Date().getFullYear(),
+  logoSrc = '/images/aisafetymx_logo.webp',
+  logoAlt = 'AI Safety Mexico',
+  siteName = 'AI Safety Mexico',
+  lang = 'es',
+} = Astro.props;
+
+const defaultColumns: FooterColumn[] = [
   {
-    heading: 'Explora',
+    heading: t(lang, 'footer.col.explore'),
     items: [
-      { label: 'Inicio', href: '/' },
-      { label: 'Sobre nosotros', href: '/about' },
-      { label: 'Equipo', href: '/team' },
-      { label: 'Actividades', href: '/activities' },
+      { label: t(lang, 'footer.item.home'),       href: localizedPath(lang, '/') },
+      { label: t(lang, 'footer.item.about'),      href: localizedPath(lang, '/about') },
+      { label: t(lang, 'footer.item.team'),       href: localizedPath(lang, '/team') },
+      { label: t(lang, 'footer.item.activities'), href: localizedPath(lang, '/activities') },
     ],
   },
   {
-    heading: 'Trabajo',
+    heading: t(lang, 'footer.col.work'),
     items: [
-      { label: 'Investigación', href: '/research' },
-      { label: 'Programas', href: '/programs' },
-      { label: 'Proyectos', href: '/projects' },
-      { label: 'Global South Challenge', href: '/global-south-challenge' },
+      { label: t(lang, 'footer.item.research'), href: localizedPath(lang, '/research') },
+      { label: t(lang, 'footer.item.programs'), href: localizedPath(lang, '/programs') },
+      { label: t(lang, 'footer.item.projects'), href: localizedPath(lang, '/projects') },
+      { label: t(lang, 'footer.item.gsh'),      href: localizedPath(lang, '/global-south-challenge') },
     ],
   },
   {
-    heading: 'Conecta',
+    heading: t(lang, 'footer.col.connect'),
     items: [
-      { label: 'Colabora', href: '/get-involved' },
-      { label: 'Contacto', href: '/contact' },
-      { label: 'LinkedIn', href: 'https://www.linkedin.com/company/ai-safety-mexico/', external: true },
+      { label: t(lang, 'footer.item.getInvolved'), href: localizedPath(lang, '/get-involved') },
+      { label: t(lang, 'footer.item.contact'),     href: localizedPath(lang, '/contact') },
+      { label: 'LinkedIn',  href: 'https://www.linkedin.com/company/ai-safety-mexico/', external: true },
       { label: 'Instagram', href: 'https://www.instagram.com/aisafetymx/', external: true },
     ],
   },
@@ -74,16 +86,14 @@ const DEFAULT_SOCIAL: SocialLink[] = [
   { name: 'Instagram', href: 'https://www.instagram.com/aisafetymx/', icon: 'instagram' },
 ];
 
-const {
-  social = DEFAULT_SOCIAL,
-  tagline = 'Investigación, educación y gobernanza de IA en México.',
-  year = new Date().getFullYear(),
-  logoSrc = '/images/aisafetymx_logo.webp',
-  logoAlt = 'AI Safety Mexico',
-  siteName = 'AI Safety Mexico',
-} = Astro.props;
+const resolvedSocial = social ?? DEFAULT_SOCIAL;
+const resolvedTagline = tagline ?? t(lang, 'footer.tagline');
+const columns = defaultColumns;
 
-const columns = DEFAULT_COLUMNS;
+const brandHref = localizedPath(lang, '/');
+const brandAria = t(lang, 'footer.aria.brandHome');
+const socialAria = t(lang, 'footer.aria.social');
+const copyrightSuffix = t(lang, 'footer.copyright');
 ---
 
 <footer class="site-footer">
@@ -91,7 +101,7 @@ const columns = DEFAULT_COLUMNS;
 
     <!-- Brand row -->
     <div class="site-footer__brand">
-      <a class="site-footer__brand-link" href="/" aria-label={`${siteName} — Inicio`}>
+      <a class="site-footer__brand-link" href={brandHref} aria-label={brandAria}>
         <img
           class="site-footer__logo"
           src={logoSrc}
@@ -104,11 +114,11 @@ const columns = DEFAULT_COLUMNS;
         <span class="site-footer__name">{siteName}</span>
       </a>
 
-      {tagline && <p class="site-footer__tagline">{tagline}</p>}
+      {resolvedTagline && <p class="site-footer__tagline">{resolvedTagline}</p>}
 
-      {social.length > 0 && (
-        <ul class="site-footer__social" aria-label="Redes sociales">
-          {social.map(s => (
+      {resolvedSocial.length > 0 && (
+        <ul class="site-footer__social" aria-label={socialAria}>
+          {resolvedSocial.map(s => (
             <li>
               <a
                 class="site-footer__social-icon"
@@ -168,7 +178,7 @@ const columns = DEFAULT_COLUMNS;
     <!-- Legal row -->
     <div class="site-footer__legal">
       <p class="site-footer__copy">
-        © {year} {siteName}. Todos los derechos reservados.
+        © {year} {siteName}. {copyrightSuffix}
       </p>
     </div>
 

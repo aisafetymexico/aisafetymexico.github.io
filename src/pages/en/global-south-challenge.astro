@@ -1,0 +1,528 @@
+---
+/**
+ * /en/global-south-challenge — English mirror of /global-south-challenge.
+ *
+ * Spec: docs/I18N-ARCHITECTURE.md §2 (Strategy B) + §7 row 12.
+ * Sibling: src/pages/global-south-challenge.astro.
+ *
+ * Translation notes (per Task #8):
+ *  - The GSH is an inherently bilingual event aimed at an international
+ *    audience. Both locale pages are first-class — this is not a "back-port
+ *    of a Spanish original" but a parallel canonical surface.
+ *  - The Luma registration URL, the Apart Research collaborator form, and
+ *    the apartresearch.com sprint URL are PRESERVED verbatim.
+ *  - "Mérida", "Guadalajara", "Apart Research", "Apart Fellowship" are
+ *    proper names — kept untranslated.
+ *  - Dates are rendered in en-US style ("June 19–21, 2026").
+ *  - Prize amounts: 3,000 USD / 1,000 USD format preserved.
+ *  - "Regístrate en Luma" → "Register on Luma" (per Task #8 guideline).
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import Card from '../../components/Card.astro';
+import CtaSection from '../../components/CtaSection.astro';
+import type { Breadcrumb } from '../../lib/types';
+import { t } from '../../lib/i18n';
+
+const pathname = '/en/global-south-challenge';
+
+const breadcrumb: Breadcrumb = {
+  items: [
+    { label: t('en', 'breadcrumb.home'), href: '/en' },
+    { label: 'Activities', href: '/en/activities' },
+    { label: 'Global South AIS Challenge' },
+  ],
+};
+
+const collabFormUrl = 'https://forms.gle/GkjtskKMJemQZDgw9';
+const apartUrl =
+  'https://apartresearch.com/sprints/global-south-ais-hackathon-2026-06-19-to-2026-06-21';
+
+const lumaRegisterUrl = 'https://luma.com/5q6vva0b';
+
+const reasons = [
+  {
+    title: 'Catalyze talent',
+    description:
+      'Mentor and evaluate the next generation of AI safety researchers, engineers, and policy professionals from underrepresented regions.',
+  },
+  {
+    title: 'Solve real problems',
+    description:
+      'Support solutions grounded in regional challenges: AI safety, governance, and accountability across the Global South.',
+  },
+  {
+    title: 'Decentralize the conversation',
+    description:
+      'Help move the global AI safety agenda beyond a handful of institutions, toward a genuinely international ecosystem.',
+  },
+  {
+    title: 'Build visibility',
+    description:
+      'Connect with researchers, founders, and policymakers across three continents and gain presence in a growing international initiative.',
+  },
+];
+
+const roles = [
+  {
+    title: 'Judges',
+    description:
+      'Evaluate projects and provide expert feedback. Ideal for researchers, engineers, and policy professionals with AI safety experience.',
+  },
+  {
+    title: 'Mentors',
+    description:
+      'Share knowledge on AI responsibility, safety, and governance in the Global South across the weekend.',
+  },
+  {
+    title: 'Speakers',
+    description:
+      'Deliver short talks or workshops on AI safety topics. Broaden the conceptual and practical toolkit of participants.',
+  },
+  {
+    title: 'Volunteers',
+    description:
+      'Support coordination, logistics, and participant experience at the in-person hubs (Mérida and Guadalajara) and in the remote format.',
+  },
+  {
+    title: 'Sponsors',
+    description:
+      'Fund prizes, venues, or ecosystem development. Gain prominent visibility in an international AI safety initiative.',
+  },
+];
+---
+
+<BaseLayout
+  title="Global South AIS Challenge · AI Safety Mexico × Apart Research"
+  description="Regional AI safety hackathon convened by Apart Research and AI Safety Mexico. Mérida, Guadalajara, and remote, June 19–21, 2026. Join as a judge, mentor, speaker, volunteer, or sponsor."
+  pathname={pathname}
+  lang="en"
+>
+  <Header slot="header" currentPath={pathname} lang="en" />
+
+  <PageHero
+    title="The Global South AI Safety Challenge"
+    description="An international hackathon convened by Apart Research and AI Safety Mexico. It brings together researchers, builders, and policy professionals from Latin America, Africa, and Asia to produce concrete work in AI safety, anchored in regional context."
+    breadcrumb={breadcrumb}
+    lang="en"
+  />
+
+  <!-- 0 · Registration CTA (Luma) -->
+  <section class="gsh-register" aria-labelledby="gsh-register-heading">
+    <div class="gsh-register__inner">
+      <p id="gsh-register-heading" class="gsh-register__lead">
+        Registration is open for participants and collaborators.
+      </p>
+      <a
+        class="gsh-register__cta"
+        href={lumaRegisterUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Register on Luma
+        <span class="gsh-register__cta-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 1 · Mission -->
+  <section class="gsh-section gsh-section--base" aria-labelledby="gsh-mission-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-mission-heading"
+        eyebrow="The mission"
+        title="What is this hackathon?"
+        description="An intensive weekend to develop prototypes, evaluations, and governance proposals in AI safety, connecting the Global South community with international researchers and mentors."
+      />
+
+      <div class="gsh-mission">
+        <p class="gsh-mission__lead">
+          Organized by <strong>Apart Research</strong> and <strong>AI Safety
+          Mexico</strong> as the regional partner, this initiative decentralizes
+          AI governance and technical research, elevating local expertise onto
+          the global stage.
+        </p>
+
+        <blockquote class="gsh-mission__quote">
+          <p>
+            AI safety cannot be solved from a single region. The Global South
+            brings irreplaceable context, expertise, and perspectives to this
+            conversation.
+          </p>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · Why it matters -->
+  <section class="gsh-section gsh-section--alt" aria-labelledby="gsh-why-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-why-heading"
+        eyebrow="Why it matters"
+        title="Why collaborate?"
+        description="Four reasons this hackathon is relevant to those working on AI safety and governance."
+      />
+
+      <div class="gsh-grid gsh-grid--2">
+        {reasons.map((r) => (
+          <Card
+            padding="md"
+            bordered={true}
+            interactive={false}
+            elevated={false}
+            title={r.title}
+            description={r.description}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Roles -->
+  <section class="gsh-section gsh-section--base" aria-labelledby="gsh-roles-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-roles-heading"
+        eyebrow="Collaboration roles"
+        title="How you can contribute"
+        description="There are multiple ways to join the event, from one-off mentoring to institutional sponsorship."
+      />
+
+      <div class="gsh-grid gsh-grid--3">
+        {roles.map((role) => (
+          <Card
+            padding="md"
+            bordered={true}
+            interactive={false}
+            elevated={false}
+            title={role.title}
+            description={role.description}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Save the date -->
+  <section class="gsh-section gsh-section--alt" aria-labelledby="gsh-snapshot-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-snapshot-heading"
+        eyebrow="Event snapshot"
+        title="Save the date"
+        description="Three essentials for planning your participation."
+      />
+
+      <dl class="gsh-snapshot">
+        <div class="gsh-snapshot__item">
+          <dt class="gsh-snapshot__label">Format</dt>
+          <dd class="gsh-snapshot__value">
+            Primarily remote, with in-person hubs in
+            <strong>Mérida</strong> and <strong>Guadalajara</strong>, Mexico.
+          </dd>
+        </div>
+        <div class="gsh-snapshot__item">
+          <dt class="gsh-snapshot__label">Dates</dt>
+          <dd class="gsh-snapshot__value">
+            <strong>June 19–21, 2026.</strong> Three intensive days in parallel
+            across Latin America, Africa, and Asia.
+          </dd>
+        </div>
+        <div class="gsh-snapshot__item">
+          <dt class="gsh-snapshot__label">Prizes</dt>
+          <dd class="gsh-snapshot__value">
+            <strong>3,000 USD</strong> prize pool: three winning teams in
+            Latin America will each receive 1,000 USD.
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 5 · Apart Fellowship -->
+  <section class="gsh-section gsh-section--base" aria-labelledby="gsh-fellowship-heading">
+    <div class="gsh-section__inner gsh-section__inner--narrow">
+      <SectionHeading
+        id="gsh-fellowship-heading"
+        eyebrow="Apart Fellowship"
+        title="Beyond the hackathon"
+        description="The top teams from every global hub will be invited to the Apart Fellowship: a pipeline of emerging AI safety talent with continuing mentorship, research opportunities, and professional support."
+        align="center"
+      />
+
+      <div class="gsh-fellowship-actions">
+        <a class="gsh-link" href={apartUrl} target="_blank" rel="noopener noreferrer">
+          Learn about Apart Research
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · Final CTA -->
+  <CtaSection
+    title="Support the future of AI safety in the Global South"
+    description="Join us in building safer, more contextualized AI systems by supporting the next generation of researchers, builders, and policymakers across three continents."
+    ctaLabel="Get in touch to collaborate"
+    ctaHref={collabFormUrl}
+  />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  .gsh-section {
+    padding-block: var(--space-12);
+  }
+
+  .gsh-section--base {
+    background: var(--color-bg-base);
+  }
+
+  .gsh-section--alt {
+    background: var(--color-bg-base);
+  }
+
+  @media (min-width: 768px) {
+    .gsh-section {
+      padding-block: var(--space-14);
+    }
+  }
+
+  .gsh-section__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 480px) {
+    .gsh-section__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  .gsh-section__inner--narrow {
+    max-width: var(--container-narrow);
+  }
+
+  /* ── Registration CTA (Luma) ─────────────────────────────────────── */
+  .gsh-register {
+    background: var(--color-bg-base);
+    padding-block: var(--space-4) var(--space-10);
+  }
+
+  @media (min-width: 768px) {
+    .gsh-register {
+      padding-block: var(--space-6) var(--space-12);
+    }
+  }
+
+  .gsh-register__inner {
+    width: 100%;
+    max-width: var(--container-narrow);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 480px) {
+    .gsh-register__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  .gsh-register__lead {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent-hover);
+  }
+
+  .gsh-register__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-9);
+    background: var(--color-cta-bg);
+    color: var(--color-cta-text);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-semibold);
+    text-decoration: none;
+    letter-spacing: var(--ls-wide);
+    border-radius: var(--radius-pill);
+    transition: background var(--transition);
+  }
+
+  .gsh-register__cta:hover,
+  .gsh-register__cta:focus-visible {
+    background: var(--color-cta-bg-hover);
+    color: var(--color-cta-text);
+  }
+
+  .gsh-register__cta:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+  }
+
+  .gsh-register__cta-arrow {
+    display: inline-block;
+    transition: transform var(--transition);
+  }
+  .gsh-register__cta:hover .gsh-register__cta-arrow {
+    transform: translateX(3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gsh-register__cta,
+    .gsh-register__cta-arrow {
+      transition: none;
+    }
+    .gsh-register__cta:hover .gsh-register__cta-arrow {
+      transform: none;
+    }
+  }
+
+  /* ── Mission block ───────────────────────────────────────────────── */
+  .gsh-mission {
+    max-width: 64ch;
+    margin-inline: auto;
+  }
+
+  .gsh-mission__lead {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-primary);
+  }
+
+  .gsh-mission__quote {
+    margin: var(--space-7) 0 0;
+    padding: var(--space-5) var(--space-6);
+    border-left: 3px solid var(--color-accent);
+    background: var(--color-accent-soft);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  .gsh-mission__quote p {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-style: italic;
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+  }
+
+  /* ── Generic card grids ──────────────────────────────────────────── */
+  .gsh-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 640px) {
+    .gsh-grid--2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-9);
+    }
+    .gsh-grid--3 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-9);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .gsh-grid--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-10);
+    }
+  }
+
+  /* ── Snapshot list ───────────────────────────────────────────────── */
+  .gsh-snapshot {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+    margin: 0;
+    padding: 0;
+    max-width: 56rem;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .gsh-snapshot {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-6);
+    }
+  }
+
+  .gsh-snapshot__item {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-5) var(--space-6);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .gsh-snapshot__label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent-hover);
+    margin: 0 0 var(--space-3);
+  }
+
+  .gsh-snapshot__value {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-primary);
+  }
+
+  /* ── Fellowship section ──────────────────────────────────────────── */
+  .gsh-fellowship-actions {
+    margin-top: var(--space-6);
+    text-align: center;
+  }
+
+  .gsh-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-semibold);
+    color: var(--color-link);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+    transition: color var(--transition), gap var(--transition);
+  }
+
+  .gsh-link:hover,
+  .gsh-link:focus-visible {
+    color: var(--color-link-hover);
+    gap: var(--space-3);
+  }
+
+  .gsh-link:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+</style>

@@ -1,0 +1,442 @@
+---
+/**
+ * /en/programs — English mirror of /programs.
+ *
+ * Spec: docs/I18N-ARCHITECTURE.md §2, §7. Sibling-page strategy: same
+ * components, same composition, English prose. Spanish sibling source of
+ * truth: src/pages/programs.astro.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import ProgramCard from '../../components/ProgramCard.astro';
+import FactList from '../../components/FactList.astro';
+import Card from '../../components/Card.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import CtaSection from '../../components/CtaSection.astro';
+import { t } from '../../lib/i18n';
+
+const pathname = '/en/programs';
+
+const breadcrumb = {
+  items: [
+    { label: t('en', 'breadcrumb.home'), href: '/en' },
+    { label: 'Programs' },
+  ],
+};
+
+// Certificate assets in /public/images/Certificados/.
+// `src` values use URL-encoded spaces so the browser resolves them as files.
+const certFundamentosAtlas = {
+  src: '/images/Certificados/AI%20Safety%20Atlas%20Angel.jpeg',
+  alt: 'AI Safety Atlas certificate — Angel Tenorio',
+};
+const certFundamentosEnais = {
+  src: '/images/Certificados/ENAIS%20Janeth.png',
+  alt: 'ENAIS certificate — Janeth Valdivia',
+};
+const certCentroGeo = {
+  src: '/images/Certificados/Centro%20Geo%20Angel.jpeg',
+  alt: 'Centro GEO certificate — Angel Tenorio',
+};
+const certUady = {
+  src: '/images/Certificados/UADY%20Angel.jpeg',
+  alt: 'UADY · School of Mathematics certificate — Angel Tenorio',
+};
+const certSpar = {
+  src: '/images/Certificados/SPAR%20Janeth.png',
+  alt: 'SPAR certificate — Janeth Valdivia',
+};
+const certAiSafetyConnect = {
+  src: '/images/Certificados/AI%20Safety%20Connect.png',
+  alt: 'AI Safety Connect recognition',
+};
+
+const certificates = [
+  certFundamentosAtlas,
+  certFundamentosEnais,
+  certCentroGeo,
+  certUady,
+  certSpar,
+  certAiSafetyConnect,
+];
+
+const fundamentosFacts = [
+  {
+    label: 'Material',
+    value: 'BlueDot Impact · AI Safety Atlas',
+  },
+  {
+    label: 'Facilitators',
+    value: 'Janeth Valdivia · Angel Tenorio',
+  },
+];
+
+const arenaFacts = [
+  {
+    label: 'Material',
+    value: 'ARENA · Alignment Research Engineer Accelerator',
+  },
+  {
+    label: 'Facilitators',
+    value: 'Max Pinelo · Angel Tenorio',
+  },
+];
+---
+
+<BaseLayout
+  title="Educational programs | AI Safety Mexico"
+  description="Community courses and tailored programs for institutions on artificial intelligence safety and governance."
+  lang="en"
+  pathname={pathname}
+>
+  <Header slot="header" currentPath={pathname} lang="en" />
+
+  <PageHero
+    title="Educational programs"
+    description="We design and deliver open and tailored courses — for communities, universities, and research centers — that adapt contemporary AI safety frameworks to the Mexican context. Upcoming cohorts will be announced through our channels."
+    breadcrumb={breadcrumb}
+    lang="en"
+  />
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       Community courses
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="programs-section programs-section--open">
+    <div class="programs-section__inner">
+      <SectionHeading
+        eyebrow="Past cohorts"
+        title="Community courses"
+        description="Past training cohorts open to the broader community, with no institutional prerequisites. We'll announce upcoming cohorts through our channels."
+      />
+
+      <div class="programs-section__grid">
+        <article class="program-block">
+          <ProgramCard
+            title="Foundations of AI Safety and Governance"
+            description="Introductory course covering contemporary frameworks in alignment, systemic risks and governance, with an emphasis on the Mexican context. Delivered in past cohorts."
+            facilitators={['Janeth Valdivia', 'Angel Tenorio']}
+            materials={['BlueDot Impact', 'AI Safety Atlas']}
+          />
+          <FactList items={fundamentosFacts} />
+        </article>
+
+        <article class="program-block">
+          <ProgramCard
+            title="Technical AI Safety Course (ARENA)"
+            description="Technical program focused on alignment research and engineering: red-teaming, model evaluations and research engineering practices, based on the ARENA curriculum. Delivered in past cohorts."
+            facilitators={['Max Pinelo', 'Angel Tenorio']}
+            materials={['ARENA']}
+          />
+          <FactList items={arenaFacts} />
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       Institutional programs
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="programs-section programs-section--institutional">
+    <div class="programs-section__inner">
+      <SectionHeading
+        eyebrow="Institutions"
+        title="Institutional programs"
+        description="Tailored courses we've designed and delivered for universities, research centers, and public bodies. Recent cases:"
+      />
+
+      <div class="programs-section__grid">
+        <ProgramCard
+          institution="Centro GEO"
+          title="AI Safety · Centro GEO"
+          description="Specialized course delivered to researchers at the Centre for Research in Geospatial Information Sciences, with an emphasis on contemporary frameworks of alignment, systemic risks and technical governance."
+          facilitators={['Angel Tenorio']}
+          certificateImage={certCentroGeo}
+        />
+
+        <ProgramCard
+          institution="UADY · School of Mathematics"
+          title="AI Safety · UADY"
+          description="Program open to the university community, delivered at the Autonomous University of Yucatán in collaboration with the School of Mathematics."
+          facilitators={['Angel Tenorio']}
+          certificateImage={certUady}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       Certificate gallery (lightbox)
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="programs-section programs-section--gallery">
+    <div class="programs-section__inner">
+      <SectionHeading
+        eyebrow="Credentials"
+        title="Certificate gallery"
+        description="Credentials earned and issued by the team through international programs and institutional collaborations."
+      />
+
+      <ul class="cert-grid" role="list">
+        {certificates.map((cert) => (
+          <li class="cert-grid__item">
+            <button
+              type="button"
+              class="cert-grid__trigger"
+              data-lightbox
+              data-lightbox-group="certificates"
+              data-lightbox-src={cert.src}
+              data-lightbox-alt={cert.alt}
+              data-lightbox-caption={cert.alt}
+              aria-label={`Enlarge image: ${cert.alt}`}
+            >
+              <img
+                class="cert-grid__img"
+                src={cert.src}
+                alt={cert.alt}
+                loading="lazy"
+                decoding="async"
+              />
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       Team training (mini)
+       ───────────────────────────────────────────────────────────────── -->
+  <section class="programs-section programs-section--trayectoria">
+    <div class="programs-section__inner">
+      <SectionHeading
+        eyebrow="Training"
+        title="Training our team has completed"
+        description="International programs members of our team have taken part in."
+      />
+
+      <div class="trayectoria-grid">
+        <Card
+          padding="md"
+          bordered={true}
+          interactive={false}
+          elevated={false}
+          title="ML4Good"
+          description="International bootcamp on machine learning applied to AI safety. Team alumni: Angel, Max, Isabel, Janeth."
+        >
+          <span slot="footer" class="trayectoria-tag">Advanced training</span>
+        </Card>
+
+        <Card
+          padding="md"
+          bordered={true}
+          interactive={false}
+          elevated={false}
+          title="EAGxCDMX"
+          description="Regional Effective Altruism conference. The team contributed the workshop “Not so speedy AI Safety” (Silvia Fernández, Angel Tenorio, Max Pinelo)."
+        >
+          <span slot="footer" class="trayectoria-tag">Conference · Workshop</span>
+        </Card>
+      </div>
+
+      <p class="trayectoria-note">
+        Further details and full calendar on
+        <a class="trayectoria-link" href="/en/activities">Activities</a>.
+      </p>
+    </div>
+  </section>
+
+  <CtaSection
+    title="Want to bring a course to your institution?"
+    description="We design tailored programs for universities, research centers, and public bodies. Reach out to discuss format, scope, and timing."
+    ctaLabel="Request an institutional program"
+    ctaHref="/en/get-involved#training"
+  />
+
+  <!-- Single global lightbox overlay; auto-wires to data-lightbox triggers. -->
+  <Lightbox />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  .programs-section {
+    padding-block: var(--space-10);
+  }
+
+  @media (min-width: 768px) {
+    .programs-section {
+      padding-block: var(--space-12);
+    }
+  }
+
+  .programs-section__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 480px) {
+    .programs-section__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  /* Alternating surfaces help separate sections without extra dividers. */
+  .programs-section--open {
+    background: var(--color-bg-base);
+  }
+  .programs-section--institutional {
+    background: var(--color-bg-base);
+  }
+  .programs-section--gallery {
+    background: var(--color-bg-base);
+  }
+  .programs-section--trayectoria {
+    background: var(--color-bg-base);
+  }
+
+  /* ── Program cards grid ─────────────────────────────────────────── */
+  .programs-section__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 768px) {
+    .programs-section__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-10);
+    }
+  }
+
+  .program-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  /* ── Certificate gallery ────────────────────────────────────────── */
+  .cert-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 480px) {
+    .cert-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 768px) {
+    .cert-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-5);
+    }
+  }
+  @media (min-width: 1024px) {
+    .cert-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+
+  .cert-grid__item {
+    margin: 0;
+  }
+
+  .cert-grid__trigger {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    cursor: zoom-in;
+    overflow: hidden;
+    transition:
+      transform var(--transition),
+      box-shadow var(--transition),
+      border-color var(--transition);
+  }
+
+  .cert-grid__trigger:hover,
+  .cert-grid__trigger:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-border-accent);
+  }
+
+  .cert-grid__trigger:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+  }
+
+  .cert-grid__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: var(--color-bg-warm);
+  }
+
+  /* ── Training mini cards ────────────────────────────────────────── */
+  .trayectoria-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 640px) {
+    .trayectoria-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .trayectoria-tag {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent);
+    line-height: 1;
+  }
+
+  .trayectoria-note {
+    margin-top: var(--space-6);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  .trayectoria-link {
+    color: var(--color-accent);
+    font-weight: var(--fw-semibold);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 1px;
+  }
+
+  .trayectoria-link:hover,
+  .trayectoria-link:focus-visible {
+    color: var(--color-accent-hover);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cert-grid__trigger {
+      transition: none;
+    }
+    .cert-grid__trigger:hover,
+    .cert-grid__trigger:focus-visible {
+      transform: none;
+    }
+  }
+</style>

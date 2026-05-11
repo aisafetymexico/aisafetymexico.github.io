@@ -1,0 +1,308 @@
+---
+/*
+ * /en/activities — English mirror of /activities.
+ *
+ * Spec: docs/I18N-ARCHITECTURE.md §2 (Strategy B sibling page files) + §7 row 9.
+ * Sibling: src/pages/activities.astro (Spanish source-of-truth structure).
+ *
+ * Structural parity with the Spanish page is mandatory — every section,
+ * heading hierarchy, and component composition mirrors the original 1:1.
+ * Only prose is translated; URLs (/en/*), image assets, and external links
+ * are preserved (the GSH spotlight image, the Luma/forms URLs, etc.).
+ *
+ * Translation notes (per Task #8 guidelines):
+ *  - "Workshop · Your AI Agent Is Not You" was authored in English upstream
+ *    and is preserved verbatim.
+ *  - "ML4Good" and "EAGxCDMX" are proper names — kept untranslated.
+ *  - Month names rendered in English (per architecture §7.7).
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import ActivityCard from '../../components/ActivityCard.astro';
+import Carousel, { type CarouselSlide } from '../../components/Carousel.astro';
+import CtaSection from '../../components/CtaSection.astro';
+import type { Breadcrumb } from '../../lib/types';
+import { t } from '../../lib/i18n';
+
+// -------- Breadcrumb --------
+const breadcrumb: Breadcrumb = {
+  items: [
+    { label: t('en', 'breadcrumb.home'), href: '/en' },
+    { label: 'Activities' },
+  ],
+};
+
+// -------- Spotlight: Global South AIS Challenge --------
+const spotlight = {
+  title: 'Apart × AI Safety Mexico · The Global South AIS Challenge',
+  date: 'March 2026',
+  description:
+    'A regional AI safety hackathon organized in collaboration with Apart Research. Convenes researchers, engineers, and policy professionals from the Global South to produce prototypes, evaluations, and governance proposals over an intensive weekend.',
+  link: '/en/global-south-challenge',
+  image: {
+    src: '/images/gsh-event-card.png',
+    alt: 'Promotional image for the Global South AIS Challenge.',
+  },
+};
+
+// -------- Mesas de trabajo (recurrente) --------
+const recurring = {
+  title: 'Working sessions · First Friday of the month',
+  date: 'Recurring',
+  description:
+    'Recurring sessions where the team and invited guests discuss ongoing project work, recent readings, and open questions in AI safety. Participation is by invitation; if you would like to join, write to us describing your interest.',
+  link: '/en/get-involved#events',
+};
+
+// -------- Conferences & talks --------
+type ConfTalk = {
+  title: string;
+  date?: string;
+  description: string;
+  link?: string;
+  external?: boolean;
+  image?: { src: string; alt: string };
+};
+
+const conferencesAndTalks: ConfTalk[] = [
+  {
+    title: 'Workshop · Your AI Agent Is Not You',
+    date: '2026',
+    description:
+      'Hands-on workshop in collaboration with Greywall on boundaries, identity, and the safety of AI agents. A guided session with Claude Code live, followed by a discussion of responsible deployment patterns.',
+    link: 'https://lu.ma/',
+    external: true,
+  },
+  {
+    title: 'EAGxCDMX · Not so speedy AI Safety',
+    date: '2025',
+    description:
+      'Workshop delivered by Silvia Fernández, Angel, and Max at EAGxCDMX. A critical introduction to the technical and political decisions that pause, accelerate, or redirect AI safety agendas.',
+  },
+  {
+    title: 'Advanced training · ML4Good',
+    date: '2025',
+    description:
+      'Intensive international bootcamp on technical AI safety. Angel, Max, Isabel, and Janeth attended as part of the regional cohort.',
+  },
+];
+
+// -------- Gallery: carousel images --------
+// Files in /public/images/carousel/ (URL-encoded where filenames contain spaces).
+const carouselSlides: CarouselSlide[] = [
+  { src: '/images/carousel/carousel-image-1.jpeg',  alt: 'Working session of the AI Safety Mexico team.' },
+  { src: '/images/carousel/carousel-image-2.jpeg',  alt: 'Participants in an AI Safety Mexico course.' },
+  { src: '/images/carousel/carousel-image-3.jpeg',  alt: 'Activity photo of the AI Safety Mexico team.' },
+  { src: '/images/carousel/carousel-image-5.jpeg',  alt: 'AI safety workshop at an academic institution.' },
+  { src: '/images/carousel/carousel-image-6.jpeg',  alt: 'Gathering with the AI Safety Mexico community.' },
+  { src: '/images/carousel/carousel-image-7.jpeg',  alt: 'Discussion session at a working table.' },
+  { src: '/images/carousel/carousel-image-9.jpeg',  alt: 'Conference with attendees from the community.' },
+  { src: '/images/carousel/carousel-image-10.jpeg', alt: 'Group photo of the team and collaborators.' },
+  { src: '/images/carousel/Dexter.png',             alt: 'Presentation of the Dexter project.' },
+  { src: '/images/carousel/IMG_7302%20Copy.JPG',    alt: 'Archive photo from an AI Safety Mexico event.' },
+  { src: '/images/carousel/Screenshot%202026-03-05%20at%201.34.26%E2%80%AFp.m..png', alt: 'Screenshot of a recent activity.' },
+  { src: '/images/carousel/Screenshot%202026-03-05%20at%2012.16.56%E2%80%AFp.m..png', alt: 'Screenshot of a recent activity.' },
+];
+
+---
+
+<BaseLayout
+  title="Activities — AI Safety Mexico"
+  description="Current and past activities of AI Safety Mexico: hackathons, working sessions, conferences, workshops, and advanced training."
+  pathname="/en/activities"
+  lang="en"
+>
+  <Header slot="header" currentPath="/en/activities" lang="en" />
+
+  <PageHero
+    title="Current and past activities"
+    description="A public record of AI Safety Mexico: active events, recurring working sessions, conferences, workshops, and training programs that have shaped our trajectory."
+    breadcrumb={breadcrumb}
+    lang="en"
+  />
+
+  <!-- Spotlight: Global South AIS Challenge -->
+  <section class="page-section page-section--spotlight" aria-labelledby="activities-spotlight">
+    <div class="page-section__inner">
+      <SectionHeading
+        eyebrow="Featured"
+        title="Global South AIS Challenge"
+        description="Our most visible regional initiative: an open hackathon that convenes the Global South community to produce concrete work in AI safety."
+        id="activities-spotlight"
+      />
+      <div class="spotlight">
+        <ActivityCard
+          title={spotlight.title}
+          date={spotlight.date}
+          description={spotlight.description}
+          image={spotlight.image}
+          link={spotlight.link}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Recurring working sessions -->
+  <section class="page-section page-section--alt" aria-labelledby="activities-recurring">
+    <div class="page-section__inner">
+      <SectionHeading
+        eyebrow="Ongoing"
+        title="Recurring working sessions"
+        description="A standing forum where the team and invited guests discuss project progress, readings, and open questions."
+        id="activities-recurring"
+      />
+      <div class="recurring">
+        <ActivityCard
+          title={recurring.title}
+          date={recurring.date}
+          description={recurring.description}
+          link={recurring.link}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Conferences and talks -->
+  <section class="page-section" aria-labelledby="activities-conferences">
+    <div class="page-section__inner">
+      <SectionHeading
+        eyebrow="Track record"
+        title="Conferences, workshops, and training"
+        description="A representative selection of events the team has delivered, attended, or co-organized."
+        id="activities-conferences"
+      />
+      <div class="conf-grid">
+        {conferencesAndTalks.map(item => (
+          <ActivityCard
+            title={item.title}
+            date={item.date}
+            description={item.description}
+            image={item.image}
+            link={item.link}
+            external={item.external}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="page-section page-section--alt" aria-labelledby="activities-gallery">
+    <div class="page-section__inner">
+      <SectionHeading
+        eyebrow="Gallery"
+        title="Images from our activities"
+        description="A visual sample of the team's work and the venues we've been part of."
+        id="activities-gallery"
+      />
+      <Carousel
+        slides={carouselSlides}
+        autoAdvance={true}
+        interval={6000}
+        label="Gallery of AI Safety Mexico activities"
+        id="activities-gallery"
+      />
+    </div>
+  </section>
+
+  <CtaSection
+    title="Would you like to organize an event with us?"
+    description="We collaborate with institutions, communities, and international allies to produce workshops, working sessions, and public events on AI safety."
+    ctaLabel="Propose an event"
+    ctaHref="/en/get-involved#events"
+  />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  /* Generic page section scaffolding — kept local to avoid coupling with
+     the home page work in #12. Pulls only existing tokens. */
+  .page-section {
+    padding-block: var(--space-12);
+    background: var(--color-bg-base);
+  }
+
+  .page-section--alt {
+    background: var(--color-bg-base);
+  }
+
+  .page-section--spotlight {
+    /* Slight emphasis at the top; keeps surface continuity with PageHero */
+    padding-top: var(--space-10);
+  }
+
+  .page-section__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 480px) {
+    .page-section__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  /* Spotlight: single full-width activity card with extra height */
+  .spotlight :global(.activity-card) {
+    max-width: var(--container-narrow, 860px);
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .spotlight :global(.activity-card) {
+      flex-direction: row;
+      align-items: stretch;
+    }
+    .spotlight :global(.activity-card__media) {
+      flex: 0 0 50%;
+      aspect-ratio: auto;
+    }
+    .spotlight :global(.activity-card__body) {
+      flex: 1 1 50%;
+      justify-content: center;
+    }
+    .spotlight :global(.activity-card__title) {
+      font-size: var(--fs-h4);
+    }
+  }
+
+  /* Recurring: single card, narrower for readability */
+  .recurring :global(.activity-card) {
+    max-width: var(--container-narrow, 860px);
+    margin-inline: auto;
+  }
+
+  /* Conferences and talks grid — 1/2/3 columns */
+  .conf-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 640px) {
+    .conf-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-9);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .conf-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-10);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .page-section {
+      padding-block: var(--space-14);
+    }
+  }
+</style>

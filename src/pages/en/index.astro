@@ -1,0 +1,220 @@
+---
+/**
+ * `/en/` — Home (curated gateway · English).
+ *
+ * English mirror of `/` (src/pages/index.astro). Structure, imports and assets
+ * are deliberately identical; only user-facing strings and in-locale links
+ * change. See docs/I18N-ARCHITECTURE.md (Strategy B — sibling page files).
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Hero from '../../components/Hero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+import StatBar from '../../components/StatBar.astro';
+import Card from '../../components/Card.astro';
+import ActivityCard from '../../components/ActivityCard.astro';
+import CtaSection from '../../components/CtaSection.astro';
+
+const pillars = [
+  {
+    title: 'Research',
+    description:
+      'Original and collaborative work in alignment, interpretability, and technical governance. Learn more →',
+    href: '/en/research',
+  },
+  {
+    title: 'Programs',
+    description:
+      'Open and bespoke courses that adapt contemporary AI safety frameworks to the Mexican context. Learn more →',
+    href: '/en/programs',
+  },
+  {
+    title: 'Projects',
+    description:
+      'Applied initiatives like VIGÍA and AI Safety Connect: open, auditable, and oriented toward producing usable knowledge. Learn more →',
+    href: '/en/projects',
+  },
+  {
+    title: 'Team',
+    description:
+      'Researchers, engineers, and multidisciplinary professionals working together from Mexico. Learn more →',
+    href: '/en/team',
+  },
+];
+
+const stats = [
+  { number: '6+', label: 'Courses delivered' },
+  { number: '30+', label: 'Participants trained' },
+  { number: '1', label: 'Peer-reviewed publication' },
+  { number: '8', label: 'People on the team' },
+];
+
+// -------- GSH spotlight (section 2) --------
+// Mirrors the spotlight on /en/activities (single ActivityCard, side-by-side
+// at md+). Copy is kept aligned with that page so both surfaces tell the same
+// story.
+const gshSpotlight = {
+  title: 'The Global South AIS Challenge',
+  date: 'March 2026',
+  description:
+    'A regional AI safety hackathon organized with Apart Research. It convenes researchers, engineers, and practitioners from the Global South to produce prototypes, evaluations, and governance proposals over an intensive weekend.',
+  link: '/en/global-south-challenge',
+  image: {
+    src: '/images/gsh-event-card.png',
+    alt: 'Promotional image for the Global South AIS Challenge.',
+  },
+};
+---
+
+<BaseLayout
+  title="AI Safety Mexico — AI research, education, and governance"
+  description="A Mexican nonprofit dedicated to research, education, and responsible governance of AI in Mexico."
+  pathname="/en"
+  lang="en"
+  ogImage="/images/observatorio.png"
+>
+  <Header slot="header" currentPath="/en" lang="en" />
+
+  <Hero
+    overline="AI SAFETY MEXICO"
+    title="AI safety and governance, from Mexico."
+    subtitle="We research, train, and build community around AI safety. We lay the technical and governance foundations Mexico needs to make informed decisions about AI."
+    image={{ src: '/images/observatorio.png', alt: 'AI Safety Mexico observatory' }}
+    primaryCta={{ label: 'Explore our projects', href: '/en/projects' }}
+    secondaryCta={{ label: 'Get involved', href: '/en/get-involved' }}
+  />
+
+  <!-- 2 · GSH spotlight (Global South AIS Challenge) -->
+  <section class="section section--base section--compact" aria-labelledby="home-gsh-spotlight">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Featured event"
+        title="Global South AIS Challenge"
+        description="Our most visible regional initiative: an open hackathon that convenes the Global South community to produce concrete work in AI safety."
+        align="center"
+        id="home-gsh-spotlight"
+      />
+      <div class="home-spotlight">
+        <ActivityCard
+          title={gshSpotlight.title}
+          date={gshSpotlight.date}
+          description={gshSpotlight.description}
+          image={gshSpotlight.image}
+          link={gshSpotlight.link}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Featured pillars (gateway of 4) -->
+  <section class="section section--base section--edge-accent">
+    <div class="container">
+      <SectionHeading
+        eyebrow="What we do"
+        title="Four fronts, a single mission."
+        description="Each pillar links to a dedicated page with details, materials, and ways to collaborate."
+        align="center"
+      />
+      <FeatureGrid items={pillars} />
+    </div>
+  </section>
+
+  <!-- 4 · Stat bar -->
+  <StatBar stats={stats} />
+
+  <!-- 5 · Curated highlights (GSH already lives in the spotlight above) -->
+  <section class="section section--base">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Highlights"
+        title="Recent work."
+        description="A project and a publication that capture where the organization is right now."
+        align="center"
+      />
+
+      <div class="home-highlights">
+        <Card
+          href="/en/projects/vigia"
+          badge="Flagship project"
+          title="VIGÍA"
+          description="A platform for observing Mexico's AI regulatory ecosystem. Special Recognition · AI Safety Collab 2025."
+          padding="md"
+          bordered
+        />
+        <Card
+          href="/en/research"
+          badge="Publication"
+          title="A Pilot Survey on AI Safety in Yucatan"
+          description="A pilot study on local perceptions, risks, and practices around AI, published in RCS · IPN."
+          padding="md"
+          bordered
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · CTA closing band -->
+  <CtaSection
+    title="Looking to collaborate?"
+    description="Researchers, institutions, and partners: there are several ways to join the work of AI Safety Mexico."
+    ctaLabel="See how to collaborate"
+    ctaHref="/en/get-involved"
+  />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  /* Highlights grid — 2 curated cards: stack on mobile → side-by-side at md+.
+     (Was 3-up; GSH moved to the top spotlight in §2, so we deliberately keep
+     only two well-curated highlights to avoid forcing a filler card.) */
+  .home-highlights {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    max-width: var(--container-narrow, 860px);
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .home-highlights {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-9);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .home-highlights {
+      gap: var(--space-10);
+    }
+  }
+
+  /* GSH spotlight — single full-width ActivityCard, mirrored from
+     /activities .spotlight (RAND editorial; no shadow / no lift). On md+,
+     switch the card to a 50/50 image-left, body-right layout. */
+  .home-spotlight :global(.activity-card) {
+    max-width: var(--container-narrow, 860px);
+    margin-inline: auto;
+  }
+
+  @media (min-width: 768px) {
+    .home-spotlight :global(.activity-card) {
+      flex-direction: row;
+      align-items: stretch;
+    }
+    .home-spotlight :global(.activity-card__media) {
+      flex: 0 0 50%;
+      aspect-ratio: auto;
+    }
+    .home-spotlight :global(.activity-card__body) {
+      flex: 1 1 50%;
+      justify-content: center;
+    }
+    .home-spotlight :global(.activity-card__title) {
+      font-size: var(--fs-h4);
+    }
+  }
+</style>

@@ -22,14 +22,16 @@
  *   ]} />
  */
 import type { BreadcrumbItem } from '../lib/types';
+import { t, type Locale } from '../lib/i18n';
 
 export interface Props {
   items: BreadcrumbItem[];
   /** Optional override for the back-link label shown on small mobile. */
   backLabel?: string;
+  lang?: Locale;
 }
 
-const { items, backLabel } = Astro.props;
+const { items, backLabel, lang = 'es' } = Astro.props;
 
 if (!items || items.length === 0) {
   throw new Error('Breadcrumb: `items` must contain at least one entry.');
@@ -41,7 +43,8 @@ const lastIndex = items.length - 1;
 const parent =
   items.length >= 2 ? items[lastIndex - 1] : items[0];
 const parentHref = parent?.href ?? '/';
-const parentLabel = backLabel ?? parent?.label ?? 'Atrás';
+const parentLabel = backLabel ?? parent?.label ?? t(lang, 'breadcrumb.back');
+const navAriaLabel = t(lang, 'breadcrumb.aria');
 
 // Resolve absolute URL for JSON-LD (BreadcrumbList requires URLs).
 const site = Astro.site ?? new URL('https://aisafetymexico.github.io/');
@@ -69,7 +72,7 @@ const jsonLd = {
 };
 ---
 
-<nav class="breadcrumb" aria-label="Migas de pan">
+<nav class="breadcrumb" aria-label={navAriaLabel}>
   {/* Mobile back-link (only renders on small screens with depth ≥ 2). */}
   {items.length >= 2 && (
     <a class="breadcrumb__back" href={parentHref} rel="up">

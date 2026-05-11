@@ -1,36 +1,23 @@
 ---
 /**
- * /projects/ai-safety-connect — AI Safety Connect deep-dive (ProjectPage template).
+ * /en/projects/ai-safety-connect — AI Safety Connect deep-dive (English locale).
  *
- * Spec:
- *   - docs/ARCHITECTURE.md §2 (`/projects/ai-safety-connect` purpose, sections, CTA).
- *   - docs/ARCHITECTURE.md §6 (ProjectPage template).
- *   - docs/CONTENT-MAP.md §1.6 — promote spotlight to subpage; preserves the
- *     PDF embed pattern from the existing `ai-safety-connect.html` page so the
- *     final report stays viewable inline.
- *
- * Sections:
- *   1. PageHero (with breadcrumb).
- *   2. ProjectMetaBar (chips: SPAR program, focus, team size, status).
- *   3. Overview & objective.
- *   4. Methodology — taxonomy, semantic search, pipelines.
- *   5. Paper / publication block — embed + download CTA.
- *   6. International team.
- *   7. Acknowledgements.
- *   8. RelatedProjects.
- *   9. CtaSection — read the paper.
+ * English sibling of src/pages/projects/ai-safety-connect.astro. Mirrors
+ * structure 1:1 per docs/I18N-ARCHITECTURE.md §2. The PDF embed pattern is
+ * preserved verbatim — only labels change to English.
  */
 import { getEntry, getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import PageHero from '../../components/PageHero.astro';
-import SectionHeading from '../../components/SectionHeading.astro';
-import Callout from '../../components/Callout.astro';
-import FactList from '../../components/FactList.astro';
-import KeyFacts from '../../components/KeyFacts.astro';
-import ProjectCard from '../../components/ProjectCard.astro';
-import CtaSection from '../../components/CtaSection.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import PageHero from '../../../components/PageHero.astro';
+import SectionHeading from '../../../components/SectionHeading.astro';
+import Callout from '../../../components/Callout.astro';
+import FactList from '../../../components/FactList.astro';
+import KeyFacts from '../../../components/KeyFacts.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import CtaSection from '../../../components/CtaSection.astro';
+import { t } from '../../../lib/i18n';
 
 const project = await getEntry('projects', 'ai-safety-connect');
 if (!project) {
@@ -43,36 +30,46 @@ const paperPath = data.paperUrl ?? '/Papers/AI_Safety_Connect_Final_Report.pdf';
 // Meta bar chips — type-only, no leading glyph.
 const metaChips = [
   { text: 'SPAR · Supervised Program for Alignment Research' },
-  { text: 'Equipo internacional' },
-  { text: 'Reporte final disponible' },
-  { text: `${data.team.length} co-investigadores` },
+  { text: 'International team' },
+  { text: 'Final report available' },
+  { text: `${data.team.length} co-researchers` },
 ];
 
 // Methodology fact list — eyebrow label / value pairs.
 const methodologyItems = [
   {
-    label: 'Objetivo',
+    label: 'Objective',
     value:
-      'Minimizar la brecha estructural de coordinación entre la investigación académica y las comunidades de seguridad en IA.',
+      'Minimize the structural coordination gap between academic research and AI safety communities.',
   },
   {
-    label: 'Metodología',
+    label: 'Methodology',
     value:
-      'Plataforma integrada que mapea autores, publicaciones y áreas temáticas mediante taxonomía estructurada, búsqueda semántica y pipelines de datos escalables.',
+      'An integrated platform that maps authors, publications, and thematic areas through a structured taxonomy, semantic search, and scalable data pipelines.',
   },
   {
-    label: 'Equipo internacional',
+    label: 'International team',
     value: data.team.map((p) => p.name).join(', '),
   },
 ];
 
-// Team list
+// Role translations for the international SPAR team.
+const roleEn: Record<string, string> = {
+  'Co-investigador': 'Co-researcher',
+  'Co-investigadora': 'Co-researcher',
+};
+
 const teamItems = data.team.map((person) => ({
-  label: person.role ?? 'Co-investigador/a',
+  label: (person.role && roleEn[person.role]) || person.role || 'Co-researcher',
   value: person.name,
 }));
 
 // Related projects
+const enRelatedSummaries: Record<string, string> = {
+  vigia:
+    'A platform for analyzing AI governance and digital sovereignty in Mexico, born out of the AI Governance course in collaboration with ENAIS.',
+};
+
 const allProjects = await getCollection('projects', ({ data: d }: { data: { draft?: boolean } }) => d.draft !== true);
 const related = allProjects
   .filter((p) => (p.data.slug ?? p.slug) !== 'ai-safety-connect')
@@ -82,37 +79,39 @@ const related = allProjects
     return {
       title: p.data.title,
       badge: p.data.badge,
-      description: p.data.summary,
+      description: enRelatedSummaries[slug] ?? p.data.summary,
       image: p.data.cover,
-      href: `/projects/${slug}`,
+      href: `/en/projects/${slug}`,
     };
   });
 
 const breadcrumb = {
   items: [
-    { label: 'Inicio', href: '/' },
-    { label: 'Proyectos', href: '/projects' },
+    { label: t('en', 'breadcrumb.home'), href: '/en' },
+    { label: 'Projects', href: '/en/projects' },
     { label: 'AI Safety Connect' },
   ],
 };
 ---
 
 <BaseLayout
-  title="AI Safety Connect · Proyecto · AI Safety Mexico"
-  description="AI Safety Connect: plataforma desarrollada en el marco de SPAR para mapear sistemáticamente la investigación en seguridad de IA y reducir la brecha entre academia y comunidad."
-  pathname="/projects/ai-safety-connect"
+  title="AI Safety Connect · Project · AI Safety Mexico"
+  description="AI Safety Connect: a platform developed within SPAR to systematically map AI safety research and reduce the gap between academia and community."
+  lang="en"
+  pathname="/en/projects/ai-safety-connect"
   ogImage={data.poster?.src as string | undefined}
 >
-  <Header slot="header" navActivePath="/projects" />
+  <Header slot="header" navActivePath="/en/projects" lang="en" />
 
   <PageHero
     title="AI Safety Connect"
-    description="Plataforma para mapear sistemáticamente la investigación en seguridad de IA y reducir la brecha entre academia y comunidad."
+    description="A platform to systematically map AI safety research and reduce the gap between academia and community."
     breadcrumb={breadcrumb}
+    lang="en"
   />
 
   {/* Meta bar */}
-  <section class="section section--compact section--base" aria-label="Información del proyecto">
+  <section class="section section--compact section--base" aria-label="Project information">
     <div class="container">
       <KeyFacts facts={metaChips} />
     </div>
@@ -122,32 +121,32 @@ const breadcrumb = {
   <section class="section section--base" aria-labelledby="aisc-overview-heading">
     <div class="container container--narrow">
       <SectionHeading
-        eyebrow="Resumen"
-        title="¿Qué es AI Safety Connect?"
+        eyebrow="Summary"
+        title="What is AI Safety Connect?"
         id="aisc-overview-heading"
       />
       <Callout tone="highlight">
         <p>
-          <strong>AI Safety Connect</strong> es una plataforma para mapear
-          sistemáticamente la investigación en seguridad de IA y reducir la brecha
-          entre la academia y las comunidades de práctica.
+          <strong>AI Safety Connect</strong> is a platform to systematically map
+          AI safety research and reduce the gap between academia and
+          communities of practice.
         </p>
       </Callout>
       <div class="prose">
         <p>
-          El proyecto fue desarrollado en el marco del <strong>Supervised
-          Program for Alignment Research (SPAR)</strong>, programa internacional
-          que conecta talento emergente con investigadores establecidos en
-          alineamiento. AI Safety Mexico participó como sede mexicana de la
-          colaboración que produjo este reporte final.
+          The project was developed within the <strong>Supervised Program for
+          Alignment Research (SPAR)</strong>, an international program that
+          connects emerging talent with established researchers in alignment.
+          AI Safety Mexico participated as the Mexican host of the collaboration
+          that produced this final report.
         </p>
         <p>
-          La hipótesis central del proyecto es que existe una <strong>brecha
-          estructural de coordinación</strong> entre quienes producen investigación
-          en seguridad de IA y quienes la consumen para diseñar políticas, productos
-          o programas formativos. Una plataforma con taxonomía consistente y
-          búsqueda semántica reduce el costo de descubrimiento y abre la
-          posibilidad de articular agendas compartidas.
+          The core hypothesis of the project is that there is a
+          <strong>structural coordination gap</strong> between those producing
+          AI safety research and those consuming it to design policy, products,
+          or training programs. A platform with a consistent taxonomy and
+          semantic search lowers the cost of discovery and opens the door to
+          articulating shared agendas.
         </p>
       </div>
     </div>
@@ -157,9 +156,9 @@ const breadcrumb = {
   <section class="section section--base" aria-labelledby="aisc-methodology-heading">
     <div class="container container--narrow">
       <SectionHeading
-        eyebrow="Metodología"
-        title="Cómo está construido"
-        description="La plataforma se apoya en tres componentes complementarios: taxonomía estructurada, búsqueda semántica y pipelines de datos escalables."
+        eyebrow="Methodology"
+        title="How it is built"
+        description="The platform relies on three complementary components: structured taxonomy, semantic search, and scalable data pipelines."
         id="aisc-methodology-heading"
       />
       <FactList items={methodologyItems} />
@@ -170,9 +169,9 @@ const breadcrumb = {
   <section class="section section--base section--edge-accent" aria-labelledby="aisc-paper-heading">
     <div class="container container--narrow">
       <SectionHeading
-        eyebrow="Publicación"
-        title="Reporte final"
-        description="El documento sintetiza los hallazgos, decisiones de diseño y trabajo a futuro de la colaboración SPAR."
+        eyebrow="Publication"
+        title="Final report"
+        description="The document synthesizes the findings, design decisions, and future work of the SPAR collaboration."
         id="aisc-paper-heading"
       />
 
@@ -183,7 +182,7 @@ const breadcrumb = {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Abrir PDF en pestaña nueva
+          Open PDF in new tab
           <span aria-hidden="true">↗</span>
         </a>
         <a
@@ -191,12 +190,12 @@ const breadcrumb = {
           href={paperPath}
           download
         >
-          Descargar reporte
+          Download report
           <span aria-hidden="true">↓</span>
         </a>
       </div>
 
-      <div class="aisc-pdf-viewer" aria-label="Visor del reporte final de AI Safety Connect">
+      <div class="aisc-pdf-viewer" aria-label="AI Safety Connect final report viewer">
         <object
           data={paperPath}
           type="application/pdf"
@@ -204,9 +203,9 @@ const breadcrumb = {
           height="800"
         >
           <p class="aisc-pdf-fallback">
-            Tu navegador no puede mostrar el PDF embebido.
+            Your browser cannot display the embedded PDF.
             <a href={paperPath} target="_blank" rel="noopener noreferrer">
-              Abre el reporte en una pestaña nueva
+              Open the report in a new tab
             </a>.
           </p>
         </object>
@@ -218,9 +217,9 @@ const breadcrumb = {
   <section class="section section--base" aria-labelledby="aisc-team-heading">
     <div class="container container--narrow">
       <SectionHeading
-        eyebrow="Equipo internacional"
-        title="Co-investigadores"
-        description="La colaboración SPAR articuló a un equipo distribuido geográficamente con experiencia en alineamiento, evaluaciones e infraestructura de datos."
+        eyebrow="International team"
+        title="Co-researchers"
+        description="The SPAR collaboration brought together a geographically distributed team with experience in alignment, evaluations, and data infrastructure."
         id="aisc-team-heading"
       />
       <FactList items={teamItems} />
@@ -231,23 +230,23 @@ const breadcrumb = {
   <section class="section section--base" aria-labelledby="aisc-ack-heading">
     <div class="container container--narrow">
       <SectionHeading
-        eyebrow="Agradecimientos"
-        title="Programas y aliados"
+        eyebrow="Acknowledgements"
+        title="Programs and partners"
         id="aisc-ack-heading"
       />
       <div class="prose">
         <p>
-          AI Safety Connect existe gracias al programa <strong>SPAR — Supervised
-          Program for Alignment Research</strong>, que articuló al equipo
-          internacional y proveyó la mentoría académica. Agradecemos a las
-          mentoras y mentores que acompañaron el diseño metodológico y la
-          revisión de resultados, así como a las comunidades de práctica que
-          aportaron retroalimentación durante el desarrollo.
+          AI Safety Connect exists thanks to the <strong>SPAR — Supervised
+          Program for Alignment Research</strong> program, which brought
+          together the international team and provided academic mentorship. We
+          thank the mentors who accompanied the methodological design and the
+          review of results, as well as the communities of practice that
+          provided feedback during development.
         </p>
         <p>
-          AI Safety Mexico participó como sede en México, conectando al equipo con
-          aliados locales y aportando perspectiva mexicana al diseño del
-          mapeo.
+          AI Safety Mexico participated as the Mexican host, connecting the
+          team with local partners and bringing a Mexican perspective to the
+          design of the mapping.
         </p>
       </div>
     </div>
@@ -258,8 +257,8 @@ const breadcrumb = {
     <section class="section section--base" aria-labelledby="aisc-related-heading">
       <div class="container">
         <SectionHeading
-          eyebrow="Sigue explorando"
-          title="Otros proyectos"
+          eyebrow="Keep exploring"
+          title="Other projects"
           id="aisc-related-heading"
         />
         <div class="aisc-related-grid">
@@ -270,6 +269,7 @@ const breadcrumb = {
               description={card.description}
               image={card.image}
               href={card.href}
+              lang="en"
             />
           ))}
         </div>
@@ -278,14 +278,14 @@ const breadcrumb = {
   )}
 
   <CtaSection
-    title="Lee el reporte completo"
-    description="El reporte final documenta hallazgos, decisiones de diseño y trabajo a futuro."
-    ctaLabel="Abrir el PDF"
+    title="Read the full report"
+    description="The final report documents findings, design decisions, and future work."
+    ctaLabel="Open the PDF"
     ctaHref={paperPath}
     ctaExternal={true}
   />
 
-  <Footer slot="footer" />
+  <Footer slot="footer" lang="en" />
 </BaseLayout>
 
 <style>

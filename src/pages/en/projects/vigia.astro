@@ -1,35 +1,23 @@
 ---
 /**
- * /projects/vigia — VIGÍA project deep-dive (ProjectPage template).
+ * /en/projects/vigia — VIGÍA project deep-dive (English locale).
  *
- * Spec:
- *   - docs/ARCHITECTURE.md §2 (`/projects/vigia` purpose, sections, CTA).
- *   - docs/ARCHITECTURE.md §6 (ProjectPage template — hero, meta bar,
- *     content sections, related projects, CTA).
- *   - docs/CONTENT-MAP.md §1.6 — promote spotlight to full subpage.
- *
- * Sections (per ARCHITECTURE):
- *   1. PageHero (with breadcrumb).
- *   2. ProjectMetaBar (chips: badge, focus, status, team size).
- *   3. Overview — what VIGÍA is, problem it solves.
- *   4. Recognition — Special Recognition · AI Safety Collab 2025 callout.
- *   5. Methodology / approach.
- *   6. Team — 5 collaborators with roles.
- *   7. External resources.
- *   8. RelatedProjects — link to AI Safety Connect.
- *   9. CtaSection — visit the platform.
+ * English sibling of src/pages/projects/vigia.astro. Mirrors structure 1:1
+ * per docs/I18N-ARCHITECTURE.md §2. The "Special Recognition · AI Safety
+ * Collab 2025" badge stays as-is (award name).
  */
 import { getEntry, getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import PageHero from '../../components/PageHero.astro';
-import SectionHeading from '../../components/SectionHeading.astro';
-import Callout from '../../components/Callout.astro';
-import FactList from '../../components/FactList.astro';
-import KeyFacts from '../../components/KeyFacts.astro';
-import ProjectCard from '../../components/ProjectCard.astro';
-import CtaSection from '../../components/CtaSection.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import PageHero from '../../../components/PageHero.astro';
+import SectionHeading from '../../../components/SectionHeading.astro';
+import Callout from '../../../components/Callout.astro';
+import FactList from '../../../components/FactList.astro';
+import KeyFacts from '../../../components/KeyFacts.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import CtaSection from '../../../components/CtaSection.astro';
+import { t } from '../../../lib/i18n';
 
 const project = await getEntry('projects', 'vigia');
 if (!project) {
@@ -40,28 +28,41 @@ const data = project.data;
 // Meta bar chips (KeyFacts component) — type-only, no leading glyph.
 const metaChips = [
   { text: 'Special Recognition · AI Safety Collab 2025' },
-  { text: 'Gobernanza · Soberanía digital' },
-  { text: 'México' },
-  { text: `Equipo de ${data.team.length} colaboradores` },
-  { text: 'En desarrollo activo' },
+  { text: 'Governance · Digital sovereignty' },
+  { text: 'Mexico' },
+  { text: `Team of ${data.team.length} collaborators` },
+  { text: 'In active development' },
 ];
 
-// Team as FactList — eyebrow label / value pairs.
+// Role translations for the VIGÍA team. Spanish roles in the content collection
+// are mapped to their English equivalents per task brief.
+const roleEn: Record<string, string> = {
+  'Cofundadora · Concepción de la plataforma': 'Co-founder · Platform conception',
+  'Cofundador · Concepción de la plataforma': 'Co-founder · Platform conception',
+  'Diseño': 'Design',
+  'Advisory · Curso de Governance': 'Advisory · AI Governance course',
+};
+
 const teamItems = data.team.map((person) => ({
-  label: person.role ?? 'Colaborador/a',
+  label: (person.role && roleEn[person.role]) || person.role || 'Collaborator',
   value: person.name,
 }));
 
 // External resources — same label/value treatment as the team list.
 const resourceItems = [
   data.externalUrl
-    ? { label: 'Plataforma', value: 'vigia-observatorio.github.io' }
+    ? { label: 'Platform', value: 'vigia-observatorio.github.io' }
     : null,
-  { label: 'Aliado fundacional', value: 'ENAIS — curso AI Governance' },
-  { label: 'Reconocimiento', value: 'AI Safety Collab 2025' },
+  { label: 'Founding partner', value: 'ENAIS — AI Governance course' },
+  { label: 'Recognition', value: 'AI Safety Collab 2025' },
 ].filter(Boolean) as { label: string; value: string }[];
 
 // Related project — AI Safety Connect
+const enRelatedSummaries: Record<string, string> = {
+  'ai-safety-connect':
+    'A platform to systematically map AI safety research and reduce the gap between academia and communities of practice.',
+};
+
 const allProjects = await getCollection('projects', ({ data: d }: { data: { draft?: boolean } }) => d.draft !== true);
 const related = allProjects
   .filter((p) => (p.data.slug ?? p.slug) !== 'vigia')
@@ -71,37 +72,39 @@ const related = allProjects
     return {
       title: p.data.title,
       badge: p.data.badge,
-      description: p.data.summary,
+      description: enRelatedSummaries[slug] ?? p.data.summary,
       image: p.data.cover,
-      href: `/projects/${slug}`,
+      href: `/en/projects/${slug}`,
     };
   });
 
 const breadcrumb = {
   items: [
-    { label: 'Inicio', href: '/' },
-    { label: 'Proyectos', href: '/projects' },
+    { label: t('en', 'breadcrumb.home'), href: '/en' },
+    { label: 'Projects', href: '/en/projects' },
     { label: 'VIGÍA' },
   ],
 };
 ---
 
 <BaseLayout
-  title="VIGÍA · Proyecto · AI Safety Mexico"
-  description="VIGÍA es la plataforma de AI Safety Mexico para el análisis de gobernanza de IA y soberanía digital en México. Special Recognition · AI Safety Collab 2025."
-  pathname="/projects/vigia"
+  title="VIGÍA · Project · AI Safety Mexico"
+  description="VIGÍA is AI Safety Mexico's platform for analyzing AI governance and digital sovereignty in Mexico. Special Recognition · AI Safety Collab 2025."
+  lang="en"
+  pathname="/en/projects/vigia"
   ogImage={data.cover?.src as string | undefined}
 >
-  <Header slot="header" navActivePath="/projects" />
+  <Header slot="header" navActivePath="/en/projects" lang="en" />
 
   <PageHero
     title="VIGÍA"
-    description="Plataforma para el análisis de gobernanza de IA y soberanía digital en México."
+    description="A platform for analyzing AI governance and digital sovereignty in Mexico."
     breadcrumb={breadcrumb}
+    lang="en"
   />
 
   {/* Meta bar */}
-  <section class="section section--compact section--base" aria-label="Información del proyecto">
+  <section class="section section--compact section--base" aria-label="Project information">
     <div class="container">
       <KeyFacts facts={metaChips} />
     </div>
@@ -111,25 +114,26 @@ const breadcrumb = {
   <section class="section section--base" aria-labelledby="vigia-overview-heading">
     <div class="container container--narrow">
       <SectionHeading
-        eyebrow="Resumen"
-        title="¿Qué es VIGÍA?"
+        eyebrow="Summary"
+        title="What is VIGÍA?"
         id="vigia-overview-heading"
       />
       <div class="prose">
         <p>
           <strong>VIGÍA</strong> — <em>Valoración de Impactos Gubernamentales de
-          Inteligencia Artificial</em> — es una plataforma en desarrollo que mapea,
-          analiza y comunica decisiones públicas sobre inteligencia artificial en
-          México. Surge como parte de los proyectos del curso de
-          AI Governance impartido por <strong>ENAIS</strong> y AI Safety Mexico, y
-          se ha consolidado como una iniciativa propia.
+          Inteligencia Artificial</em> (Assessment of Governmental Impacts of
+          Artificial Intelligence) — is a platform under development that maps,
+          analyzes, and communicates public decisions about artificial intelligence
+          in Mexico. It emerged as part of the projects of the AI Governance course
+          taught by <strong>ENAIS</strong> and AI Safety Mexico, and has since
+          grown into a standalone initiative.
         </p>
         <p>
-          El observatorio busca cerrar una brecha concreta: no existe una fuente
-          pública, sistemática y auditable que documente cómo el gobierno
-          mexicano toma decisiones sobre IA — qué adquiere, qué regula, qué
-          despliega y bajo qué supervisión. VIGÍA articula esa información
-          para investigadores, periodistas, sociedad civil y tomadores de decisión.
+          The observatory aims to close a concrete gap: there is no public,
+          systematic, and auditable source documenting how the Mexican government
+          makes decisions about AI — what it procures, what it regulates, what it
+          deploys, and under what oversight. VIGÍA articulates that information
+          for researchers, journalists, civil society, and decision-makers.
         </p>
       </div>
     </div>
@@ -139,17 +143,16 @@ const breadcrumb = {
   <section class="section section--base" aria-labelledby="vigia-recognition-heading">
     <div class="container container--narrow">
       <SectionHeading
-        eyebrow="Reconocimiento"
+        eyebrow="Recognition"
         title="Special Recognition · AI Safety Collab 2025"
         id="vigia-recognition-heading"
       />
       <Callout tone="highlight">
         <p>
-          VIGÍA recibió el <strong>Special Recognition</strong> en
-          <strong>AI Safety Collab 2025</strong>, programa global de proyectos de
-          investigación en seguridad de IA. El reconocimiento valida el enfoque
-          situado del proyecto y abre puertas para futuras colaboraciones
-          internacionales.
+          VIGÍA received <strong>Special Recognition</strong> at
+          <strong>AI Safety Collab 2025</strong>, a global program for AI safety
+          research projects. The recognition validates the project's situated
+          approach and opens doors for future international collaborations.
         </p>
       </Callout>
     </div>
@@ -159,26 +162,26 @@ const breadcrumb = {
   <section class="section section--base" aria-labelledby="vigia-methodology-heading">
     <div class="container container--narrow">
       <SectionHeading
-        eyebrow="Metodología"
-        title="Cómo trabajamos"
-        description="VIGÍA combina rastreo documental, análisis cualitativo y comunicación estructurada."
+        eyebrow="Methodology"
+        title="How we work"
+        description="VIGÍA combines documentary tracking, qualitative analysis, and structured communication."
         id="vigia-methodology-heading"
       />
       <div class="prose">
         <p>
-          La plataforma articula tres capas de trabajo: (1) <strong>rastreo
-          documental</strong> de adquisiciones, regulaciones, consultas públicas y
-          despliegues gubernamentales que involucran sistemas de IA; (2)
-          <strong>análisis cualitativo</strong> de cada caso bajo categorías de
-          gobernanza, riesgo y rendición de cuentas; y (3) <strong>comunicación
-          estructurada</strong> en formatos accesibles para audiencias técnicas y
-          no técnicas — fichas, líneas de tiempo y resúmenes interpretativos.
+          The platform articulates three layers of work: (1) <strong>documentary
+          tracking</strong> of procurements, regulations, public consultations, and
+          government deployments involving AI systems; (2) <strong>qualitative
+          analysis</strong> of each case under categories of governance, risk, and
+          accountability; and (3) <strong>structured communication</strong> in
+          formats accessible to both technical and non-technical audiences —
+          briefs, timelines, and interpretive summaries.
         </p>
         <p>
-          El enfoque privilegia la <strong>verificabilidad</strong>: cada caso
-          documentado en VIGÍA enlaza a su fuente primaria (boletines oficiales,
-          actas, comunicados) y se acompaña de una nota metodológica sobre cómo se
-          obtuvo y clasificó la información.
+          The approach prioritizes <strong>verifiability</strong>: every case
+          documented in VIGÍA links to its primary source (official gazettes,
+          minutes, communiqués) and is accompanied by a methodological note on
+          how the information was obtained and classified.
         </p>
       </div>
     </div>
@@ -188,9 +191,9 @@ const breadcrumb = {
   <section class="section section--base" aria-labelledby="vigia-team-heading">
     <div class="container container--narrow">
       <SectionHeading
-        eyebrow="Equipo"
-        title="Quiénes lo construyen"
-        description="VIGÍA es un esfuerzo colaborativo entre sus cofundadores, una colaboración en diseño y la asesoría de docentes del curso de AI Governance del que surgió la idea."
+        eyebrow="Team"
+        title="Who builds it"
+        description="VIGÍA is a collaborative effort between its co-founders, a design collaboration, and the guidance of instructors from the AI Governance course where the idea first took shape."
         id="vigia-team-heading"
       />
       <FactList items={teamItems} />
@@ -201,8 +204,8 @@ const breadcrumb = {
   <section class="section section--base" aria-labelledby="vigia-resources-heading">
     <div class="container container--narrow">
       <SectionHeading
-        eyebrow="Recursos"
-        title="Enlaces y referencias"
+        eyebrow="Resources"
+        title="Links and references"
         id="vigia-resources-heading"
       />
       <FactList items={resourceItems} />
@@ -210,7 +213,7 @@ const breadcrumb = {
       {data.externalUrl && (
         <p class="vigia-link">
           <a class="vigia-link__cta" href={data.externalUrl} target="_blank" rel="noopener noreferrer">
-            Visitar la plataforma VIGÍA
+            Visit the VIGÍA platform
             <span aria-hidden="true">↗</span>
           </a>
         </p>
@@ -223,8 +226,8 @@ const breadcrumb = {
     <section class="section section--base" aria-labelledby="vigia-related-heading">
       <div class="container">
         <SectionHeading
-          eyebrow="Sigue explorando"
-          title="Otros proyectos"
+          eyebrow="Keep exploring"
+          title="Other projects"
           id="vigia-related-heading"
         />
         <div class="vigia-related-grid">
@@ -235,6 +238,7 @@ const breadcrumb = {
               description={card.description}
               image={card.image}
               href={card.href}
+              lang="en"
             />
           ))}
         </div>
@@ -243,14 +247,14 @@ const breadcrumb = {
   )}
 
   <CtaSection
-    title="Conoce VIGÍA en vivo"
-    description="La plataforma se actualiza con cada nuevo caso documentado. Visítala para explorar el observatorio."
-    ctaLabel="Ir a vigia-observatorio.github.io"
+    title="See VIGÍA live"
+    description="The platform updates with every new case documented. Visit it to explore the observatory."
+    ctaLabel="Go to vigia-observatorio.github.io"
     ctaHref={data.externalUrl ?? 'https://vigia-observatorio.github.io/index-en.html'}
     ctaExternal={true}
   />
 
-  <Footer slot="footer" />
+  <Footer slot="footer" lang="en" />
 </BaseLayout>
 
 <style>

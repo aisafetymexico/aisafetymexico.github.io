@@ -2,7 +2,7 @@
 /**
  * Nav — primary site navigation.
  *
- * Spec: docs/ARCHITECTURE.md §3.
+ * Spec: docs/ARCHITECTURE.md §3 + docs/I18N-ARCHITECTURE.md §3.
  *  - Flat horizontal nav, 6 items max (no mega menu — pattern A7 in
  *    docs/INSPIRATION.md).
  *  - Order: About, Research, Programs, Projects, Activities, Get involved.
@@ -11,39 +11,43 @@
  *  - Active state: exact match on currentPath, OR currentPath is a child of
  *    the link href (so /projects/vigia highlights /projects).
  *
- * Default labels are Spanish-first per ARCHITECTURE.md §7. Pass `items`
- * explicitly to override (e.g., for English landings).
+ * Labels are sourced from the i18n module by default. Pass `items` to
+ * override (rare — only for content-specific overrides).
  */
 import type { NavItem } from '../lib/types';
 import MobileMenu from './MobileMenu.astro';
+import { t, localizedPath, type Locale } from '../lib/i18n';
 
 export interface Props {
   currentPath: string;
   items?: NavItem[];
+  lang?: Locale;
 }
 
-const DEFAULT_ITEMS: NavItem[] = [
-  { label: 'Sobre nosotros', href: '/about' },
-  { label: 'Investigación', href: '/research' },
-  { label: 'Programas', href: '/programs' },
-  { label: 'Proyectos', href: '/projects' },
-  { label: 'Actividades', href: '/activities' },
-  { label: 'Colabora', href: '/get-involved', cta: true },
+const { currentPath, items, lang = 'es' } = Astro.props;
+
+const defaultItems: NavItem[] = [
+  { label: t(lang, 'header.nav.about'),       href: localizedPath(lang, '/about') },
+  { label: t(lang, 'header.nav.research'),    href: localizedPath(lang, '/research') },
+  { label: t(lang, 'header.nav.programs'),    href: localizedPath(lang, '/programs') },
+  { label: t(lang, 'header.nav.projects'),    href: localizedPath(lang, '/projects') },
+  { label: t(lang, 'header.nav.activities'),  href: localizedPath(lang, '/activities') },
+  { label: t(lang, 'header.nav.getInvolved'), href: localizedPath(lang, '/get-involved'), cta: true },
 ];
 
-const { currentPath, items = DEFAULT_ITEMS } = Astro.props;
+const resolvedItems = items ?? defaultItems;
 
 const isActive = (href: string): boolean => {
   if (!currentPath) return false;
-  if (href === '/') return currentPath === '/';
+  if (href === '/' || href === '/en') return currentPath === href;
   return currentPath === href || currentPath.startsWith(href + '/');
 };
 ---
 
-<nav class="main-nav" aria-label="Navegación principal">
+<nav class="main-nav" aria-label={t(lang, 'header.aria.primaryNav')}>
   {/* Desktop horizontal list — hidden on mobile via media query */}
   <ul class="main-nav__list">
-    {items.map((item: NavItem) => (
+    {resolvedItems.map((item: NavItem) => (
       <li>
         <a
           class:list={[
@@ -59,7 +63,7 @@ const isActive = (href: string): boolean => {
   </ul>
 
   {/* Mobile drawer + hamburger toggle (renders only <768px) */}
-  <MobileMenu items={items} currentPath={currentPath} />
+  <MobileMenu items={resolvedItems} currentPath={currentPath} lang={lang} />
 </nav>
 
 <style>
