@@ -11,10 +11,12 @@
  *   4. 3 vías de colaboración — feature cards with anchorable ids
  *      (#research, #training, #events) so other pages can deep-link.
  *   5. Aliados y colaboradores — SectionHeading + KeyFacts chips.
- *   6. ContactForm (sección "Escríbenos") con id="contacto".
- *   7. Contact info directa — email canónico + LinkedIn + Instagram.
- *   8. CtaSection — cierre con email canónico contact@aismx.org.
- *   9. SiteFooter
+ *   6. Contact info directa (sección "Escríbenos") con id="contacto" —
+ *      email canónico + LinkedIn + Instagram. Cuando integremos Formspree o
+ *      backend real, reintroducir el formulario de contacto aquí (componente
+ *      reusable en src/components/).
+ *   7. CtaSection — cierre con email canónico contact@aismx.org.
+ *   8. SiteFooter
  *
  * Note on the 3 vías cards:
  *   FeatureGrid does not expose per-item ids on its <li>. Since the spec
@@ -30,7 +32,6 @@ import Footer from '../components/Footer.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import KeyFacts from '../components/KeyFacts.astro';
-import ContactForm from '../components/ContactForm.astro';
 import CtaSection from '../components/CtaSection.astro';
 
 const pathname = '/get-involved';
@@ -138,32 +139,16 @@ const aliados = [
 
   <section
     id="contacto"
-    class="page-section page-section--form"
-    aria-labelledby="form-heading"
+    class="page-section page-section--direct"
+    aria-labelledby="contacto-heading"
   >
     <div class="container container--narrow">
       <SectionHeading
         eyebrow="Escríbenos"
         title="Cuéntanos sobre tu organización y tu propuesta"
-        description="Completa el formulario y te responderemos al correo que indiques. Si prefieres, también puedes escribirnos directamente a contact@aismx.org."
-        id="form-heading"
+        description="Escríbenos directamente por cualquiera de estos canales con una breve descripción de tu organización y la línea de trabajo que te interesa explorar. Te responderemos lo antes posible."
+        id="contacto-heading"
       />
-
-      <ContactForm
-        endpoint="mailto:contact@aismx.org"
-        successMessage="¡Gracias! Hemos recibido tu mensaje y te responderemos pronto."
-        id="get-involved-form"
-      />
-    </div>
-  </section>
-
-  <section class="page-section page-section--direct" aria-labelledby="direct-heading">
-    <div class="container container--narrow">
-      <h2 id="direct-heading" class="direct__heading">Contacto directo</h2>
-      <p class="direct__lede">
-        Si tu mensaje es breve o prefieres no usar el formulario, escríbenos por
-        cualquiera de estos canales.
-      </p>
 
       <ul class="direct__list" role="list">
         <li class="direct__item">
@@ -228,9 +213,6 @@ const aliados = [
     background: var(--color-bg-base);
   }
   .page-section--allies {
-    background: var(--color-bg-base);
-  }
-  .page-section--form {
     background: var(--color-bg-base);
   }
   .page-section--direct {
@@ -342,25 +324,6 @@ const aliados = [
   }
 
   /* Direct-contact list ---------------------------------------------------- */
-  .direct__heading {
-    font-family: var(--font-display);
-    font-size: var(--fs-h2);
-    font-weight: var(--fw-bold);
-    line-height: var(--lh-snug);
-    letter-spacing: var(--ls-tight);
-    color: var(--color-text-heading);
-    margin: 0 0 var(--space-3);
-  }
-
-  .direct__lede {
-    font-family: var(--font-body);
-    font-size: var(--fs-lead);
-    line-height: var(--lh-loose);
-    color: var(--color-text-secondary);
-    margin: 0 0 var(--space-7);
-    max-width: 60ch;
-  }
-
   .direct__list {
     display: grid;
     grid-template-columns: 1fr;
