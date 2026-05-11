@@ -37,7 +37,7 @@ const breadcrumb: Breadcrumb = {
   ],
 };
 
-const collabFormUrl = 'https://forms.gle/GkjtskKMJemQZDgw9';
+const collabFormUrl = 'https://forms.gle/SzTHokBh1yaVdM7i7';
 const apartUrl =
   'https://apartresearch.com/sprints/global-south-ais-hackathon-2026-06-19-to-2026-06-21';
 
@@ -110,21 +110,35 @@ const roles = [
     lang="en"
   />
 
-  <!-- 0 · Registration CTA (Luma) -->
+  <!-- 0 · Registration CTA (Luma + Collaborators) -->
   <section class="gsh-register" aria-labelledby="gsh-register-heading">
     <div class="gsh-register__inner">
       <p id="gsh-register-heading" class="gsh-register__lead">
         Registration is open for participants and collaborators.
       </p>
-      <a
-        class="gsh-register__cta"
-        href={lumaRegisterUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Register on Luma
-        <span class="gsh-register__cta-arrow" aria-hidden="true">→</span>
-      </a>
+      <div class="gsh-register__actions">
+        <a
+          class="gsh-register__cta gsh-register__cta--primary"
+          href={lumaRegisterUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Register as a participant
+          <span class="gsh-register__cta-arrow" aria-hidden="true">→</span>
+        </a>
+        <a
+          class="gsh-register__cta gsh-register__cta--secondary"
+          href={collabFormUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Apply as a collaborator
+          <span class="gsh-register__cta-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+      <p class="gsh-register__note">
+        Collaborator deadline: May 23, 2026.
+      </p>
     </div>
   </section>
 
@@ -349,26 +363,64 @@ const roles = [
     color: var(--color-accent-hover);
   }
 
+  .gsh-register__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .gsh-register__actions {
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      width: auto;
+    }
+  }
+
   .gsh-register__cta {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: var(--space-2);
     padding: var(--space-4) var(--space-9);
-    background: var(--color-cta-bg);
-    color: var(--color-cta-text);
     font-family: var(--font-body);
     font-size: var(--fs-body);
     font-weight: var(--fw-semibold);
     text-decoration: none;
     letter-spacing: var(--ls-wide);
     border-radius: var(--radius-pill);
-    transition: background var(--transition);
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+    border: 1px solid transparent;
   }
 
-  .gsh-register__cta:hover,
-  .gsh-register__cta:focus-visible {
-    background: var(--color-cta-bg-hover);
+  .gsh-register__cta--primary {
+    background: var(--color-cta-bg);
     color: var(--color-cta-text);
+    border-color: var(--color-cta-bg);
+  }
+
+  .gsh-register__cta--primary:hover,
+  .gsh-register__cta--primary:focus-visible {
+    background: var(--color-cta-bg-hover);
+    border-color: var(--color-cta-bg-hover);
+    color: var(--color-cta-text);
+  }
+
+  .gsh-register__cta--secondary {
+    background: transparent;
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .gsh-register__cta--secondary:hover,
+  .gsh-register__cta--secondary:focus-visible {
+    background: var(--color-accent-soft);
+    color: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
   }
 
   .gsh-register__cta:focus-visible {
@@ -382,6 +434,21 @@ const roles = [
   }
   .gsh-register__cta:hover .gsh-register__cta-arrow {
     transform: translateX(3px);
+  }
+
+  .gsh-register__note {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--color-text-secondary);
+    width: 100%;
+    text-align: left;
+  }
+
+  @media (min-width: 640px) {
+    .gsh-register__note {
+      text-align: left;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
