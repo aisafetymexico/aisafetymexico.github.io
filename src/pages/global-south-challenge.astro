@@ -24,6 +24,7 @@ import Footer from '../components/Footer.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import Card from '../components/Card.astro';
+import GshPersonCard from '../components/GshPersonCard.astro';
 import CtaSection from '../components/CtaSection.astro';
 import type { Breadcrumb } from '../lib/types';
 
@@ -33,7 +34,7 @@ const breadcrumb: Breadcrumb = {
   items: [
     { label: 'Inicio', href: '/' },
     { label: 'Actividades', href: '/activities' },
-    { label: 'Global South AIS Challenge' },
+    { label: 'Global South AIS Hackathon' },
   ],
 };
 
@@ -93,17 +94,21 @@ const roles = [
       'Financian premios, sedes o desarrollo de ecosistema. Obtienen visibilidad destacada en una iniciativa internacional de AI safety.',
   },
 ];
+
+const speakers = [{"name":"Damiano Fornasiere","affiliation":"LawZero","photo":null,"initials":"DF","linkedin":null,"talkTitle":"De las matemáticas a la seguridad técnica en IA","talkDesc":"Comparte su trayectoria hacia la seguridad en IA y describe su trabajo actual en LawZero."},{"name":"Luis Cosio","affiliation":"SL5 Task Force","photo":"/images/gsh/people/luis.jpeg","initials":"LC","linkedin":"https://www.linkedin.com/in/luiscosio/","talkTitle":"Cómo construir IA que no se salga de control","talkDesc":"Una introducción al alineamiento de IA y a la importancia de América Latina en este campo."},{"name":"Nikita Lokhmachev","affiliation":"Greyhaven","photo":"/images/gsh/people/nikita.jpeg","initials":"NL","linkedin":"https://www.linkedin.com/in/nikitalokhmachev-ai/","talkTitle":"Your AI Agent Is Not You: AI safety, data sovereignty, and taking back control","talkDesc":"Tu agente de IA corre con tus permisos, credenciales y acceso a archivos, guiado por un modelo que no entrenaste. Una charla sobre seguridad y soberanía de datos, con una demo práctica de Greywall envolviendo a Claude Code."},{"name":"Camilla Balbis","affiliation":"AIGS Canada · SPAR Research Fellow","photo":"/images/gsh/people/camilla.jpeg","initials":"CB","linkedin":"https://www.linkedin.com/in/camilla-b-a70b69150/","talkTitle":"The Governance Copy-Paste Trap","talkDesc":"Cómo el sur global puede aprender de los tropiezos del norte en seguridad y gobernanza de IA, y por qué una resiliencia doméstica decidida desde abajo (no impuesta) es un mejor camino."},{"name":"Marcos Galván López","affiliation":"Instituto Politécnico Nacional · AI Safety México","photo":"/images/gsh/people/marcos.jpeg","initials":"MG","linkedin":"https://www.linkedin.com/in/marcos-galvan-lopez-4aa20514a","talkTitle":"El conocimiento previo como filosofía para el diseño de sistemas inteligentes seguros","talkDesc":"Cómo incorporar conocimiento previo sobre los problemas que buscamos resolver ayuda a diseñar sistemas de IA más seguros, confiables y auditables."},{"name":"Fernando Castillo","affiliation":"Universidad Politécnica de Yucatán · AI Safety México","photo":"/images/gsh/people/fernando.jpeg","initials":"FC","linkedin":null,"talkTitle":"La IA como arma cognitiva: manipulación, propaganda y seguridad nacional en la era de la sociedad sintética","talkDesc":"Cómo la IA convierte la desinformación en un sistema automatizado, escalable y personalizado (de bots a deepfakes) y por qué la defensa cognitiva (alfabetización crítica, transparencia algorítmica y regulación responsable) es clave para la resiliencia democrática."}];
+const judges = [{"name":"Cibeles García Burt","affiliation":"USAID","photo":"/images/gsh/people/cibeles.jpeg","initials":"CG","linkedin":"http://www.linkedin.com/in/cibeles-garcia-burt","location":"Mérida, México","bio":"Diplomática estadounidense con 17 años de experiencia en América Latina, África y Asia. Hoy enfocada en gobernanza de IA; ha cursado varios programas de BlueDot."},{"name":"Camilla Balbis","affiliation":"AIGS Canada · SPAR Research Fellow","photo":"/images/gsh/people/camilla.jpeg","initials":"CB","linkedin":"https://www.linkedin.com/in/camilla-b-a70b69150/","location":"Toronto, Canadá","bio":"Analista multilingüe de políticas de gobernanza de IA. Investiga con AIGS combinando análisis de riesgo, ética de la tecnología y colaboración internacional para fortalecer el desarrollo responsable de la IA."},{"name":"Luis Cosio","affiliation":"SL5 Task Force · Member of Technical Staff","photo":"/images/gsh/people/luis.jpeg","initials":"LC","linkedin":"https://www.linkedin.com/in/luiscosio/","location":"Guadalajara, México","bio":"Trabaja en la intersección de la IA de frontera y los sistemas de alta seguridad, traduciendo requisitos abstractos de seguridad en soluciones desplegables y resistentes a adversarios reales, incluidos ataques de Estado y escenarios de pérdida de control. Ha ganado múltiples hackatones de Apart."},{"name":"Nikita Lokhmachev","affiliation":"Greyhaven · Technical Product Lead","photo":"/images/gsh/people/nikita.jpeg","initials":"NL","linkedin":"https://www.linkedin.com/in/nikitalokhmachev-ai/","location":"México","bio":"Senior ML Engineer y cofundador con maestría en IA. Tras participar en hackatones de Apart, reorientó su carrera hacia la seguridad en IA."},{"name":"Vincent Mai","affiliation":"LawZero · Senior Research Scientist","photo":"/images/gsh/people/vincent.jpeg","initials":"VM","linkedin":"https://www.linkedin.com/in/mai-vincent","location":"Montreal, Canadá","bio":"Doctor en Machine Learning por Mila."},{"name":"Jesús M. Siqueiros","affiliation":"IIMAS, UNAM","photo":"/images/gsh/people/siqueiros.jpeg","initials":"JS","linkedin":"https://www.linkedin.com/in/jes%C3%BAs-m-siqueiros-garcia-2b79bb14/","location":"Mérida, México","bio":"Doctor en Filosofía de la Ciencia. Investiga en modelado participativo, sostenibilidad e IA. En 2024 recibió el Google Academic Research Award por el proyecto Community Weavers of AI and Nature-based Solutions y lidera el proyecto Lab-DEMOSS."},{"name":"Fernando Castillo","affiliation":"Universidad Politécnica de Yucatán","photo":"/images/gsh/people/fernando.jpeg","initials":"FC","linkedin":null,"location":null,"bio":"Investigador socio-técnico en ciberseguridad que trabaja en la intersección de seguridad digital, derechos humanos, democracia y seguridad en IA. Fundador de Threat Trackers, organización civil que democratiza la ciberseguridad para comunidades desatendidas por la transición digital."},{"name":"Marcos Galván López","affiliation":"Instituto Politécnico Nacional","photo":"/images/gsh/people/marcos.jpeg","initials":"MG","linkedin":"https://www.linkedin.com/in/marcos-galvan-lopez-4aa20514a","location":null,"bio":"Investigador en IA neurosimbólica, aprendizaje automático explicable y razonamiento formal y probabilístico. Integra redes neuronales con métodos simbólicos para construir modelos más interpretables, auditables y confiables. Ha investigado en la Universidad de Edimburgo."},{"name":"Amanda Isbosseth Guzmán Aceves","affiliation":"Gobierno de Jalisco","photo":"/images/gsh/people/amanda.jpeg","initials":"AG","linkedin":"https://www.linkedin.com/in/amanda-isbosseth-guzm%C3%A1n-aceves-54009a202/","location":null,"bio":"Ingeniera en nanotecnología por la UdeG. Exvicepresidenta de IEEE CU Tonalá y expresidenta de Women in Engineering Guadalajara. Becaria Fulbright en UT Dallas y ex investigadora en ExxonMobil Houston. Ganadora del ANUIES4MX 2025 con estancia en ATR Kyoto. Coordina iniciativas de ciencia de datos en la Secretaría de Administración de Jalisco."},{"name":"Nelly Berenice Delgado Angeles","affiliation":"Gobierno de Jalisco","photo":null,"initials":"ND","linkedin":"https://www.linkedin.com/in/nelly-berenice-delgado-angeles","location":null,"bio":"Ingeniera en Informática interesada en integrar conocimiento de múltiples disciplinas en proyectos de impacto. Su enfoque actual es la ciencia de datos, en particular la ingeniería de datos."},{"name":"Amaia Amézaga","affiliation":"Sattva Labs · Fundadora e Investigadora Independiente","photo":"/images/gsh/people/amaia.jpeg","initials":"AA","linkedin":"https://www.linkedin.com/in/amaia-amezaga/","location":null,"bio":"Investigadora independiente y fundadora de Sattva Labs, dedicada a la seguridad en IA, la evaluación de modelos y la interacción humano-IA. Combina diseño de interacción (HCI), comunicación multicultural y análisis cualitativo para estudiar cómo las personas se relacionan con los sistemas de IA."}];
+const sponsors = [{"name":"IMET","logo":"/images/gsh/sponsors/imet.png","alt":"IMET"},{"name":"Techmaleon","logo":"/images/gsh/sponsors/techmaleon.png","alt":"Techmaleon"},{"name":"Tec de Software","logo":"/images/gsh/sponsors/tec-de-software.png","alt":"Tec de Software"},{"name":"Universidad Politécnica de Yucatán","logo":"/images/gsh/sponsors/upy.png","alt":"Universidad Politécnica de Yucatán"}];
 ---
 
 <BaseLayout
-  title="Global South AIS Challenge · AI Safety Mexico × Apart Research"
+  title="Global South AIS Hackathon · AI Safety Mexico × Apart Research"
   description="Hackathon regional de seguridad de IA convocado por Apart Research y AI Safety Mexico. Mérida, Guadalajara y formato remoto, 19-21 de junio de 2026. Únete como juez, mentor, speaker, voluntario o sponsor."
   pathname={pathname}
 >
   <Header slot="header" currentPath={pathname} />
 
   <PageHero
-    title="The Global South AI Safety Challenge"
+    title="The Global South AIS Hackathon"
     description="Hackathon internacional convocado por Apart Research y AI Safety Mexico. Reúne a investigadoras, builders y profesionales de policy de América Latina, África y Asia para producir trabajo concreto en seguridad de IA, anclado en el contexto regional."
     breadcrumb={breadcrumb}
   />
@@ -194,6 +199,58 @@ const roles = [
     </div>
   </section>
 
+  <!-- Speakers -->
+  <section class="gsh-section gsh-section--base" aria-labelledby="gsh-speakers-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-speakers-heading"
+        eyebrow="Charlas y talleres"
+        title="Speakers"
+        description="Voces que acompañan al hackathon con charlas y talleres sobre seguridad, gobernanza y soberanía de la IA."
+      />
+
+      <div class="gsh-grid gsh-grid--2">
+        {speakers.map((s) => (
+          <GshPersonCard
+            name={s.name}
+            affiliation={s.affiliation}
+            photo={s.photo}
+            initials={s.initials}
+            linkedin={s.linkedin}
+            highlight={s.talkTitle}
+            body={s.talkDesc}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Jueces -->
+  <section class="gsh-section gsh-section--base" aria-labelledby="gsh-judges-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-judges-heading"
+        eyebrow="Panel"
+        title="Jueces"
+        description="Quienes evaluarán los proyectos y darán retroalimentación experta a los equipos participantes."
+      />
+
+      <div class="gsh-grid gsh-grid--3">
+        {judges.map((j) => (
+          <GshPersonCard
+            name={j.name}
+            affiliation={j.affiliation}
+            photo={j.photo}
+            initials={j.initials}
+            linkedin={j.linkedin}
+            location={j.location}
+            body={j.bio}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
   <!-- 3 · Roles -->
   <section class="gsh-section gsh-section--base" aria-labelledby="gsh-roles-heading">
     <div class="gsh-section__inner">
@@ -252,6 +309,33 @@ const roles = [
           </dd>
         </div>
       </dl>
+    </div>
+  </section>
+
+  <!-- Patrocinadores -->
+  <section class="gsh-section gsh-section--alt" aria-labelledby="gsh-sponsors-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-sponsors-heading"
+        eyebrow="Patrocinadores"
+        title="Con el apoyo de"
+        description="Instituciones y aliados que hacen posible el hackathon."
+        align="center"
+      />
+
+      <ul class="gsh-sponsors">
+        {sponsors.map((sp) => (
+          <li class="gsh-sponsors__item">
+            <img
+              class="gsh-sponsors__logo"
+              src={sp.logo}
+              alt={sp.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
@@ -589,5 +673,42 @@ const roles = [
     outline: 2px solid var(--color-focus-ring);
     outline-offset: 3px;
     border-radius: var(--radius-xs);
+  }
+
+  /* -- Sponsor logo wall -- */
+  .gsh-sponsors {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-5);
+    max-width: 56rem;
+    margin-inline: auto;
+  }
+  /* Logos ship for light backgrounds; seat each on a subtle cream tile so all
+     read consistently on the dark theme and uneven aspect ratios are contained. */
+  .gsh-sponsors__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 92px;
+    padding: var(--space-4) var(--space-5);
+    background: var(--cream-50);
+    border-radius: var(--radius);
+  }
+  .gsh-sponsors__logo {
+    display: block;
+    max-width: 100%;
+    max-height: 52px;
+    width: auto;
+    object-fit: contain;
+  }
+  @media (min-width: 768px) {
+    .gsh-sponsors__item { width: 168px; height: 100px; }
+    .gsh-sponsors__logo { max-height: 56px; }
   }
 </style>

@@ -1,0 +1,156 @@
+---
+/**
+ * GshPersonCard -- speaker / judge card for /global-south-challenge (ES + EN).
+ * Flat bordered card (RAND editorial, no shadow), mirroring the gsh-* surfaces.
+ * Circular portrait or initials placeholder, name, affiliation, optional talk
+ * title (highlight) and location, a short body, and an optional LinkedIn link.
+ */
+export interface Props {
+  name: string;
+  affiliation: string;
+  body: string;
+  photo?: string | null;
+  initials?: string;
+  linkedin?: string | null;
+  highlight?: string | null;
+  location?: string | null;
+}
+
+const {
+  name,
+  affiliation,
+  body,
+  photo = null,
+  initials = '',
+  linkedin = null,
+  highlight = null,
+  location = null,
+} = Astro.props;
+---
+
+<article class="gperson">
+  <div class="gperson__head">
+    {photo ? (
+      <img
+        class="gperson__photo"
+        src={photo}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        width="72"
+        height="72"
+      />
+    ) : (
+      <span class="gperson__photo gperson__photo--ph" aria-hidden="true">{initials}</span>
+    )}
+    <div class="gperson__id">
+      <h3 class="gperson__name">{name}</h3>
+      <p class="gperson__affil">{affiliation}</p>
+      {location && <p class="gperson__loc">{location}</p>}
+    </div>
+  </div>
+
+  {highlight && <p class="gperson__highlight">{highlight}</p>}
+  <p class="gperson__body">{body}</p>
+
+  {linkedin && (
+    <a
+      class="gperson__social"
+      href={linkedin}
+      aria-label={name + ' · LinkedIn'}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5.001zM3 9h4v12H3V9zm7 0h3.84v1.64h.05c.53-1 1.85-2.05 3.81-2.05 4.07 0 4.82 2.68 4.82 6.16V21h-4v-5.34c0-1.27-.02-2.91-1.77-2.91-1.77 0-2.04 1.39-2.04 2.82V21h-4V9z" />
+      </svg>
+    </a>
+  )}
+</article>
+
+<style>
+  .gperson {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    height: 100%;
+    padding: var(--space-6);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+  .gperson__head { display: flex; align-items: center; gap: var(--space-4); }
+  .gperson__photo {
+    flex: 0 0 auto;
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    background: var(--color-bg-warm);
+  }
+  .gperson__photo--ph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-bold);
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+  }
+  .gperson__id { min-width: 0; }
+  .gperson__name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+  }
+  .gperson__affil {
+    margin: var(--space-1) 0 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent-hover);
+  }
+  .gperson__loc {
+    margin: var(--space-1) 0 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--color-text-muted);
+  }
+  .gperson__highlight {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-body);
+    font-style: italic;
+    line-height: var(--lh-snug);
+    color: var(--color-text-heading);
+  }
+  .gperson__body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+  }
+  .gperson__social {
+    margin-top: auto;
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-full);
+    color: var(--color-text-muted);
+    transition: color var(--transition);
+  }
+  .gperson__social:hover { color: var(--color-accent); }
+  .gperson__social:focus-visible { outline: 2px solid var(--color-focus-ring); outline-offset: 3px; }
+  .gperson__social svg { width: 18px; height: 18px; }
+  @media (prefers-reduced-motion: reduce) { .gperson__social { transition: none; } }
+</style>
