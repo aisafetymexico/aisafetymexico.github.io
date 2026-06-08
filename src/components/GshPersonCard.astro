@@ -14,6 +14,8 @@ export interface Props {
   linkedin?: string | null;
   highlight?: string | null;
   location?: string | null;
+  talkUrl?: string | null;
+  talkLabel?: string;
 }
 
 const {
@@ -25,6 +27,8 @@ const {
   linkedin = null,
   highlight = null,
   location = null,
+  talkUrl = null,
+  talkLabel = 'Ver charla',
 } = Astro.props;
 ---
 
@@ -53,18 +57,36 @@ const {
   {highlight && <p class="gperson__highlight">{highlight}</p>}
   <p class="gperson__body">{body}</p>
 
-  {linkedin && (
-    <a
-      class="gperson__social"
-      href={linkedin}
-      aria-label={name + ' · LinkedIn'}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5.001zM3 9h4v12H3V9zm7 0h3.84v1.64h.05c.53-1 1.85-2.05 3.81-2.05 4.07 0 4.82 2.68 4.82 6.16V21h-4v-5.34c0-1.27-.02-2.91-1.77-2.91-1.77 0-2.04 1.39-2.04 2.82V21h-4V9z" />
-      </svg>
-    </a>
+  {(talkUrl || linkedin) && (
+    <div class="gperson__links">
+      {talkUrl && (
+        <a
+          class="gperson__talk"
+          href={talkUrl}
+          aria-label={talkLabel + ' — ' + name}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg class="gperson__talk-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M8 5v14l11-7z" />
+          </svg>
+          {talkLabel}
+        </a>
+      )}
+      {linkedin && (
+        <a
+          class="gperson__social"
+          href={linkedin}
+          aria-label={name + ' · LinkedIn'}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5.001zM3 9h4v12H3V9zm7 0h3.84v1.64h.05c.53-1 1.85-2.05 3.81-2.05 4.07 0 4.82 2.68 4.82 6.16V21h-4v-5.34c0-1.27-.02-2.91-1.77-2.91-1.77 0-2.04 1.39-2.04 2.82V21h-4V9z" />
+          </svg>
+        </a>
+      )}
+    </div>
   )}
 </article>
 
@@ -137,9 +159,35 @@ const {
     line-height: var(--lh-relaxed);
     color: var(--color-text-secondary);
   }
-  .gperson__social {
+  .gperson__links {
     margin-top: auto;
-    align-self: flex-start;
+    padding-top: var(--space-1);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+  .gperson__talk {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-semibold);
+    color: var(--color-link);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 1px;
+    transition: color var(--transition);
+  }
+  .gperson__talk:hover,
+  .gperson__talk:focus-visible { color: var(--color-link-hover); }
+  .gperson__talk:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+  .gperson__talk-icon { width: 13px; height: 13px; flex: 0 0 auto; }
+  .gperson__social {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -152,5 +200,8 @@ const {
   .gperson__social:hover { color: var(--color-accent); }
   .gperson__social:focus-visible { outline: 2px solid var(--color-focus-ring); outline-offset: 3px; }
   .gperson__social svg { width: 18px; height: 18px; }
-  @media (prefers-reduced-motion: reduce) { .gperson__social { transition: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .gperson__social,
+    .gperson__talk { transition: none; }
+  }
 </style>
