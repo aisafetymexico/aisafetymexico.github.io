@@ -170,7 +170,7 @@ const activities = defineCollection({
       'workshop',          // "Your AI Agent Is Not You"
       'research-program',  // SPAR
       'recurring',         // mesas de trabajo
-      'event',             // Global South AIS Challenge
+      'event',             // Global South AIS Hackathon
     ]),
     status: z.enum(['upcoming', 'ongoing', 'past']).default('past'),
     startDate: z.coerce.date().optional(),

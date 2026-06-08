@@ -5,7 +5,7 @@
  * Spec: docs/ARCHITECTURE.md §2 (`/activities`) + docs/CONTENT-MAP.md §1.5/§1.9.
  * Task #18 sections:
  *   1. PageHero (eyebrow "Actividades" + breadcrumb).
- *   2. Spotlight: Global South AIS Challenge → /global-south-challenge.
+ *   2. Spotlight: Global South AIS Hackathon → /global-south-challenge.
  *   3. Mesas de trabajo (recurrente · primer viernes del mes).
  *   4. Conferencias y talleres grid: Greywall workshop, EAGxCDMX, ML4Good.
  *   5. Galería: Carousel con todas las imágenes de /public/images/carousel/.
@@ -35,16 +35,16 @@ const breadcrumb: Breadcrumb = {
   ],
 };
 
-// -------- Spotlight: Global South AIS Challenge --------
+// -------- Spotlight: Global South AIS Hackathon --------
 const spotlight = {
-  title: 'Apart × AI Safety México · The Global South AIS Challenge',
+  title: 'Apart × AI Safety México · The Global South AIS Hackathon',
   date: 'Marzo 2026',
   description:
     'Hackatón regional de seguridad en IA organizado en colaboración con Apart Research. Convoca a investigadoras, ingenieros y profesionales del sur global a producir prototipos, evaluaciones y propuestas de gobernanza durante un fin de semana intensivo.',
   link: '/global-south-challenge',
   image: {
     src: '/images/gsh-event-card.png',
-    alt: 'Imagen promocional del Global South AIS Challenge.',
+    alt: 'Imagen promocional del Global South AIS Hackathon.',
   },
 };
 
@@ -122,12 +122,12 @@ const carouselSlides: CarouselSlide[] = [
     breadcrumb={breadcrumb}
   />
 
-  <!-- Spotlight: Global South AIS Challenge -->
+  <!-- Spotlight: Global South AIS Hackathon -->
   <section class="page-section page-section--spotlight" aria-labelledby="actividades-destacado">
     <div class="page-section__inner">
       <SectionHeading
         eyebrow="Destacado"
-        title="Global South AIS Challenge"
+        title="Global South AIS Hackathon"
         description="Nuestra iniciativa regional más visible: un hackatón abierto que convoca a la comunidad del sur global a producir trabajo concreto en seguridad de IA."
         id="actividades-destacado"
       />
