@@ -4,7 +4,8 @@
  * Global South AIS Hackathon.
  *
  * Cada certificado enlaza a /certificados/<id>, la pagina publica de
- * verificacion (misma URL que codifica el QR de esa pagina).
+ * verificacion (misma URL que codifica el QR). El claim (LinkedIn / PDF)
+ * se envia por correo privado (scripts/generate-claim-emails.mjs).
  *
  * Nota i18n: esta seccion es una herramienta de verificacion orientada a
  * datos (nombres, fechas, roles), no contenido editorial, asi que por ahora
@@ -43,7 +44,7 @@ const sorted = [...certificates].sort((a, b) => a.name.localeCompare(b.name, 'es
 
   <PageHero
     title="Certificados verificables"
-    description={`${sorted.length} certificados de ${EVENT_NAME}, emitidos por AI Safety Mexico. Busca un nombre para abrir su certificado, obtener el codigo QR de verificacion y compartirlo como credencial en LinkedIn.`}
+    description={`${sorted.length} certificados de ${EVENT_NAME}, emitidos por AI Safety Mexico. Busca un nombre para abrir su pagina de verificacion publica y el codigo QR.`}
     breadcrumb={breadcrumb}
   />
 
