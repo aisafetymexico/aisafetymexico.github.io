@@ -1,0 +1,212 @@
+---
+/**
+ * /certificados — Directorio de certificados verificables del
+ * Global South AIS Hackathon.
+ *
+ * Cada certificado enlaza a /certificados/<id>, la pagina publica de
+ * verificacion (misma URL que codifica el QR de esa pagina).
+ *
+ * Nota i18n: esta seccion es una herramienta de verificacion orientada a
+ * datos (nombres, fechas, roles), no contenido editorial, asi que por ahora
+ * no se duplica bajo /en/ (ver docs/I18N-ARCHITECTURE.md — Strategy B aplica
+ * a paginas editoriales). Las etiquetas clave se dejan bilingues donde ya
+ * se solicito explicitamente (ej. el QR "Verify at AI Safety Mexico").
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import type { Breadcrumb } from '../../lib/types';
+import { certificates } from '../../lib/certificates';
+import { EVENT_NAME } from '../../lib/linkedin';
+
+const pathname = '/certificados';
+
+const breadcrumb: Breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Actividades', href: '/activities' },
+    { label: 'Global South AIS Hackathon', href: '/global-south-challenge' },
+    { label: 'Certificados' },
+  ],
+};
+
+const sorted = [...certificates].sort((a, b) => a.name.localeCompare(b.name, 'es'));
+---
+
+<BaseLayout
+  title={`Certificados verificables · ${EVENT_NAME} | AI Safety Mexico`}
+  description={`Directorio de ${sorted.length} certificados verificables de ${EVENT_NAME}, emitidos por AI Safety Mexico.`}
+  pathname={pathname}
+>
+  <Header slot="header" currentPath={pathname} navActivePath="/activities" />
+
+  <PageHero
+    title="Certificados verificables"
+    description={`${sorted.length} certificados de ${EVENT_NAME}, emitidos por AI Safety Mexico. Busca un nombre para abrir su certificado, obtener el codigo QR de verificacion y compartirlo como credencial en LinkedIn.`}
+    breadcrumb={breadcrumb}
+  />
+
+  <section class="certs-section">
+    <div class="certs-section__inner">
+      <input
+        id="cert-search"
+        type="search"
+        class="certs-search"
+        placeholder="Buscar por nombre..."
+        autocomplete="off"
+        aria-label="Buscar certificado por nombre"
+      />
+
+      <ul class="certs-grid" id="certs-grid">
+        {sorted.map((c) => (
+          <li class="certs-item" data-name={c.name.toLowerCase()}>
+            <a href={`/certificados/${c.id}`}>
+              <div class="certs-item__thumb">
+                <img src={c.image} alt={`Certificado de ${c.name}`} loading="lazy" decoding="async" />
+              </div>
+              <div class="certs-item__info">
+                <span class="certs-item__name">{c.name}</span>
+                <span class="certs-item__role">{c.role}</span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <p class="certs-empty" id="certs-empty" hidden>No se encontraron certificados con ese nombre.</p>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .certs-section {
+    background: var(--color-bg-base);
+    padding-block: var(--space-2) var(--space-14);
+  }
+
+  .certs-section__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 480px) {
+    .certs-section__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  .certs-search {
+    display: block;
+    width: 100%;
+    max-width: 28rem;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-elevated);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    margin-bottom: var(--space-8);
+  }
+
+  .certs-search:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .certs-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-5);
+  }
+
+  .certs-item a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color var(--transition);
+  }
+
+  .certs-item a:hover,
+  .certs-item a:focus-visible {
+    border-color: var(--color-accent);
+  }
+
+  .certs-item a:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .certs-item__thumb {
+    aspect-ratio: 1754 / 1240;
+    overflow: hidden;
+    background: var(--color-bg-base);
+  }
+
+  .certs-item__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .certs-item__info {
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .certs-item__name {
+    font-family: var(--font-body);
+    font-weight: var(--fw-semibold);
+    font-size: var(--fs-small);
+    color: var(--color-text-heading);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .certs-item__role {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-uppercase);
+    color: var(--color-accent);
+  }
+
+  .certs-empty {
+    margin-top: var(--space-8);
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+  }
+</style>
+
+<script>
+  const search = document.getElementById('cert-search') as HTMLInputElement | null;
+  const items = Array.from(document.querySelectorAll<HTMLLIElement>('.certs-item'));
+  const emptyState = document.getElementById('certs-empty');
+
+  search?.addEventListener('input', () => {
+    const q = search.value.trim().toLowerCase();
+    let visible = 0;
+    for (const item of items) {
+      const match = !q || (item.dataset.name || '').includes(q);
+      item.hidden = !match;
+      if (match) visible += 1;
+    }
+    if (emptyState) emptyState.hidden = visible !== 0;
+  });
+</script>

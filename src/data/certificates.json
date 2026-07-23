@@ -1,0 +1,743 @@
+[
+  {
+    "id": "cert-01",
+    "image": "/images/gsh/certificates/cert-01.png",
+    "names": [
+      "Damiano Fornasiere"
+    ],
+    "name": "Damiano Fornasiere",
+    "role": "Speaker",
+    "paper": null,
+    "issuedOnIso": "2026-05-29",
+    "issuedOnDisplay": "29 de Mayo del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-02",
+    "image": "/images/gsh/certificates/cert-02.png",
+    "names": [
+      "Luis Cosio"
+    ],
+    "name": "Luis Cosio",
+    "role": "Speaker y Juez",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-03",
+    "image": "/images/gsh/certificates/cert-03.png",
+    "names": [
+      "Nikita Lokhmachev"
+    ],
+    "name": "Nikita Lokhmachev",
+    "role": "Speaker y Juez",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-04",
+    "image": "/images/gsh/certificates/cert-04.png",
+    "names": [
+      "Camilla Balbis"
+    ],
+    "name": "Camilla Balbis",
+    "role": "Speaker y Juez",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-05",
+    "image": "/images/gsh/certificates/cert-05.png",
+    "names": [
+      "Marcos Galván López"
+    ],
+    "name": "Marcos Galván López",
+    "role": "Speaker y Juez",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-06",
+    "image": "/images/gsh/certificates/cert-06.png",
+    "names": [
+      "Fernando Castillo"
+    ],
+    "name": "Fernando Castillo",
+    "role": "Speaker y Juez",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-07",
+    "image": "/images/gsh/certificates/cert-07.png",
+    "names": [
+      "Miguel Peñaloza"
+    ],
+    "name": "Miguel Peñaloza",
+    "role": "Speaker",
+    "paper": null,
+    "issuedOnIso": "2026-06-17",
+    "issuedOnDisplay": "17 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-08",
+    "image": "/images/gsh/certificates/cert-08.png",
+    "names": [
+      "Sissi de la Peña"
+    ],
+    "name": "Sissi de la Peña",
+    "role": "Speaker",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-09",
+    "image": "/images/gsh/certificates/cert-09.png",
+    "names": [
+      "Amaia Amézaga"
+    ],
+    "name": "Amaia Amézaga",
+    "role": "Speaker",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-10",
+    "image": "/images/gsh/certificates/cert-10.png",
+    "names": [
+      "Juan Roberto Hernández"
+    ],
+    "name": "Juan Roberto Hernández",
+    "role": "Speaker",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-11",
+    "image": "/images/gsh/certificates/cert-11.png",
+    "names": [
+      "Mati Roy"
+    ],
+    "name": "Mati Roy",
+    "role": "Speaker",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-12",
+    "image": "/images/gsh/certificates/cert-12.png",
+    "names": [
+      "Tony Palma"
+    ],
+    "name": "Tony Palma",
+    "role": "Mentor(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-13",
+    "image": "/images/gsh/certificates/cert-13.png",
+    "names": [
+      "Angel Tenorio"
+    ],
+    "name": "Angel Tenorio",
+    "role": "Organizador(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-14",
+    "image": "/images/gsh/certificates/cert-14.png",
+    "names": [
+      "Max Pinelo"
+    ],
+    "name": "Max Pinelo",
+    "role": "Organizador(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-15",
+    "image": "/images/gsh/certificates/cert-15.png",
+    "names": [
+      "Daniel Hernández Mota"
+    ],
+    "name": "Daniel Hernández Mota",
+    "role": "Mentor(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-16",
+    "image": "/images/gsh/certificates/cert-16.png",
+    "names": [
+      "Didier Gamboa Angulo"
+    ],
+    "name": "Didier Gamboa Angulo",
+    "role": "Mentor(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-17",
+    "image": "/images/gsh/certificates/cert-17.png",
+    "names": [
+      "Cibeles Garcia Burt"
+    ],
+    "name": "Cibeles Garcia Burt",
+    "role": "Participante",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-18",
+    "image": "/images/gsh/certificates/cert-18.png",
+    "names": [
+      "Jesús M. Siqueiros"
+    ],
+    "name": "Jesús M. Siqueiros",
+    "role": "Juez",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-19",
+    "image": "/images/gsh/certificates/cert-19.png",
+    "names": [
+      "Amanda Isbosseth Guzmán"
+    ],
+    "name": "Amanda Isbosseth Guzmán",
+    "role": "Juez",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-20",
+    "image": "/images/gsh/certificates/cert-20.png",
+    "names": [
+      "Marta Kosmyna"
+    ],
+    "name": "Marta Kosmyna",
+    "role": "Juez",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-21",
+    "image": "/images/gsh/certificates/cert-21.png",
+    "names": [
+      "Osmani Redondo"
+    ],
+    "name": "Osmani Redondo",
+    "role": "Juez",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-22",
+    "image": "/images/gsh/certificates/cert-22.png",
+    "names": [
+      "Vincent Mai"
+    ],
+    "name": "Vincent Mai",
+    "role": "Juez",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-23",
+    "image": "/images/gsh/certificates/cert-23.png",
+    "names": [
+      "Ivete Sanchez Bravo"
+    ],
+    "name": "Ivete Sanchez Bravo",
+    "role": "Juez",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-24",
+    "image": "/images/gsh/certificates/cert-24.png",
+    "names": [
+      "Silvia Fernandez"
+    ],
+    "name": "Silvia Fernandez",
+    "role": "Juez",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-25",
+    "image": "/images/gsh/certificates/cert-25.png",
+    "names": [
+      "Janeth Valdivia"
+    ],
+    "name": "Janeth Valdivia",
+    "role": "Organizador(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-26",
+    "image": "/images/gsh/certificates/cert-26.png",
+    "names": [
+      "Isabel Cámara Montalvo"
+    ],
+    "name": "Isabel Cámara Montalvo",
+    "role": "Organizador(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-27",
+    "image": "/images/gsh/certificates/cert-27.png",
+    "names": [
+      "Dexter Gomez"
+    ],
+    "name": "Dexter Gomez",
+    "role": "Organizador(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-28",
+    "image": "/images/gsh/certificates/cert-28.png",
+    "names": [
+      "Marco Guzmán"
+    ],
+    "name": "Marco Guzmán",
+    "role": "Organizador(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-29",
+    "image": "/images/gsh/certificates/cert-29.png",
+    "names": [
+      "Armando Aldair Gonzalez Cardenete",
+      "Deisler Leandro Heredia Pérez",
+      "Elio Eduardo Ucán Zapata",
+      "Fernando Rodriguez Gomez",
+      "Karolyn Pérez Rosales",
+      "Lizandro Emiliano Martin Alpuche",
+      "Suny Ricarte Ramirez Perez"
+    ],
+    "name": "Armando Aldair Gonzalez Cardenete; Deisler Leandro Heredia Pérez; Elio Eduardo Ucán Zapata; Fernando Rodriguez Gomez; Karolyn Pérez Rosales; Lizandro Emiliano Martin Alpuche; Suny Ricarte Ramirez Perez",
+    "role": "Participante",
+    "paper": "Slang Bypass: Benchmarking Alignment Failures in Mexican Regional Spanish",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-30",
+    "image": "/images/gsh/certificates/cert-30.png",
+    "names": [
+      "Alexis Lopez Fregoso",
+      "Angel Soto",
+      "Ezbai Ahananel Guzman Rojas",
+      "Lorena Jacqueline Garcia Luevano",
+      "Rocío Nefertari García Luevano"
+    ],
+    "name": "Alexis Lopez Fregoso; Angel Soto; Ezbai Ahananel Guzman Rojas; Lorena Jacqueline Garcia Luevano; Rocío Nefertari García Luevano",
+    "role": "Participante",
+    "paper": "Metodología de implementación de un modelo de IA para la detección de situaciones de riesgo para niñas, niños y adolescentes en",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-31",
+    "image": "/images/gsh/certificates/cert-31.png",
+    "names": [
+      "Jorge Luis Castillo Ruz",
+      "Karime Pacheco",
+      "María José León López",
+      "Santiago Humberto Gamboa Angulo"
+    ],
+    "name": "Jorge Luis Castillo Ruz; Karime Pacheco; María José León López; Santiago Humberto Gamboa Angulo",
+    "role": "Participante",
+    "paper": "Agentic Surveillance Mx",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-32",
+    "image": "/images/gsh/certificates/cert-32.png",
+    "names": [
+      "David Alonso Romero Medina",
+      "Euruviel Marquez Martinez",
+      "Leonardo Torres Tellez",
+      "Roberto Balmes Solis"
+    ],
+    "name": "David Alonso Romero Medina; Euruviel Marquez Martinez; Leonardo Torres Tellez; Roberto Balmes Solis",
+    "role": "Participante",
+    "paper": "DialectSafe, Bridging the ASR Gap",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-33",
+    "image": "/images/gsh/certificates/cert-33.png",
+    "names": [
+      "Fernando Gonzalez Ruiz",
+      "Itzel Aurora",
+      "Álvaro Núñez Pérez",
+      "Ángel Reynoso"
+    ],
+    "name": "Fernando Gonzalez Ruiz; Itzel Aurora; Álvaro Núñez Pérez; Ángel Reynoso",
+    "role": "Participante",
+    "paper": "Evaluating LLM Safety Across Intra-Language Variations: A Study of Regional Spanish Slang",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-34",
+    "image": "/images/gsh/certificates/cert-34.png",
+    "names": [
+      "Alex Novelo",
+      "Axel Adolfo Morales Caro",
+      "Jose Samuel Blanco Cervera",
+      "Samuel Diaz Rios"
+    ],
+    "name": "Alex Novelo; Axel Adolfo Morales Caro; Jose Samuel Blanco Cervera; Samuel Diaz Rios",
+    "role": "Participante",
+    "paper": "HAZE: Adversarial Multi-Agent Scrutiny for Vulnerability Detection",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-35",
+    "image": "/images/gsh/certificates/cert-35.png",
+    "names": [
+      "Arlette Guadalupe Martinez Juarez",
+      "Armando Alberto Rivas Quevedo",
+      "Juan Emiliano Quintal Chuc",
+      "Luis Gerardo Escalante Velazquez"
+    ],
+    "name": "Arlette Guadalupe Martinez Juarez; Armando Alberto Rivas Quevedo; Juan Emiliano Quintal Chuc; Luis Gerardo Escalante Velazquez",
+    "role": "Participante",
+    "paper": "RAGE",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-36",
+    "image": "/images/gsh/certificates/cert-36.png",
+    "names": [
+      "Jorge Enrique Vargas Pech",
+      "Jose Luis Rejon Quintal",
+      "Saul Ruiz Peña",
+      "William Emmanuel Fernández Castillo"
+    ],
+    "name": "Jorge Enrique Vargas Pech; Jose Luis Rejon Quintal; Saul Ruiz Peña; William Emmanuel Fernández Castillo",
+    "role": "Participante",
+    "paper": "TUP Detection: Hybrid Prompt-Injection Guard for AI Generative Security Monitoring",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-37",
+    "image": "/images/gsh/certificates/cert-37.png",
+    "names": [
+      "Diego David Peña Martinez",
+      "Hector Tadeo Cadena",
+      "Uriel Ismael Guadalupe Ramirez Andrade"
+    ],
+    "name": "Diego David Peña Martinez; Hector Tadeo Cadena; Uriel Ismael Guadalupe Ramirez Andrade",
+    "role": "Participante",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-38",
+    "image": "/images/gsh/certificates/cert-38.png",
+    "names": [
+      "Cristopher Euan Pool",
+      "Manuel alejandro ortega Blanco",
+      "Noe Euan"
+    ],
+    "name": "Cristopher Euan Pool; Manuel alejandro ortega Blanco; Noe Euan",
+    "role": "Participante",
+    "paper": "Nexus-Gov",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-39",
+    "image": "/images/gsh/certificates/cert-39.png",
+    "names": [
+      "Angel Pineda",
+      "Daniel Alberto Curiel",
+      "Ernesto Ramirez"
+    ],
+    "name": "Angel Pineda; Daniel Alberto Curiel; Ernesto Ramirez",
+    "role": "Participante",
+    "paper": "Three Detectors, Three Failure Profiles: Detector-Specific Demographic Bias in Public Deepfake Detection and Its Implications for",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-40",
+    "image": "/images/gsh/certificates/cert-40.png",
+    "names": [
+      "Cesar Giovanny Cárdenas Olivares",
+      "Francisco Segura Valencia",
+      "Iltan Gabriel Ramirez Miramontes"
+    ],
+    "name": "Cesar Giovanny Cárdenas Olivares; Francisco Segura Valencia; Iltan Gabriel Ramirez Miramontes",
+    "role": "Participante",
+    "paper": "The AI Deployment Audit Playbook: An Operational, Lirecycle— Oriented Framework for the Global South",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-41",
+    "image": "/images/gsh/certificates/cert-41.png",
+    "names": [
+      "Angel Abraham Lugo Saenz",
+      "Joseph Jesus Aguilar Rodriguez"
+    ],
+    "name": "Angel Abraham Lugo Saenz; Joseph Jesus Aguilar Rodriguez",
+    "role": "Participante",
+    "paper": "YucaSafeBench",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-42",
+    "image": "/images/gsh/certificates/cert-42.png",
+    "names": [
+      "Krishna Sandoval"
+    ],
+    "name": "Krishna Sandoval",
+    "role": "Participante",
+    "paper": "The State Is Not Enough",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-43",
+    "image": "/images/gsh/certificates/cert-43.png",
+    "names": [
+      "Pilar Carolina Moncada Santana",
+      "Max Pinelo"
+    ],
+    "name": "Pilar Carolina Moncada Santana; Max Pinelo",
+    "role": "Participante",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-44",
+    "image": "/images/gsh/certificates/cert-44.png",
+    "names": [
+      "German Alfaro"
+    ],
+    "name": "German Alfaro",
+    "role": "Participante",
+    "paper": "Can-You-Predict-a-Network-Without-Running-1t.",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-45",
+    "image": "/images/gsh/certificates/cert-45.png",
+    "names": [
+      "Karla Doctor"
+    ],
+    "name": "Karla Doctor",
+    "role": "Participante",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-46",
+    "image": "/images/gsh/certificates/cert-46.png",
+    "names": [
+      "Alejandra Leyva"
+    ],
+    "name": "Alejandra Leyva",
+    "role": "Participante",
+    "paper": "¿Está México preparado institucionalmente para contener los riesgos en inteligencia artificial?",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-47",
+    "image": "/images/gsh/certificates/cert-47.png",
+    "names": [
+      "Angel Tenorio",
+      "Max Pinelo"
+    ],
+    "name": "Angel Tenorio; Max Pinelo",
+    "role": "Participante",
+    "paper": "performative Subversion: A False Sense of Safety despite a Control Protocol",
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-48",
+    "image": "/images/gsh/certificates/cert-48.png",
+    "names": [
+      "Julia Patricia Huchin"
+    ],
+    "name": "Julia Patricia Huchin",
+    "role": "Voluntario(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-49",
+    "image": "/images/gsh/certificates/cert-49.png",
+    "names": [
+      "Angel Isabella Morales Barrera"
+    ],
+    "name": "Angel Isabella Morales Barrera",
+    "role": "Voluntario(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-50",
+    "image": "/images/gsh/certificates/cert-50.png",
+    "names": [
+      "Betzi Fernanda Pérez Ortega"
+    ],
+    "name": "Betzi Fernanda Pérez Ortega",
+    "role": "Voluntario(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-51",
+    "image": "/images/gsh/certificates/cert-51.png",
+    "names": [
+      "Natalia Romani"
+    ],
+    "name": "Natalia Romani",
+    "role": "Voluntario(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-52",
+    "image": "/images/gsh/certificates/cert-52.png",
+    "names": [
+      "Fernando Rodriguez"
+    ],
+    "name": "Fernando Rodriguez",
+    "role": "Voluntario(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-53",
+    "image": "/images/gsh/certificates/cert-53.png",
+    "names": [
+      "Cesar Barragan"
+    ],
+    "name": "Cesar Barragan",
+    "role": "Voluntario(a)",
+    "paper": null,
+    "issuedOnIso": "2026-06-21",
+    "issuedOnDisplay": "19-21 de Junio del 2026",
+    "needsReview": false
+  },
+  {
+    "id": "cert-54",
+    "image": "/images/gsh/certificates/cert-54.png",
+    "names": [
+      "Karime Pacheco"
+    ],
+    "name": "Karime Pacheco",
+    "role": "Speaker",
+    "paper": null,
+    "issuedOnIso": "2026-05-29",
+    "issuedOnDisplay": "29 de Mayo del 2026",
+    "needsReview": false
+  }
+]
