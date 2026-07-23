@@ -394,7 +394,7 @@
     ],
     "name": "Alexis Lopez Fregoso; Angel Soto; Ezbai Ahananel Guzman Rojas; Lorena Jacqueline Garcia Luevano; Rocío Nefertari García Luevano",
     "role": "Participante",
-    "paper": "Metodología de implementación de un modelo de IA para la detección de situaciones de riesgo para niñas, niños y adolescentes en",
+    "paper": "Metodología de implementación de un modelo de IA para la detección de situaciones de riesgo para niñas, niños y adolescentes en chats de videojuegos.",
     "issuedOnIso": "2026-06-21",
     "issuedOnDisplay": "19-21 de Junio del 2026",
     "needsReview": false
@@ -426,7 +426,7 @@
     ],
     "name": "David Alonso Romero Medina; Euruviel Marquez Martinez; Leonardo Torres Tellez; Roberto Balmes Solis",
     "role": "Participante",
-    "paper": "DialectSafe, Bridging the ASR Gap",
+    "paper": "DialectSafe: Bridging the ASR Gap",
     "issuedOnIso": "2026-06-21",
     "issuedOnDisplay": "19-21 de Junio del 2026",
     "needsReview": false
@@ -505,7 +505,7 @@
     ],
     "name": "Diego David Peña Martinez; Hector Tadeo Cadena; Uriel Ismael Guadalupe Ramirez Andrade",
     "role": "Participante",
-    "paper": null,
+    "paper": "Filtrum-Safety: LLM-Agnostic RAG for Reducing Legal Hallucinations in Civil-Law Contexts",
     "issuedOnIso": "2026-06-21",
     "issuedOnDisplay": "19-21 de Junio del 2026",
     "needsReview": false
@@ -535,7 +535,7 @@
     ],
     "name": "Angel Pineda; Daniel Alberto Curiel; Ernesto Ramirez",
     "role": "Participante",
-    "paper": "Three Detectors, Three Failure Profiles: Detector-Specific Demographic Bias in Public Deepfake Detection and Its Implications for",
+    "paper": "Three Detectors, Three Failure Profiles: Detector-Specific Demographic Bias in Public Deepfake Detection and Its Implications for Content Moderation in Latin America",
     "issuedOnIso": "2026-06-21",
     "issuedOnDisplay": "19-21 de Junio del 2026",
     "needsReview": false
@@ -550,7 +550,7 @@
     ],
     "name": "Cesar Giovanny Cárdenas Olivares; Francisco Segura Valencia; Iltan Gabriel Ramirez Miramontes",
     "role": "Participante",
-    "paper": "The AI Deployment Audit Playbook: An Operational, Lirecycle— Oriented Framework for the Global South",
+    "paper": "The AI Deployment Audit Playbook: An Operational, Lifecycle-Oriented Framework for the Global South",
     "issuedOnIso": "2026-06-21",
     "issuedOnDisplay": "19-21 de Junio del 2026",
     "needsReview": false
@@ -604,7 +604,7 @@
     ],
     "name": "German Alfaro",
     "role": "Participante",
-    "paper": "Can-You-Predict-a-Network-Without-Running-1t.",
+    "paper": "Can-You-Predict-a-Network-Without-Running-It-",
     "issuedOnIso": "2026-06-21",
     "issuedOnDisplay": "19-21 de Junio del 2026",
     "needsReview": false
@@ -617,7 +617,7 @@
     ],
     "name": "Karla Doctor",
     "role": "Participante",
-    "paper": null,
+    "paper": "Cultural Knowledge Gaps in LLMs: Geographic Hallucination Bias Across Latin American Countries",
     "issuedOnIso": "2026-06-21",
     "issuedOnDisplay": "19-21 de Junio del 2026",
     "needsReview": false
