@@ -3,10 +3,9 @@
  * /certificados/[id] — Pagina publica de verificacion de un certificado
  * individual del Global South AIS Hackathon.
  *
- * Esta es la URL canonica codificada en el QR: cualquiera que la abra puede
+ * Esta es la URL canonica de verificacion: cualquiera que la abra puede
  * confirmar que el certificado fue emitido por AI Safety Mexico.
  */
-import QRCode from 'qrcode';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
@@ -27,13 +26,6 @@ if (!cert) {
 }
 
 const pathname = `/certificados/${cert.id}`;
-const verifyUrl = new URL(pathname, Astro.site).toString();
-
-const qrDataUrl = await QRCode.toDataURL(verifyUrl, {
-  margin: 1,
-  width: 480,
-  color: { dark: '#1E1E1C', light: '#F7F3E8' },
-});
 
 const breadcrumb: Breadcrumb = {
   items: [
@@ -85,21 +77,6 @@ const breadcrumb: Breadcrumb = {
           <dd><code>{cert.id}</code></dd>
         </div>
       </dl>
-
-      <div class="verify-grid">
-        <div class="qr-block">
-          <img src={qrDataUrl} alt="Codigo QR de verificacion" width="180" height="180" />
-          <p class="qr-caption">Verify at {ORG_NAME}</p>
-          <p class="qr-url">{verifyUrl}</p>
-        </div>
-
-        <div class="verify-copy">
-          <p class="hint">
-            Este enlace ({verifyUrl}) es la prueba de verificacion: cualquiera puede
-            abrirlo para confirmar que este certificado fue emitido por {ORG_NAME}.
-          </p>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -109,7 +86,7 @@ const breadcrumb: Breadcrumb = {
 <style>
   .verify-page {
     background: var(--color-bg-base);
-    padding-block: var(--space-2) var(--space-14);
+    padding-block: var(--space-2) var(--space-5);
   }
 
   .verify-page__inner {
@@ -196,66 +173,7 @@ const breadcrumb: Breadcrumb = {
     color: var(--color-text-primary);
   }
 
-  .verify-grid {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: var(--space-6);
-    align-items: start;
-    background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    padding: var(--space-6);
-  }
-
-  .qr-block {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-2);
-    text-align: center;
-  }
-
-  .qr-block img {
-    background: var(--cream-50);
-    border-radius: var(--radius-sm);
-    padding: 8px;
-  }
-
-  .qr-caption {
-    margin: 0;
-    font-family: var(--font-body);
-    font-weight: var(--fw-semibold);
-    font-size: var(--fs-small);
-    color: var(--color-text-primary);
-  }
-
-  .qr-url {
-    margin: 0;
-    color: var(--color-text-muted);
-    font-family: var(--font-body);
-    font-size: var(--fs-caption);
-    word-break: break-all;
-  }
-
-  .verify-copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    justify-content: center;
-  }
-
-  .hint {
-    margin: 0;
-    color: var(--color-text-muted);
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    max-width: 32rem;
-  }
-
   @media (max-width: 700px) {
-    .verify-grid {
-      grid-template-columns: 1fr;
-    }
     .meta {
       grid-template-columns: 1fr;
     }
