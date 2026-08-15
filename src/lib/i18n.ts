@@ -54,6 +54,7 @@ export type StringKey =
   | 'footer.item.programs'
   | 'footer.item.projects'
   | 'footer.item.gsh'
+  | 'footer.item.blog'
   | 'footer.item.getInvolved'
   | 'footer.item.contact'
   | 'footer.tagline'
@@ -122,6 +123,7 @@ const strings: Record<Locale, Record<StringKey, string>> = {
     'footer.item.programs': 'Programas',
     'footer.item.projects': 'Proyectos',
     'footer.item.gsh': 'Global South AIS Hackathon',
+    'footer.item.blog': 'Blog',
     'footer.item.getInvolved': 'Colabora',
     'footer.item.contact': 'Contacto',
     'footer.tagline': 'Investigación, educación y gobernanza de IA en México.',
@@ -191,6 +193,7 @@ const strings: Record<Locale, Record<StringKey, string>> = {
     'footer.item.programs': 'Programs',
     'footer.item.projects': 'Projects',
     'footer.item.gsh': 'Global South AIS Hackathon',
+    'footer.item.blog': 'Blog',
     'footer.item.getInvolved': 'Get involved',
     'footer.item.contact': 'Contact',
     'footer.tagline': 'AI safety research, education, and governance in Mexico.',
