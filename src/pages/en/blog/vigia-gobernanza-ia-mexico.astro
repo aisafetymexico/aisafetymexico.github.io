@@ -1,0 +1,953 @@
+---
+/**
+ * /en/blog/vigia-gobernanza-ia-mexico — English version of the blog entry.
+ *
+ * Mirror of /blog/vigia-gobernanza-ia-mexico. The markup, section ids and
+ * anchors are identical to the Spanish page so both stay in sync; only the
+ * human-readable text differs.
+ *
+ * Verbatim quotations from the Diario Oficial de la Federación are kept in
+ * Spanish, each followed by an English translation in square brackets. They
+ * are evidence, and translating them away would destroy their value.
+ */
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+
+const pathname = '/en/blog/vigia-gobernanza-ia-mexico';
+
+const breadcrumb = [
+  { label: 'Home', href: '/en' },
+  { label: 'Blog', href: '/en/blog' },
+  { label: 'VIGIA: A Pipeline to Accelerate AI Governance' },
+];
+---
+
+<BaseLayout
+  title="VIGIA: A Pipeline to Accelerate AI Governance in Mexico · AI Safety Mexico"
+  description="Working paper: the absence of an AI risk lexicon in Mexican official discourse as a bottleneck for AI Governance, and a pipeline to address it."
+  pathname={pathname}
+  lang="en"
+>
+  <Header slot="header" currentPath={pathname} lang="en" />
+
+<article class="post">
+    <div class="post__crumb">
+      <Breadcrumb items={breadcrumb} />
+    </div>
+
+    <header class="post__masthead">
+      <p class="post__kicker">Blog · AI Governance</p>
+      <h1 class="post__title">VIGIA: A Pipeline to Accelerate AI Governance in Mexico</h1>
+      <div class="post__byline">
+        <span>Pilar Moncada and Max Pinelo</span>
+      </div>
+    </header>
+
+    <nav class="post-toc" aria-label="Contents">
+      <h2 class="post-toc__heading">Contents</h2>
+      <ol>
+        <li><span class="tn">1</span><a href="#introduccion">Introduction</a></li>
+        <li><span class="tn">2</span><a href="#trabajo-similar">Similar work</a></li>
+        <li><span class="tn">3</span><a href="#operacionalizacion">Operationalization</a></li>
+        <li><span class="tn">4</span><a href="#implementacion">Implementation in Mexico</a></li>
+        <li><span class="tn">5</span><a href="#resultados">Results</a></li>
+        <li><span class="tn">6</span><a href="#limitaciones">Limitations</a></li>
+        <li><span class="tn">7</span><a href="#trabajo-futuro">Future work</a></li>
+        <li><span class="tn">8</span><a href="#conclusion">Conclusion</a></li>
+        <li><span class="tn">A</span><a href="#apendice-a">Risk categories</a></li>
+        <li><span class="tn">B</span><a href="#apendice-b">How it is rendered invisible</a></li>
+        <li><span class="tn">·</span><a href="#referencias">References</a></li>
+      </ol>
+    </nav>
+
+    <div class="post__body">
+<section id="resumen">
+  <h2><span class="n">§</span>Abstract</h2>
+
+  <p>In this paper we argue that the main problem for accelerating AI Governance in nations such as Mexico is constrained by the almost nonexistent AI safety vocabulary in the country. As a result, AI risks are not conceptualized in the official discourse, which makes those risks invisible to the various spheres that drive the progress of AI regulation. We call this bottleneck a higher-order risk.</p>
+
+  <p class="nota"><span class="lbl">Scope</span>We do not claim that this is the only bottleneck for AI Governance in Mexico, but rather one that we believe is important and that is also upstream of several of the others.</p>
+
+  <p>To overcome this bottleneck we propose a pipeline whose ultimate goal is to make visible the risks of AI, and we produced a first implementation of this pipeline for Mexico. We also suggest future steps that can be built on top of it. In the end, we believe this could be replicated for other countries that are in a similar state.</p>
+</section>
+
+<section id="introduccion">
+  <h2><span class="n">1</span>Introduction</h2>
+
+  <p class="epigraph">What is not mentioned does not exist.</p>
+
+  <div class="defbox">
+    <h4>To overcome this bottleneck we propose a pipeline whose ultimate goal is to make visible the risks of AI, and we produced a first implementation of this pipeline for Mexico. We also suggest future steps that can be built on top of it. In the end, we believe this could be replicated for other countries that are in a similar state.</h4>
+    <dl>
+      <dt>Pipeline</dt>
+      <dd>The strategy we propose, divided into steps, to unblock the bottleneck and thereby accelerate AI Governance.</dd>
+      <dt>First-type and second-type nations</dt>
+      <dd>First-type nations have the capacity to produce frontier models. Second-type nations do not have it and are mainly consumers of that technology.</dd>
+      <dt>Invisibilization of AI risks</dt>
+      <dd>The phenomenon we study: that the use of AI appears in the discourse without any associated risk being named. It does not mean that the use is hidden, but that the operation of naming it as a risk is missing.</dd>
+      <dt>Higher-order risk</dt>
+      <dd>Invisibilization itself, understood as a risk, because it acts on the capacity to manage all the others. The term is ours.</dd>
+      <dt>Official discourse and public discourse</dt>
+      <dd>The first is where the State speaks in its own voice and with legal effects. The second is the conversation in the press and digital media.</dd>
+    </dl>
+  </div>
+
+  <p>In the field of AI we can categorize nations into two types: those with the capacity to produce frontier models and those without it.</p>
+
+  <p>First-type nations, being in direct contact with the frontier, can observe the risks of AI, they have institutions, research centers and, above all, their own conceptualization and language for the discourse on the risks related to artificial intelligence.</p>
+
+  <p>Second-type nations are mainly consumers of the frontier technology of the former, but institutions and research controls for artificial intelligence safety are almost nonexistent. We say "almost" because AI Safety México <a href="#r1">[1]</a> is the only Mexican organization we know of whose declared purpose is to make these risks visible, in a register different from that of ethics and responsible AI, where the Mexican field is older and more populated. There is no public promotion of these risks, and much less can these conceptualizations be spoken of. Therefore, at an epistemic level these risks are nonexistent in the public discourse and, much worse, they do not exist in the official discourse.</p>
+
+  <p>If this language does not exist, then it is practically impossible to progress toward the recognition of AI risks and therefore toward AI Governance in Mexico. It is thus a bottleneck for AI Governance.</p>
+
+  <p>It is worth giving the previous problem a name in order to address it. The risks documented by first-type countries are first-order risks: a system fails, discriminates, surveils, displaces work. The invisibilization of those risks in public and official discourse operates one level above, because it does not cause harm by itself but rather prevents first-order harms from being noticed and corrected, and for that reason we call it a higher-order risk. It also has the property of concealing itself: a legislator who reviews an AI deployment agreement and finds in it no mention of bias or human oversight does not perceive an omission, because the document looks normal.</p>
+
+  <p>To overcome this higher-order risk we propose a pipeline whose objective is to make visible the risks of AI through the analysis of official and public discourse. In this way, the actors and agents who could contribute to governance would already have the conceptual framework to begin regulating in order to avoid the risks of AI.</p>
+</section>
+
+<section id="trabajo-similar">
+  <h2><span class="n">2</span>Similar work</h2>
+
+  <p>The idea that a problem without a name does not reach the agenda has theoretical support. Kingdon <a href="#r2">[2]</a> distinguishes between a condition and a problem, and notes that the category in which an issue is placed determines which remedies are considered appropriate. The formulation closest to what we argue here comes from the sociology of law: Felstiner, Abel and Sarat <a href="#r3">[3]</a> show that an injurious experience that is never named does not become a grievance and therefore never reaches an institution that could address it.</p>
+
+  <p>It is worth stating which part of this pipeline is not novel. Counting AI mentions in official text was the method of the AI Index between 2016 and 2024 <a href="#r4">[4]</a>, coding government documents against a fixed taxonomy is the trade of the Comparative Agendas Project <a href="#r5">[5]</a>, and using an LLM for this has been evaluated with published figures <a href="#r6">[6]</a>. Mexico already has its registry of public algorithms in Algoritmos CIDE <a href="#r7">[7]</a> and Cação et al. <a href="#r8">[8]</a> tracked environmental policy in the <em>Diário Oficial da União</em>. The closest precedent is Trielli, Stark and Diakopoulos <a href="#r9">[9]</a>, who built a vocabulary of 61 terms precisely because agencies do not say «AI».</p>
+</section>
+
+<section id="operacionalizacion">
+  <h2><span class="n">3</span>Operationalization</h2>
+
+  <p>The operationalization of the pipeline, in the abstract and without reference to any particular country, suggests the following methodology.</p>
+
+  <ol>
+    <li>Identify official documents in which official discourse publishes its initiatives and use of artificial intelligence.</li>
+    <li>Identify in each of these documents both explicit and implicit mentions of the use of artificial intelligence.</li>
+    <li>Identify official documents in which official discourse publishes its initiatives and use of artificial intelligence.</li>
+    <li>Report the finding: explain why it is a risk, with what level of urgency, and give some initial recommendations on how to resolve this gap.</li>
+    <li>Create concrete reports for the potential drivers of AI Governance, such as researchers, legislators and the general public.</li>
+    <li>Monitor in public discourse how far the AI risk lexicon is being adopted, through media such as digital newspapers. That is, measure how far the language of AI risks is used.</li>
+  </ol>
+</section>
+
+<section id="implementacion">
+  <h2><span class="n">4</span>Implementation in Mexico</h2>
+
+  <p>Create concrete reports for the potential drivers of AI Governance, such as researchers, legislators and the general public.</p>
+
+  <p>The DOF is the natural choice because it is the vehicle through which the acts of the Mexican State acquire legal validity, so a use of AI that appears there has moved past the stage of a plan: it is a fact of government with a date and a signature. It is also public and downloadable, which makes the exercise reproducible. The corpus is 153 issues of the morning edition, from 3 November 2025 to 12 June 2026.</p>
+
+  <p>An LLM (Claude Opus 4.8) reads each complete issue, identifies explicit and implicit mentions of AI use and classifies each one against the 15 categories in Appendix A with a severity level. For each finding it outputs the original text fragment, its location in the document, the relevance analysis, the risk categories with their severity and one or more recommendations. Steps 5 and 6 are outside the scope of this iteration. The observatory with the results of this implementation is published at <a href="https://vigia-3-0-21536470668.us-central1.run.app">vigia-3-0.us-central1.run.app</a>.</p>
+
+  <figure class="figure wide">
+    <div class="figure__frame">
+      <svg viewBox="0 0 920 440" role="img"
+         aria-label="Architecture of the VIGIA pipeline. The Diario Oficial de la Federación feeds a language model that detects mentions of AI use and classifies the associated risk. The output is a finding with the original text fragment, risk category, severity and recommendation. Reports by audience and the public discourse monitoring layer are planned but not implemented in this iteration."
+         class="diagram">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="currentColor"></path>
+        </marker>
+        <marker id="ar-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="var(--accent)"></path>
+        </marker>
+      </defs>
+
+      <text x="40"  y="28"  class="d-eyebrow">1 · Sources</text>
+      <text x="290" y="28"  class="d-eyebrow">2–3 · Identification and classification</text>
+      <text x="670" y="28"  class="d-eyebrow">4–5 · Outputs</text>
+      <text x="290" y="292" class="d-eyebrow">6 · Monitoring</text>
+
+      <rect x="40" y="46" width="160" height="76" rx="3" class="d-box"></rect>
+      <text x="56" y="70"  class="d-title">DOF</text>
+      <text x="56" y="88"  class="d-sub">Diario Oficial</text>
+      <text x="56" y="102" class="d-sub">de la Federación</text>
+      <text x="56" y="117" class="d-num">153 issues</text>
+
+      <rect x="40" y="136" width="160" height="38" rx="3" class="d-box d-box--ghost"></rect>
+      <text x="56" y="160" class="d-title d-title--ghost">Doc 2</text>
+      <text x="120" y="197" class="d-dots" text-anchor="middle">⋮</text>
+      <rect x="40" y="208" width="160" height="38" rx="3" class="d-box d-box--ghost"></rect>
+      <text x="56" y="232" class="d-title d-title--ghost">Doc N</text>
+
+      <path d="M200,84 H235"  class="d-line"></path>
+      <path d="M200,155 H235" class="d-line d-line--ghost"></path>
+      <path d="M200,227 H235" class="d-line d-line--ghost"></path>
+      <path d="M235,84 V227"  class="d-line"></path>
+      <path d="M235,146 H286" class="d-line" marker-end="url(#ar)"></path>
+      <text x="243" y="72" class="d-edge" text-anchor="middle">full text</text>
+
+      <rect x="290" y="46" width="290" height="200" rx="3" class="d-box d-box--fill"></rect>
+      <text x="308" y="72" class="d-title">Language model</text>
+      <text x="308" y="90" class="d-num">Claude Opus 4.8</text>
+      <path d="M290,104 H580" class="d-rule"></path>
+
+      <text x="308" y="132" class="d-step">2</text>
+      <text x="332" y="132" class="d-body">Detects mentions of AI use</text>
+      <text x="332" y="148" class="d-sub">explicit and implicit</text>
+      <path d="M308,166 H562" class="d-rule d-rule--faint"></path>
+
+      <text x="308" y="192" class="d-step">3</text>
+      <text x="332" y="192" class="d-body">Classifies the associated risk</text>
+      <text x="332" y="208" class="d-sub">categories R1 to R15 and severity</text>
+      <path d="M308,224 H562" class="d-rule d-rule--faint"></path>
+
+      <text x="308" y="240" class="d-sub">reads each complete issue</text>
+
+      <path d="M580,146 H625 V84 H666" class="d-line" marker-end="url(#ar)"></path>
+      <text x="629" y="74" class="d-edge" text-anchor="middle">findings</text>
+
+      <rect x="670" y="46" width="210" height="86" rx="3" class="d-box"></rect>
+      <text x="686" y="70"  class="d-title">Finding</text>
+      <text x="686" y="89"  class="d-sub">original text fragment</text>
+      <text x="686" y="104" class="d-sub">risk, severity and urgency</text>
+      <text x="686" y="119" class="d-sub">recommendation</text>
+
+      <path d="M775,132 V154" class="d-line d-line--ghost" marker-end="url(#ar)"></path>
+
+      <rect x="670" y="158" width="210" height="88" rx="3" class="d-box d-box--ghost"></rect>
+      <text x="686" y="180" class="d-title d-title--ghost">Reports by audience</text>
+      <text x="686" y="199" class="d-sub">researchers</text>
+      <text x="686" y="214" class="d-sub">legislators</text>
+      <text x="686" y="229" class="d-sub">general public · Report N</text>
+
+      <path d="M775,246 V302" class="d-line d-line--ghost" marker-end="url(#ar)"></path>
+      <text x="787" y="278" class="d-edge">dissemination</text>
+
+      <rect x="290" y="304" width="590" height="70" rx="3" class="d-box d-box--ghost"></rect>
+      <text x="310" y="330" class="d-title d-title--ghost">Public discourse monitoring</text>
+      <text x="310" y="350" class="d-sub">media and digital newspapers</text>
+      <text x="310" y="365" class="d-sub">measures how far the AI risk lexicon circulates</text>
+
+      <path d="M290,339 H18 V84 H36" class="d-loop" marker-end="url(#ar-a)"></path>
+      <text x="168" y="329" class="d-edge d-edge--accent" text-anchor="middle">the lexicon enters official discourse</text>
+
+      <path d="M40,410 H74" class="d-line"></path>
+      <text x="84" y="414" class="d-legend">implemented in this iteration</text>
+      <path d="M320,410 H354" class="d-line d-line--ghost"></path>
+      <text x="364" y="414" class="d-legend">planned or extensible</text>
+    </svg>
+    </div>
+    <figcaption>
+      <strong>Figure 1. High-level architecture of the pipeline.</strong> Note that in this case we represent the implementation for Mexico, VIGIA, where the DOF was used as the only document. "Doc N" indicates that more documents can be added to the pipeline, and likewise for the reports. That the lexicon returns to the official discourse, marked in color, is the sign that the pipeline would be working.
+    </figcaption>
+  </figure>
+</section>
+
+<section id="resultados">
+  <h2><span class="n">5</span>Results</h2>
+
+  <p>We analyzed 153 issues of the DOF from 03-11-2025 to 12-06-2026 and observed the following.</p>
+
+  <div class="stats">
+    <div class="stat"><span class="v">249</span><span class="k">literal mentions of «inteligencia artificial» [artificial intelligence], in 57 issues</span></div>
+    <div class="stat"><span class="v">545</span><span class="k">implicit mentions of AI use</span></div>
+    <div class="stat"><span class="v is-zero">0</span><span class="k">mentions of any AI risk named as such</span></div>
+  </div>
+
+  <p>Implicit mentions are passages where the State deploys what is in fact an AI system without naming it as such, and they are four times as many as the 136 explicit ones counted by the model.</p>
+
+  <h3>5.1 The AI risk lexicon is absent</h3>
+
+  <p>We searched for the AI safety vocabulary in the complete corpus.</p>
+
+  <div class="tablewrap wide">
+    <table class="lex">
+      <caption>AI risk lexicon in 153 issues of the DOF</caption>
+      <thead><tr><th>Term</th><th class="n-col">Occurrences</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr class="zero"><td class="t">risks of artificial intelligence</td><td class="n-col">0</td><td></td></tr>
+        <tr class="zero"><td class="t">artificial intelligence safety · AI safety</td><td class="n-col">0</td><td></td></tr>
+        <tr class="zero"><td class="t">artificial intelligence governance</td><td class="n-col">0</td><td></td></tr>
+        <tr class="zero"><td class="t">artificial intelligence ethics</td><td class="n-col">0</td><td></td></tr>
+        <tr class="zero"><td class="t">algorithmic transparency</td><td class="n-col">0</td><td></td></tr>
+        <tr class="zero"><td class="t">explainability · interpretability</td><td class="n-col">0</td><td></td></tr>
+        <tr class="zero"><td class="t">algorithmic auditing</td><td class="n-col">0</td><td></td></tr>
+        <tr class="zero"><td class="t">algorithmic impact assessment</td><td class="n-col">0</td><td>there is 1 of «data protection impact assessment», which is a different instrument</td></tr>
+        <tr class="zero"><td class="t">high-risk AI system</td><td class="n-col">0</td><td></td></tr>
+        <tr class="zero"><td class="t">frontier model · frontier AI</td><td class="n-col">0</td><td></td></tr>
+        <tr class="zero"><td class="t">model alignment</td><td class="n-col">0</td><td></td></tr>
+        <tr class="zero"><td class="t">red teaming · dangerous capabilities</td><td class="n-col">0</td><td></td></tr>
+        <tr class="zero"><td class="t">deepfake · ultrafalso</td><td class="n-col">0</td><td></td></tr>
+        <tr class="zero"><td class="t">misuse of AI</td><td class="n-col">0</td><td></td></tr>
+        <tr class="zero"><td class="t">meaningful human oversight</td><td class="n-col">0</td><td>there is 1 of «intervención humana mínima» [minimal human intervention], in the Value Added Tax Law, unrelated</td></tr>
+        <tr class="zero"><td class="t">automated decisions (as a regulated instrument)</td><td class="n-col">0</td><td>5 of «automated processing», in treaty titles and medical equipment data sheets</td></tr>
+        <tr class="hit"><td class="t">algorithmic bias</td><td class="n-col">1</td><td>institutional program of El Colef, an academic center</td></tr>
+        <tr class="hit"><td class="t">responsible AI · ethical AI</td><td class="n-col">2</td><td>one is a footnote citing UNESCO, the other a strategic plan of CIDESI</td></tr>
+      </tbody>
+    </table>
+    <p class="tnote"><strong>Occurrences</strong> is the total number of times the expression appears in the 153 issues, not the number of documents that contain it.</p>
+  </div>
+
+  <p>Sixteen of the eighteen terms do not appear even once, and the three cases that do appear come from two public research centers and a bibliographic citation, none of them a regulator. We also searched for which words accompany each mention of AI: of the 249, only 17 (6.8%) have any risk or safeguard word within 200 characters. Widening the window to 500 characters yields 40 cases, but on reviewing them one by one none refers to AI risks, because in all of them «seguridad» means food, water, social or public security, or cybersecurity.</p>
+
+  <h3>5.2 How AI appears when it appears</h3>
+
+  <p>We manually classified the 249 mentions according to the framing with which AI appears in the passage.</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Framing of the 249 mentions</caption>
+      <thead><tr><th>Framing</th><th class="n-col">Mentions</th><th class="n-col">%</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Capability</strong>, benefit or line of research</td><td class="n-col">181</td><td class="n-col">72.7</td></tr>
+        <tr><td><strong>Procurement</strong>, procurement line item or technical data sheet</td><td class="n-col">29</td><td class="n-col">11.7</td></tr>
+        <tr><td><strong>Glossary</strong>, list of acronyms or bibliography</td><td class="n-col">20</td><td class="n-col">8.0</td></tr>
+        <tr><td><strong>Harm framing</strong>, AI as a source of harm or subject to a limit</td><td class="n-col">18</td><td class="n-col">7.2</td></tr>
+        <tr><td>Other</td><td class="n-col">1</td><td class="n-col">0.4</td></tr>
+      </tbody>
+    </table>
+    <p class="tnote"><strong>Mentions</strong> counts each appearance of the expression «artificial intelligence» in the corpus, classified by how the passage containing it frames it.</p>
+  </div>
+
+  <p>The central result is in those 18 mentions with harm framing: none uses vocabulary proper to AI risks, and all of them borrow the framing of an earlier legal regime. Six come from copyright and image and voice rights, four from academic integrity, two from public ethics, two from gender violence via CEDAW, two from consumer law, one from administrative sanctioning law and one from patient data protection.</p>
+
+  <h3>5.3 Risks identified</h3>
+
+  <p>Of the 665 findings, 636 (95.6%) are marked as a regulatory gap, and they are distributed across 1,466 finding-risk pairs over 15 categories. In severity, 582 pairs (39.7%) are High or above, and 50 of the 153 issues are marked as requiring urgent attention.</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Finding-risk pairs by category</caption>
+      <thead><tr><th>Category</th><th class="n-col">Pairs</th><th class="n-col">Issues</th></tr></thead>
+      <tbody>
+        <tr><td><span class="rid">R3</span> Invasion of privacy</td><td class="n-col">406</td><td class="n-col">134</td></tr>
+        <tr><td><span class="rid">R2</span> Discrimination and bias</td><td class="n-col">301</td><td class="n-col">127</td></tr>
+        <tr><td><span class="rid">R1</span> Failures and errors</td><td class="n-col">233</td><td class="n-col">107</td></tr>
+        <tr><td><span class="rid">R9</span> Authoritarian surveillance</td><td class="n-col">177</td><td class="n-col">96</td></tr>
+        <tr><td><span class="rid">R10</span> Concentration of power</td><td class="n-col">74</td><td class="n-col">50</td></tr>
+        <tr><td><span class="rid">R7</span> Labor displacement</td><td class="n-col">72</td><td class="n-col">52</td></tr>
+        <tr><td><span class="rid">R15</span> Emerging risks</td><td class="n-col">45</td><td class="n-col">27</td></tr>
+        <tr><td><span class="rid">R4</span> Disinformation and deepfakes</td><td class="n-col">44</td><td class="n-col">30</td></tr>
+        <tr><td><span class="rid">R8</span> Social connection</td><td class="n-col">34</td><td class="n-col">23</td></tr>
+        <tr><td><span class="rid">R5</span> Copyright</td><td class="n-col">27</td><td class="n-col">21</td></tr>
+        <tr><td><span class="rid">R13</span> Loss of control</td><td class="n-col">24</td><td class="n-col">17</td></tr>
+        <tr><td><span class="rid">R12</span> Military escalation</td><td class="n-col">12</td><td class="n-col">11</td></tr>
+        <tr><td><span class="rid">R6</span> Labor exploitation</td><td class="n-col">11</td><td class="n-col">9</td></tr>
+        <tr><td><span class="rid">R11</span> Bioterrorism</td><td class="n-col">6</td><td class="n-col">6</td></tr>
+        <tr class="zero"><td><span class="rid">R14</span> Agent misalignment</td><td class="n-col">0</td><td class="n-col">0</td></tr>
+      </tbody>
+    </table>
+    <p class="tnote"><strong>Pairs</strong> is how many times that risk category was assigned to a finding; a single finding can receive several categories. <strong>Issues</strong> is in how many of the 153 issues of the DOF at least one finding of that category appears.</p>
+  </div>
+
+  <h3>5.4 Some examples</h3>
+
+  <ul>
+    <li><strong>National AI infrastructure without a risk framework.</strong> On 29 May 2026 the Technical Committee of the Coatlicue supercomputer is created, in order to strengthen «las capacidades nacionales en materia de supercómputo e inteligencia artificial» [national capabilities in supercomputing and artificial intelligence]. It is the most explicitly AI-oriented instrument in the corpus and it contains no provision on permitted uses, model evaluation or access.</li>
+    <li><strong>When risk enters, it enters borrowed.</strong> On 30 January 2026 the INE Strategy against gender-based political violence takes up General Recommendation 40 of CEDAW and calls for a response to «contenido generado por usuarios e inteligencia artificial que constituya un acto de violencia de género» [content generated by users and artificial intelligence that constitutes an act of gender-based violence]. It is the only explicit mention of AI in that issue and it arrives by way of an international recommendation.</li>
+  </ul>
+
+  <p>Appendix B collects further examples, organized by the way in which the risk is rendered invisible.</p>
+</section>
+
+<section id="limitaciones">
+  <h2><span class="n">6</span>Limitations</h2>
+
+  <p>There are some limitations in our first implementation of the proposed pipeline.</p>
+
+  <ul>
+    <li>For this we used an LLM to do all the identification and classification, in this case Claude Opus 4.8, and we did not use any other model to compare the results. So these results are framed by the model's interpretation and by known limitations, such as hallucination or <em>lost in the middle</em> effects, aggravated by the enormous length of the documents: the median DOF issue is around 389 pages.</li>
+
+    <li>The risk categories used are inherited from frameworks of first-type countries, as we defined them at the beginning, and it could be the case that we need additional or adapted categories that make more sense for the nature of second-type countries, such as Mexico. For example, the invisibilization of the existing risks of AI, which is the higher-order risk we define here, is not classifiable within this taxonomy. Other similar risks could be identified.</li>
+
+    <li>We note that for the monitoring layer of the pipeline we want to exclude our own dissemination of reports; otherwise we may be contaminating the "metric", and we do not want that: we want to measure the organic infiltration of AI risk language into the discourse.</li>
+  </ul>
+</section>
+
+<section id="trabajo-futuro">
+  <h2><span class="n">7</span>Future work</h2>
+
+  <h3>On the pipeline</h3>
+
+  <ul>
+    <li>Test the current LLM classification approach and define a more robust one, running at least a second model and validating a subsample with human reviewers.</li>
+    <li>Add to the current operation the channel and the actors that best make use of the information, since our objective is to accelerate AI Governance.</li>
+    <li>Identify which format works best for communicating the results to the promoters of AI Governance.</li>
+    <li>Define better metrics that we can use to monitor how far AI risks are made visible in public discourse.</li>
+  </ul>
+
+  <p>We also think that this pipeline can be used, in a very similar version, in other second-type countries.</p>
+
+  <h3>On the Mexican implementation</h3>
+
+  <ul>
+    <li>Use the results to identify Mexico's most urgent needs in terms of regulation.</li>
+    <li>Use the results to define the largest future step that could have the greatest impact.</li>
+  </ul>
+
+  <p>And what we think is the largest future step is to build on top of it a defense strategy that is specific to second-type countries such as Mexico. For first-type countries there are other strategies, such as MAIM (<em>Mutual Assured AI Malfunction</em>, the deterrence regime based on preventive sabotage of Hendrycks, Schmidt and Wang <a href="#r10">[10]</a>) or the <em>Mutual Assured Compute Destruction</em> of the AI 2040 plan <a href="#r11">[11]</a>, but they respond to the nature of those nations with the capacity to produce frontier models: MAIM does not mention middle powers, the Global South or Mexico even once, and the agreement in the second is bilateral between the United States and China. In the concrete case of Mexico, we think that the defense strategy can be operationalized via regulation, along the lines of Viri Ríos <a href="#r12">[12]</a>, who argues that the country «no puede desarrollar una IA que compita con las de Estados Unidos o China, pero sí puede protegerse contra los abusos de estas» [cannot develop an AI that competes with those of the United States or China, but it can protect itself against their abuses]. That will be crucial for balancing the power dynamics of AI between first-type and second-type nations.</p>
+</section>
+
+<section id="conclusion">
+  <h2><span class="n">8</span>Conclusion</h2>
+
+  <p>In this work we proposed a pipeline to advance AI Governance in countries that do not produce frontier AI but do use it. We established that one of the main bottlenecks is the invisibilization of AI risk and that, because of this conceptualization, AI Governance cannot progress. We conceptualized this bottleneck as a higher-order risk that needs to be addressed, and our pipeline is the operationalization for addressing this risk.</p>
+
+  <p>We built a first version of this pipeline for Mexico, and further iterations can be made to make this implementation more robust and to have more material. We also invite other second-type nations to apply this pipeline to their own official discourse.</p>
+</section>
+
+<section id="apendice-a">
+  <h2><span class="n">A</span>Appendix A. Risk categories</h2>
+
+  <p>VIGIA classifies each detected AI use against a fixed taxonomy of fifteen categories, adapted from two published frameworks: BlueDot Impact's review of AI risks <a href="#r13">[13]</a> and Annex A on future risks of frontier AI from the UK Government Office for Science <a href="#r14">[14]</a>.</p>
+
+  <p>In checking the sources for this text we found that neither one is a formal taxonomy, and it is worth saying so before the table. The British Annex A contains no table of categories with names and definitions: its paragraph 85 is a list of eight loose, unlabeled sentences, preceded by the warning that it is not exhaustive, and its paragraph 89 separately lists three pathways to catastrophic risk. The BlueDot text, for its part, is a pedagogical blog entry with thirteen risk headings plus a catch-all for unknown risks, without formal definitions. The labels R1 to R15 are ours and the correspondence with the sources is one of inspiration and not of citation.</p>
+
+  <div class="tablewrap wide">
+    <table>
+      <caption>Categories R1 to R15</caption>
+      <thead><tr><th></th><th>Category</th><th>What it covers</th><th class="n-col">Pairs</th></tr></thead>
+      <tbody>
+        <tr><td class="rid">R1</td><td>Failures and errors</td><td>The system makes a mistake or behaves in an unforeseen way and the erroneous decision produces harm.</td><td class="n-col">233</td></tr>
+        <tr><td class="rid">R2</td><td>Discrimination and bias</td><td>The system reproduces or amplifies disadvantages affecting particular groups.</td><td class="n-col">301</td></tr>
+        <tr><td class="rid">R3</td><td>Invasion of privacy</td><td>Collection, inference or cross-referencing of personal data beyond what was consented to or what is necessary.</td><td class="n-col">406</td></tr>
+        <tr><td class="rid">R4</td><td>Disinformation and deepfakes</td><td>Generation of false or manipulated content and its circulation at scale.</td><td class="n-col">44</td></tr>
+        <tr><td class="rid">R5</td><td>Copyright</td><td>Use of protected work in training or generation, and impersonation of a work, voice or performance.</td><td class="n-col">27</td></tr>
+        <tr><td class="rid">R6</td><td>Labor exploitation</td><td>Conditions of those who label data, moderate content or are subject to algorithmic management.</td><td class="n-col">11</td></tr>
+        <tr><td class="rid">R7</td><td>Labor displacement</td><td>Replacement of human work by automated systems.</td><td class="n-col">72</td></tr>
+        <tr><td class="rid">R8</td><td>Social connection</td><td>Deterioration of the social bond through the mediation of systems.</td><td class="n-col">34</td></tr>
+        <tr><td class="rid">R9</td><td>Authoritarian surveillance</td><td>Capacity to observe, identify and track people at population scale.</td><td class="n-col">177</td></tr>
+        <tr><td class="rid">R10</td><td>Concentration of power</td><td>Dependence on few providers and accumulation of decision-making capacity.</td><td class="n-col">74</td></tr>
+        <tr><td class="rid">R11</td><td>Bioterrorism</td><td>Facilitation of the design or acquisition of dangerous biological agents.</td><td class="n-col">6</td></tr>
+        <tr><td class="rid">R12</td><td>Military escalation</td><td>Military use and acceleration of decision cycles in conflict.</td><td class="n-col">12</td></tr>
+        <tr><td class="rid">R13</td><td>Loss of control</td><td>Gradual delegation of decisions without an effective capacity to reverse them.</td><td class="n-col">24</td></tr>
+        <tr class="zero"><td class="rid">R14</td><td>Agent misalignment</td><td>Autonomous systems that pursue objectives other than those entrusted to them.</td><td class="n-col">0</td></tr>
+        <tr><td class="rid">R15</td><td>Emerging risks</td><td>What does not yet have a category of its own.</td><td class="n-col">45</td></tr>
+      </tbody>
+    </table>
+    <p class="tnote"><strong>Pairs</strong> is how many times that category was assigned to a finding in the corpus; a single finding may receive several categories.</p>
+  </div>
+</section>
+
+<section id="apendice-b">
+  <h2><span class="n">B</span>Appendix B. How language is rendered invisible in the mentions</h2>
+
+  <h3>B.1 The capability framing</h3>
+  <p>This is the dominant mode, with 181 of 249 mentions (72.7%). AI appears as an input to modernization, in a list alongside other technologies and always on the benefit side. The structure of the sentence leaves no syntactic slot for a risk.</p>
+  <blockquote class="gazette">
+    <p>«…impulse la creación y adopción de soluciones innovadoras en generación, transmisión, distribución y uso eficiente de energía eléctrica, con incorporación de la <strong>inteligencia artificial</strong>, el internet de las cosas, la digitalización, la ciberseguridad industrial y los materiales avanzados.» ["…promote the creation and adoption of innovative solutions in the generation, transmission, distribution and efficient use of electrical energy, with the incorporation of artificial intelligence, the internet of things, digitalization, industrial cybersecurity and advanced materials."]</p>
+    <span class="src">DOF, 1 June 2026 · Institutional Program of INEEL</span>
+  </blockquote>
+
+  <h3>B.2 The procurement line item</h3>
+  <p>29 mentions (11.7%). AI enters the State through the administrative door, in a tender, a budget line or an equipment specification sheet. The document format does not provide for the question of risk, so the question is not asked.</p>
+  <blockquote class="gazette">
+    <p>«Licitación Pública Internacional Abierta Número ASF-DGRMS-LPIA-07/2025. Descripción de la licitación: <strong>Suscripción de Chatbot de Inteligencia Artificial</strong> y Servicio de Suscripción de Software Gestor de PDF.» ["International Open Public Tender Number ASF-DGRMS-LPIA-07/2025. Description of the tender: Subscription to an Artificial Intelligence Chatbot and Subscription Service for PDF Manager Software."]</p>
+    <span class="src">DOF, 4 November 2025 · Auditoría Superior de la Federación</span>
+  </blockquote>
+
+  <h3>B.3 The system that is never called AI</h3>
+  <p>This is the most consequential form and it does not appear in the count of mentions because by definition there is no mention. The instrument describes in technical detail a biometric recognition system, and does so in the vocabulary of the administrative registry. There are 545 implicit uses against 136 explicit ones.</p>
+  <blockquote class="gazette">
+    <p>«Verificar que la información biométrica contenga, al menos, tres de los siguientes registros: a) Registro de datos de identificación, incluyendo el Código de Identificación Biométrica; b) Registro decadactilar; c) <strong>Registro de íris</strong>; d) <strong>Registro de reconocimiento facial</strong>, y e) <strong>Registro de voz</strong>.» ["Verify that the biometric information contains at least three of the following records: a) Record of identification data, including the Biometric Identification Code; b) Ten-fingerprint record; c) Iris record; d) Facial recognition record, and e) Voice record."]</p>
+    <span class="src">DOF, 30 January 2026 · Biometric registry of Persons Deprived of Liberty</span>
+  </blockquote>
+
+  <h3>B.4 The borrowed framing</h3>
+  <p>When risk is in fact named, in 18 mentions (7.2%), it arrives wrapped in an earlier legal regime. In the example below the framework is copyright and related rights, that is, an intellectual property regime that already protected the performer’s voice and image and that simply extends that protection to what an AI system produces.</p>
+  <blockquote class="gazette">
+    <p>«…la <strong>suplantación de sus interpretaciones o ejecuciones por sistemas de inteligencia artificial</strong> o cualquier otra tecnología que resulten en generación de clones de sus interpretaciones o que simulen su voz de manera identificable.» ["…the impersonation of their performances or renditions by artificial intelligence systems or any other technology resulting in the generation of clones of their performances or simulating their voice in an identifiable manner."]</p>
+    <span class="src">DOF, 14 May 2026 · Amendments to the Ley Federal del Trabajo and the Ley Federal del Derecho de Autor</span>
+  </blockquote>
+
+  <h3>B.5 The exception</h3>
+  <p>In all the law published during those seven months, the only sentence in the corpus that states an AI risk in its own vocabulary is in the internal program of an academic center.</p>
+  <blockquote class="gazette">
+    <p>«Entenderla y saber utilizarla no solo puede significar oportunidades para potencializar la investigación y la docencia […] sino que también conlleva riesgos, como los <strong>sesgos algorítmicos</strong>, el plagio y los fraudes en los trabajos académicos.» ["Understanding it and knowing how to use it may not only mean opportunities to enhance research and teaching […] but it also carries risks, such as algorithmic biases, plagiarism and fraud in academic work."]</p>
+    <span class="src">DOF, 23 December 2025 · Institutional Program of El Colegio de la Frontera Norte</span>
+  </blockquote>
+</section>
+
+<section id="referencias">
+  <h2><span class="n">·</span>References</h2>
+
+  <ol class="refs">
+    <li id="r1">AI Safety México. <a href="https://www.aismx.org/">aismx.org</a></li>
+    <li id="r2">Kingdon, J. W. (1993). <em>How Do Issues Get on Public Policy Agendas?</em>. In Wilson (ed.), <em>Sociology and the Public Agenda</em>, Sage.</li>
+    <li id="r3">Felstiner, W. L. F., Abel, R. L., and Sarat, A. (1980-81). <em>The Emergence and Transformation of Disputes: Naming, Blaming, Claiming…</em>. Law &amp; Society Review 15(3-4), 631-654.</li>
+    <li id="r4">Stanford HAI (2026). <em>AI Index Report 2026, Chapter 8: Policy and Governance</em>.</li>
+    <li id="r5">Sebők, M., Máté, Á., Ring, O., et al. (2025). <em>Leveraging Open Large Language Models for Multilingual Policy Topic Classification</em>. Social Science Computer Review 43(2), 295-317.</li>
+    <li id="r6">Halterman, A., and Keith, K. A. (2026). <em>Codebook LLMs: Evaluating LLMs as Measurement Tools for Political Science Concepts</em>. Political Analysis 34, 188-204.</li>
+    <li id="r7">Algoritmos CIDE. <em>Inventario de aplicaciones de inteligencia artificial en el gobierno mexicano</em>. Centro de Investigación y Docencia Económicas.</li>
+    <li id="r8">Cação, F. N., Reali Costa, A. H., Unterstell, N., et al. (2022). <em>Tracking environmental policy changes in the Brazilian Federal Official Gazette</em>. arXiv:2202.10221.</li>
+    <li id="r9">Trielli, D., Stark, J., and Diakopoulos, N. (2017). <em>Algorithm Tips: A Resource for Algorithmic Accountability in Government</em>. Computation + Journalism Symposium.</li>
+    <li id="r10">Hendrycks, D., Schmidt, E., and Wang, A. (2025). <em>Superintelligence Strategy: Expert Version</em>. arXiv:2503.05628.</li>
+    <li id="r11">Kokotajlo, D., Greenblatt, R., Larsen, T., et al. (2026). <em>AI 2040: Plan A</em>. AI Futures Project.</li>
+    <li id="r12">Ríos, V. (2026). <em>La trampa de la IA que México no está viendo</em>. Milenio, «No es normal» column, 15 June 2026.</li>
+    <li id="r13">Jones, A. (2024). <em>What risks does AI pose?</em>. BlueDot Impact. <a href="https://blog.bluedot.org/p/ai-risks">blog.bluedot.org/p/ai-risks</a></li>
+    <li id="r14">UK Government Office for Science (2023). <em>Future Risks of Frontier AI</em> (Annex A), October 2023. <a href="https://assets.publishing.service.gov.uk/media/653bc393d10f3500139a6ac5/future-risks-of-frontier-ai-annex-a.pdf">assets.publishing.service.gov.uk</a></li>
+  </ol>
+</section>
+
+<p class="endnote">Corpus: 153 morning editions of the Diario Oficial de la Federación, from 3 November 2025 to 12 June 2026.<br> VIGIA. Valoración de Impactos Gubernamentales de IA. Working paper.</p>
+    </div>
+  </article>
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  /* ============================================================
+   * Entrada de blog — long-form.
+   * Todo el color sale de los tokens semánticos (§1.3 de tokens.css):
+   * fondo bg-base, texto cream, acento peach-500 en enlaces y cifras
+   * destacadas, sky-300 en eyebrows. Sin colores literales salvo la
+   * monoespaciada, que no tiene token en el sistema.
+   * ============================================================ */
+
+  .post {
+    --measure: 44rem;
+    --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'IBM Plex Mono', monospace;
+    padding-inline: var(--container-padding-md, 20px);
+    padding-block: var(--space-8) var(--space-16);
+    color: var(--color-text-primary);
+  }
+
+  .post__crumb,
+  .post__masthead,
+  .post-toc,
+  .post__body > :global(section),
+  .post__body > :global(.endnote) {
+    max-width: var(--measure);
+    margin-inline: auto;
+  }
+
+  /* ---------- cabecera ---------- */
+  .post__masthead { padding-block: var(--space-8) var(--space-9); }
+
+  .post__kicker {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent-secondary);
+    margin: 0 0 var(--space-5);
+  }
+
+  .post__title {
+    font-family: var(--font-display);
+    /* Un paso por debajo de --fs-h1: los titulos de entrada son mas largos
+       que los de page-hero y a 72px ocupan cuatro lineas. */
+    font-size: clamp(2.00rem, 1.35rem + 2.60vw, 3.20rem);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-tight);
+    color: var(--color-text-heading);
+    text-wrap: balance;
+    margin: 0 0 var(--space-6);
+  }
+
+  .post__byline {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    color: var(--color-text-muted);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-4);
+  }
+
+  /* ---------- índice ---------- */
+  .post-toc {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-5) var(--space-6) var(--space-6);
+    margin-bottom: var(--space-12);
+  }
+  .post-toc__heading {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-4);
+  }
+  .post-toc :global(ol) {
+    list-style: none; margin: 0; padding: 0;
+    columns: 2; column-gap: var(--space-9);
+  }
+  .post-toc :global(li) {
+    margin: 0 0 var(--space-2);
+    break-inside: avoid;
+    font-size: var(--fs-small);
+  }
+  .post-toc :global(a) {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+  .post-toc :global(a:hover) {
+    color: var(--color-link-hover);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .post-toc :global(.tn) {
+    font-family: var(--mono);
+    font-size: 0.78em;
+    color: var(--color-text-muted);
+    margin-right: var(--space-2);
+  }
+  @media (max-width: 34rem) { .post-toc :global(ol) { columns: 1; } }
+
+  /* ---------- cuerpo ---------- */
+  .post__body {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-relaxed);
+  }
+
+  .post__body :global(h2) {
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-snug);
+    color: var(--color-text-heading);
+    text-wrap: balance;
+    margin: var(--space-14) 0 var(--space-5);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+    position: relative;
+  }
+  .post__body :global(h2 .n) {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: var(--fw-regular);
+    letter-spacing: 0.04em;
+    color: var(--color-accent-secondary);
+    margin-bottom: var(--space-2);
+  }
+  @media (min-width: 68rem) {
+    .post__body :global(h2 .n) {
+      position: absolute; left: -3.6rem; top: 2.1rem; margin: 0;
+    }
+  }
+
+  .post__body :global(h3) {
+    font-family: var(--font-display);
+    font-size: var(--fs-h4);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-heading);
+    color: var(--color-text-heading);
+    margin: var(--space-9) 0 var(--space-3);
+  }
+
+  .post__body :global(h4) {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: var(--space-7) 0 var(--space-3);
+  }
+
+  .post__body :global(p) { margin: 0 0 var(--space-5); text-wrap: pretty; }
+  .post__body :global(a) {
+    color: var(--color-link);
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+  }
+  .post__body :global(a:hover) { color: var(--color-link-hover); }
+  .post__body :global(strong) { font-weight: var(--fw-semibold); color: var(--color-text-primary); }
+  .post__body :global(ul),
+  .post__body :global(ol) { margin: 0 0 var(--space-5); padding-left: var(--space-6); }
+  .post__body :global(li) { margin-bottom: var(--space-2); }
+  .post__body :global(li::marker) { color: var(--color-text-muted); }
+
+  /* cifras y términos léxicos, siempre monoespaciados */
+  .post__body :global(.num) {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.93em;
+  }
+  .post__body :global(.term) {
+    font-family: var(--mono);
+    font-size: 0.86em;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xs);
+    padding: 0.06em 0.34em;
+    white-space: nowrap;
+  }
+
+  /* ---------- epígrafe ---------- */
+  .post__body :global(.epigraph) {
+    margin: 0 0 var(--space-7);
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--color-accent);
+    font-family: var(--font-display);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-normal);
+    color: var(--color-text-primary);
+  }
+
+  /* ---------- cita textual del DOF ---------- */
+  .post__body :global(.gazette) {
+    margin: var(--space-6) 0;
+    padding: var(--space-4) var(--space-5);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-left: 2px solid var(--color-accent-secondary);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-secondary);
+  }
+  .post__body :global(.gazette p) { margin: 0; }
+  .post__body :global(.gazette .src) {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    margin-top: var(--space-3);
+  }
+
+  /* ---------- nota lateral ---------- */
+  .post__body :global(.nota) {
+    display: block;
+    margin: var(--space-5) 0;
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--color-border);
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-secondary);
+  }
+  .post__body :global(.nota .lbl) {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.66rem;
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent-secondary);
+    margin-bottom: var(--space-1);
+  }
+  @media (min-width: 82rem) {
+    .post__body :global(.nota) {
+      float: right; clear: right;
+      width: 14rem;
+      margin: 0.3rem -16rem var(--space-4) 0;
+      font-size: var(--fs-caption);
+    }
+  }
+
+  /* ---------- caja de definiciones ---------- */
+  .post__body :global(.defbox) {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-5) var(--space-6) var(--space-4);
+    margin: var(--space-7) 0;
+  }
+  .post__body :global(.defbox h4) { margin-top: 0; color: var(--color-accent-secondary); }
+  .post__body :global(.defbox dl) { margin: 0; }
+  .post__body :global(.defbox dt) {
+    font-weight: var(--fw-semibold);
+    font-size: var(--fs-small);
+    color: var(--color-text-primary);
+    margin-top: var(--space-4);
+  }
+  .post__body :global(.defbox dd) {
+    margin: var(--space-1) 0 0;
+    font-size: var(--fs-small);
+    color: var(--color-text-secondary);
+    line-height: var(--lh-normal);
+  }
+
+  /* ---------- bloque ancho ---------- */
+  .post__body :global(.wide) {
+    width: min(var(--container-max), calc(100vw - 2.5rem));
+    margin-inline: auto;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* ---------- figura ---------- */
+  .post__body :global(.figure) { margin: var(--space-9) auto var(--space-10); }
+  .post__body :global(.figure__frame) {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-5) var(--space-4);
+    overflow-x: auto;
+  }
+  .post__body :global(.diagram) {
+    display: block; width: 100%; height: auto; min-width: 620px;
+    color: var(--color-text-primary);
+  }
+  .post__body :global(figcaption) {
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-secondary);
+    margin-top: var(--space-4);
+    max-width: 46rem;
+  }
+  .post__body :global(figcaption strong) { color: var(--color-text-primary); }
+
+  /* clases del SVG */
+  .post__body :global(.d-box)   { fill: var(--color-bg-base); stroke: var(--color-text-secondary); stroke-width: 1; }
+  .post__body :global(.d-box--fill)  { fill: var(--bg-overlay); }
+  .post__body :global(.d-box--ghost) { stroke: var(--color-text-muted); stroke-dasharray: 4 3; fill: none; }
+  .post__body :global(.d-title) { font-family: var(--font-display); font-size: 14px; font-weight: 700; fill: var(--color-text-primary); }
+  .post__body :global(.d-title--ghost) { fill: var(--color-text-secondary); font-weight: 400; }
+  .post__body :global(.d-body)  { font-family: var(--font-body); font-size: 12.5px; fill: var(--color-text-primary); }
+  .post__body :global(.d-sub)   { font-family: var(--font-body); font-size: 11.5px; fill: var(--color-text-muted); }
+  .post__body :global(.d-num)   { font-family: var(--mono); font-size: 10px; fill: var(--color-text-muted); }
+  .post__body :global(.d-step)  { font-family: var(--mono); font-size: 11px; fill: var(--color-accent); font-weight: 600; }
+  .post__body :global(.d-eyebrow) { font-family: var(--font-body); font-size: 9.5px; letter-spacing: 0.13em; text-transform: uppercase; fill: var(--color-accent-secondary); }
+  .post__body :global(.d-edge)  { font-family: var(--mono); font-size: 9.5px; fill: var(--color-text-muted); }
+  .post__body :global(.d-edge--accent) { fill: var(--color-accent); }
+  .post__body :global(.d-legend) { font-family: var(--mono); font-size: 9.5px; fill: var(--color-text-muted); }
+  .post__body :global(.d-line)  { stroke: var(--color-text-secondary); stroke-width: 1; fill: none; }
+  .post__body :global(.d-line--ghost) { stroke: var(--color-text-muted); stroke-dasharray: 4 3; }
+  .post__body :global(.d-loop)  { stroke: var(--color-accent); stroke-width: 1.2; fill: none; stroke-dasharray: 5 3; }
+  .post__body :global(.d-rule)  { stroke: var(--color-border); stroke-width: 1; }
+  .post__body :global(.d-rule--faint) { stroke: var(--gray-900); }
+  .post__body :global(.d-dots)  { font-size: 15px; fill: var(--color-text-muted); }
+
+  /* ---------- tablas ---------- */
+  .post__body :global(.tablewrap) { overflow-x: auto; margin: var(--space-6) 0 var(--space-3); }
+  .post__body :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--fs-small);
+    font-variant-numeric: tabular-nums;
+  }
+  .post__body :global(caption) {
+    caption-side: top; text-align: left;
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent-secondary);
+    padding-bottom: var(--space-3);
+  }
+  .post__body :global(th) {
+    text-align: left;
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: var(--fw-semibold);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    padding: 0 var(--space-4) var(--space-2) 0;
+    border-bottom: 1px solid var(--color-text-secondary);
+    white-space: nowrap;
+  }
+  .post__body :global(td) {
+    padding: var(--space-2) var(--space-4) var(--space-2) 0;
+    border-bottom: 1px solid var(--gray-900);
+    vertical-align: top;
+    color: var(--color-text-secondary);
+  }
+  .post__body :global(td:last-child),
+  .post__body :global(th:last-child) { padding-right: 0; }
+  .post__body :global(.n-col) {
+    text-align: right;
+    font-family: var(--mono);
+    white-space: nowrap;
+    padding-left: var(--space-6);
+  }
+  .post__body :global(.rid) { font-family: var(--mono); font-size: 0.8rem; color: var(--color-text-muted); }
+  .post__body :global(td strong) { color: var(--color-text-primary); }
+
+  /* la tabla del léxico: la ausencia se ve como ausencia */
+  .post__body :global(.lex .zero td),
+  .post__body :global(.lex .zero .n-col) { color: var(--gray-700); }
+  .post__body :global(.lex .hit .n-col) { color: var(--color-accent); font-weight: var(--fw-semibold); }
+  .post__body :global(.lex .hit .t) { color: var(--color-text-primary); }
+  .post__body :global(.lex .t) { font-family: var(--mono); font-size: 0.8rem; }
+  .post__body :global(.lex th:first-child),
+  .post__body :global(.lex td:first-child) { width: 22rem; }
+  .post__body :global(.lex th:nth-child(2)),
+  .post__body :global(.lex td:nth-child(2)) { width: 5.5rem; }
+
+  /* nota bajo tabla, explica las columnas */
+  .post__body :global(.tnote) {
+    font-size: var(--fs-caption);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    margin: var(--space-3) 0 0;
+    padding-left: var(--space-3);
+    border-left: 2px solid var(--color-border);
+  }
+  .post__body :global(.tnote strong) {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--color-text-secondary);
+  }
+
+  /* ---------- cifras destacadas ---------- */
+  .post__body :global(.stats) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 1px;
+    background: var(--color-border);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    margin: var(--space-7) 0;
+    overflow: hidden;
+  }
+  .post__body :global(.stat) { background: var(--color-bg-elevated); padding: var(--space-4) var(--space-5) var(--space-5); }
+  .post__body :global(.stat .v) {
+    display: block;
+    font-family: var(--mono);
+    font-size: var(--fs-stat);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--color-accent);
+  }
+  .post__body :global(.stat .v.is-zero) { color: var(--gray-700); }
+  .post__body :global(.stat .k) {
+    display: block;
+    font-size: var(--fs-caption);
+    line-height: var(--lh-normal);
+    color: var(--color-text-secondary);
+    margin-top: var(--space-2);
+  }
+
+  /* ---------- referencias ---------- */
+  .post__body :global(ol.refs) {
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    list-style: decimal;
+    padding-left: var(--space-8);
+  }
+  .post__body :global(ol.refs li) { margin-bottom: var(--space-3); }
+  .post__body :global(ol.refs li::marker) {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+  }
+  .post__body :global(a[href^="#r"]) {
+    font-family: var(--mono);
+    font-size: 0.78em;
+    text-decoration: none;
+    vertical-align: 0.18em;
+  }
+  .post__body :global(a[href^="#r"]:hover) { text-decoration: underline; }
+  .post__body :global(:target) { background: var(--color-accent-soft); }
+
+  /* ---------- pie ---------- */
+  .post__body :global(.endnote) {
+    margin-top: var(--space-12);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    line-height: var(--lh-loose);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .post :global(*) { animation: none !important; transition: none !important; }
+  }
+</style>
+

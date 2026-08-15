@@ -3,9 +3,7 @@
  * /en/blog — English mirror of the blog index.
  *
  * Strategy B (docs/I18N-ARCHITECTURE.md): every Spanish page is hand-authored
- * in both locales. The first entry is a Spanish-language working paper, so the
- * card is labelled as such and links to the Spanish post rather than to a
- * machine translation that nobody reviewed.
+ * in both locales. Each entry links to its English counterpart under /en/blog/.
  */
 
 import BaseLayout from '../../../layouts/BaseLayout.astro';
@@ -24,11 +22,10 @@ const breadcrumb = {
 
 const posts = [
   {
-    title: 'VIGIA: un pipeline para acelerar la Gobernanza de la IA en México',
-    href: '/blog/vigia-gobernanza-ia-mexico',
+    title: 'VIGIA: A Pipeline to Accelerate AI Governance in Mexico',
+    href: '/en/blog/vigia-gobernanza-ia-mexico',
     authors: 'Pilar Moncada and Max Pinelo',
     kind: 'Working paper',
-    language: 'In Spanish',
     summary:
       'We argue that the main obstacle to accelerating AI governance in countries like Mexico is the near-absence of an AI safety vocabulary. We propose a pipeline to make AI risks visible and present its first implementation over Mexico’s official gazette.',
     topics: ['Governance', 'Mexico', 'VIGIA'],
@@ -58,7 +55,6 @@ const posts = [
           <li class="post-card">
             <p class="post-card__kind">
               {post.kind}
-              <span class="post-card__lang">{post.language}</span>
             </p>
             <h2 class="post-card__title">
               <a class="post-card__link" href={post.href}>{post.title}</a>
@@ -70,7 +66,7 @@ const posts = [
                 <li class="post-card__topic">{topic}</li>
               ))}
             </ul>
-            <a class="post-card__cta" href={post.href}>Read the post (Spanish)</a>
+            <a class="post-card__cta" href={post.href}>Read the post</a>
           </li>
         ))}
       </ul>
@@ -106,10 +102,6 @@ const posts = [
   }
 
   .post-card__kind {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-3);
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
     letter-spacing: var(--ls-uppercase);
@@ -118,14 +110,6 @@ const posts = [
     margin: 0 0 var(--space-3);
   }
 
-  .post-card__lang {
-    letter-spacing: var(--ls-normal);
-    text-transform: none;
-    color: var(--color-text-muted);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-pill);
-    padding: 1px var(--space-3);
-  }
 
   .post-card__title {
     font-family: var(--font-display);
