@@ -61,3 +61,14 @@ tmp/
 temp/
 # Local Claude Code worktrees and metadata
 .claude/
+
+# Claim emails (PII + local Gmail OAuth)
+emails/recipients.csv
+emails/out/
+emails/gmail-credentials.json
+emails/gmail-token.json
+emails/courses/recipients.csv
+emails/courses/participants.csv
+emails/courses/filename-manifest.csv
+emails/courses/out/
+
