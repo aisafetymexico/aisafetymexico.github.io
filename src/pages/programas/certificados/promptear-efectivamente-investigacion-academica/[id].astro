@@ -1,0 +1,176 @@
+---
+/**
+ * /programas/certificados/promptear-efectivamente-investigacion-academica/[id] — Pagina publica de verificacion de un
+ * certificado de curso emitido por AI Safety Mexico.
+ *
+ * Namespace aparte de /certificados (Global South AIS Hackathon).
+ */
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Header from '../../../../components/Header.astro';
+import Footer from '../../../../components/Footer.astro';
+import PageHero from '../../../../components/PageHero.astro';
+import type { Breadcrumb } from '../../../../lib/types';
+import {
+  courseCertificates,
+  getCourseCertificate,
+  COURSE_NAME,
+  COURSE_VERIFY_PATH,
+} from '../../../../lib/course-certificates';
+import { ORG_NAME } from '../../../../lib/linkedin';
+
+export function getStaticPaths() {
+  return courseCertificates.map((c) => ({ params: { id: c.id } }));
+}
+
+const { id } = Astro.params;
+const cert = getCourseCertificate(id!);
+
+if (!cert) {
+  return new Response(null, { status: 404 });
+}
+
+const pathname = `${COURSE_VERIFY_PATH}/${cert.id}`;
+
+const breadcrumb: Breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Programas', href: '/programs' },
+    { label: 'Certificados', href: '/programas/certificados' },
+    { label: cert.name },
+  ],
+};
+---
+
+<BaseLayout
+  title={`Certificado verificado · ${cert.name} | ${ORG_NAME}`}
+  description={`Certificado de ${cert.name} en ${COURSE_NAME}, verificado por ${ORG_NAME}.`}
+  pathname={pathname}
+>
+  <Header slot="header" currentPath={pathname} navActivePath="/programs" />
+
+  <PageHero title={cert.name} breadcrumb={breadcrumb} />
+
+  <section class="verify-page">
+    <div class="verify-page__inner">
+      <div class="badge-row">
+        <span class="badge">&#10003; Credencial verificada</span>
+      </div>
+
+      <p class="subtitle">
+        {cert.course}
+      </p>
+
+      <div class="cert-card">
+        <img class="cert-image" src={cert.image} alt={`Certificado de ${cert.name}`} />
+      </div>
+
+      <dl class="meta">
+        <div>
+          <dt>Issued on</dt>
+          <dd>{cert.issuedOnDisplay ?? 'Por confirmar'}</dd>
+        </div>
+        <div>
+          <dt>Emitido por</dt>
+          <dd>{ORG_NAME}</dd>
+        </div>
+        <div>
+          <dt>ID de certificado</dt>
+          <dd><code>{cert.id}</code></dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .verify-page {
+    background: var(--color-bg-base);
+    padding-block: var(--space-2) var(--space-5);
+  }
+
+  .verify-page__inner {
+    width: 100%;
+    max-width: var(--container-narrow);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 480px) {
+    .verify-page__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  .badge-row {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(61, 242, 132, 0.13);
+    color: var(--color-cta-register);
+    border: 1px solid rgba(61, 242, 132, 0.35);
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-semibold);
+  }
+
+  .subtitle {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    color: var(--color-text-secondary);
+  }
+
+  .cert-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--color-bg-elevated);
+  }
+
+  .cert-image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+    margin: 0;
+  }
+
+  .meta dt {
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-uppercase);
+  }
+
+  .meta dd {
+    margin: 2px 0 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    color: var(--color-text-primary);
+  }
+
+  @media (max-width: 700px) {
+    .meta {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
