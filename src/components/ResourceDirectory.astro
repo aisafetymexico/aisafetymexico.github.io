@@ -1,0 +1,604 @@
+---
+/**
+ * ResourceDirectory — catálogo filtrable de recursos abiertos de AI safety.
+ *
+ * Usado por /resources y /en/resources. Las tarjetas se renderizan en el
+ * build (SSG), así que la página es indexable y legible sin JavaScript; el
+ * script del cliente solo alterna el atributo `hidden` de tarjetas que ya
+ * existen en el DOM.
+ *
+ * Nota de contenido: el catálogo se curó en español. Los resúmenes y la
+ * taxonomía (tipo / área / formato) siguen en español también en la versión
+ * en inglés; solo la interfaz está traducida. Traducir los 69 resúmenes es
+ * trabajo pendiente, no un olvido.
+ */
+import SectionHeading from './SectionHeading.astro';
+import { recursos, actualizado, valoresUnicos, totales } from '../lib/recursos';
+import type { Locale } from '../lib/i18n';
+
+export interface Props {
+  lang?: Locale;
+}
+
+const { lang = 'es' } = Astro.props;
+
+const copy = {
+  es: {
+    catalogEyebrow: 'El catálogo',
+    catalogTitle: 'Qué vas a encontrar',
+    catalogDesc: (fecha: string) =>
+      `Enlaces verificados el ${fecha}. Si encuentras uno roto o quieres proponer un recurso, escríbenos.`,
+    stats: [
+      'recursos verificados',
+      'cursos y currículos',
+      'programas y fellowships',
+      'relevantes para América Latina',
+    ],
+    dirEyebrow: 'Directorio',
+    dirTitle: 'Explora los recursos',
+    dirDesc:
+      'Filtra por tipo, área o idioma, o busca por nombre. Los filtros se aplican en tu navegador; nada sale de tu equipo.',
+    quickFilters: 'Filtros rápidos',
+    chips: {
+      todos: 'Todos',
+      es: 'En español',
+      latam: 'América Latina',
+      curso: 'Cursos',
+      tecnica: 'Investigación técnica',
+      gobernanza: 'Gobernanza',
+      financiamiento: 'Financiamiento',
+      comunidad: 'Comunidad',
+    },
+    search: 'Buscar',
+    searchPlaceholder: 'Nombre, tema o etiqueta',
+    type: 'Tipo',
+    allTypes: 'Todos',
+    area: 'Área',
+    allAreas: 'Todas',
+    showing: (n: number, total: number) => `Mostrando ${n} de ${total} recursos`,
+    clear: 'Limpiar filtros',
+    download: 'Descargar JSON',
+    empty: 'Ningún recurso coincide con esos filtros. Prueba con menos criterios.',
+    badgeEs: 'Español',
+    note: null as string | null,
+  },
+  en: {
+    catalogEyebrow: 'The catalogue',
+    catalogTitle: 'What you will find',
+    catalogDesc: (fecha: string) =>
+      `Links verified on ${fecha}. If you find a broken one or want to suggest a resource, get in touch.`,
+    stats: [
+      'verified resources',
+      'courses and curricula',
+      'programmes and fellowships',
+      'relevant to Latin America',
+    ],
+    dirEyebrow: 'Directory',
+    dirTitle: 'Browse the resources',
+    dirDesc:
+      'Filter by type, area or language, or search by name. Filtering happens in your browser; nothing leaves your device.',
+    quickFilters: 'Quick filters',
+    chips: {
+      todos: 'All',
+      es: 'In Spanish',
+      latam: 'Latin America',
+      curso: 'Courses',
+      tecnica: 'Technical research',
+      gobernanza: 'Governance',
+      financiamiento: 'Funding',
+      comunidad: 'Community',
+    },
+    search: 'Search',
+    searchPlaceholder: 'Name, topic or tag',
+    type: 'Type',
+    allTypes: 'All',
+    area: 'Area',
+    allAreas: 'All',
+    showing: (n: number, total: number) => `Showing ${n} of ${total} resources`,
+    clear: 'Clear filters',
+    download: 'Download JSON',
+    empty: 'No resource matches those filters. Try fewer criteria.',
+    badgeEs: 'Spanish',
+    note: 'The catalogue was curated in Spanish: resource summaries and category labels remain in Spanish.',
+  },
+}[lang];
+
+const tipos = valoresUnicos('tipo');
+const areas = valoresUnicos('area');
+
+const chipIds = [
+  'todos',
+  'es',
+  'latam',
+  'curso',
+  'tecnica',
+  'gobernanza',
+  'financiamiento',
+  'comunidad',
+] as const;
+
+const fechaLegible = new Date(actualizado + 'T00:00:00Z').toLocaleDateString(
+  lang === 'es' ? 'es-MX' : 'en-GB',
+  { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' },
+);
+
+const cifras = [totales.recursos, totales.cursos, totales.programas, totales.latam];
+---
+
+<!-- Cifras del catálogo -->
+<section class="page-section" aria-labelledby="recursos-resumen">
+  <div class="page-section__inner">
+    <SectionHeading
+      eyebrow={copy.catalogEyebrow}
+      title={copy.catalogTitle}
+      description={copy.catalogDesc(fechaLegible)}
+      id="recursos-resumen"
+    />
+    <ul class="resumen">
+      {cifras.map((n, i) => (
+        <li><strong>{n}</strong><span>{copy.stats[i]}</span></li>
+      ))}
+    </ul>
+    {copy.note && <p class="nota">{copy.note}</p>}
+  </div>
+</section>
+
+<!-- Directorio -->
+<section class="page-section page-section--alt" aria-labelledby="recursos-directorio">
+  <div class="page-section__inner">
+    <SectionHeading
+      eyebrow={copy.dirEyebrow}
+      title={copy.dirTitle}
+      description={copy.dirDesc}
+      id="recursos-directorio"
+    />
+
+    <div class="filtros">
+      <div class="chips" role="group" aria-label={copy.quickFilters}>
+        {chipIds.map((id) => (
+          <button
+            type="button"
+            class="chip"
+            data-chip={id}
+            aria-pressed={id === 'todos' ? 'true' : 'false'}
+          >{copy.chips[id]}</button>
+        ))}
+      </div>
+
+      <div class="campos">
+        <div class="campo campo--busqueda">
+          <label for="r-buscar">{copy.search}</label>
+          <input type="search" id="r-buscar" placeholder={copy.searchPlaceholder} autocomplete="off" />
+        </div>
+        <div class="campo">
+          <label for="r-tipo">{copy.type}</label>
+          <select id="r-tipo">
+            <option value="">{copy.allTypes}</option>
+            {tipos.map((t) => <option value={t}>{t}</option>)}
+          </select>
+        </div>
+        <div class="campo">
+          <label for="r-area">{copy.area}</label>
+          <select id="r-area">
+            <option value="">{copy.allAreas}</option>
+            {areas.map((a) => <option value={a}>{a}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div class="barra">
+        <p
+          class="conteo"
+          id="r-conteo"
+          role="status"
+          aria-live="polite"
+          data-tpl={lang === 'es' ? 'Mostrando {n} de {t} recursos' : 'Showing {n} of {t} resources'}
+        >{copy.showing(totales.recursos, totales.recursos)}</p>
+        <div class="barra-acciones">
+          <button type="button" class="btn-ghost" id="r-limpiar">{copy.clear}</button>
+          <a class="btn-ghost" href="/resources.json" download="ai-safety-mexico-resources.json">
+            {copy.download}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <ul class="rejilla" id="r-rejilla">
+      {recursos.map((r) => (
+        <li
+          class="recurso"
+          data-tipo={r.tipo}
+          data-area={r.area}
+          data-idioma={r.idioma}
+          data-latam={r.latam ? 'si' : 'no'}
+          data-texto={`${r.titulo} ${r.resumen} ${r.etiquetas.join(' ')} ${r.tipo} ${r.area}`.toLowerCase()}
+        >
+          <article>
+            <p class="recurso__meta">
+              <span class="recurso__tipo">{r.tipo}</span>
+              <span class="recurso__sep" aria-hidden="true">·</span>
+              <span>{r.area}</span>
+              {r.idioma === 'es' && <span class="recurso__badge">{copy.badgeEs}</span>}
+              {r.latam && <span class="recurso__badge">LatAm</span>}
+            </p>
+            <h3 class="recurso__titulo">
+              <a href={r.enlace} target="_blank" rel="noopener noreferrer">{r.titulo}</a>
+            </h3>
+            <p class="recurso__resumen">{r.resumen}</p>
+            <p class="recurso__pie">
+              <span>{r.formato}</span>
+              <span class="recurso__sep" aria-hidden="true">·</span>
+              <span>{r.duracion}</span>
+            </p>
+          </article>
+        </li>
+      ))}
+    </ul>
+
+    <p class="vacio" id="r-vacio" hidden>{copy.empty}</p>
+  </div>
+</section>
+
+<script>
+  const rejilla = document.getElementById('r-rejilla');
+  if (rejilla) {
+    const tarjetas = Array.from(rejilla.querySelectorAll<HTMLLIElement>('.recurso'));
+    const buscar = document.getElementById('r-buscar') as HTMLInputElement | null;
+    const selTipo = document.getElementById('r-tipo') as HTMLSelectElement | null;
+    const selArea = document.getElementById('r-area') as HTMLSelectElement | null;
+    const conteo = document.getElementById('r-conteo');
+    const vacio = document.getElementById('r-vacio');
+    const limpiar = document.getElementById('r-limpiar');
+    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.chip'));
+
+    // La plantilla del contador viene del servidor para no duplicar i18n aquí.
+    const tpl = conteo?.dataset.tpl ?? 'Showing {n} of {t} resources';
+    let chipActivo = 'todos';
+
+    const predicados: Record<string, (el: HTMLLIElement) => boolean> = {
+      todos: () => true,
+      es: (el) => el.dataset.idioma === 'es',
+      latam: (el) => el.dataset.latam === 'si',
+      curso: (el) => el.dataset.tipo === 'Curso',
+      tecnica: (el) =>
+        el.dataset.tipo === 'Programa de investigación' || el.dataset.area === 'Técnica',
+      gobernanza: (el) => (el.dataset.area ?? '').startsWith('Gobernanza'),
+      financiamiento: (el) => el.dataset.tipo === 'Financiamiento',
+      comunidad: (el) => el.dataset.tipo === 'Comunidad' || el.dataset.tipo === 'Organización',
+    };
+
+    function aplicar() {
+      const q = (buscar?.value ?? '').trim().toLowerCase();
+      const tipo = selTipo?.value ?? '';
+      const area = selArea?.value ?? '';
+      const pasaChip = predicados[chipActivo] ?? predicados.todos;
+
+      let visibles = 0;
+      for (const el of tarjetas) {
+        const ok =
+          pasaChip(el) &&
+          (!tipo || el.dataset.tipo === tipo) &&
+          (!area || el.dataset.area === area) &&
+          (!q || (el.dataset.texto ?? '').includes(q));
+        el.hidden = !ok;
+        if (ok) visibles++;
+      }
+
+      if (conteo) {
+        conteo.textContent = tpl
+          .replace('{n}', String(visibles))
+          .replace('{t}', String(tarjetas.length));
+      }
+      if (vacio) vacio.hidden = visibles !== 0;
+    }
+
+    for (const chip of chips) {
+      chip.addEventListener('click', () => {
+        chipActivo = chip.dataset.chip ?? 'todos';
+        for (const c of chips) c.setAttribute('aria-pressed', String(c === chip));
+        aplicar();
+      });
+    }
+
+    buscar?.addEventListener('input', aplicar);
+    selTipo?.addEventListener('change', aplicar);
+    selArea?.addEventListener('change', aplicar);
+
+    limpiar?.addEventListener('click', () => {
+      if (buscar) buscar.value = '';
+      if (selTipo) selTipo.value = '';
+      if (selArea) selArea.value = '';
+      chipActivo = 'todos';
+      for (const c of chips) c.setAttribute('aria-pressed', String(c.dataset.chip === 'todos'));
+      aplicar();
+    });
+  }
+</script>
+
+<style>
+  .page-section {
+    padding-block: var(--space-12);
+    background: var(--color-bg-base);
+  }
+
+  .page-section--alt {
+    background: var(--color-bg-section-warm, var(--color-bg-base));
+  }
+
+  .page-section__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 480px) {
+    .page-section__inner { padding-inline: var(--container-padding-md); }
+  }
+
+  @media (min-width: 768px) {
+    .page-section { padding-block: var(--space-14); }
+  }
+
+  /* ---------- Cifras ---------- */
+  .resumen {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-7) 0 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .resumen li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .resumen strong {
+    font-size: var(--fs-stat);
+    font-weight: var(--fw-semibold);
+    line-height: var(--lh-tight);
+    color: var(--color-text-heading);
+  }
+
+  .resumen span {
+    font-size: var(--fs-small);
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 768px) {
+    .resumen { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .nota {
+    margin: var(--space-6) 0 0;
+    font-size: var(--fs-small);
+    color: var(--color-text-muted);
+    max-width: 68ch;
+  }
+
+  /* ---------- Filtros ---------- */
+  .filtros {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    margin-bottom: var(--space-9);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .chip {
+    font: inherit;
+    font-size: var(--fs-small);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-base);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .chip:hover {
+    border-color: var(--color-border-accent, var(--color-accent));
+    color: var(--color-text-primary);
+  }
+
+  .chip[aria-pressed='true'] {
+    background: var(--color-cta-bg);
+    border-color: var(--color-cta-bg);
+    color: var(--color-cta-text);
+  }
+
+  .campos {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .campos { grid-template-columns: 2fr 1fr 1fr; }
+  }
+
+  .campo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .campo label {
+    font-size: var(--fs-caption);
+    color: var(--color-text-muted);
+  }
+
+  .campo input,
+  .campo select {
+    font: inherit;
+    font-size: var(--fs-small);
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-base);
+    color: var(--color-text-primary);
+  }
+
+  .campo input:focus-visible,
+  .campo select:focus-visible,
+  .chip:focus-visible,
+  .btn-ghost:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .barra {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 640px) {
+    .barra {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .conteo {
+    margin: 0;
+    font-size: var(--fs-small);
+    color: var(--color-text-muted);
+  }
+
+  .barra-acciones {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .btn-ghost {
+    font: inherit;
+    font-size: var(--fs-small);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--color-border-accent, var(--color-accent));
+    color: var(--color-text-primary);
+  }
+
+  /* ---------- Rejilla ---------- */
+  .rejilla {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 640px) {
+    .rejilla { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .rejilla { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .recurso[hidden] { display: none; }
+
+  .recurso > article {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-base);
+    transition: border-color var(--transition-fast);
+  }
+
+  .recurso > article:hover {
+    border-color: var(--color-border-accent, var(--color-accent));
+  }
+
+  .recurso__meta {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--fs-caption);
+    color: var(--color-text-muted);
+  }
+
+  .recurso__tipo {
+    color: var(--color-text-secondary);
+    font-weight: var(--fw-medium);
+  }
+
+  .recurso__sep { opacity: 0.5; }
+
+  .recurso__badge {
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border);
+    font-size: var(--fs-caption);
+    color: var(--color-text-muted);
+  }
+
+  .recurso__titulo {
+    margin: 0;
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-semibold);
+    line-height: var(--lh-snug);
+  }
+
+  .recurso__titulo a {
+    color: var(--color-text-heading);
+    text-decoration: none;
+  }
+
+  .recurso__titulo a:hover {
+    color: var(--color-link-hover, var(--color-link));
+    text-decoration: underline;
+  }
+
+  .recurso__resumen {
+    margin: 0;
+    flex: 1;
+    font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+  }
+
+  .recurso__pie {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    font-size: var(--fs-caption);
+    color: var(--color-text-muted);
+  }
+
+  .vacio {
+    margin-top: var(--space-8);
+    text-align: center;
+    color: var(--color-text-muted);
+  }
+</style>
