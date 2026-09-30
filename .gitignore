@@ -12,6 +12,12 @@ package-lock.json
 .env.test.local
 .env.production.local
 
+# Caché local de Astro (no forma parte del sitio estático)
+.astro/
+
+# Ensamblado local del artifact de Pages
+_site/
+
 # Archivos de construcción/distribución
 /dist
 /build
