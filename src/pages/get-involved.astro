@@ -45,35 +45,77 @@ const breadcrumb = {
 
 const vias = [
   {
-    id: 'research',
+    id: 'training',
     number: '01',
-    title: 'Investigación conjunta',
+    title: 'Pedir un curso in-house',
     description:
-      'Sumamos esfuerzos con grupos académicos y laboratorios para co-desarrollar proyectos de investigación en seguridad y alineación de IA, con énfasis en preguntas relevantes para México.',
+      'Llevamos a facultades y centros de investigación los cursos de fundamentos, gobernanza y el curso técnico de seguridad en IA. Ya lo hicimos en el Centro de Investigación Geoestadística y en la Facultad de Matemáticas de la UADY.',
+    href: 'mailto:contact@aismx.org?subject=Curso%20in-house%20de%20seguridad%20en%20IA',
+    cta: 'Solicitar un curso',
   },
   {
-    id: 'training',
+    id: 'research',
     number: '02',
-    title: 'Programas educativos para instituciones',
+    title: 'VIGÍA, para investigadores',
     description:
-      'Diseñamos cursos y talleres a la medida para universidades, centros de investigación y equipos técnicos que quieran integrar la seguridad de IA en sus programas, en formato presencial, híbrido o remoto.',
+      'VIGÍA es el recurso abierto para quien investiga gobernanza de IA y soberanía digital en México: un observatorio del Diario Oficial que identifica menciones de IA, huecos regulatorios y riesgos.',
+    href: '/projects/vigia',
+    cta: 'Abrir VIGÍA',
+  },
+  {
+    id: 'students',
+    number: '03',
+    title: 'Estancias AISMx × UPY',
+    description:
+      'Programa de estancias de AI Safety México en colaboración con la Universidad Politécnica de Yucatán, para estudiantes que quieran pasar de los cursos a trabajar con el equipo en un proyecto concreto.',
+    href: 'mailto:contact@aismx.org?subject=Estancias%20AISMx%20%C3%97%20UPY',
+    cta: 'Preguntar por estancias',
   },
   {
     id: 'events',
-    number: '03',
-    title: 'Eventos y advisory',
+    number: '04',
+    title: 'Agenda y talks',
     description:
-      'Participamos como ponentes, panelistas y asesores en eventos, mesas de trabajo y conversaciones sobre gobernanza de IA en México.',
+      'El próximo evento es el panel de México Tech Week. Las mesas son el primer viernes del mes: fecha y registro están en el calendario de Luma. Las pre-talks y talks del Global South están en YouTube.',
+    href: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5',
+    cta: 'Calendario en Luma',
+    external: true,
+  },
+];
+
+const colaboraciones = [
+  {
+    eyebrow: 'Formación',
+    title: 'ENAIS',
+    description:
+      'Con ENAIS impartimos dos cursos: uno de gobernanza de IA y otro técnico de seguridad en IA. De esa colaboración salió también VIGÍA, que recibió un Special Recognition en la AI Safety Collab 2025.',
+  },
+  {
+    eyebrow: 'Hackatón regional',
+    title: 'Apart Research',
+    description:
+      'Partner en México del Global South AIS Hackathon: hubs en Mérida y Guadalajara, participación remota y un pipeline hacia el fellowship de Apart. 65 asistentes, 19 proyectos, uno de ellos continuó en el fellowship.',
+  },
+  {
+    eyebrow: 'Herramientas y talleres',
+    title: 'Cursor',
+    description:
+      'Dos colaboraciones en Mérida: el Cursor Mérida Challenge —AI Safety Edition— durante el Global South, y el workshop de AI Strategy (AGI Strategy Build Day) con la Universidad Politécnica de Yucatán.',
+  },
+  {
+    eyebrow: 'Subvención',
+    title: 'BlueDot Impact',
+    description:
+      'Obtuvimos una subvención de BlueDot Impact para llevar a cabo el panel Impulsando la comunidad de AI Safety en México: Tech Policy Panel en el marco de México Tech Week.',
   },
 ];
 
 const aliados = [
   { text: 'AI Safety Collab' },
-  { text: 'ENAIS' },
   { text: 'Centro Geo' },
   { text: 'UADY' },
+  { text: 'Universidad Politécnica de Yucatán' },
   { text: 'SPAR Research' },
-  { text: 'Apart Research' },
 ];
 ---
 
@@ -106,8 +148,8 @@ const aliados = [
     <div class="container">
       <SectionHeading
         eyebrow="Formas de colaborar"
-        title="Tres vías para trabajar con AI Safety Mexico"
-        description="Cada modalidad puede adaptarse en alcance y duración según el proyecto. Escríbenos describiendo tu interés y exploraremos en conjunto la forma de colaboración que mejor se ajuste."
+        title="Cuatro caminos, según desde dónde llegas"
+        description="Si no encajas en ninguno, escríbenos igual a contact@aismx.org."
         id="vias-heading"
       />
 
@@ -118,6 +160,15 @@ const aliados = [
               <span class="collab-vias__number" aria-hidden="true">{via.number}</span>
               <h3 class="collab-vias__title">{via.title}</h3>
               <p class="collab-vias__description">{via.description}</p>
+              {via.href && (
+                <a
+                  class="collab-vias__cta"
+                  href={via.href}
+                  {...(via.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                >
+                  {via.cta}
+                </a>
+              )}
             </article>
           </li>
         ))}
@@ -128,11 +179,22 @@ const aliados = [
   <section class="page-section page-section--allies" aria-labelledby="allies-heading">
     <div class="container">
       <SectionHeading
-        eyebrow="Aliados y colaboradores"
-        title="Quiénes han trabajado con nosotros"
-        description="Estas son algunas de las organizaciones con las que hemos co-creado cursos, proyectos de investigación, eventos y procesos de formación."
+        eyebrow="Colaboraciones"
+        title="Con quiénes hemos construido"
+        description="Cursos, eventos e investigación que no habríamos podido hacer solos. Estas son las alianzas con las que hemos construido en el último año."
         id="allies-heading"
       />
+      <ul class="collab-named" role="list">
+        {colaboraciones.map((item) => (
+          <li class="collab-named__item">
+            <article class="collab-named__card">
+              <span class="collab-named__eyebrow">{item.eyebrow}</span>
+              <h3 class="collab-named__title">{item.title}</h3>
+              <p class="collab-named__description">{item.description}</p>
+            </article>
+          </li>
+        ))}
+      </ul>
       <KeyFacts facts={aliados} />
     </div>
   </section>
@@ -177,6 +239,28 @@ const aliados = [
             rel="noopener noreferrer"
           >
             @aisafetymx
+          </a>
+        </li>
+        <li class="direct__item">
+          <span class="direct__label">Calendario</span>
+          <a
+            class="direct__value"
+            href="https://luma.com/calendar/cal-WjnM2llUGXz17t5"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Eventos en Luma
+          </a>
+        </li>
+        <li class="direct__item">
+          <span class="direct__label">YouTube</span>
+          <a
+            class="direct__value"
+            href="https://www.youtube.com/@AISafetyMéxico"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @AISafetyMéxico
           </a>
         </li>
       </ul>
@@ -301,9 +385,68 @@ const aliados = [
     margin: 0;
   }
 
+  .collab-vias__cta {
+    margin-top: auto;
+    padding-top: var(--space-4);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    color: var(--color-accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    width: fit-content;
+  }
+  .collab-vias__cta:hover,
+  .collab-vias__cta:focus-visible {
+    color: var(--color-link-hover);
+    border-bottom-color: var(--color-link-hover);
+  }
+
+  .collab-named {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    margin: 0 0 var(--space-8);
+    padding: 0;
+    list-style: none;
+  }
+  .collab-named__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    height: 100%;
+    padding: var(--space-6);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+  .collab-named__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .collab-named__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-bold);
+    margin: 0;
+    color: var(--color-text-heading);
+  }
+  .collab-named__description {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
   @media (min-width: 768px) {
-    .collab-vias {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .collab-vias,
+    .collab-named {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--space-9);
     }
     .collab-vias__card {

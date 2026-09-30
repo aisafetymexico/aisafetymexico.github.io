@@ -79,6 +79,8 @@ const defaultColumns: FooterColumn[] = [
       { label: t(lang, 'footer.item.contact'),     href: localizedPath(lang, '/contact') },
       { label: 'LinkedIn',  href: 'https://www.linkedin.com/company/ai-safety-mexico/', external: true },
       { label: 'Instagram', href: 'https://www.instagram.com/aisafetymx/', external: true },
+      { label: 'YouTube', href: 'https://www.youtube.com/@AISafetyMéxico', external: true },
+      { label: 'Calendario', href: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5', external: true },
     ],
   },
 ];
@@ -86,6 +88,7 @@ const defaultColumns: FooterColumn[] = [
 const DEFAULT_SOCIAL: SocialLink[] = [
   { name: 'LinkedIn', href: 'https://www.linkedin.com/company/ai-safety-mexico/', icon: 'linkedin' },
   { name: 'Instagram', href: 'https://www.instagram.com/aisafetymx/', icon: 'instagram' },
+  { name: 'YouTube', href: 'https://www.youtube.com/@AISafetyMéxico', icon: 'youtube' },
 ];
 
 const resolvedSocial = social ?? DEFAULT_SOCIAL;
@@ -142,6 +145,14 @@ const copyrightSuffix = t(lang, 'footer.copyright');
                     <path
                       fill="currentColor"
                       d="M12 2.2c3.2 0 3.58.012 4.85.07 1.17.054 1.8.249 2.22.413.56.217.96.477 1.38.896.42.42.679.819.896 1.38.164.42.36 1.05.413 2.22.058 1.27.07 1.65.07 4.85s-.012 3.58-.07 4.85c-.054 1.17-.249 1.8-.413 2.22-.217.56-.477.96-.896 1.38-.42.42-.819.679-1.38.896-.42.164-1.05.36-2.22.413-1.27.058-1.65.07-4.85.07s-3.58-.012-4.85-.07c-1.17-.054-1.8-.249-2.22-.413-.56-.217-.96-.477-1.38-.896-.42-.42-.679-.819-.896-1.38-.164-.42-.36-1.05-.413-2.22C2.212 15.58 2.2 15.2 2.2 12s.012-3.58.07-4.85c.054-1.17.249-1.8.413-2.22.217-.56.477-.96.896-1.38.42-.42.819-.679 1.38-.896.42-.164 1.05-.36 2.22-.413C8.42 2.212 8.8 2.2 12 2.2zm0 1.8c-3.146 0-3.498.012-4.73.068-1.022.046-1.578.217-1.948.36-.49.19-.84.418-1.207.785-.367.367-.595.717-.785 1.207-.143.37-.314.926-.36 1.948C2.812 8.502 2.8 8.854 2.8 12s.012 3.498.068 4.73c.046 1.022.217 1.578.36 1.948.19.49.418.84.785 1.207.367.367.717.595 1.207.785.37.143.926.314 1.948.36 1.232.056 1.584.068 4.73.068s3.498-.012 4.73-.068c1.022-.046 1.578-.217 1.948-.36.49-.19.84-.418 1.207-.785.367-.367.595-.717.785-1.207.143-.37.314-.926.36-1.948.056-1.232.068-1.584.068-4.73s-.012-3.498-.068-4.73c-.046-1.022-.217-1.578-.36-1.948-.19-.49-.418-.84-.785-1.207-.367-.367-.717-.595-1.207-.785-.37-.143-.926-.314-1.948-.36C15.498 4.012 15.146 4 12 4zm0 3.2a4.8 4.8 0 1 1 0 9.6 4.8 4.8 0 0 1 0-9.6zm0 1.8a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.05-3.05a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3z"
+                    />
+                  </svg>
+                )}
+                {s.icon === 'youtube' && (
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      fill="currentColor"
+                      d="M23.5 6.2a3.05 3.05 0 00-2.15-2.16C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.35.44A3.05 3.05 0 00.5 6.2 32 32 0 000 12a32 32 0 00.5 5.8 3.05 3.05 0 002.15 2.16C4.5 20.4 12 20.4 12 20.4s7.5 0 9.35-.44a3.05 3.05 0 002.15-2.16A32 32 0 0024 12a32 32 0 00-.5-5.8zM9.75 15.57V8.43L15.84 12l-6.09 3.57z"
                     />
                   </svg>
                 )}
