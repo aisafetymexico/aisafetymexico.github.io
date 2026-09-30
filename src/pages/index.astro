@@ -71,16 +71,13 @@ const stats = [
 // Mirrors the spotlight on /activities (single ActivityCard, side-by-side at
 // md+). Keeping copy aligned with that page so the two surfaces tell the same
 // story.
-const gshSpotlight = {
-  title: 'The Global South AIS Hackathon',
-  date: 'Marzo 2026',
+const currentSpotlight = {
+  title: 'Impulsando la comunidad de AI Safety en México: Tech Policy Panel',
+  date: '27 de octubre de 2026',
   description:
-    'Hackatón regional de seguridad en IA organizado con Apart Research. Convoca a investigadoras, ingenieros y profesionales del sur global a producir prototipos, evaluaciones y propuestas de gobernanza durante un fin de semana intensivo.',
-  link: '/global-south-challenge',
-  image: {
-    src: '/images/gsh-event-card.png',
-    alt: 'Imagen promocional del Global South AIS Hackathon.',
-  },
+    'Panel sobre cómo la regulación de la IA impactará al ecosistema tecnológico de México y América Latina. Organizan Marta Kosmyna, Isabel Montalvo, Janeth Valdivia y Oscar Mata. Subvención de BlueDot Impact en el marco de México Tech Week.',
+  link: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5',
+  external: true,
 };
 ---
 
@@ -105,19 +102,19 @@ const gshSpotlight = {
   <section class="section section--base section--compact" aria-labelledby="home-gsh-spotlight">
     <div class="container">
       <SectionHeading
-        eyebrow="Evento destacado"
-        title="Global South AIS Hackathon"
-        description="Nuestra iniciativa regional más visible: un hackatón abierto que convoca a la comunidad del sur global a producir trabajo concreto en seguridad de IA."
+        eyebrow="En curso"
+        title="México Tech Week 2026"
+        description="El próximo evento público, con subvención de BlueDot Impact. La agenda completa está en Luma."
         align="center"
         id="home-gsh-spotlight"
       />
       <div class="home-spotlight">
         <ActivityCard
-          title={gshSpotlight.title}
-          date={gshSpotlight.date}
-          description={gshSpotlight.description}
-          image={gshSpotlight.image}
-          link={gshSpotlight.link}
+          title={currentSpotlight.title}
+          date={currentSpotlight.date}
+          description={currentSpotlight.description}
+          link={currentSpotlight.link}
+          external={currentSpotlight.external}
         />
       </div>
     </div>

@@ -37,15 +37,12 @@ const breadcrumb: Breadcrumb = {
 
 // -------- Spotlight: Global South AIS Hackathon --------
 const spotlight = {
-  title: 'Apart × AI Safety México · The Global South AIS Hackathon',
-  date: 'Marzo 2026',
+  title: 'Impulsando la comunidad de AI Safety en México: Tech Policy Panel',
+  date: '27 de octubre de 2026',
   description:
-    'Hackatón regional de seguridad en IA organizado en colaboración con Apart Research. Convoca a investigadoras, ingenieros y profesionales del sur global a producir prototipos, evaluaciones y propuestas de gobernanza durante un fin de semana intensivo.',
-  link: '/global-south-challenge',
-  image: {
-    src: '/images/gsh-event-card.png',
-    alt: 'Imagen promocional del Global South AIS Hackathon.',
-  },
+    'Panel sobre cómo la regulación de la inteligencia artificial impactará al ecosistema tecnológico de México y América Latina. Organizan Marta Kosmyna, Isabel Montalvo, Janeth Valdivia y Oscar Mata. Subvención de BlueDot Impact en el marco de México Tech Week.',
+  link: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5',
+  external: true,
 };
 
 // -------- Mesas de trabajo (recurrente) --------
@@ -53,8 +50,9 @@ const recurring = {
   title: 'Mesas de trabajo · Primer viernes del mes',
   date: 'Recurrente',
   description:
-    'Sesiones recurrentes en las que el equipo y personas invitadas discutimos avances de proyectos, lecturas recientes y preguntas abiertas en seguridad de IA. La participación es por invitación; si te interesa sumarte, escríbenos describiendo tu interés.',
-  link: '/get-involved#events',
+    'Fecha, lugar y registro de cada mesa —y del resto de la agenda— están en el calendario de AI Safety México en Luma.',
+  link: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5',
+  external: true,
 };
 
 // -------- Conferencias y talleres --------
@@ -68,6 +66,14 @@ type ConfTalk = {
 };
 
 const conferencesAndTalks: ConfTalk[] = [
+  {
+    title: 'The Global South AIS Hackathon',
+    date: 'Junio 2026',
+    description:
+      'Hubs en Mérida y Guadalajara con Apart Research: 65 asistentes, 19 proyectos. Las pre-talks y talks están en el canal de YouTube de AI Safety México.',
+    link: 'https://www.youtube.com/@AISafetyMéxico',
+    external: true,
+  },
   {
     title: 'Workshop · Your AI Agent Is Not You',
     date: '2026',
@@ -126,9 +132,9 @@ const carouselSlides: CarouselSlide[] = [
   <section class="page-section page-section--spotlight" aria-labelledby="actividades-destacado">
     <div class="page-section__inner">
       <SectionHeading
-        eyebrow="Destacado"
-        title="Global South AIS Hackathon"
-        description="Nuestra iniciativa regional más visible: un hackatón abierto que convoca a la comunidad del sur global a producir trabajo concreto en seguridad de IA."
+        eyebrow="En curso"
+        title="México Tech Week 2026"
+        description="El próximo evento público: un panel de política tecnológica con subvención de BlueDot Impact."
         id="actividades-destacado"
       />
       <div class="spotlight">
@@ -136,8 +142,8 @@ const carouselSlides: CarouselSlide[] = [
           title={spotlight.title}
           date={spotlight.date}
           description={spotlight.description}
-          image={spotlight.image}
           link={spotlight.link}
+          external={spotlight.external}
         />
       </div>
     </div>
@@ -158,6 +164,7 @@ const carouselSlides: CarouselSlide[] = [
           date={recurring.date}
           description={recurring.description}
           link={recurring.link}
+          external={recurring.external}
         />
       </div>
     </div>

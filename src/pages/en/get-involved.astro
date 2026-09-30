@@ -35,35 +35,77 @@ const breadcrumb = {
 
 const vias = [
   {
-    id: 'research',
+    id: 'training',
     number: '01',
-    title: 'Joint research',
+    title: 'Request an in-house course',
     description:
-      'We join forces with academic groups and labs to co-develop research projects on AI safety and alignment, with an emphasis on questions relevant to Mexico.',
+      'We bring fundamentals, governance, and technical AI-safety courses to faculties and research centers. We have already done this at Centro Geo and at UADY’s Faculty of Mathematics.',
+    href: 'mailto:contact@aismx.org?subject=In-house%20AI%20safety%20course',
+    cta: 'Request a course',
   },
   {
-    id: 'training',
+    id: 'research',
     number: '02',
-    title: 'Educational programs for institutions',
+    title: 'VIGÍA, for researchers',
     description:
-      'We design tailored courses and workshops for universities, research centers, and technical teams that want to integrate AI safety into their programs — in person, hybrid, or remote.',
+      'VIGÍA is the open resource for anyone researching AI governance and digital sovereignty in Mexico: an Official Gazette observatory that flags AI mentions, regulatory gaps, and risks.',
+    href: '/en/projects/vigia',
+    cta: 'Open VIGÍA',
+  },
+  {
+    id: 'students',
+    number: '03',
+    title: 'AISMx × UPY residencies',
+    description:
+      'A residency program with Universidad Politécnica de Yucatán for students who want to move from courses to a concrete project with the team.',
+    href: 'mailto:contact@aismx.org?subject=AISMx%20%C3%97%20UPY%20residencies',
+    cta: 'Ask about residencies',
   },
   {
     id: 'events',
-    number: '03',
-    title: 'Events and advisory',
+    number: '04',
+    title: 'Calendar and talks',
     description:
-      'We participate as speakers, panelists, and advisors at events, working sessions, and conversations on AI governance in Mexico.',
+      'The next event is the Mexico Tech Week panel. Monthly working tables land on the first Friday; dates and registration live on our Luma calendar. Global South pre-talks and talks are on YouTube.',
+    href: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5',
+    cta: 'Luma calendar',
+    external: true,
+  },
+];
+
+const collaborations = [
+  {
+    eyebrow: 'Training',
+    title: 'ENAIS',
+    description:
+      'With ENAIS we ran two courses: one on AI governance and one technical AI-safety course. VIGÍA also came out of that collaboration and received a Special Recognition at AI Safety Collab 2025.',
+  },
+  {
+    eyebrow: 'Regional hackathon',
+    title: 'Apart Research',
+    description:
+      'Mexico partner for the Global South AIS Hackathon: hubs in Mérida and Guadalajara, remote participation, and a path into the Apart fellowship. 65 attendees, 19 projects, one of which continued into the fellowship.',
+  },
+  {
+    eyebrow: 'Tools and workshops',
+    title: 'Cursor',
+    description:
+      'Two collaborations in Mérida: the Cursor Mérida Challenge — AI Safety Edition — during the Global South, and the AI Strategy workshop (AGI Strategy Build Day) with Universidad Politécnica de Yucatán.',
+  },
+  {
+    eyebrow: 'Grant',
+    title: 'BlueDot Impact',
+    description:
+      'We received a BlueDot Impact grant to run the panel Impulsando la comunidad de AI Safety en México: Tech Policy Panel as part of Mexico Tech Week.',
   },
 ];
 
 const allies = [
   { text: 'AI Safety Collab' },
-  { text: 'ENAIS' },
   { text: 'Centro Geo' },
   { text: 'UADY' },
+  { text: 'Universidad Politécnica de Yucatán' },
   { text: 'SPAR Research' },
-  { text: 'Apart Research' },
 ];
 ---
 
@@ -98,8 +140,8 @@ const allies = [
     <div class="container">
       <SectionHeading
         eyebrow="Ways to collaborate"
-        title="Three paths to work with AI Safety Mexico"
-        description="Each path can be adapted in scope and duration to fit the project. Write to us describing your interest and we'll work out together which form of collaboration fits best."
+        title="Four paths, depending on where you arrive from"
+        description="If none of these fit, write to us anyway at contact@aismx.org."
         id="vias-heading"
       />
 
@@ -110,6 +152,15 @@ const allies = [
               <span class="collab-vias__number" aria-hidden="true">{via.number}</span>
               <h3 class="collab-vias__title">{via.title}</h3>
               <p class="collab-vias__description">{via.description}</p>
+              {via.href && (
+                <a
+                  class="collab-vias__cta"
+                  href={via.href}
+                  {...(via.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                >
+                  {via.cta}
+                </a>
+              )}
             </article>
           </li>
         ))}
@@ -120,11 +171,22 @@ const allies = [
   <section class="page-section page-section--allies" aria-labelledby="allies-heading">
     <div class="container">
       <SectionHeading
-        eyebrow="Allies and collaborators"
-        title="Who has worked with us"
-        description="A selection of the organizations we've co-created courses, research projects, events, and training programs with."
+        eyebrow="Collaborations"
+        title="Who we have built with"
+        description="Courses, events, and research we could not have done alone."
         id="allies-heading"
       />
+      <ul class="collab-named" role="list">
+        {collaborations.map((item) => (
+          <li class="collab-named__item">
+            <article class="collab-named__card">
+              <span class="collab-named__eyebrow">{item.eyebrow}</span>
+              <h3 class="collab-named__title">{item.title}</h3>
+              <p class="collab-named__description">{item.description}</p>
+            </article>
+          </li>
+        ))}
+      </ul>
       <KeyFacts facts={allies} />
     </div>
   </section>
@@ -169,6 +231,28 @@ const allies = [
             rel="noopener noreferrer"
           >
             @aisafetymx
+          </a>
+        </li>
+        <li class="direct__item">
+          <span class="direct__label">Calendar</span>
+          <a
+            class="direct__value"
+            href="https://luma.com/calendar/cal-WjnM2llUGXz17t5"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Events on Luma
+          </a>
+        </li>
+        <li class="direct__item">
+          <span class="direct__label">YouTube</span>
+          <a
+            class="direct__value"
+            href="https://www.youtube.com/@AISafetyMéxico"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @AISafetyMéxico
           </a>
         </li>
       </ul>
@@ -293,9 +377,68 @@ const allies = [
     margin: 0;
   }
 
+  .collab-vias__cta {
+    margin-top: auto;
+    padding-top: var(--space-4);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    color: var(--color-accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    width: fit-content;
+  }
+  .collab-vias__cta:hover,
+  .collab-vias__cta:focus-visible {
+    color: var(--color-link-hover);
+    border-bottom-color: var(--color-link-hover);
+  }
+
+  .collab-named {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    margin: 0 0 var(--space-8);
+    padding: 0;
+    list-style: none;
+  }
+  .collab-named__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    height: 100%;
+    padding: var(--space-6);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+  .collab-named__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .collab-named__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-bold);
+    margin: 0;
+    color: var(--color-text-heading);
+  }
+  .collab-named__description {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
   @media (min-width: 768px) {
-    .collab-vias {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .collab-vias,
+    .collab-named {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--space-9);
     }
     .collab-vias__card {
