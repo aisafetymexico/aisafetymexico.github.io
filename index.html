@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Safety Mexico - Seguridad de la Inteligencia Artificial</title>
-    <link rel="stylesheet" href="css/style.css?v=5">
+    <link rel="stylesheet" href="css/style.css?v=7">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600&display=swap" rel="stylesheet">
     <meta name="description" content="AI Safety Mexico es una organización dedicada a promover la investigación, educación y políticas sobre la seguridad y alineación de la inteligencia artificial en México.">
 </head>
 <body>
@@ -16,7 +16,7 @@
     <header class="site-header">
         <div class="header-inner">
             <a href="#" class="header-logo">
-                <img src="images/aisafetymx_logo.webp" alt="AI Safety Mexico logo" class="logo-img">
+                <img src="images/aismx-logo-2026.png" alt="AI Safety Mexico logo" class="logo-img">
                 <span class="logo-text">AI SAFETY MX</span>
             </a>
             <button class="mobile-toggle" aria-label="Abrir menú" aria-expanded="false">
@@ -27,6 +27,7 @@
                     <li><a href="#" class="active">Inicio</a></li>
                     <li><a href="#programas">Programas</a></li>
                     <li><a href="#investigacion">Investigación</a></li>
+                    <li><a href="recursos.html">Recursos</a></li>
                     <li><a href="#equipo">Equipo</a></li>
                     <li><a href="#advisors">Advisors</a></li>
                     <li><a href="#actividades-en-curso" class="btn-nav">Actividades en curso</a></li>
@@ -39,17 +40,18 @@
     <!-- Hero Section -->
     <section class="hero hero--observatorio">
         <div class="hero-inner">
-            <div class="hero-image">
-                <img src="images/observatorio.png" alt="Observatorio AI Safety México">
-            </div>
             <div class="hero-content">
-                <h1 class="hero-title">Investigación y Educación en Seguridad de Inteligencia Artificial</h1>
+                <h1 class="hero-title">Investigación y educación en seguridad de <span class="accent">inteligencia artificial</span>.</h1>
                 <p class="hero-subtitle">Fomentamos la colaboración entre investigadores, desarrolladores y responsables políticos para garantizar que los sistemas de IA se desarrollen de forma segura y beneficiosa para toda la sociedad mexicana.</p>
                 <div class="hero-actions">
                     <a href="#programas" class="btn btn-primary">Nuestros programas</a>
-                    <a href="#contacto" class="btn btn-outline">Contáctanos</a>
+                    <a href="recursos.html" class="btn btn-outline">Ver recursos</a>
                 </div>
             </div>
+            <p class="scroll-hint">Desplázate para explorar ↓</p>
+        </div>
+        <div class="hero-banner">
+            <img src="images/banner-caracol.png" alt="El Caracol, observatorio astronómico maya de Chichén Itzá">
         </div>
     </section>
 
@@ -67,6 +69,41 @@
                     <span class="tag">Colaboración Internacional</span>
                     <span class="tag">Divulgación</span>
                 </div>
+            </div>
+        </section>
+
+        <!-- Teoría del cambio -->
+        <section class="section-theory">
+            <!-- El id va en el contenedor, no en la <section>: main.js recorre
+                 section[id] y borraría el resaltado del nav al pasar por aquí. -->
+            <div class="container" id="teoria-del-cambio">
+                <h2 class="section-heading">Nuestra teoría del cambio</h2>
+                <p class="theory-lead">No estamos construyendo una comunidad para «unirse». Estamos construyendo una plataforma de despegue hacia la frontera de la seguridad en IA y la voz creíble de investigación de México: un puñado de mexicanos de alta agencia persiguiendo la frontera, un cuerpo citable de investigación y un puente en español hacia quienes decidirán cómo México enfrenta la IA avanzada.</p>
+
+                <div class="theory-grid">
+                    <div class="program-card">
+                        <span class="theory-label">North Star</span>
+                        <h3 class="program-card-title">Ambición</h3>
+                        <p>Sembrar en México un cuerpo de trabajo que produzca investigación propia en áreas clave de seguridad en IA. Nuestra referencia son los AI Safety Institutes.</p>
+                        <p>De ahí se siguen dos efectos: funcionar como capa de traducción al español de la IA de frontera, y como una voz creíble y no partidista a la que un tomador de decisiones mexicano pueda llamar.</p>
+                        <p>Ese es el norte de largo plazo; todo lo que hacemos hoy construye hacia allá.</p>
+                    </div>
+                    <div class="program-card">
+                        <span class="theory-label">Cómo llegamos</span>
+                        <h3 class="program-card-title">Política guía</h3>
+                        <p>Lograr que un número pequeño de personas de alta agencia se auto-propulsen hacia la frontera, producir un cuerpo de investigación citable y traducirlo para tomadores de decisiones mexicanos y para el mundo hispanohablante.</p>
+                        <p>Todo apoyándonos en infraestructura que ya existe (Apart, SPAR, BlueDot, Atlas, instituciones académicas en México) en lugar de construir la nuestra desde cero.</p>
+                    </div>
+                </div>
+
+                <h3 class="theory-subheading">Cómo medimos el crecimiento</h3>
+                <ul class="metric-list">
+                    <li><strong>Postulaciones contrafactuales.</strong> Mexicanos que le dan a «enviar» en SPAR, Apart, MATS o en vacantes de Estados Unidos y China. La mayoría será rechazada, por diseño; lo que cuenta es que apliquen.</li>
+                    <li><strong>Auto-propulsión y retención.</strong> Cuántos continúan más allá de las primeras veinte horas acompañadas.</li>
+                    <li><strong>Producción de investigación.</strong> Experimentos y artículos publicados, y equipos aceptados en SPAR.</li>
+                    <li><strong>Financiamiento y pista de despegue.</strong> Recursos levantados a lo largo de la escalera de fondeo.</li>
+                    <li><strong>Credibilidad y visibilidad.</strong> Academia y tomadores de decisiones en el circuito, y solicitudes de consulta del gobierno.</li>
+                </ul>
             </div>
         </section>
 
@@ -94,53 +131,10 @@
             </div>
         </section>
 
-        <!-- Actividades Pasadas — Carousel -->
-        <section class="section-carousel">
+        <!-- Foto de actividad -->
+        <section class="section-photo">
             <div class="container">
-                <h2 class="section-heading">Actividades Pasadas</h2>
-                <div class="carousel-container">
-                    <div class="carousel">
-                        <div class="carousel-slide">
-                            <img src="images/carousel/carousel-image-1.jpeg" alt="AI Safety Mexico Actividad 1">
-                        </div>
-                        <div class="carousel-slide">
-                            <img src="images/carousel/carousel-image-2.jpeg" alt="AI Safety Mexico Actividad 2">
-                        </div>
-                        <div class="carousel-slide">
-                            <img src="images/carousel/carousel-image-3.jpeg" alt="AI Safety Mexico Actividad 3">
-                        </div>
-                        <div class="carousel-slide">
-                            <img src="images/carousel/carousel-image-5.jpeg" alt="AI Safety Mexico Actividad 5">
-                        </div>
-                        <div class="carousel-slide">
-                            <img src="images/carousel/carousel-image-6.jpeg" alt="AI Safety Mexico Actividad 6">
-                        </div>
-                        <div class="carousel-slide">
-                            <img src="images/carousel/carousel-image-7.jpeg" alt="AI Safety Mexico Actividad 7">
-                        </div>
-                        <div class="carousel-slide">
-                            <img src="images/carousel/carousel-image-9.jpeg" alt="AI Safety Mexico Actividad 9">
-                        </div>
-                        <div class="carousel-slide">
-                            <img src="images/carousel/carousel-image-10.jpeg" alt="AI Safety Mexico Actividad 10">
-                        </div>
-                        <div class="carousel-slide">
-                            <img src="images/carousel/Dexter.png" alt="AI Safety Mexico - Equipo en sesión de trabajo">
-                        </div>
-                        <div class="carousel-slide">
-                            <img src="images/carousel/IMG_7302 Copy.JPG" alt="AI Safety Mexico - Taller con participantes">
-                        </div>
-                        <div class="carousel-slide">
-                            <img src="images/carousel/Screenshot 2026-03-05 at 12.16.56 p.m..png" alt="AI Safety Mexico - Material de curso">
-                        </div>
-                        <div class="carousel-slide">
-                            <img src="images/carousel/Screenshot 2026-03-05 at 1.34.26 p.m..png" alt="AI Safety Mexico - Resultados y visualizaciones">
-                        </div>
-                    </div>
-                    <button class="carousel-btn prev" aria-label="Anterior">&#10094;</button>
-                    <button class="carousel-btn next" aria-label="Siguiente">&#10095;</button>
-                    <div class="carousel-indicators"></div>
-                </div>
+                <img src="images/sesion-trabajo.webp" alt="Participantes de AI Safety México en una sesión de trabajo en círculo" class="feature-photo" loading="lazy" width="2048" height="1432">
             </div>
         </section>
 
@@ -148,18 +142,23 @@
         <section id="actividades-en-curso" class="section-current">
             <div class="container">
                 <h2 class="section-heading">Actividades en curso</h2>
-                <div class="card event-card">
-                    <p>Actualmente estamos trabajando en las siguientes iniciativas:</p>
-                    <div class="event-promo">
-                        <span class="event-promo-label">Apart x AI Safety México</span>
-                        <h3>The Global South AIS Challenge</h3>
-                        <p class="event-promo-description">El evento regional de AI Safety que une a América Latina para crear soluciones responsables y colaborativas.</p>
-                        <a href="global-south-ais-challenge.html" class="btn btn-primary btn-hero">Ir a la página del evento</a>
+                <div class="program-card">
+                    <span class="theory-label">Mexico Tech Week 2026</span>
+                    <h3 class="program-card-title">Impulsando la comunidad de AI Safety en México: Tech Policy Panel</h3>
+                    <p>Un panel sobre cómo la regulación de la inteligencia artificial impactará al ecosistema tecnológico de México y América Latina.</p>
+                    <p class="event-meta">Martes 27 de octubre de 2026 · MXTW AI House, Juárez, Ciudad de México</p>
+                    <div class="event-embed">
+                        <iframe src="https://luma.com/embed/event/evt-0jdNWFu6jYVQ148/simple"
+                                title="Registro al panel Impulsando la comunidad de AI Safety en México"
+                                frameborder="0"
+                                allow="fullscreen; payment"
+                                loading="lazy"></iframe>
                     </div>
-                    <div class="event-note">
-                        <span class="event-note-label">Mesas de trabajo</span>
-                        <p>Primer viernes del mes, si te interesa participar, por favor contacta con nosotros.</p>
-                    </div>
+                </div>
+
+                <div class="event-note">
+                    <span class="event-note-label">Mesas de trabajo</span>
+                    <p>Primer viernes del mes, si te interesa participar, por favor contacta con nosotros.</p>
                 </div>
             </div>
         </section>
@@ -168,6 +167,20 @@
         <section class="section-past-activities">
             <div class="container">
                 <h2 class="section-heading">Actividades Pasadas</h2>
+                <div class="event-preview">
+                    <a href="https://forum.effectivealtruism.org/posts/ttePFhSrxpRQu8CR5/running-two-ai-safety-hackathon-hubs-in-mexico-results-costs" target="_blank" rel="noopener noreferrer">
+                        <div class="event-preview-header">The Global South AI Safety Hackathon: sedes de Mérida y Guadalajara</div>
+                        <div class="event-preview-subtitle">Apart Research x AI Safety México · EA Forum</div>
+                        <div class="event-preview-link">Leer la retrospectiva</div>
+                    </a>
+                </div>
+                <div class="program-card">
+                    <p>Organizamos las sedes mexicanas del hackatón junto con Apart Research: dos hubs simultáneos en Mérida y Guadalajara más participación remota, con 65 asistentes que formaron 19 equipos y entregaron 19 proyectos de investigación.</p>
+                    <p>Un proyecto quedó en el 20% superior global y cuatro en el 50% superior, aunque ningún participante llegó con publicaciones o experiencia previa en seguridad de IA. Uno de ellos, sobre soberanía y vulnerabilidad de la IA en una potencia media, continuó en el programa de fellowship de Apart Research.</p>
+                    <div class="program-actions">
+                        <a href="global-south-ais-challenge.html" class="btn btn-outline">Página del evento</a>
+                    </div>
+                </div>
                 <div class="event-preview">
                     <a href="https://luma.com/l0fumrub" target="_blank" rel="noopener noreferrer">
                         <div class="event-preview-header">Your AI Agent Is Not You: AI Safety, data sovereignty, and taking back control</div>
@@ -267,6 +280,22 @@
                         <h3 class="program-card-title">Participación en EAGxCDMX</h3>
                         <p>En el marco de la conferencia Effective Altruism Global X Ciudad de México (EAGxCDMX), Silvia Fernández, Angel Tenorio y Jason Pinelo impartieron el taller "Not so speedy AI Safety", evento diseñado para establecer vínculos colaborativos con especialistas del área y difundir el trabajo desarrollado en México sobre seguridad en inteligencia artificial a la comunidad internacional.</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recursos abiertos -->
+        <section id="recursos" class="section-resources-preview">
+            <div class="container">
+                <div class="section-head">
+                    <h2 class="section-heading">Recursos abiertos</h2>
+                    <a class="section-link" href="recursos.html">Ver el directorio completo →</a>
+                </div>
+                <p class="section-description">Mantenemos un directorio curado de cursos, programas de investigación, fellowships de política, financiamiento y comunidades, con los enlaces verificados uno por uno. Está pensado para quien quiera empezar o dar el siguiente paso desde México y América Latina.</p>
+                <div class="resource-preview-grid" id="resource-preview"></div>
+                <div class="resource-preview-actions">
+                    <a href="recursos.html" class="btn btn-primary">Explorar recursos</a>
+                    <a href="https://aisafety.com" class="btn btn-outline" target="_blank" rel="noopener noreferrer">AISafety.com ↗</a>
                 </div>
             </div>
         </section>
@@ -392,7 +421,7 @@
     <footer class="site-footer">
         <div class="footer-inner">
             <div class="footer-brand">
-                <img src="images/aisafetymx_logo.webp" alt="AI Safety Mexico" class="footer-logo">
+                <img src="images/aismx-logo-2026.png" alt="AI Safety Mexico" class="footer-logo">
                 <span class="footer-name">AI Safety Mexico</span>
                 <a href="https://www.linkedin.com/company/ai-safety-mexico/?viewAsMember=true" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="AI Safety Mexico en LinkedIn">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true" focusable="false">
@@ -408,6 +437,7 @@
             <div class="footer-links">
                 <a href="#programas">Programas</a>
                 <a href="#investigacion">Investigación</a>
+                <a href="recursos.html">Recursos</a>
                 <a href="#equipo">Equipo</a>
                 <a href="#contacto">Contacto</a>
             </div>
@@ -422,5 +452,7 @@
     </div>
 
     <script src="js/main.js"></script>
+    <script src="js/recursos-data.js"></script>
+    <script src="js/recursos-preview.js"></script>
 </body>
 </html>
