@@ -22,22 +22,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
+      - name: Assemble static HTML site
+        run: |
+          set -euo pipefail
+          test -f index.html
+          test -f recursos.html
+          test -f about.html
+          test -f CNAME
+          test -d css
+          test -d js
+          test -d images
+          mkdir -p _site
+          cp *.html _site/
+          cp CNAME _site/
+          cp -R css js images _site/
+          if [ -d Papers ]; then cp -R Papers _site/; fi
 
-      - name: Install dependencies
-        run: npm ci || npm install
-
-      - name: Build with Astro
-        run: npm run build
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: _site
 
   deploy:
     environment:

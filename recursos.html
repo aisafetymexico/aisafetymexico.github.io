@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursos abiertos de Seguridad y Gobernanza de IA - AI Safety Mexico</title>
+    <link rel="stylesheet" href="css/style.css?v=8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600&display=swap" rel="stylesheet">
+    <meta name="description" content="Directorio abierto y curado de cursos, fellowships, agendas de investigación, financiamiento y comunidades de seguridad y gobernanza de inteligencia artificial, mantenido por AI Safety Mexico.">
+</head>
+<body>
+
+    <!-- Sticky Header -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" class="header-logo">
+                <img src="images/aismx-logo-2026.png" alt="AI Safety Mexico logo" class="logo-img">
+                <span class="logo-text">AI SAFETY MX</span>
+            </a>
+            <button class="mobile-toggle" aria-label="Abrir menú" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <nav class="main-nav" id="main-nav">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="index.html#programas">Programas</a></li>
+                    <li><a href="index.html#investigacion">Investigación</a></li>
+                    <li><a href="recursos.html" class="active">Recursos</a></li>
+                    <li><a href="index.html#participa">Participa</a></li>
+                    <li><a href="index.html#colaboraciones">Colaboraciones</a></li>
+                    <li><a href="index.html#actividades-en-curso" class="btn-nav">Actividades en curso</a></li>
+                    <li><a href="index.html#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <h1 class="page-hero-title">Recursos abiertos de seguridad y gobernanza de IA</h1>
+            <p class="page-hero-subtitle">Un directorio curado y verificado para quien quiera empezar, formarse o investigar desde México y América Latina</p>
+        </div>
+    </section>
+
+    <main>
+
+        <!-- Introducción -->
+        <section class="section-what-we-do">
+            <div class="container">
+                <h2 class="section-heading">Cómo usar este directorio</h2>
+                <p class="section-description">Entrar al campo de la seguridad en inteligencia artificial suele ser confuso: la información está dispersa, muchas convocatorias caducan y varios enlaces de referencia dejan de funcionar. Reunimos aquí los recursos que consideramos vigentes y útiles, con una nota sobre su formato y duración para que puedas decidir rápido qué se ajusta a tu momento. Si es tu primera vez, te recomendamos comenzar por un curso introductorio y por el mapa del campo.</p>
+                <div class="tag-list">
+                    <span class="tag">Cursos y currículos</span>
+                    <span class="tag">Programas de investigación</span>
+                    <span class="tag">Gobernanza y política</span>
+                    <span class="tag">Financiamiento</span>
+                    <span class="tag">Comunidades</span>
+                    <span class="tag">Recursos en español</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Directorio -->
+        <section class="section-resources">
+            <div class="container" id="directorio">
+
+                <div class="resource-filters">
+                    <div class="filter-row">
+                        <div class="filter-field filter-field--search">
+                            <label for="buscador">Buscar por nombre, tema o palabra clave</label>
+                            <input type="search" id="buscador" placeholder="Por ejemplo: interpretabilidad, gobernanza, beca, remoto">
+                        </div>
+                        <div class="filter-field">
+                            <label for="filtro-tipo">Tipo de recurso</label>
+                            <select id="filtro-tipo"></select>
+                        </div>
+                        <div class="filter-field">
+                            <label for="filtro-area">Área</label>
+                            <select id="filtro-area"></select>
+                        </div>
+                    </div>
+                    <div class="filter-chips" id="chips"></div>
+                </div>
+
+                <div class="resource-toolbar">
+                    <p class="resource-count" id="contador">Cargando recursos…</p>
+                    <div class="toolbar-actions">
+                        <button type="button" class="btn btn-ghost" id="btn-limpiar">Limpiar filtros</button>
+                        <button type="button" class="btn btn-ghost" id="btn-json">Descargar datos (JSON)</button>
+                    </div>
+                </div>
+
+                <div class="resource-grid" id="rejilla"></div>
+
+            </div>
+        </section>
+
+        <!-- Contribuir -->
+        <section class="section-contribute">
+            <div class="container">
+                <h2 class="section-heading">Un espacio abierto</h2>
+                <p class="section-description">Este directorio es un bien común. Los datos están disponibles para descarga y reutilización, y las propuestas de la comunidad son bienvenidas.</p>
+                <div class="contribute-grid">
+                    <div class="program-card">
+                        <h3 class="program-card-title">Propón o corrige un recurso</h3>
+                        <p>Si conoces un programa que falta, detectas un enlace roto o una descripción desactualizada, escríbenos a <a class="inline-link" href="mailto:contact@aismx.org">contact@aismx.org</a>. Nos interesa especialmente sumar recursos en español y oportunidades accesibles desde América Latina.</p>
+                    </div>
+                    <div class="program-card">
+                        <h3 class="program-card-title">Reutiliza los datos</h3>
+                        <p>El botón <em>Descargar datos (JSON)</em> exporta el catálogo completo para que puedas integrarlo en tus propios materiales, talleres o sitios. Si lo reutilizas, agradecemos la atribución a AI Safety México.</p>
+                    </div>
+                    <div class="program-card">
+                        <h3 class="program-card-title">Referencias del ecosistema</h3>
+                        <p>Nos apoyamos en el trabajo de <a class="inline-link" href="https://aisafety.com" target="_blank" rel="noopener noreferrer">AISafety.com</a>, que mantiene el mapa y los directorios más completos del campo, y en <a class="inline-link" href="https://www.enais.co" target="_blank" rel="noopener noreferrer">ENAIS</a>. Para convocatorias con fecha límite, consulta siempre la fuente original.</p>
+                    </div>
+                    <div class="program-card">
+                        <h3 class="program-card-title">Participa con nosotros</h3>
+                        <p>Hay cursos in-house para instituciones, estancias con la UPY, mesas el primer viernes de cada mes y un <a class="inline-link" href="https://luma.com/calendar/cal-WjnM2llUGXz17t5" target="_blank" rel="noopener noreferrer">calendario en Luma</a>. Empieza por <a class="inline-link" href="index.html#participa">cómo participar</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="images/aismx-logo-2026.png" alt="AI Safety Mexico" class="footer-logo">
+                <span class="footer-name">AI Safety Mexico</span>
+                <a href="https://www.linkedin.com/company/ai-safety-mexico/?viewAsMember=true" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="AI Safety Mexico en LinkedIn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true" focusable="false">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                </a>
+                <a href="https://www.instagram.com/aisafetymx/" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="AI Safety Mexico en Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true" focusable="false">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.056 1.97.24 2.428.405a4.92 4.92 0 011.675 1.091 4.92 4.92 0 011.091 1.675c.165.459.349 1.258.405 2.428.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.056 1.17-.24 1.97-.405 2.428a4.92 4.92 0 01-1.091 1.675 4.92 4.92 0 01-1.675 1.091c-.459.165-1.258.349-2.428.405-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.056-1.97-.24-2.428-.405a4.92 4.92 0 01-1.675-1.091 4.92 4.92 0 01-1.091-1.675c-.165-.459-.349-1.258-.405-2.428C2.175 15.747 2.163 15.367 2.163 12s.012-3.584.07-4.85c.056-1.17.24-1.97.405-2.428a4.92 4.92 0 011.091-1.675 4.92 4.92 0 011.675-1.091c.459-.165 1.258-.349 2.428-.405C8.416 2.175 8.796 2.163 12 2.163zm0 1.838c-3.17 0-3.545.012-4.795.069-1.043.048-1.608.217-1.983.363a3.13 3.13 0 00-1.138.743 3.13 3.13 0 00-.743 1.138c-.146.375-.315.94-.363 1.983-.057 1.25-.069 1.625-.069 4.795s.012 3.545.069 4.795c.048 1.043.217 1.608.363 1.983.18.464.44.84.743 1.138.298.303.674.563 1.138.743.375.146.94.315 1.983.363 1.25.057 1.625.069 4.795.069s3.545-.012 4.795-.069c1.043-.048 1.608-.217 1.983-.363a3.13 3.13 0 001.138-.743 3.13 3.13 0 00.743-1.138c.146-.375.315-.94.363-1.983.057-1.25.069-1.625.069-4.795s-.012-3.545-.069-4.795c-.048-1.043-.217-1.608-.363-1.983a3.13 3.13 0 00-.743-1.138 3.13 3.13 0 00-1.138-.743c-.375-.146-.94-.315-1.983-.363-1.25-.057-1.625-.069-4.795-.069zM12 5.838a6.162 6.162 0 116.162 6.162A6.17 6.17 0 0112 5.838zm0 10.162a3.999 3.999 0 10-4-4 3.999 3.999 0 004 4zm6.406-11.845a1.44 1.44 0 11-1.44-1.44 1.44 1.44 0 011.44 1.44z"/>
+                    </svg>
+                </a>
+                <a href="https://www.youtube.com/@AISafetyMéxico" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="AI Safety Mexico en YouTube">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true" focusable="false">
+                        <path d="M23.5 6.2a3.05 3.05 0 00-2.15-2.16C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.35.44A3.05 3.05 0 00.5 6.2 32 32 0 000 12a32 32 0 00.5 5.8 3.05 3.05 0 002.15 2.16C4.5 20.4 12 20.4 12 20.4s7.5 0 9.35-.44a3.05 3.05 0 002.15-2.16A32 32 0 0024 12a32 32 0 00-.5-5.8zM9.75 15.57V8.43L15.84 12l-6.09 3.57z"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="footer-links">
+                <a href="index.html#programas">Programas</a>
+                <a href="index.html#investigacion">Investigación</a>
+                <a href="recursos.html">Recursos</a>
+                <a href="index.html#participa">Participa</a>
+                <a href="index.html#colaboraciones">Colaboraciones</a>
+                <a href="index.html#equipo">Equipo</a>
+                <a href="index.html#contacto">Contacto</a>
+            </div>
+            <p class="footer-copy">&copy; 2026 AI Safety Mexico. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/recursos-data.js"></script>
+    <script src="js/recursos.js"></script>
+</body>
+</html>

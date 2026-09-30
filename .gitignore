@@ -3,6 +3,7 @@ node_modules/
 npm-debug.log
 yarn-debug.log
 yarn-error.log
+package-lock.json
 
 # Archivos de entorno
 .env
@@ -11,11 +12,16 @@ yarn-error.log
 .env.test.local
 .env.production.local
 
+# Caché local de Astro (no forma parte del sitio estático)
+.astro/
+
+# Ensamblado local del artifact de Pages
+_site/
+
 # Archivos de construcción/distribución
 /dist
 /build
 /out
-.astro/
 
 # Archivos de sistema
 .DS_Store
@@ -59,16 +65,3 @@ coverage/
 # Archivos temporales
 tmp/
 temp/
-# Local Claude Code worktrees and metadata
-.claude/
-
-# Claim emails (PII + local Gmail OAuth)
-emails/recipients.csv
-emails/out/
-emails/gmail-credentials.json
-emails/gmail-token.json
-emails/courses/recipients.csv
-emails/courses/participants.csv
-emails/courses/filename-manifest.csv
-emails/courses/out/
-
