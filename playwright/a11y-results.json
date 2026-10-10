@@ -1,0 +1,2450 @@
+{
+  "base": "http://localhost:5022",
+  "timestamp": "2026-05-08T01:58:18.038Z",
+  "routeCount": 11,
+  "viewports": [
+    "mobile",
+    "desktop"
+  ],
+  "totals": {
+    "violations": 62,
+    "critical": 0,
+    "serious": 38,
+    "moderate": 0,
+    "minor": 24
+  },
+  "results": [
+    {
+      "route": "/",
+      "name": "home",
+      "viewport": "mobile",
+      "url": "http://localhost:5022/",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 9,
+          "sampleNodes": [
+            {
+              "target": [
+                ".hero__overline"
+              ],
+              "html": "<p class=\"hero__overline role-eyebrow role-eyebrow--xl\" data-astro-cid-bbe6dxrz=\"\">AI SAFETY MEXICO · MX-LATAM</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".hero__cta--primary"
+              ],
+              "html": "<a class=\"hero__cta hero__cta--primary\" href=\"/projects\" data-astro-cid-bbe6dxrz=\"\">Conoce nuestros proyectos</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #ffffff, background color: #c4854a, font size: 11.5pt (15.2825px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".section--warm > .container[data-astro-cid-j7pv25f6=\"\"] > .section-heading.section-heading--light.section-heading--center > .section-heading__eyebrow[data-astro-cid-ytvomcwp=\"\"]"
+              ],
+              "html": "<p class=\"section-heading__eyebrow\" data-astro-cid-ytvomcwp=\"\">Qué hacemos</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.84 (foreground color: #c4854a, background color: #fbf5eb, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 40,
+      "incomplete": 2,
+      "inapplicable": 49
+    },
+    {
+      "route": "/",
+      "name": "home",
+      "viewport": "desktop",
+      "url": "http://localhost:5022/",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 9,
+          "sampleNodes": [
+            {
+              "target": [
+                ".main-nav__link--cta"
+              ],
+              "html": "<a class=\"main-nav__link main-nav__link--cta\" href=\"/get-involved\" data-astro-cid-dmqpwcec=\"\">Colabora</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #ffffff, background color: #c4854a, font size: 10.8pt (14.4px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".hero__overline"
+              ],
+              "html": "<p class=\"hero__overline role-eyebrow role-eyebrow--xl\" data-astro-cid-bbe6dxrz=\"\">AI SAFETY MEXICO · MX-LATAM</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 9.5pt (12.64px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".hero__cta--primary"
+              ],
+              "html": "<a class=\"hero__cta hero__cta--primary\" href=\"/projects\" data-astro-cid-bbe6dxrz=\"\">Conoce nuestros proyectos</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #ffffff, background color: #c4854a, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 50
+    },
+    {
+      "route": "/about",
+      "name": "about",
+      "viewport": "mobile",
+      "url": "http://localhost:5022/about",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 11,
+          "sampleNodes": [
+            {
+              "target": [
+                ".breadcrumb__back > span[data-astro-cid-qaanghzh=\"\"]:nth-child(2)"
+              ],
+              "html": "<span data-astro-cid-qaanghzh=\"\">Inicio</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Sobre nosotros</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".section--base.section:nth-child(2) > .container--narrow.container > .section-heading.section-heading--light.section-heading--left > .section-heading__eyebrow[data-astro-cid-ytvomcwp=\"\"]"
+              ],
+              "html": "<p class=\"section-heading__eyebrow\" data-astro-cid-ytvomcwp=\"\">Misión</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #c4854a, background color: #ffffff, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 49
+    },
+    {
+      "route": "/about",
+      "name": "about",
+      "viewport": "desktop",
+      "url": "http://localhost:5022/about",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 12,
+          "sampleNodes": [
+            {
+              "target": [
+                ".main-nav__link--cta"
+              ],
+              "html": "<a class=\"main-nav__link main-nav__link--cta\" href=\"/get-involved\" data-astro-cid-dmqpwcec=\"\">Colabora</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #ffffff, background color: #c4854a, font size: 10.8pt (14.4px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".breadcrumb__link"
+              ],
+              "html": "<a class=\"breadcrumb__link\" href=\"/\" data-astro-cid-qaanghzh=\"\">Inicio</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Sobre nosotros</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 9.5pt (12.64px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 38,
+      "incomplete": 2,
+      "inapplicable": 50
+    },
+    {
+      "route": "/research",
+      "name": "research",
+      "viewport": "mobile",
+      "url": "http://localhost:5022/research",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 14,
+          "sampleNodes": [
+            {
+              "target": [
+                ".breadcrumb__back > span[data-astro-cid-qaanghzh=\"\"]:nth-child(2)"
+              ],
+              "html": "<span data-astro-cid-qaanghzh=\"\">Inicio</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Investigación</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".research-section--areas > .research-section__inner[data-astro-cid-odi5jzfj=\"\"] > .section-heading.section-heading--light.section-heading--left > .section-heading__eyebrow[data-astro-cid-ytvomcwp=\"\"]"
+              ],
+              "html": "<p class=\"section-heading__eyebrow\" data-astro-cid-ytvomcwp=\"\">Líneas de trabajo</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #c4854a, background color: #ffffff, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 49
+    },
+    {
+      "route": "/research",
+      "name": "research",
+      "viewport": "desktop",
+      "url": "http://localhost:5022/research",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 15,
+          "sampleNodes": [
+            {
+              "target": [
+                ".main-nav__link--cta"
+              ],
+              "html": "<a class=\"main-nav__link main-nav__link--cta\" href=\"/get-involved\" data-astro-cid-dmqpwcec=\"\">Colabora</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #ffffff, background color: #c4854a, font size: 10.8pt (14.4px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".breadcrumb__link"
+              ],
+              "html": "<a class=\"breadcrumb__link\" href=\"/\" data-astro-cid-qaanghzh=\"\">Inicio</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Investigación</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 9.5pt (12.64px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 38,
+      "incomplete": 2,
+      "inapplicable": 50
+    },
+    {
+      "route": "/programs",
+      "name": "programs",
+      "viewport": "mobile",
+      "url": "http://localhost:5022/programs",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 26,
+          "sampleNodes": [
+            {
+              "target": [
+                ".breadcrumb__back > span[data-astro-cid-qaanghzh=\"\"]:nth-child(2)"
+              ],
+              "html": "<span data-astro-cid-qaanghzh=\"\">Inicio</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Programas</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".programs-section--open > .programs-section__inner[data-astro-cid-iru3ew3w=\"\"] > .section-heading.section-heading--light.section-heading--left > .section-heading__eyebrow[data-astro-cid-ytvomcwp=\"\"]"
+              ],
+              "html": "<p class=\"section-heading__eyebrow\" data-astro-cid-ytvomcwp=\"\">Comunidad</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #c4854a, background color: #ffffff, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "definition-list",
+          "impact": "serious",
+          "description": "Ensure <dl> elements are structured correctly",
+          "help": "<dl> elements must only directly contain properly-ordered <dt> and <dd> groups, <script>, <template> or <div> elements",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/definition-list?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".program-block:nth-child(1) > dl"
+              ],
+              "html": "<dl class=\"fact-list\" data-astro-cid-cjbmrvxo=\"\">",
+              "failureSummary": "Fix all of the following:\n  dl element has direct children that are not allowed: div > div"
+            },
+            {
+              "target": [
+                ".program-block:nth-child(2) > dl"
+              ],
+              "html": "<dl class=\"fact-list\" data-astro-cid-cjbmrvxo=\"\">",
+              "failureSummary": "Fix all of the following:\n  dl element has direct children that are not allowed: div > div"
+            }
+          ]
+        },
+        {
+          "id": "dlitem",
+          "impact": "serious",
+          "description": "Ensure <dt> and <dd> elements are contained by a <dl>",
+          "help": "<dt> and <dd> elements must be contained by a <dl>",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/dlitem?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "nodeCount": 8,
+          "sampleNodes": [
+            {
+              "target": [
+                ".program-block:nth-child(1) > dl > .fact-list__row[data-astro-cid-cjbmrvxo=\"\"]:nth-child(1) > .fact-list__pair[data-astro-cid-cjbmrvxo=\"\"] > dt"
+              ],
+              "html": "<dt class=\"fact-list__label\" data-astro-cid-cjbmrvxo=\"\">Material</dt>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            },
+            {
+              "target": [
+                ".program-block:nth-child(1) > dl > .fact-list__row[data-astro-cid-cjbmrvxo=\"\"]:nth-child(1) > .fact-list__pair[data-astro-cid-cjbmrvxo=\"\"] > dd"
+              ],
+              "html": "<dd class=\"fact-list__value\" data-astro-cid-cjbmrvxo=\"\">BlueDot Impact · AI Safety Atlas</dd>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            },
+            {
+              "target": [
+                ".program-block:nth-child(1) > dl > .fact-list__row[data-astro-cid-cjbmrvxo=\"\"]:nth-child(2) > .fact-list__pair[data-astro-cid-cjbmrvxo=\"\"] > dt"
+              ],
+              "html": "<dt class=\"fact-list__label\" data-astro-cid-cjbmrvxo=\"\">Facilitadores</dt>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 41,
+      "incomplete": 2,
+      "inapplicable": 46
+    },
+    {
+      "route": "/programs",
+      "name": "programs",
+      "viewport": "desktop",
+      "url": "http://localhost:5022/programs",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 27,
+          "sampleNodes": [
+            {
+              "target": [
+                ".main-nav__link--cta"
+              ],
+              "html": "<a class=\"main-nav__link main-nav__link--cta\" href=\"/get-involved\" data-astro-cid-dmqpwcec=\"\">Colabora</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #ffffff, background color: #c4854a, font size: 10.8pt (14.4px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".breadcrumb__link"
+              ],
+              "html": "<a class=\"breadcrumb__link\" href=\"/\" data-astro-cid-qaanghzh=\"\">Inicio</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Programas</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 9.5pt (12.64px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "definition-list",
+          "impact": "serious",
+          "description": "Ensure <dl> elements are structured correctly",
+          "help": "<dl> elements must only directly contain properly-ordered <dt> and <dd> groups, <script>, <template> or <div> elements",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/definition-list?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".program-block:nth-child(1) > dl"
+              ],
+              "html": "<dl class=\"fact-list\" data-astro-cid-cjbmrvxo=\"\">",
+              "failureSummary": "Fix all of the following:\n  dl element has direct children that are not allowed: div > div"
+            },
+            {
+              "target": [
+                ".program-block:nth-child(2) > dl"
+              ],
+              "html": "<dl class=\"fact-list\" data-astro-cid-cjbmrvxo=\"\">",
+              "failureSummary": "Fix all of the following:\n  dl element has direct children that are not allowed: div > div"
+            }
+          ]
+        },
+        {
+          "id": "dlitem",
+          "impact": "serious",
+          "description": "Ensure <dt> and <dd> elements are contained by a <dl>",
+          "help": "<dt> and <dd> elements must be contained by a <dl>",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/dlitem?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "nodeCount": 8,
+          "sampleNodes": [
+            {
+              "target": [
+                ".program-block:nth-child(1) > dl > .fact-list__row[data-astro-cid-cjbmrvxo=\"\"]:nth-child(1) > .fact-list__pair[data-astro-cid-cjbmrvxo=\"\"] > dt"
+              ],
+              "html": "<dt class=\"fact-list__label\" data-astro-cid-cjbmrvxo=\"\">Material</dt>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            },
+            {
+              "target": [
+                ".program-block:nth-child(1) > dl > .fact-list__row[data-astro-cid-cjbmrvxo=\"\"]:nth-child(1) > .fact-list__pair[data-astro-cid-cjbmrvxo=\"\"] > dd"
+              ],
+              "html": "<dd class=\"fact-list__value\" data-astro-cid-cjbmrvxo=\"\">BlueDot Impact · AI Safety Atlas</dd>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            },
+            {
+              "target": [
+                ".program-block:nth-child(1) > dl > .fact-list__row[data-astro-cid-cjbmrvxo=\"\"]:nth-child(2) > .fact-list__pair[data-astro-cid-cjbmrvxo=\"\"] > dt"
+              ],
+              "html": "<dt class=\"fact-list__label\" data-astro-cid-cjbmrvxo=\"\">Facilitadores</dt>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 41,
+      "incomplete": 2,
+      "inapplicable": 46
+    },
+    {
+      "route": "/projects",
+      "name": "projects",
+      "viewport": "mobile",
+      "url": "http://localhost:5022/projects",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 9,
+          "sampleNodes": [
+            {
+              "target": [
+                ".breadcrumb__back > span[data-astro-cid-qaanghzh=\"\"]:nth-child(2)"
+              ],
+              "html": "<span data-astro-cid-qaanghzh=\"\">Inicio</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Trabajo aplicado</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".section--cream > .container--narrow.container > .section-heading.section-heading--light.section-heading--left > .section-heading__eyebrow[data-astro-cid-ytvomcwp=\"\"]"
+              ],
+              "html": "<p class=\"section-heading__eyebrow\" data-astro-cid-ytvomcwp=\"\">Qué entendemos por proyecto</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.8 (foreground color: #c4854a, background color: #faf3e8, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 50
+    },
+    {
+      "route": "/projects",
+      "name": "projects",
+      "viewport": "desktop",
+      "url": "http://localhost:5022/projects",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 10,
+          "sampleNodes": [
+            {
+              "target": [
+                ".main-nav__link--cta"
+              ],
+              "html": "<a class=\"main-nav__link main-nav__link--cta\" href=\"/get-involved\" data-astro-cid-dmqpwcec=\"\">Colabora</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #ffffff, background color: #c4854a, font size: 10.8pt (14.4px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".breadcrumb__link"
+              ],
+              "html": "<a class=\"breadcrumb__link\" href=\"/\" data-astro-cid-qaanghzh=\"\">Inicio</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Trabajo aplicado</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 9.5pt (12.64px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 38,
+      "incomplete": 2,
+      "inapplicable": 51
+    },
+    {
+      "route": "/projects/vigia",
+      "name": "projects-vigia",
+      "viewport": "mobile",
+      "url": "http://localhost:5022/projects/vigia",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 22,
+          "sampleNodes": [
+            {
+              "target": [
+                ".breadcrumb__back > span[data-astro-cid-qaanghzh=\"\"]:nth-child(2)"
+              ],
+              "html": "<span data-astro-cid-qaanghzh=\"\">Proyectos</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Proyecto insignia</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#vigia-overview-heading > .section-heading__eyebrow"
+              ],
+              "html": "<p class=\"section-heading__eyebrow\" data-astro-cid-ytvomcwp=\"\">Resumen</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #c4854a, background color: #ffffff, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "definition-list",
+          "impact": "serious",
+          "description": "Ensure <dl> elements are structured correctly",
+          "help": "<dl> elements must only directly contain properly-ordered <dt> and <dd> groups, <script>, <template> or <div> elements",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/definition-list?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                "section[aria-labelledby=\"vigia-team-heading\"] > .container--narrow.container[data-astro-cid-t5qpcvsq=\"\"] > dl"
+              ],
+              "html": "<dl class=\"fact-list\" data-astro-cid-cjbmrvxo=\"\">",
+              "failureSummary": "Fix all of the following:\n  dl element has direct children that are not allowed: div > div"
+            },
+            {
+              "target": [
+                "section[aria-labelledby=\"vigia-resources-heading\"] > .container--narrow.container[data-astro-cid-t5qpcvsq=\"\"] > dl"
+              ],
+              "html": "<dl class=\"fact-list\" data-astro-cid-cjbmrvxo=\"\">",
+              "failureSummary": "Fix all of the following:\n  dl element has direct children that are not allowed: div > div"
+            }
+          ]
+        },
+        {
+          "id": "dlitem",
+          "impact": "serious",
+          "description": "Ensure <dt> and <dd> elements are contained by a <dl>",
+          "help": "<dt> and <dd> elements must be contained by a <dl>",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/dlitem?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "nodeCount": 16,
+          "sampleNodes": [
+            {
+              "target": [
+                "section[aria-labelledby=\"vigia-team-heading\"] > .container--narrow.container[data-astro-cid-t5qpcvsq=\"\"] > dl > .fact-list__row:nth-child(1) > .fact-list__pair > dt"
+              ],
+              "html": "<dt class=\"fact-list__label\" data-astro-cid-cjbmrvxo=\"\">Co-fundadora · Investigación</dt>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            },
+            {
+              "target": [
+                "section[aria-labelledby=\"vigia-team-heading\"] > .container--narrow.container[data-astro-cid-t5qpcvsq=\"\"] > dl > .fact-list__row:nth-child(1) > .fact-list__pair > dd"
+              ],
+              "html": "<dd class=\"fact-list__value\" data-astro-cid-cjbmrvxo=\"\">Pilar Carolina Moncada Santana</dd>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            },
+            {
+              "target": [
+                "section[aria-labelledby=\"vigia-team-heading\"] > .container--narrow.container[data-astro-cid-t5qpcvsq=\"\"] > dl > .fact-list__row:nth-child(2) > .fact-list__pair > dt"
+              ],
+              "html": "<dt class=\"fact-list__label\" data-astro-cid-cjbmrvxo=\"\">Co-fundador · Plataforma</dt>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 40,
+      "incomplete": 2,
+      "inapplicable": 47
+    },
+    {
+      "route": "/projects/vigia",
+      "name": "projects-vigia",
+      "viewport": "desktop",
+      "url": "http://localhost:5022/projects/vigia",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 24,
+          "sampleNodes": [
+            {
+              "target": [
+                ".main-nav__link--cta"
+              ],
+              "html": "<a class=\"main-nav__link main-nav__link--cta\" href=\"/get-involved\" data-astro-cid-dmqpwcec=\"\">Colabora</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #ffffff, background color: #c4854a, font size: 10.8pt (14.4px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".breadcrumb__link[href=\"/\"][data-astro-cid-qaanghzh=\"\"]"
+              ],
+              "html": "<a class=\"breadcrumb__link\" href=\"/\" data-astro-cid-qaanghzh=\"\">Inicio</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".breadcrumb__link[href$=\"projects\"][data-astro-cid-qaanghzh=\"\"]"
+              ],
+              "html": "<a class=\"breadcrumb__link\" href=\"/projects\" data-astro-cid-qaanghzh=\"\">Proyectos</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "definition-list",
+          "impact": "serious",
+          "description": "Ensure <dl> elements are structured correctly",
+          "help": "<dl> elements must only directly contain properly-ordered <dt> and <dd> groups, <script>, <template> or <div> elements",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/definition-list?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                "section[aria-labelledby=\"vigia-team-heading\"] > .container--narrow.container[data-astro-cid-t5qpcvsq=\"\"] > dl"
+              ],
+              "html": "<dl class=\"fact-list\" data-astro-cid-cjbmrvxo=\"\">",
+              "failureSummary": "Fix all of the following:\n  dl element has direct children that are not allowed: div > div"
+            },
+            {
+              "target": [
+                "section[aria-labelledby=\"vigia-resources-heading\"] > .container--narrow.container[data-astro-cid-t5qpcvsq=\"\"] > dl"
+              ],
+              "html": "<dl class=\"fact-list\" data-astro-cid-cjbmrvxo=\"\">",
+              "failureSummary": "Fix all of the following:\n  dl element has direct children that are not allowed: div > div"
+            }
+          ]
+        },
+        {
+          "id": "dlitem",
+          "impact": "serious",
+          "description": "Ensure <dt> and <dd> elements are contained by a <dl>",
+          "help": "<dt> and <dd> elements must be contained by a <dl>",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/dlitem?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "nodeCount": 16,
+          "sampleNodes": [
+            {
+              "target": [
+                "section[aria-labelledby=\"vigia-team-heading\"] > .container--narrow.container[data-astro-cid-t5qpcvsq=\"\"] > dl > .fact-list__row:nth-child(1) > .fact-list__pair > dt"
+              ],
+              "html": "<dt class=\"fact-list__label\" data-astro-cid-cjbmrvxo=\"\">Co-fundadora · Investigación</dt>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            },
+            {
+              "target": [
+                "section[aria-labelledby=\"vigia-team-heading\"] > .container--narrow.container[data-astro-cid-t5qpcvsq=\"\"] > dl > .fact-list__row:nth-child(1) > .fact-list__pair > dd"
+              ],
+              "html": "<dd class=\"fact-list__value\" data-astro-cid-cjbmrvxo=\"\">Pilar Carolina Moncada Santana</dd>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            },
+            {
+              "target": [
+                "section[aria-labelledby=\"vigia-team-heading\"] > .container--narrow.container[data-astro-cid-t5qpcvsq=\"\"] > dl > .fact-list__row:nth-child(2) > .fact-list__pair > dt"
+              ],
+              "html": "<dt class=\"fact-list__label\" data-astro-cid-cjbmrvxo=\"\">Co-fundador · Plataforma</dt>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 48
+    },
+    {
+      "route": "/projects/ai-safety-connect",
+      "name": "projects-ai-safety-connect",
+      "viewport": "mobile",
+      "url": "http://localhost:5022/projects/ai-safety-connect",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "aria-prohibited-attr",
+          "impact": "serious",
+          "description": "Ensure ARIA attributes are not prohibited for an element's role",
+          "help": "Elements must only use permitted ARIA attributes",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=playwright",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "nodeCount": 1,
+          "sampleNodes": [
+            {
+              "target": [
+                ".aisc-pdf-viewer"
+              ],
+              "html": "<div class=\"aisc-pdf-viewer\" aria-label=\"Visor del reporte final de AI Safety Connect\" data-astro-cid-5is7dozs=\"\">",
+              "failureSummary": "Fix all of the following:\n  aria-label attribute cannot be used on a div with no valid role attribute."
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 22,
+          "sampleNodes": [
+            {
+              "target": [
+                ".breadcrumb__back > span[data-astro-cid-qaanghzh=\"\"]:nth-child(2)"
+              ],
+              "html": "<span data-astro-cid-qaanghzh=\"\">Proyectos</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Proyecto insignia</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#aisc-overview-heading > .section-heading__eyebrow"
+              ],
+              "html": "<p class=\"section-heading__eyebrow\" data-astro-cid-ytvomcwp=\"\">Resumen</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #c4854a, background color: #ffffff, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "definition-list",
+          "impact": "serious",
+          "description": "Ensure <dl> elements are structured correctly",
+          "help": "<dl> elements must only directly contain properly-ordered <dt> and <dd> groups, <script>, <template> or <div> elements",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/definition-list?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                "section[aria-labelledby=\"aisc-methodology-heading\"] > .container--narrow.container[data-astro-cid-5is7dozs=\"\"] > dl"
+              ],
+              "html": "<dl class=\"fact-list\" data-astro-cid-cjbmrvxo=\"\">",
+              "failureSummary": "Fix all of the following:\n  dl element has direct children that are not allowed: div > div"
+            },
+            {
+              "target": [
+                "section[aria-labelledby=\"aisc-team-heading\"] > .container--narrow.container[data-astro-cid-5is7dozs=\"\"] > dl"
+              ],
+              "html": "<dl class=\"fact-list\" data-astro-cid-cjbmrvxo=\"\">",
+              "failureSummary": "Fix all of the following:\n  dl element has direct children that are not allowed: div > div"
+            }
+          ]
+        },
+        {
+          "id": "dlitem",
+          "impact": "serious",
+          "description": "Ensure <dt> and <dd> elements are contained by a <dl>",
+          "help": "<dt> and <dd> elements must be contained by a <dl>",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/dlitem?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "nodeCount": 16,
+          "sampleNodes": [
+            {
+              "target": [
+                "section[aria-labelledby=\"aisc-methodology-heading\"] > .container--narrow.container[data-astro-cid-5is7dozs=\"\"] > dl > .fact-list__row:nth-child(1) > .fact-list__pair > dt"
+              ],
+              "html": "<dt class=\"fact-list__label\" data-astro-cid-cjbmrvxo=\"\">Objetivo</dt>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            },
+            {
+              "target": [
+                "section[aria-labelledby=\"aisc-methodology-heading\"] > .container--narrow.container[data-astro-cid-5is7dozs=\"\"] > dl > .fact-list__row:nth-child(1) > .fact-list__pair > dd"
+              ],
+              "html": "<dd class=\"fact-list__value\" data-astro-cid-cjbmrvxo=\"\">Minimizar la brecha estructural de coordinación entre la investigación académica y las comunidades de seguridad en IA.</dd>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            },
+            {
+              "target": [
+                "section[aria-labelledby=\"aisc-methodology-heading\"] > .container--narrow.container[data-astro-cid-5is7dozs=\"\"] > dl > .fact-list__row:nth-child(2) > .fact-list__pair > dt"
+              ],
+              "html": "<dt class=\"fact-list__label\" data-astro-cid-cjbmrvxo=\"\">Metodología</dt>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 41,
+      "incomplete": 2,
+      "inapplicable": 46
+    },
+    {
+      "route": "/projects/ai-safety-connect",
+      "name": "projects-ai-safety-connect",
+      "viewport": "desktop",
+      "url": "http://localhost:5022/projects/ai-safety-connect",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "aria-prohibited-attr",
+          "impact": "serious",
+          "description": "Ensure ARIA attributes are not prohibited for an element's role",
+          "help": "Elements must only use permitted ARIA attributes",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=playwright",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "nodeCount": 1,
+          "sampleNodes": [
+            {
+              "target": [
+                ".aisc-pdf-viewer"
+              ],
+              "html": "<div class=\"aisc-pdf-viewer\" aria-label=\"Visor del reporte final de AI Safety Connect\" data-astro-cid-5is7dozs=\"\">",
+              "failureSummary": "Fix all of the following:\n  aria-label attribute cannot be used on a div with no valid role attribute."
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 24,
+          "sampleNodes": [
+            {
+              "target": [
+                ".main-nav__link--cta"
+              ],
+              "html": "<a class=\"main-nav__link main-nav__link--cta\" href=\"/get-involved\" data-astro-cid-dmqpwcec=\"\">Colabora</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #ffffff, background color: #c4854a, font size: 10.8pt (14.4px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".breadcrumb__link[href=\"/\"][data-astro-cid-qaanghzh=\"\"]"
+              ],
+              "html": "<a class=\"breadcrumb__link\" href=\"/\" data-astro-cid-qaanghzh=\"\">Inicio</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".breadcrumb__link[href$=\"projects\"][data-astro-cid-qaanghzh=\"\"]"
+              ],
+              "html": "<a class=\"breadcrumb__link\" href=\"/projects\" data-astro-cid-qaanghzh=\"\">Proyectos</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "definition-list",
+          "impact": "serious",
+          "description": "Ensure <dl> elements are structured correctly",
+          "help": "<dl> elements must only directly contain properly-ordered <dt> and <dd> groups, <script>, <template> or <div> elements",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/definition-list?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                "section[aria-labelledby=\"aisc-methodology-heading\"] > .container--narrow.container[data-astro-cid-5is7dozs=\"\"] > dl"
+              ],
+              "html": "<dl class=\"fact-list\" data-astro-cid-cjbmrvxo=\"\">",
+              "failureSummary": "Fix all of the following:\n  dl element has direct children that are not allowed: div > div"
+            },
+            {
+              "target": [
+                "section[aria-labelledby=\"aisc-team-heading\"] > .container--narrow.container[data-astro-cid-5is7dozs=\"\"] > dl"
+              ],
+              "html": "<dl class=\"fact-list\" data-astro-cid-cjbmrvxo=\"\">",
+              "failureSummary": "Fix all of the following:\n  dl element has direct children that are not allowed: div > div"
+            }
+          ]
+        },
+        {
+          "id": "dlitem",
+          "impact": "serious",
+          "description": "Ensure <dt> and <dd> elements are contained by a <dl>",
+          "help": "<dt> and <dd> elements must be contained by a <dl>",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/dlitem?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.3"
+          ],
+          "nodeCount": 16,
+          "sampleNodes": [
+            {
+              "target": [
+                "section[aria-labelledby=\"aisc-methodology-heading\"] > .container--narrow.container[data-astro-cid-5is7dozs=\"\"] > dl > .fact-list__row:nth-child(1) > .fact-list__pair > dt"
+              ],
+              "html": "<dt class=\"fact-list__label\" data-astro-cid-cjbmrvxo=\"\">Objetivo</dt>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            },
+            {
+              "target": [
+                "section[aria-labelledby=\"aisc-methodology-heading\"] > .container--narrow.container[data-astro-cid-5is7dozs=\"\"] > dl > .fact-list__row:nth-child(1) > .fact-list__pair > dd"
+              ],
+              "html": "<dd class=\"fact-list__value\" data-astro-cid-cjbmrvxo=\"\">Minimizar la brecha estructural de coordinación entre la investigación académica y las comunidades de seguridad en IA.</dd>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            },
+            {
+              "target": [
+                "section[aria-labelledby=\"aisc-methodology-heading\"] > .container--narrow.container[data-astro-cid-5is7dozs=\"\"] > dl > .fact-list__row:nth-child(2) > .fact-list__pair > dt"
+              ],
+              "html": "<dt class=\"fact-list__label\" data-astro-cid-cjbmrvxo=\"\">Metodología</dt>",
+              "failureSummary": "Fix any of the following:\n  Description list item does not have a <dl> parent element"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 40,
+      "incomplete": 2,
+      "inapplicable": 47
+    },
+    {
+      "route": "/team",
+      "name": "team",
+      "viewport": "mobile",
+      "url": "http://localhost:5022/team",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 7,
+          "sampleNodes": [
+            {
+              "target": [
+                ".breadcrumb__back > span[data-astro-cid-qaanghzh=\"\"]:nth-child(2)"
+              ],
+              "html": "<span data-astro-cid-qaanghzh=\"\">Inicio</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Equipo</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#core-team-heading > .section-heading__eyebrow[data-astro-cid-ytvomcwp=\"\"]"
+              ],
+              "html": "<p class=\"section-heading__eyebrow\" data-astro-cid-ytvomcwp=\"\">Nuestro equipo</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #c4854a, background color: #ffffff, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 50
+    },
+    {
+      "route": "/team",
+      "name": "team",
+      "viewport": "desktop",
+      "url": "http://localhost:5022/team",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 8,
+          "sampleNodes": [
+            {
+              "target": [
+                ".main-nav__link--cta"
+              ],
+              "html": "<a class=\"main-nav__link main-nav__link--cta\" href=\"/get-involved\" data-astro-cid-dmqpwcec=\"\">Colabora</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #ffffff, background color: #c4854a, font size: 10.8pt (14.4px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".breadcrumb__link"
+              ],
+              "html": "<a class=\"breadcrumb__link\" href=\"/\" data-astro-cid-qaanghzh=\"\">Inicio</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Equipo</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 9.5pt (12.64px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 38,
+      "incomplete": 2,
+      "inapplicable": 51
+    },
+    {
+      "route": "/activities",
+      "name": "activities",
+      "viewport": "mobile",
+      "url": "http://localhost:5022/activities",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "aria-allowed-role",
+          "impact": "minor",
+          "description": "Ensure role attribute has an appropriate value for the element",
+          "help": "ARIA role should be appropriate for the element",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-allowed-role?application=playwright",
+          "tags": [
+            "cat.aria",
+            "best-practice"
+          ],
+          "nodeCount": 1,
+          "sampleNodes": [
+            {
+              "target": [
+                "li[aria-label=\"1 de 12\"]"
+              ],
+              "html": "<li class=\"carousel__slide is-active\" role=\"group\" aria-roledescription=\"slide\" aria-label=\"1 de 12\" data-carousel-slide=\"\" data-index=\"0\" aria-hidden=\"false\" data-astro-cid-wfe7xcno=\"\">",
+              "failureSummary": "Fix any of the following:\n  ARIA role group is not allowed for given element"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 13,
+          "sampleNodes": [
+            {
+              "target": [
+                ".breadcrumb__back > span[data-astro-cid-qaanghzh=\"\"]:nth-child(2)"
+              ],
+              "html": "<span data-astro-cid-qaanghzh=\"\">Inicio</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Actividades</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#actividades-destacado > .section-heading__eyebrow[data-astro-cid-ytvomcwp=\"\"]"
+              ],
+              "html": "<p class=\"section-heading__eyebrow\" data-astro-cid-ytvomcwp=\"\">Destacado</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #c4854a, background color: #ffffff, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        },
+        {
+          "id": "list",
+          "impact": "serious",
+          "description": "Ensure that lists are structured correctly",
+          "help": "<ul> and <ol> must only directly contain <li>, <script> or <template> elements",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/list?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.1"
+          ],
+          "nodeCount": 1,
+          "sampleNodes": [
+            {
+              "target": [
+                ".carousel__track"
+              ],
+              "html": "<ul class=\"carousel__track\" data-carousel-track=\"\" data-astro-cid-wfe7xcno=\"\" style=\"transform: translateX(0%);\">",
+              "failureSummary": "Fix all of the following:\n  List element has direct children that are not allowed: [role=group]"
+            }
+          ]
+        }
+      ],
+      "passes": 43,
+      "incomplete": 2,
+      "inapplicable": 46
+    },
+    {
+      "route": "/activities",
+      "name": "activities",
+      "viewport": "desktop",
+      "url": "http://localhost:5022/activities",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "aria-allowed-role",
+          "impact": "minor",
+          "description": "Ensure role attribute has an appropriate value for the element",
+          "help": "ARIA role should be appropriate for the element",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-allowed-role?application=playwright",
+          "tags": [
+            "cat.aria",
+            "best-practice"
+          ],
+          "nodeCount": 1,
+          "sampleNodes": [
+            {
+              "target": [
+                "li[aria-label=\"1 de 12\"]"
+              ],
+              "html": "<li class=\"carousel__slide is-active\" role=\"group\" aria-roledescription=\"slide\" aria-label=\"1 de 12\" data-carousel-slide=\"\" data-index=\"0\" aria-hidden=\"false\" data-astro-cid-wfe7xcno=\"\">",
+              "failureSummary": "Fix any of the following:\n  ARIA role group is not allowed for given element"
+            }
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 14,
+          "sampleNodes": [
+            {
+              "target": [
+                ".main-nav__link--cta"
+              ],
+              "html": "<a class=\"main-nav__link main-nav__link--cta\" href=\"/get-involved\" data-astro-cid-dmqpwcec=\"\">Colabora</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #ffffff, background color: #c4854a, font size: 10.8pt (14.4px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".breadcrumb__link"
+              ],
+              "html": "<a class=\"breadcrumb__link\" href=\"/\" data-astro-cid-qaanghzh=\"\">Inicio</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Actividades</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 9.5pt (12.64px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        },
+        {
+          "id": "list",
+          "impact": "serious",
+          "description": "Ensure that lists are structured correctly",
+          "help": "<ul> and <ol> must only directly contain <li>, <script> or <template> elements",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/list?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.1"
+          ],
+          "nodeCount": 1,
+          "sampleNodes": [
+            {
+              "target": [
+                ".carousel__track"
+              ],
+              "html": "<ul class=\"carousel__track\" data-carousel-track=\"\" data-astro-cid-wfe7xcno=\"\" style=\"transform: translateX(0%);\">",
+              "failureSummary": "Fix all of the following:\n  List element has direct children that are not allowed: [role=group]"
+            }
+          ]
+        }
+      ],
+      "passes": 43,
+      "incomplete": 2,
+      "inapplicable": 46
+    },
+    {
+      "route": "/get-involved",
+      "name": "get-involved",
+      "viewport": "mobile",
+      "url": "http://localhost:5022/get-involved",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 12,
+          "sampleNodes": [
+            {
+              "target": [
+                ".breadcrumb__back > span[data-astro-cid-qaanghzh=\"\"]:nth-child(2)"
+              ],
+              "html": "<span data-astro-cid-qaanghzh=\"\">Inicio</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Colabora</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "#intro-heading > .section-heading__eyebrow[data-astro-cid-ytvomcwp=\"\"]"
+              ],
+              "html": "<p class=\"section-heading__eyebrow\" data-astro-cid-ytvomcwp=\"\">Quiénes colaboran con nosotros</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #c4854a, background color: #ffffff, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 44,
+      "incomplete": 2,
+      "inapplicable": 44
+    },
+    {
+      "route": "/get-involved",
+      "name": "get-involved",
+      "viewport": "desktop",
+      "url": "http://localhost:5022/get-involved",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 13,
+          "sampleNodes": [
+            {
+              "target": [
+                ".main-nav__link--cta"
+              ],
+              "html": "<a class=\"main-nav__link main-nav__link--cta is-active\" href=\"/get-involved\" aria-current=\"page\" data-astro-cid-dmqpwcec=\"\">Colabora</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.23 (foreground color: #ffffff, background color: #a86e3a, font size: 10.8pt (14.4px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".breadcrumb__link"
+              ],
+              "html": "<a class=\"breadcrumb__link\" href=\"/\" data-astro-cid-qaanghzh=\"\">Inicio</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Colabora</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 9.5pt (12.64px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 44,
+      "incomplete": 2,
+      "inapplicable": 44
+    },
+    {
+      "route": "/contact",
+      "name": "contact",
+      "viewport": "mobile",
+      "url": "http://localhost:5022/contact",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 7,
+          "sampleNodes": [
+            {
+              "target": [
+                ".breadcrumb__back > span[data-astro-cid-qaanghzh=\"\"]:nth-child(2)"
+              ],
+              "html": "<span data-astro-cid-qaanghzh=\"\">Inicio</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Contacto</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".contact__item[data-astro-cid-uw5kdbxl=\"\"]:nth-child(1) > .contact__label"
+              ],
+              "html": "<span class=\"contact__label\" data-astro-cid-uw5kdbxl=\"\">Correo electrónico</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.8 (foreground color: #c4854a, background color: #faf3e8, font size: 8.7pt (11.575px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 49
+    },
+    {
+      "route": "/contact",
+      "name": "contact",
+      "viewport": "desktop",
+      "url": "http://localhost:5022/contact",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=playwright",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "nodeCount": 8,
+          "sampleNodes": [
+            {
+              "target": [
+                ".main-nav__link--cta"
+              ],
+              "html": "<a class=\"main-nav__link main-nav__link--cta\" href=\"/get-involved\" data-astro-cid-dmqpwcec=\"\">Colabora</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.08 (foreground color: #ffffff, background color: #c4854a, font size: 10.8pt (14.4px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".breadcrumb__link"
+              ],
+              "html": "<a class=\"breadcrumb__link\" href=\"/\" data-astro-cid-qaanghzh=\"\">Inicio</a>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".page-hero__eyebrow"
+              ],
+              "html": "<p class=\"page-hero__eyebrow role-eyebrow\" data-astro-cid-s5hxusys=\"\">Contacto</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.09 (foreground color: #d4a853, background color: #545a70, font size: 9.5pt (12.64px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"70\" height=\"70\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 38,
+      "incomplete": 2,
+      "inapplicable": 50
+    }
+  ]
+}

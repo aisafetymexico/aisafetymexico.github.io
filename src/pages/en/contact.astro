@@ -1,0 +1,224 @@
+---
+/**
+ * /en/contact — English mirror of /contact.
+ *
+ * Spec: docs/I18N-ARCHITECTURE.md §2 (Strategy B) + §7 row 11.
+ * Sibling: src/pages/contact.astro.
+ *
+ * As with the Spanish source, this is a deliberately minimal page —
+ * lowest-friction email contact, no form, with a CTA that routes
+ * higher-intent visitors to /en/get-involved#contacto.
+ *
+ * Translation notes:
+ *  - The fragment `#contacto` in the outbound CTA is intentionally kept in
+ *    Spanish: the anchor id on the destination page is `id="contacto"` in
+ *    both locales (slugs are identical across locales — see I18N §1).
+ *  - `contact@aismx.org` preserved verbatim.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import CtaSection from '../../components/CtaSection.astro';
+import { t } from '../../lib/i18n';
+
+const pathname = '/en/contact';
+
+const breadcrumb = {
+  items: [
+    { label: t('en', 'breadcrumb.home'), href: '/en' },
+    { label: 'Contact' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Contact — AI Safety Mexico"
+  description="Write to contact@aismx.org or connect with us on LinkedIn and Instagram. We respond to most messages within five business days."
+  pathname={pathname}
+  lang="en"
+  ogImage="/images/aisafetymx_logo.webp"
+>
+  <Header slot="header" currentPath={pathname} lang="en" />
+
+  <PageHero
+    title="Get in touch"
+    description="If you have a question, a proposal, or want to learn more about our programs and research, you can reach us through any of the channels below."
+    breadcrumb={breadcrumb}
+    lang="en"
+  />
+
+  <section class="page-section" aria-labelledby="channels-heading">
+    <div class="container container--narrow">
+      <h2 id="channels-heading" class="contact__heading">Channels</h2>
+
+      <ul class="contact__list" role="list">
+        <li class="contact__item">
+          <span class="contact__label">Email</span>
+          <a class="contact__value" href="mailto:contact@aismx.org">
+            contact@aismx.org
+          </a>
+          <p class="contact__hint">Primary channel — we prefer email for formal proposals.</p>
+        </li>
+
+        <li class="contact__item">
+          <span class="contact__label">LinkedIn</span>
+          <a
+            class="contact__value"
+            href="https://www.linkedin.com/company/ai-safety-mexico/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            linkedin.com/company/ai-safety-mexico
+          </a>
+          <p class="contact__hint">For professional connections and updates.</p>
+        </li>
+
+        <li class="contact__item">
+          <span class="contact__label">Instagram</span>
+          <a
+            class="contact__value"
+            href="https://www.instagram.com/aisafetymx/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @aisafetymx
+          </a>
+          <p class="contact__hint">For activities, events, and a glimpse of the community.</p>
+        </li>
+      </ul>
+
+      <div class="contact__meta">
+        <p class="contact__meta-item">
+          <strong>Response time.</strong> We respond to most messages within
+          five business days.
+        </p>
+        <p class="contact__meta-item">
+          <strong>Location.</strong> We operate from Mexico and also collaborate
+          with international organizations.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaSection
+    title="Want to collaborate with us?"
+    description="If your message is a collaboration proposal — joint research, educational programs, or events — visit Get involved for details and a dedicated form."
+    ctaLabel="See ways to collaborate"
+    ctaHref="/en/get-involved#contacto"
+  />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  .page-section {
+    padding-block: var(--space-10);
+    background: var(--color-bg-base);
+  }
+  @media (min-width: 768px) {
+    .page-section {
+      padding-block: var(--space-12);
+    }
+  }
+
+  .container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+  .container--narrow {
+    max-width: var(--container-narrow);
+  }
+  @media (min-width: 480px) {
+    .container {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  .contact__heading {
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-tight);
+    color: var(--color-text-heading);
+    margin: 0 0 var(--space-7);
+  }
+
+  .contact__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    margin: 0 0 var(--space-9);
+    padding: 0;
+    list-style: none;
+  }
+
+  .contact__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-5) var(--space-6);
+    background: var(--color-bg-base);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-xs);
+  }
+
+  .contact__label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .contact__value {
+    font-family: var(--font-body);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-semibold);
+    color: var(--color-text-heading);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color var(--transition), border-color var(--transition);
+    word-break: break-word;
+  }
+  .contact__value:hover,
+  .contact__value:focus-visible {
+    color: var(--color-link-hover);
+    border-bottom-color: var(--color-link-hover);
+  }
+
+  .contact__hint {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .contact__meta {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .contact__meta-item {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .contact__meta-item :global(strong) {
+    color: var(--color-text-heading);
+    font-weight: var(--fw-semibold);
+  }
+</style>

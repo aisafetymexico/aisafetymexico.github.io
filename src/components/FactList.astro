@@ -1,0 +1,94 @@
+---
+/**
+ * FactList — vertical list of key facts. Each row is rendered as a pure
+ * typographic pair: an uppercase eyebrow label on top and a value below.
+ *
+ * Spec:
+ *  - Task #10 props: `{ items: Array<{icon?, label, value}> }` (icon ignored).
+ *  - docs/DESIGN-SYSTEM.md §6.4 — FactList.
+ *  - docs/RAND-AESTHETIC.md §8 — type-only label/value rows, no leading
+ *    glyph.
+ *  - Mobile-first; rows wrap on narrow viewports.
+ *
+ * Backwards-compat: callers may still pass `icon` per item; the value is
+ * ignored so the rendered output stays type-only (Task #26 / RAND-ify).
+ */
+
+export interface FactItem {
+  /** @deprecated kept for backwards compatibility; not rendered. */
+  icon?: string;
+  label: string;
+  value: string;
+}
+
+export interface Props {
+  items: FactItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<dl class="fact-list">
+  {items.map((item) => (
+    <div class="fact-list__row">
+      <dt class="fact-list__label">{item.label}</dt>
+      <dd class="fact-list__value">{item.value}</dd>
+    </div>
+  ))}
+</dl>
+
+<style>
+  .fact-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+  }
+
+  .fact-list__row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xs);
+    transition: border-color var(--transition), background var(--transition);
+    min-width: 0;
+  }
+
+  .fact-list__row:hover {
+    border-color: var(--color-border-accent);
+    background: var(--color-accent-soft);
+  }
+
+  .fact-list__label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-semibold);
+    line-height: 1.2;
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .fact-list__value {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-normal);
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .fact-list {
+      gap: var(--space-3);
+    }
+    .fact-list__row {
+      padding: var(--space-4) var(--space-5);
+    }
+  }
+</style>

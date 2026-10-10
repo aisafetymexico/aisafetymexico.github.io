@@ -1,0 +1,1148 @@
+{
+  "base": "http://localhost:5082",
+  "timestamp": "2026-05-08T12:58:55.151Z",
+  "routeCount": 12,
+  "viewports": [
+    "mobile",
+    "desktop"
+  ],
+  "totals": {
+    "violations": 30,
+    "critical": 0,
+    "serious": 4,
+    "moderate": 0,
+    "minor": 26
+  },
+  "results": [
+    {
+      "route": "/",
+      "name": "home",
+      "viewport": "mobile",
+      "url": "http://localhost:5082/",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 40,
+      "incomplete": 2,
+      "inapplicable": 49
+    },
+    {
+      "route": "/",
+      "name": "home",
+      "viewport": "desktop",
+      "url": "http://localhost:5082/",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 50
+    },
+    {
+      "route": "/about",
+      "name": "about",
+      "viewport": "mobile",
+      "url": "http://localhost:5082/about",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 49
+    },
+    {
+      "route": "/about",
+      "name": "about",
+      "viewport": "desktop",
+      "url": "http://localhost:5082/about",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 38,
+      "incomplete": 2,
+      "inapplicable": 50
+    },
+    {
+      "route": "/research",
+      "name": "research",
+      "viewport": "mobile",
+      "url": "http://localhost:5082/research",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 49
+    },
+    {
+      "route": "/research",
+      "name": "research",
+      "viewport": "desktop",
+      "url": "http://localhost:5082/research",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 38,
+      "incomplete": 2,
+      "inapplicable": 50
+    },
+    {
+      "route": "/programs",
+      "name": "programs",
+      "viewport": "mobile",
+      "url": "http://localhost:5082/programs",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 43,
+      "incomplete": 2,
+      "inapplicable": 46
+    },
+    {
+      "route": "/programs",
+      "name": "programs",
+      "viewport": "desktop",
+      "url": "http://localhost:5082/programs",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 43,
+      "incomplete": 2,
+      "inapplicable": 46
+    },
+    {
+      "route": "/projects",
+      "name": "projects",
+      "viewport": "mobile",
+      "url": "http://localhost:5082/projects",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 50
+    },
+    {
+      "route": "/projects",
+      "name": "projects",
+      "viewport": "desktop",
+      "url": "http://localhost:5082/projects",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 38,
+      "incomplete": 2,
+      "inapplicable": 51
+    },
+    {
+      "route": "/projects/vigia",
+      "name": "projects-vigia",
+      "viewport": "mobile",
+      "url": "http://localhost:5082/projects/vigia",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 42,
+      "incomplete": 2,
+      "inapplicable": 47
+    },
+    {
+      "route": "/projects/vigia",
+      "name": "projects-vigia",
+      "viewport": "desktop",
+      "url": "http://localhost:5082/projects/vigia",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 41,
+      "incomplete": 2,
+      "inapplicable": 48
+    },
+    {
+      "route": "/projects/ai-safety-connect",
+      "name": "projects-ai-safety-connect",
+      "viewport": "mobile",
+      "url": "http://localhost:5082/projects/ai-safety-connect",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "aria-prohibited-attr",
+          "impact": "serious",
+          "description": "Ensure ARIA attributes are not prohibited for an element's role",
+          "help": "Elements must only use permitted ARIA attributes",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=playwright",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "nodeCount": 1,
+          "sampleNodes": [
+            {
+              "target": [
+                ".aisc-pdf-viewer"
+              ],
+              "html": "<div class=\"aisc-pdf-viewer\" aria-label=\"Visor del reporte final de AI Safety Connect\" data-astro-cid-5is7dozs=\"\">",
+              "failureSummary": "Fix all of the following:\n  aria-label attribute cannot be used on a div with no valid role attribute."
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 43,
+      "incomplete": 2,
+      "inapplicable": 46
+    },
+    {
+      "route": "/projects/ai-safety-connect",
+      "name": "projects-ai-safety-connect",
+      "viewport": "desktop",
+      "url": "http://localhost:5082/projects/ai-safety-connect",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "aria-prohibited-attr",
+          "impact": "serious",
+          "description": "Ensure ARIA attributes are not prohibited for an element's role",
+          "help": "Elements must only use permitted ARIA attributes",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=playwright",
+          "tags": [
+            "cat.aria",
+            "wcag2a",
+            "wcag412",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "RGAAv4",
+            "RGAA-7.1.1"
+          ],
+          "nodeCount": 1,
+          "sampleNodes": [
+            {
+              "target": [
+                ".aisc-pdf-viewer"
+              ],
+              "html": "<div class=\"aisc-pdf-viewer\" aria-label=\"Visor del reporte final de AI Safety Connect\" data-astro-cid-5is7dozs=\"\">",
+              "failureSummary": "Fix all of the following:\n  aria-label attribute cannot be used on a div with no valid role attribute."
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 42,
+      "incomplete": 2,
+      "inapplicable": 47
+    },
+    {
+      "route": "/team",
+      "name": "team",
+      "viewport": "mobile",
+      "url": "http://localhost:5082/team",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 50
+    },
+    {
+      "route": "/team",
+      "name": "team",
+      "viewport": "desktop",
+      "url": "http://localhost:5082/team",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 38,
+      "incomplete": 2,
+      "inapplicable": 51
+    },
+    {
+      "route": "/activities",
+      "name": "activities",
+      "viewport": "mobile",
+      "url": "http://localhost:5082/activities",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "aria-allowed-role",
+          "impact": "minor",
+          "description": "Ensure role attribute has an appropriate value for the element",
+          "help": "ARIA role should be appropriate for the element",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-allowed-role?application=playwright",
+          "tags": [
+            "cat.aria",
+            "best-practice"
+          ],
+          "nodeCount": 1,
+          "sampleNodes": [
+            {
+              "target": [
+                "li[aria-label=\"1 de 12\"]"
+              ],
+              "html": "<li class=\"carousel__slide is-active\" role=\"group\" aria-roledescription=\"slide\" aria-label=\"1 de 12\" data-carousel-slide=\"\" data-index=\"0\" aria-hidden=\"false\" data-astro-cid-wfe7xcno=\"\">",
+              "failureSummary": "Fix any of the following:\n  ARIA role group is not allowed for given element"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        },
+        {
+          "id": "list",
+          "impact": "serious",
+          "description": "Ensure that lists are structured correctly",
+          "help": "<ul> and <ol> must only directly contain <li>, <script> or <template> elements",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/list?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.1"
+          ],
+          "nodeCount": 1,
+          "sampleNodes": [
+            {
+              "target": [
+                ".carousel__track"
+              ],
+              "html": "<ul class=\"carousel__track\" data-carousel-track=\"\" data-astro-cid-wfe7xcno=\"\" style=\"transform: translateX(0%);\">",
+              "failureSummary": "Fix all of the following:\n  List element has direct children that are not allowed: [role=group]"
+            }
+          ]
+        }
+      ],
+      "passes": 43,
+      "incomplete": 2,
+      "inapplicable": 46
+    },
+    {
+      "route": "/activities",
+      "name": "activities",
+      "viewport": "desktop",
+      "url": "http://localhost:5082/activities",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "aria-allowed-role",
+          "impact": "minor",
+          "description": "Ensure role attribute has an appropriate value for the element",
+          "help": "ARIA role should be appropriate for the element",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-allowed-role?application=playwright",
+          "tags": [
+            "cat.aria",
+            "best-practice"
+          ],
+          "nodeCount": 1,
+          "sampleNodes": [
+            {
+              "target": [
+                "li[aria-label=\"1 de 12\"]"
+              ],
+              "html": "<li class=\"carousel__slide is-active\" role=\"group\" aria-roledescription=\"slide\" aria-label=\"1 de 12\" data-carousel-slide=\"\" data-index=\"0\" aria-hidden=\"false\" data-astro-cid-wfe7xcno=\"\">",
+              "failureSummary": "Fix any of the following:\n  ARIA role group is not allowed for given element"
+            }
+          ]
+        },
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        },
+        {
+          "id": "list",
+          "impact": "serious",
+          "description": "Ensure that lists are structured correctly",
+          "help": "<ul> and <ol> must only directly contain <li>, <script> or <template> elements",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/list?application=playwright",
+          "tags": [
+            "cat.structure",
+            "wcag2a",
+            "wcag131",
+            "EN-301-549",
+            "EN-9.1.3.1",
+            "RGAAv4",
+            "RGAA-9.3.1"
+          ],
+          "nodeCount": 1,
+          "sampleNodes": [
+            {
+              "target": [
+                ".carousel__track"
+              ],
+              "html": "<ul class=\"carousel__track\" data-carousel-track=\"\" data-astro-cid-wfe7xcno=\"\" style=\"transform: translateX(0%);\">",
+              "failureSummary": "Fix all of the following:\n  List element has direct children that are not allowed: [role=group]"
+            }
+          ]
+        }
+      ],
+      "passes": 43,
+      "incomplete": 2,
+      "inapplicable": 46
+    },
+    {
+      "route": "/get-involved",
+      "name": "get-involved",
+      "viewport": "mobile",
+      "url": "http://localhost:5082/get-involved",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 44,
+      "incomplete": 2,
+      "inapplicable": 44
+    },
+    {
+      "route": "/get-involved",
+      "name": "get-involved",
+      "viewport": "desktop",
+      "url": "http://localhost:5082/get-involved",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 44,
+      "incomplete": 2,
+      "inapplicable": 44
+    },
+    {
+      "route": "/contact",
+      "name": "contact",
+      "viewport": "mobile",
+      "url": "http://localhost:5082/contact",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 49
+    },
+    {
+      "route": "/contact",
+      "name": "contact",
+      "viewport": "desktop",
+      "url": "http://localhost:5082/contact",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 38,
+      "incomplete": 2,
+      "inapplicable": 50
+    },
+    {
+      "route": "/global-south-challenge",
+      "name": "global-south-challenge",
+      "viewport": "mobile",
+      "url": "http://localhost:5082/global-south-challenge",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 40,
+      "incomplete": 2,
+      "inapplicable": 48
+    },
+    {
+      "route": "/global-south-challenge",
+      "name": "global-south-challenge",
+      "viewport": "desktop",
+      "url": "http://localhost:5082/global-south-challenge",
+      "httpStatus": 200,
+      "error": null,
+      "violations": [
+        {
+          "id": "image-redundant-alt",
+          "impact": "minor",
+          "description": "Ensure image alternative is not repeated as text",
+          "help": "Alternative text of images should not be repeated as text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/image-redundant-alt?application=playwright",
+          "tags": [
+            "cat.text-alternatives",
+            "best-practice"
+          ],
+          "nodeCount": 2,
+          "sampleNodes": [
+            {
+              "target": [
+                ".site-header__logo-img"
+              ],
+              "html": "<img class=\"site-header__logo-img\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"48\" height=\"48\" loading=\"eager\" decoding=\"async\" data-astro-cid-3ef6ksr2=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            },
+            {
+              "target": [
+                ".site-footer__logo"
+              ],
+              "html": "<img class=\"site-footer__logo\" src=\"/images/aisafetymx_logo.webp\" alt=\"AI Safety Mexico\" width=\"40\" height=\"40\" loading=\"lazy\" decoding=\"async\" data-astro-cid-sz7xmlte=\"\">",
+              "failureSummary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+            }
+          ]
+        }
+      ],
+      "passes": 39,
+      "incomplete": 2,
+      "inapplicable": 49
+    }
+  ]
+}

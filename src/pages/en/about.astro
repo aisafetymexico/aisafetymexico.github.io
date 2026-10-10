@@ -1,0 +1,264 @@
+---
+/*
+ * /en/about — Who we are (English mirror of /about).
+ *
+ * Strategy B sibling. Structure, imports, and component contracts are
+ * preserved from the Spanish source; only user-facing strings and in-locale
+ * links change.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import Callout from '../../components/Callout.astro';
+import PullQuote from '../../components/PullQuote.astro';
+import PillarCard from '../../components/PillarCard.astro';
+import KeyFacts from '../../components/KeyFacts.astro';
+import CtaSection from '../../components/CtaSection.astro';
+
+const breadcrumb = {
+  items: [
+    { label: 'Home', href: '/en' },
+    { label: 'About us' },
+  ],
+};
+
+const pillars = [
+  {
+    number: '01',
+    title: 'Research',
+    description:
+      'We produce original and collaborative work in alignment, mechanistic interpretability, and technical governance, in partnership with national and international institutions.',
+  },
+  {
+    number: '02',
+    title: 'Education',
+    description:
+      'We design and deliver open and bespoke courses — for communities, universities, and research centers — that adapt contemporary AI safety frameworks to the Mexican context.',
+  },
+  {
+    number: '03',
+    title: 'Governance',
+    description:
+      'We produce technical analyses, take part in working groups, and publish specialist documents that feed into public consultations and AI policy design in Mexico.',
+  },
+  {
+    number: '04',
+    title: 'Community',
+    description:
+      'We sustain ongoing spaces for dialogue — working groups, workshops, conferences — that connect those who research, develop, and regulate AI in Mexico.',
+  },
+];
+
+const keyFacts = [
+  { text: 'Founded in 2025' },
+  { text: 'Nonprofit' },
+  { text: 'Multidisciplinary team' },
+  { text: 'Based in Mexico' },
+];
+---
+
+<BaseLayout
+  title="About us · AI Safety Mexico"
+  description="AI Safety Mexico is a nonprofit founded in 2025 that advances research, education, and responsible governance of artificial intelligence in Mexico."
+  pathname="/en/about"
+  lang="en"
+>
+  <Header slot="header" currentPath="/en/about" lang="en" />
+
+  <PageHero
+    title="Who we are"
+    description="A nonprofit organization that brings together AI research, education, and governance from Mexico."
+    breadcrumb={breadcrumb}
+    lang="en"
+  />
+
+  <!-- 2. Mission -->
+  <section class="section section--base">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Mission"
+        title="Why we exist"
+        description="Our purpose stated in a single line."
+      />
+
+      <div class="prose">
+        <p>
+          AI Safety Mexico is a nonprofit organization founded in 2025 that
+          advances research, education, and responsible governance of
+          artificial intelligence in Mexico. We work at the intersection of
+          three communities — researchers, educators, and policymakers — to
+          ensure that AI systems are developed and deployed safely, aligned
+          with human values, and attentive to the Mexican context.
+        </p>
+        <p>
+          Our work combines open research, context-aware training, and
+          collaboration with partner institutions. We operate as a
+          multidisciplinary team and partner with national and international
+          organizations that share our commitment to giving the Global South a
+          voice of its own in the conversation about AI safety.
+        </p>
+      </div>
+
+      <Callout tone="highlight">
+        <p>
+          <strong>Mission.</strong> To advance research, education, and
+          responsible governance of artificial intelligence in Mexico, ensuring
+          that AI systems are developed and deployed safely, aligned with human
+          values, and attentive to the Mexican context.
+        </p>
+      </Callout>
+    </div>
+  </section>
+
+  <!-- 3. Vision -->
+  <section class="section section--base">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Vision"
+        title="Where we are headed"
+      />
+
+      <div class="prose">
+        <p>
+          We envision a Mexico where the Global South speaks with a voice of
+          its own in the technical and normative definition of AI safety: a
+          consolidated community of researchers, educators, and policymakers
+          producing locally grounded knowledge, training new generations, and
+          taking an active role in shaping regulatory frameworks attentive to
+          Mexican realities.
+        </p>
+      </div>
+
+      <PullQuote
+        quote="A Mexico where the Global South speaks with a voice of its own in the technical and normative definition of AI safety."
+        attribution="Vision · AI Safety Mexico"
+      />
+    </div>
+  </section>
+
+  <!-- 4. Pillars in depth -->
+  <section class="section section--base">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Four axes"
+        title="Our pillars of work"
+        description="The areas where we concentrate our efforts. They are not watertight compartments: most projects cut across several of them."
+      />
+
+      <div class="pillar-grid">
+        {pillars.map((pillar) => (
+          <PillarCard
+            number={pillar.number}
+            title={pillar.title}
+            description={pillar.description}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. History / Origin -->
+  <section class="section section--base">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Origin"
+        title="How AI Safety Mexico came to be"
+      />
+
+      <div class="prose">
+        <p>
+          AI Safety Mexico was born in 2025 in response to an observation
+          shared by a group of researchers, engineers, and practitioners in
+          Mexico: the conversation about AI safety is moving at a fast pace in
+          the Global North, while the concerns, values, and contexts of the
+          Global South are rarely brought into that conversation.
+        </p>
+        <p>
+          We decided to organize ourselves to close that gap from a specific
+          country — Mexico — and through a specific practice: rigorous
+          research, open training, and the production of technical inputs that
+          support informed decision-making about AI. The organization was
+          formally established in 2025 with a multidisciplinary founding team
+          combining experience in machine learning, social sciences, public
+          policy, and applied mathematics.
+        </p>
+        <p>
+          Since then, we've run open and institutional courses, published in
+          national venues, taken part in international events (EAGxCDMX,
+          ML4Good, SPAR), and partnered with allies such as Centro Geo, UADY,
+          ENAIS, and Apart Research. Every activity follows the same principle:
+          producing locally grounded knowledge that is useful to those who
+          research, regulate, or deploy AI in Mexico.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. KeyFacts -->
+  <section class="section section--base section--compact">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="Identity"
+        title="Essential facts"
+        description="The minimum worth knowing about us before exploring the rest of the site."
+      />
+
+      <KeyFacts facts={keyFacts} />
+    </div>
+  </section>
+
+  <!-- 7. CTA -->
+  <CtaSection
+    title="Want to meet the team?"
+    description="Behind AI Safety Mexico is a multidisciplinary group of researchers, engineers, and educators committed to AI safety in Mexico."
+    ctaLabel="Meet the team"
+    ctaHref="/en/team"
+  />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  /* Local prose tuning for the About narrative blocks. The site uses Inter
+     for body and Playfair for display headings; here we set comfortable
+     line-height and bottom margin between paragraphs. */
+  .prose {
+    max-width: 64ch;
+    margin-inline: auto;
+  }
+
+  .prose p {
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--space-4);
+  }
+
+  .prose p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Pillar grid: 1-up mobile → 2-up tablet → 4-up desktop. */
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 640px) {
+    .pillar-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-9);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .pillar-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-9);
+    }
+  }
+</style>

@@ -1,0 +1,133 @@
+---
+/**
+ * LanguageSwitcher — two-segment "ES | EN" toggle in the site header.
+ *
+ * Spec: docs/I18N-ARCHITECTURE.md §4.
+ *
+ * Behaviour:
+ *  - Renders two plain <a> tags so middle-click / right-click / no-JS all work.
+ *  - The active locale gets `.is-active` + `aria-current="true"`. Active state
+ *    is signalled by weight + opacity contrast only — no background fill.
+ *  - On click, an inline script writes `localStorage.aismx_locale = <target>`
+ *    before the browser follows the link. This pins the user's preference so
+ *    the auto-detection script on `/` won't override them on the next visit.
+ *  - Path preservation is handled by `switchLocalePath` in `src/lib/i18n.ts`:
+ *    `/about` ↔ `/en/about`, `/projects/vigia` ↔ `/en/projects/vigia`,
+ *    `/` ↔ `/en`.
+ *
+ * Placement: rendered by `<Header>` as the last child of `.site-header__inner`,
+ * inline next to the nav cluster at every viewport (it does NOT collapse into
+ * the mobile drawer — language is a meta-control, kept always-visible).
+ */
+import { localeFromPath, switchLocalePath, t } from '../lib/i18n';
+
+export interface Props {
+  /** Current pathname, e.g. Astro.url.pathname from the parent layout. */
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+const active = localeFromPath(currentPath);
+const { href: other } = switchLocalePath(currentPath);
+const esHref = active === 'es' ? currentPath : other;
+const enHref = active === 'en' ? currentPath : other;
+---
+
+<div class="lang-switcher" role="group" aria-label={t(active, 'switcher.label')}>
+  <a
+    class:list={['lang-switcher__option', { 'is-active': active === 'es' }]}
+    href={esHref}
+    hreflang="es"
+    lang="es"
+    aria-current={active === 'es' ? 'true' : undefined}
+    aria-label={t(active, 'switcher.toEs')}
+  >{t(active, 'switcher.es')}</a>
+  <span class="lang-switcher__sep" aria-hidden="true">|</span>
+  <a
+    class:list={['lang-switcher__option', { 'is-active': active === 'en' }]}
+    href={enHref}
+    hreflang="en"
+    lang="en"
+    aria-current={active === 'en' ? 'true' : undefined}
+    aria-label={t(active, 'switcher.toEn')}
+  >{t(active, 'switcher.en')}</a>
+</div>
+
+<script is:inline>
+  /*
+   * Persist the chosen locale to localStorage *before* navigation completes.
+   * Uses `click` (not the `<a>`'s navigation event) so it fires synchronously
+   * in the same tick the browser starts the link follow. We never call
+   * preventDefault — if storage is unavailable (private mode, quota), the
+   * link still navigates and the user just gets re-detected on the next visit.
+   */
+  (() => {
+    if (window.__aismxLangSwitcherBound) return;
+    window.__aismxLangSwitcherBound = true;
+    const bind = () => {
+      document.querySelectorAll('.lang-switcher__option').forEach((a) => {
+        a.addEventListener('click', () => {
+          try {
+            localStorage.setItem('aismx_locale', a.getAttribute('hreflang'));
+          } catch (e) { /* swallow: private mode / quota */ }
+        });
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bind);
+    } else {
+      bind();
+    }
+  })();
+</script>
+
+<style>
+  /* docs/I18N-ARCHITECTURE.md §4.2 — minimal "ES | EN" toggle, no chip,
+     no border. Active is signalled by weight + opacity contrast only. */
+  .lang-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 12px;
+  }
+
+  .lang-switcher__option {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 4px 6px;
+    border-radius: 4px;
+    color: var(--color-text-on-dark-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .lang-switcher__option:hover {
+    color: var(--color-text-on-dark);
+  }
+  .lang-switcher__option:focus-visible {
+    outline: 2px solid var(--color-accent-secondary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  .lang-switcher__option.is-active {
+    color: var(--color-text-on-dark);
+    font-weight: 700;
+    /* No background fill, no underline — editorial restraint. */
+  }
+
+  .lang-switcher__sep {
+    color: var(--color-border-on-dark, var(--color-border));
+    user-select: none;
+    font-size: 0.85rem;
+    line-height: 1;
+  }
+
+  /* Slightly tighter gap below the desktop breakpoint where the switcher
+     sits adjacent to the hamburger toggle. */
+  @media (max-width: 1023.98px) {
+    .lang-switcher {
+      margin-left: 8px;
+    }
+  }
+</style>

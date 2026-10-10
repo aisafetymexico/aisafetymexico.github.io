@@ -1,0 +1,264 @@
+---
+/**
+ * /en/projects — Projects index (English locale).
+ *
+ * English sibling of src/pages/projects/index.astro. Mirrors structure 1:1
+ * per docs/I18N-ARCHITECTURE.md §2 (Strategy B). Same components, same
+ * data source — only prose changes.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import PageHero from '../../../components/PageHero.astro';
+import SectionHeading from '../../../components/SectionHeading.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import CtaSection from '../../../components/CtaSection.astro';
+import { t } from '../../../lib/i18n';
+
+const allProjects = await getCollection(
+  'projects',
+  ({ data }: { data: { draft?: boolean } }) => data.draft !== true,
+);
+
+// Order by `order` ascending, then alphabetically by title.
+const projects = allProjects.sort((a, b) => {
+  const ao = a.data.order ?? 100;
+  const bo = b.data.order ?? 100;
+  if (ao !== bo) return ao - bo;
+  return a.data.title.localeCompare(b.data.title);
+});
+
+// English-side descriptions for the two flagship projects, so the index reads
+// natively in EN even though the content collection itself is authored in ES.
+const enSummaries: Record<string, string> = {
+  vigia:
+    'A platform for analyzing AI governance and digital sovereignty in Mexico, born out of the AI Governance course in collaboration with ENAIS.',
+  'ai-safety-connect':
+    'A platform to systematically map AI safety research and reduce the gap between academia and communities of practice.',
+};
+
+const cards = projects.map((p) => {
+  const slug = p.data.slug ?? p.slug;
+  return {
+    title: p.data.title,
+    badge: p.data.badge,
+    description: enSummaries[slug] ?? p.data.summary,
+    image: p.data.cover,
+    href: `/en/projects/${slug}`,
+    external: false,
+  };
+});
+
+const breadcrumb = {
+  items: [
+    { label: t('en', 'breadcrumb.home'), href: '/en' },
+    { label: 'Projects' },
+  ],
+};
+
+const criteria = [
+  {
+    number: '01',
+    title: 'A concrete question',
+    description:
+      'Every project starts from an investigable question about AI safety or governance — not from a technology in search of a problem.',
+  },
+  {
+    number: '02',
+    title: 'Technical capacity',
+    description:
+      'The team — in-house or partnered — has the training and resources to address the question with methodological rigor.',
+  },
+  {
+    number: '03',
+    title: 'Commitment to openness',
+    description:
+      'Findings, materials, and code are published openly whenever the nature of the work allows.',
+  },
+];
+---
+
+<BaseLayout
+  title="Projects · AI Safety Mexico"
+  description="Flagship initiatives of AI Safety Mexico — VIGÍA, AI Safety Connect, and collaborative projects in governance, alignment, and community."
+  lang="en"
+  pathname="/en/projects"
+  ogImage="/images/aisafetymx_logo.webp"
+>
+  <Header slot="header" currentPath="/en/projects" lang="en" />
+
+  <PageHero
+    title="Projects"
+    description="In-house and collaborative initiatives that reflect the work of AI Safety Mexico across applied research, governance, and community."
+    breadcrumb={breadcrumb}
+    lang="en"
+  />
+
+  {/* Intro */}
+  <section class="section section--base">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="What we mean by project"
+        title="Applied research with a public purpose"
+        description="Projects at AI Safety Mexico emerge at the intersection of three conditions: a concrete question about AI safety or governance, a technical team able to address it with rigor, and a commitment to making findings public. Some begin as theses from training cohorts; others as collaborations with partner organizations. All are auditable, open, and oriented toward producing knowledge useful to those who research, regulate, or deploy AI in Mexico."
+      />
+    </div>
+  </section>
+
+  {/* Project grid */}
+  <section class="section section--base section--edge-accent" aria-labelledby="projects-grid-heading">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Portfolio"
+        title="Flagship projects"
+        description="Each card links to the project's subpage with the full detail: team, methodology, and links to the paper or external platform."
+        id="projects-grid-heading"
+      />
+
+      {cards.length === 0 ? (
+        <p class="projects-empty">
+          We will publish details of the current projects soon. In the meantime,
+          write to us at <a href="mailto:contact@aismx.org">contact@aismx.org</a>.
+        </p>
+      ) : (
+        <div class="projects-grid">
+          {cards.map((card) => (
+            <ProjectCard
+              title={card.title}
+              badge={card.badge}
+              description={card.description}
+              image={card.image}
+              href={card.href}
+              external={card.external}
+              lang="en"
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  {/* Criteria */}
+  <section class="section section--base" aria-labelledby="projects-criteria-heading">
+    <div class="container container--narrow">
+      <SectionHeading
+        eyebrow="How we choose"
+        title="Selection criteria"
+        description="A project joins the portfolio when it meets all three of the following conditions."
+        id="projects-criteria-heading"
+      />
+      <ul class="projects-criteria">
+        {criteria.map((c) => (
+          <li class="projects-criteria__item">
+            <span class="projects-criteria__number" aria-hidden="true">{c.number}</span>
+            <h3 class="projects-criteria__title">{c.title}</h3>
+            <p class="projects-criteria__description">{c.description}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <CtaSection
+    title="Have a project in mind?"
+    description="If your research question aligns with our agenda and you're looking for a team to collaborate with, we'd like to hear about it."
+    ctaLabel="Write to us at contact@aismx.org"
+    ctaHref="mailto:contact@aismx.org?subject=Project%20proposal"
+  />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 768px) {
+    .projects-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-10);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .projects-grid {
+      gap: var(--space-12);
+    }
+  }
+
+  .projects-empty {
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .projects-empty a {
+    color: var(--color-link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .projects-empty a:hover {
+    color: var(--color-link-hover);
+  }
+
+  /* Criteria list */
+  .projects-criteria {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (min-width: 768px) {
+    .projects-criteria {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-7);
+    }
+  }
+
+  .projects-criteria__item {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-xs);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .projects-criteria__number {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    color: var(--color-accent);
+    letter-spacing: -0.02em;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  .projects-criteria__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-bold);
+    color: var(--color-text-heading);
+    line-height: var(--lh-snug);
+  }
+
+  .projects-criteria__description {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+  }
+</style>

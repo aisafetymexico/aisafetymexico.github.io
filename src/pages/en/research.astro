@@ -1,0 +1,342 @@
+---
+/**
+ * /en/research — Publications and ongoing research index (English mirror).
+ *
+ * Sibling page of /research (Strategy B). Pulls from the same `publications`
+ * collection; titles, abstracts, and authors come straight from the entry
+ * data and are not retranslated here.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+import PublicationCard from '../../components/PublicationCard.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import CtaSection from '../../components/CtaSection.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+const pathname = '/en/research';
+
+// --- Publications collection ---------------------------------------------
+// Pulls all non-draft entries; sorts featured first, then by year desc.
+const allPublications = await getCollection('publications', ({ data }) => !data.draft);
+const publications = allPublications.sort(
+  (a: CollectionEntry<'publications'>, b: CollectionEntry<'publications'>) => {
+    if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+    return b.data.year - a.data.year;
+  },
+);
+
+// --- Research areas (taxonomy) -------------------------------------------
+const researchAreas = [
+  {
+    title: 'Technical AI safety',
+    description:
+      'Alignment, mechanistic interpretability, and red-teaming applied to the study of deployed models.',
+  },
+  {
+    title: 'Governance',
+    description:
+      'Technical analysis and policy instruments for the responsible development and deployment of AI.',
+  },
+  {
+    title: 'Public policy',
+    description:
+      'Mexico-based studies on perceptions, risks, and priorities of the Global South.',
+  },
+  {
+    title: 'Open research and education',
+    description:
+      'Materials, curricula, and open publications that connect research with training in Mexico.',
+  },
+];
+
+// --- Ongoing research ----------------------------------------------------
+// AI Safety Connect cross-link to /en/projects/ai-safety-connect.
+const ongoingProjects = [
+  {
+    title: 'AI Safety Connect',
+    badge: 'SPAR COLLABORATION',
+    description:
+      'A platform and paper that map the international AI safety community through taxonomy and semantic search. Output of the SPAR program with an international team.',
+    href: '/en/projects/ai-safety-connect',
+    ctaLabel: 'See the project',
+  },
+];
+
+// --- Collaborations (chips) ----------------------------------------------
+const researchPartners = [
+  { name: 'SPAR Research', href: 'https://supervisedprogramforalignment.org/' },
+  { name: 'ENAIS', href: undefined },
+  { name: 'AI Safety Collab', href: undefined },
+  { name: 'Centro Geo', href: undefined },
+  { name: 'Apart Research', href: 'https://apartresearch.com/' },
+];
+
+// --- Breadcrumb -----------------------------------------------------------
+const breadcrumb = {
+  items: [
+    { label: 'Home', href: '/en' },
+    { label: 'Research' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Research · AI Safety Mexico"
+  description="Publications, ongoing projects, and the research agenda of AI Safety Mexico in AI safety, governance, and public policy."
+  pathname={pathname}
+  lang="en"
+>
+  <Header slot="header" currentPath={pathname} lang="en" />
+
+  <PageHero
+    title="Rigorous research, grounded in Mexico"
+    description="We produce open research on technical AI safety, governance, and policy questions specific to Mexico, in collaboration with national and international institutions."
+    breadcrumb={breadcrumb}
+    lang="en"
+  />
+
+  <!-- 1 · Research areas -->
+  <section class="research-section research-section--areas">
+    <div class="research-section__inner">
+      <SectionHeading
+        eyebrow="Lines of work"
+        title="Research areas"
+        description="Four fronts where we focus our questions, methods, and publications."
+      />
+      <FeatureGrid items={researchAreas} />
+    </div>
+  </section>
+
+  <!-- 2 · Publications -->
+  <section class="research-section research-section--publications">
+    <div class="research-section__inner">
+      <SectionHeading
+        eyebrow="Publications"
+        title="Papers and published work"
+        description="Results that the team and its collaborators release in open venues."
+      />
+
+      {publications.length > 0 ? (
+        <div class="publication-grid">
+          {publications.map((pub: CollectionEntry<'publications'>) => (
+            <PublicationCard
+              title={pub.data.title}
+              authors={pub.data.authors}
+              year={pub.data.year}
+              journal={pub.data.venue}
+              paperUrl={pub.data.paperUrl}
+              podcastUrl={pub.data.podcastUrl}
+              abstract={pub.data.abstract}
+              lang="en"
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="research-empty">
+          More publications are on the way. In the meantime, write to us if
+          you're interested in collaborating on research.
+        </p>
+      )}
+    </div>
+  </section>
+
+  <!-- 3 · Ongoing research -->
+  <section class="research-section research-section--ongoing">
+    <div class="research-section__inner">
+      <SectionHeading
+        eyebrow="Ongoing"
+        title="Research in progress"
+        description="Active team projects and international collaborations."
+      />
+      <div class="ongoing-grid">
+        {ongoingProjects.map((p) => (
+          <ProjectCard
+            title={p.title}
+            badge={p.badge}
+            description={p.description}
+            href={p.href}
+            ctaLabel={p.ctaLabel}
+            lang="en"
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Collaborations (chips) -->
+  <section class="research-section research-section--collabs">
+    <div class="research-section__inner">
+      <SectionHeading
+        eyebrow="Collaborations"
+        title="We work with"
+        description="Partner organizations that sustain and enrich our research agenda."
+      />
+      <ul class="partner-chips" role="list">
+        {researchPartners.map((partner) => (
+          <li class="partner-chips__item">
+            {partner.href ? (
+              <a
+                class="partner-chips__chip partner-chips__chip--link"
+                href={partner.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {partner.name}
+              </a>
+            ) : (
+              <span class="partner-chips__chip">{partner.name}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5 · Final CTA -->
+  <CtaSection
+    title="Let's work together on research"
+    description="Have a research question, a dataset, or a collaboration in mind? Let's connect to explore how we could work together."
+    ctaLabel="Propose a collaboration"
+    ctaHref="/en/get-involved#research"
+  />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  .research-section {
+    padding-block: var(--space-12);
+  }
+
+  .research-section--areas {
+    background: var(--color-bg-base);
+  }
+
+  .research-section--publications {
+    background: var(--color-bg-base);
+  }
+
+  .research-section--ongoing {
+    background: var(--color-bg-base);
+  }
+
+  .research-section--collabs {
+    background: var(--color-bg-base);
+  }
+
+  @media (min-width: 768px) {
+    .research-section {
+      padding-block: var(--space-14);
+    }
+  }
+
+  .research-section__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 480px) {
+    .research-section__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  /* Publication grid: single column on mobile, 2 cols ≥768px. */
+  .publication-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 768px) {
+    .publication-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-10);
+    }
+  }
+
+  /* Ongoing-projects grid: matches publication grid breakpoints. */
+  .ongoing-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 768px) {
+    .ongoing-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-10);
+    }
+  }
+
+  .research-empty {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    max-width: 60ch;
+  }
+
+  /* Partner chips */
+  .partner-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .partner-chips__item {
+    display: inline-flex;
+  }
+
+  .partner-chips__chip {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-5);
+    background: var(--color-bg-elevated);
+    color: var(--color-text-heading);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--ls-wide);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    line-height: 1.4;
+    transition:
+      transform var(--transition),
+      border-color var(--transition),
+      color var(--transition);
+  }
+
+  .partner-chips__chip--link:hover,
+  .partner-chips__chip--link:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--color-border-accent);
+    color: var(--color-link-hover);
+  }
+
+  .partner-chips__chip--link:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .partner-chips__chip { transition: none; }
+    .partner-chips__chip--link:hover,
+    .partner-chips__chip--link:focus-visible {
+      transform: none;
+    }
+  }
+</style>
