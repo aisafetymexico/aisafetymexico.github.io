@@ -6,8 +6,9 @@
 // interno en el que 14 de 38 enlaces estaban rotos o apuntaban a
 // organizaciones renombradas; esas correcciones ya están aplicadas.
 //
-// El JSON se sirve además como descarga pública en /recursos.json para que
-// otras comunidades de la región puedan reutilizarlo.
+// El JSON se sirve además como descarga pública en /resources.json (copia en
+// public/resources.json) para que otras comunidades de la región puedan
+// reutilizarlo.
 import raw from '../data/recursos.json';
 
 export type Idioma = 'es' | 'en';

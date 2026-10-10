@@ -5,6 +5,12 @@
  * Spec:
  *  - docs/DESIGN-SYSTEM.md §6.5 (`Lightbox.astro`).
  *  - WAI-ARIA Authoring Practices: "Dialog (Modal)".
+ *  - Design: her lightbox: ink scrim at 94%
+ *    (`--color-scrim`), image with an 8px radius and no shadow, white
+ *    controls (`--color-on-scrim`) that dim on hover, caption in white 72%,
+ *    and white focus rings (`--color-focus-ring-on-dark`). The controls sit
+ *    on a scrim-coloured disc: invisible on the scrim itself, it keeps the
+ *    glyphs legible where the image runs under them on narrow screens.
  *
  * Behaviour:
  *  - Renders a single global overlay (role="dialog", aria-modal=true) per page.
@@ -27,29 +33,61 @@
  *      inside is used.
  *   3. Optionally provide `data-lightbox-src` for a higher-res alternative.
  *
+ * Copy: the control labels live in the ES/EN table below, picked from `lang`
+ * or `Astro.currentLocale`; the script reads the two it builds at runtime
+ * from data-* attributes on the overlay.
+ *
  * Props:
  *  - triggerSelector?: string  (default '[data-lightbox]')
+ *  - lang?: 'es' | 'en' (default: the page locale)
  */
+import type { Locale } from '../lib/i18n';
+
 export interface Props {
   triggerSelector?: string;
+  lang?: Locale;
 }
 
-const { triggerSelector = '[data-lightbox]' } = Astro.props;
+const COPY = {
+  es: {
+    dialog: 'Imagen ampliada',
+    close: 'Cerrar imagen',
+    prev: 'Imagen anterior',
+    next: 'Imagen siguiente',
+    zoom: 'Ampliar imagen',
+  },
+  en: {
+    dialog: 'Enlarged image',
+    close: 'Close image',
+    prev: 'Previous image',
+    next: 'Next image',
+    zoom: 'Enlarge image',
+  },
+} as const;
+
+const {
+  triggerSelector = '[data-lightbox]',
+  lang = (Astro.currentLocale as Locale | undefined) ?? 'es',
+} = Astro.props;
+
+const copy = COPY[lang] ?? COPY.es;
 ---
 
 <div
   class="lightbox"
   role="dialog"
   aria-modal="true"
-  aria-label="Imagen ampliada"
+  aria-label={copy.dialog}
   data-lightbox-overlay
   data-trigger-selector={triggerSelector}
+  data-label-dialog={copy.dialog}
+  data-label-zoom={copy.zoom}
   hidden
 >
   <button
     type="button"
     class="lightbox__close"
-    aria-label="Cerrar imagen"
+    aria-label={copy.close}
     data-lightbox-close
   >
     <span aria-hidden="true">×</span>
@@ -57,7 +95,7 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
   <button
     type="button"
     class="lightbox__nav lightbox__nav--prev"
-    aria-label="Imagen anterior"
+    aria-label={copy.prev}
     data-lightbox-prev
     hidden
   >
@@ -66,7 +104,7 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
   <button
     type="button"
     class="lightbox__nav lightbox__nav--next"
-    aria-label="Imagen siguiente"
+    aria-label={copy.next}
     data-lightbox-next
     hidden
   >
@@ -88,6 +126,8 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
       if (!overlay) return;
 
       const selector = overlay.getAttribute('data-trigger-selector') || '[data-lightbox]';
+      const labelDialog = overlay.dataset.labelDialog || 'Imagen ampliada';
+      const labelZoom = overlay.dataset.labelZoom || 'Ampliar imagen';
       const img = overlay.querySelector<HTMLImageElement>('[data-lightbox-image]');
       const caption = overlay.querySelector<HTMLElement>('[data-lightbox-caption]');
       const closeBtn = overlay.querySelector<HTMLButtonElement>('[data-lightbox-close]');
@@ -99,6 +139,11 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
       let lastFocus: HTMLElement | null = null;
       let currentGroup: HTMLElement[] = [];
       let currentIndex = 0;
+      // Pending fade-in frame and fade-out timer. Reopening during the 200ms
+      // fade-out (Escape then Enter) must cancel the hide, and closing before
+      // the fade-in frame must cancel the show.
+      let showFrame = 0;
+      let hideTimer = 0;
 
       const collectTriggers = (): HTMLElement[] =>
         Array.from(document.querySelectorAll<HTMLElement>(selector));
@@ -124,7 +169,7 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
         const alt =
           trigger.getAttribute('data-lightbox-alt') ||
           sourceImg.alt ||
-          'Imagen ampliada';
+          labelDialog;
         const captionText =
           trigger.getAttribute('data-lightbox-caption') ||
           sourceImg.getAttribute('data-caption') ||
@@ -142,6 +187,7 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
       };
 
       const open = (trigger: HTMLElement) => {
+        window.clearTimeout(hideTimer);
         lastFocus = document.activeElement as HTMLElement;
         const group = groupOf(trigger);
         const all = collectTriggers();
@@ -151,20 +197,23 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
         currentIndex = Math.max(0, currentGroup.indexOf(trigger));
         showAt(currentIndex);
         overlay.hidden = false;
-        requestAnimationFrame(() => overlay.classList.add('is-open'));
+        showFrame = requestAnimationFrame(() => overlay.classList.add('is-open'));
         document.body.style.overflow = 'hidden';
         closeBtn.focus();
       };
 
       const close = () => {
+        cancelAnimationFrame(showFrame);
         overlay.classList.remove('is-open');
         const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const finalize = () => {
+          // Reopened in the meantime: keep it visible.
+          if (overlay.classList.contains('is-open')) return;
           overlay.hidden = true;
           if (img) img.src = '';
         };
         if (reduced) finalize();
-        else setTimeout(finalize, 200);
+        else hideTimer = window.setTimeout(finalize, 200);
         document.body.style.overflow = '';
         lastFocus?.focus();
       };
@@ -205,7 +254,7 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
         if (!t.hasAttribute('role')) t.setAttribute('role', 'button');
         if (!t.hasAttribute('aria-label') && !t.textContent?.trim()) {
           const im = resolveImg(t);
-          if (im?.alt) t.setAttribute('aria-label', `Ampliar imagen: ${im.alt}`);
+          if (im?.alt) t.setAttribute('aria-label', `${labelZoom}: ${im.alt}`);
         }
       });
 
@@ -258,17 +307,20 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
 </script>
 
 <style>
+  /* Her lightbox (fcacfc4 css/style.css L1278–1314): the one genuinely dark
+     surface. Everything on it uses the on-scrim tokens, never the light-shell
+     text colours. */
   .lightbox {
     position: fixed;
     inset: 0;
-    z-index: 9999;
+    z-index: var(--z-lightbox);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-6, 24px);
-    background: var(--bg-base-overlay-strong);
+    padding: 20px;
+    background: var(--color-scrim);
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity var(--transition);
   }
   .lightbox.is-open { opacity: 1; }
   .lightbox[hidden] { display: none; }
@@ -280,7 +332,7 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-3, 12px);
+    gap: var(--space-3);
   }
 
   .lightbox__image {
@@ -288,55 +340,61 @@ const { triggerSelector = '[data-lightbox]' } = Astro.props;
     max-width: 100%;
     max-height: 80vh;
     object-fit: contain;
-    border-radius: var(--radius-sm, 6px);
-    /* Polish-rand (RAND-DIFF §1.5, tokens.css §4.2): kept-modal shadow.
-       --shadow-modal is one of the two functional shadow tokens that
-       survive the chrome-strip (the other is --shadow-header). */
-    box-shadow: var(--shadow-modal);
-    background: var(--color-bg-elevated);
+    border-radius: var(--radius);
+    background: transparent;
   }
 
   .lightbox__caption {
     color: var(--color-text-on-dark-muted);
-    font-family: var(--font-body, 'Inter', sans-serif);
-    font-size: var(--fs-small, 0.92rem);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
     text-align: center;
     max-width: 60ch;
   }
   .lightbox__caption[hidden] { display: none; }
 
+  /* Her close button: a white glyph in a 44px circle; hover dims it. The
+     circle is filled with the scrim colour: on the scrim it is invisible, so
+     wide screens keep her bare-glyph look, but where the image runs under
+     the controls (≤1024px) the glyphs stay legible over white certificates. */
   .lightbox__close,
   .lightbox__nav {
     position: absolute;
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-full, 50%);
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
     border: none;
-    background: var(--cream-text-faint);
-    color: var(--color-text-on-dark);
-    font-size: 24px;
+    background: var(--color-scrim);
+    color: var(--color-on-scrim);
+    font-size: 2rem;
     line-height: 1;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s ease;
+    transition: opacity var(--transition);
   }
   .lightbox__close:hover,
-  .lightbox__nav:hover { background: var(--cream-text-muted); }
+  .lightbox__nav:hover { opacity: 0.6; }
+  /* The script hides prev/next for single images; `display` above would
+     otherwise override the `hidden` attribute. */
+  .lightbox__nav[hidden] { display: none; }
+
+  /* Blue is under 3:1 on the scrim, so the ring goes white here. */
   .lightbox__close:focus-visible,
   .lightbox__nav:focus-visible {
-    outline: 2px solid var(--color-focus-ring);
-    outline-offset: 3px;
+    outline: 2px solid var(--color-focus-ring-on-dark);
+    outline-offset: 2px;
   }
 
   .lightbox__close {
-    top: var(--space-4, 16px);
-    right: var(--space-4, 16px);
-    font-size: 28px;
+    top: 20px;
+    right: 24px;
+    font-size: 2.2rem;
   }
-  .lightbox__nav--prev { left: var(--space-4, 16px); top: 50%; transform: translateY(-50%); }
-  .lightbox__nav--next { right: var(--space-4, 16px); top: 50%; transform: translateY(-50%); }
+  .lightbox__nav--prev { left: var(--space-4); top: 50%; transform: translateY(-50%); }
+  .lightbox__nav--next { right: var(--space-4); top: 50%; transform: translateY(-50%); }
 
   @media (prefers-reduced-motion: reduce) {
     .lightbox { transition: none; }

@@ -3,23 +3,31 @@
  * `/` — Home (Gateway curado).
  *
  * Spec: docs/ARCHITECTURE.md §2 (Home), Task #12.
- * Pattern: docs/INSPIRATION.md A1 (editorial hero) + A3 (feature + side cards)
- *          + A6 (restrained two-tone surfaces).
+ * Design: her "Editorial mínimo" home (fcacfc4 index.html + css/style.css):
+ *         white page, 1px hairlines between sections, left-aligned section
+ *         headings, and a bg-2 tint every few sections — never two tinted
+ *         bands in a row (the footer below the CTA band is bg-2).
  *
  * Deliberate restraint: this page is a curated gateway — NOT a long-scroll
  * synthesis of every section. Each block sends visitors to a deeper page.
  *
  * Sections:
- *   1. Hero — full-bleed navy, image + overline + h1 + subtitle + 2 CTAs.
- *   2. GSH spotlight — full-width ActivityCard for the Global South AIS
- *      Hackathon, surfaced immediately after the hero.
+ *   1. Hero — centered h1 with a muted trailing phrase, subtitle, 3 pill
+ *      CTAs, scroll hint, then the full-bleed El Caracol halftone band.
+ *   2. Próximo evento — upcoming-event spotlight (Mexico Tech Week panel):
+ *      one full-width Card that is not a link, with two pill actions
+ *      (register on Luma; event details on /activities#proximo-evento),
+ *      on bg-2 (her `.section-current`).
  *   3. Featured pillars — FeatureGrid (4 entries: Investigación, Programas,
- *      Proyectos, Equipo) on warm surface.
- *   4. StatBar — 4 impact stats on navy.
- *   5. Highlights curados — 2 cards (proyecto insignia + publicación). GSH
- *      vive arriba en el spotlight, así que aquí dejamos solo dos destacados
- *      bien curados (RAND-editorial: 2 fuertes > 3 forzados).
- *   6. CtaSection — navy closing band, single CTA → /get-involved.
+ *      Proyectos, Equipo).
+ *   4. StatBar — 4 impact stats between hairlines.
+ *   4b. Feature photo — a working session (her `.section-photo`).
+ *   5. Trabajo reciente — 3 curated whole-card links (proyecto insignia,
+ *      publicación, GSH) on bg-2. Each ends in a visible action pill (Card
+ *      `linkLabel`, her `.event-preview-link`), so touch screens get a cue
+ *      at rest, not only the hover border.
+ *   5b. Recursos abiertos — ResourcesTeaser (directory figures + 2 CTAs).
+ *   6. CtaSection — white closing band, single CTA → /get-involved.
  */
 
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -30,32 +38,34 @@ import SectionHeading from '../components/SectionHeading.astro';
 import FeatureGrid from '../components/FeatureGrid.astro';
 import StatBar from '../components/StatBar.astro';
 import Card from '../components/Card.astro';
-import ActivityCard from '../components/ActivityCard.astro';
+import ResourcesTeaser from '../components/ResourcesTeaser.astro';
 import CtaSection from '../components/CtaSection.astro';
 
+// «AI\u00A0safety» is bound with a no-break space so the balanced tile copy
+// never ends a line on «AI» (FeatureGrid balances its descriptions).
 const pillars = [
   {
     title: 'Investigación',
     description:
-      'Trabajo original y colaborativo en alineación, interpretabilidad y gobernanza técnica. Saber más →',
+      'Trabajo original y colaborativo en alineación, interpretabilidad y gobernanza técnica.',
     href: '/research',
   },
   {
     title: 'Programas',
     description:
-      'Cursos abiertos y a la medida que adaptan los marcos contemporáneos de AI safety al contexto mexicano. Saber más →',
+      'Cursos abiertos y a la medida que adaptan los marcos contemporáneos de AI\u00A0safety al contexto mexicano.',
     href: '/programs',
   },
   {
     title: 'Proyectos',
     description:
-      'Iniciativas aplicadas como VIGÍA y AI Safety Connect: abiertas, auditables y orientadas a producir conocimiento utilizable. Saber más →',
+      'Iniciativas aplicadas como VIGÍA y AI\u00A0Safety Connect: abiertas, auditables y orientadas a producir conocimiento utilizable.',
     href: '/projects',
   },
   {
     title: 'Equipo',
     description:
-      'Investigadoras, ingenieros y profesionales multidisciplinarios articulados desde México. Saber más →',
+      'Investigadoras, ingenieros y profesionales multidisciplinarios articulados desde México.',
     href: '/team',
   },
 ];
@@ -67,17 +77,22 @@ const stats = [
   { number: '8', label: 'Personas en el equipo' },
 ];
 
-// -------- GSH spotlight (sección 2) --------
-// Mirrors the spotlight on /activities (single ActivityCard, side-by-side at
-// md+). Keeping copy aligned with that page so the two surfaces tell the same
-// story.
-const currentSpotlight = {
-  title: 'Impulsando la comunidad de AI Safety en México: Tech Policy Panel',
-  date: '27 de octubre de 2026',
+// -------- Próximo evento (sección 2) --------
+// Teaser of the full block on /activities#proximo-evento (venue, organizers
+// and the Luma registration embed). Like her Mexico Tech Week card, it is
+// not a link: two visible pills register on Luma (new tab) or open the full
+// block. The date is the card's in-card label, so it stays human-readable.
+// The title binds «AI\u00A0Safety» with a no-break space so the balanced
+// heading never splits the field's name across lines (same string as on
+// /activities).
+// EXPIRES 2026-10-27: after the panel, swap this spotlight for the next event
+// and move the panel to past activities (here and on /activities).
+const upcomingSpotlight = {
+  title: 'Impulsando la comunidad de AI\u00A0Safety en México: Tech Policy Panel',
+  date: 'Martes 27 de octubre de 2026',
   description:
-    'Panel sobre cómo la regulación de la IA impactará al ecosistema tecnológico de México y América Latina. Organizan Marta Kosmyna, Isabel Montalvo, Janeth Valdivia y Oscar Mata. Subvención de BlueDot Impact en el marco de México Tech Week.',
-  link: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5',
-  external: true,
+    'Un panel sobre cómo la regulación de la inteligencia artificial impactará al ecosistema tecnológico de México y América Latina. En MXTW AI House (Juárez, Ciudad de México). Organizan Marta Kosmyna, Isabel Montalvo, Janeth Valdivia y Oscar Mata.',
+  link: 'https://luma.com/event/evt-0jdNWFu6jYVQ148',
 };
 ---
 
@@ -90,44 +105,58 @@ const currentSpotlight = {
   <Header slot="header" currentPath="/" />
 
   <Hero
-    overline="AI SAFETY MEXICO"
     title="Seguridad y gobernanza de la IA, desde México."
+    titleAccent="desde México"
     subtitle="Investigamos, formamos y construimos comunidad alrededor de la seguridad de la inteligencia artificial. Construimos las bases técnicas y de gobernanza necesarias para que México tome decisiones informadas sobre IA."
-    image={{ src: '/images/observatorio.png', alt: 'Observatorio de AI Safety Mexico' }}
-    primaryCta={{ label: 'Conoce nuestros proyectos', href: '/projects' }}
-    secondaryCta={{ label: 'Colabora', href: '/get-involved' }}
+    ctas={[
+      { label: 'Cómo participar', href: '/get-involved#participa' },
+      { label: 'Ver recursos', href: '/resources', variant: 'outline' },
+      { label: 'Nuestros programas', href: '/programs', variant: 'outline' },
+    ]}
+    scrollHint="Desplázate para explorar ↓"
   />
 
-  <!-- 2 · GSH spotlight (Global South AIS Hackathon) -->
-  <section class="section section--base section--compact" aria-labelledby="home-gsh-spotlight">
+  <!-- 2 · Próximo evento (spotlight; bg-2 like her .section-current) -->
+  <section class="section section--warm" aria-labelledby="home-spotlight">
     <div class="container">
       <SectionHeading
-        eyebrow="En curso"
-        title="México Tech Week 2026"
-        description="El próximo evento público, con subvención de BlueDot Impact. La agenda completa está en Luma."
-        align="center"
-        id="home-gsh-spotlight"
+        eyebrow="Próximo evento"
+        title="Mexico Tech Week 2026"
+        description="Un panel de política tecnológica con subvención de BlueDot Impact. La agenda completa está en Luma."
+        id="home-spotlight"
       />
       <div class="home-spotlight">
-        <ActivityCard
-          title={currentSpotlight.title}
-          date={currentSpotlight.date}
-          description={currentSpotlight.description}
-          link={currentSpotlight.link}
-          external={currentSpotlight.external}
-        />
+        <Card
+          badge={upcomingSpotlight.date}
+          title={upcomingSpotlight.title}
+          description={upcomingSpotlight.description}
+          padding="md"
+        >
+          <div class="program-actions">
+            <a
+              class="btn btn-register"
+              href={upcomingSpotlight.link}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Regístrate en Luma
+            </a>
+            <a class="btn btn-outline" href="/activities#proximo-evento">
+              Detalles del evento
+            </a>
+          </div>
+        </Card>
       </div>
     </div>
   </section>
 
   <!-- 3 · Featured pillars (gateway de 4) -->
-  <section class="section section--base section--edge-accent">
+  <section class="section section--base">
     <div class="container">
       <SectionHeading
         eyebrow="Qué hacemos"
-        title="Cuatro frentes, una sola misión."
+        title="Cuatro frentes, una sola misión"
         description="Cada pilar enlaza a la página dedicada con detalles, materiales y formas de colaborar."
-        align="center"
       />
       <FeatureGrid items={pillars} />
     </div>
@@ -136,36 +165,70 @@ const currentSpotlight = {
   <!-- 4 · Stat bar -->
   <StatBar stats={stats} />
 
-  <!-- 5 · Highlights curados (GSH ya vive arriba en el spotlight) -->
+  <!-- 4b · Foto de una sesión de trabajo (her .section-photo) -->
   <section class="section section--base">
+    <div class="container">
+      <img
+        class="home-photo"
+        src="/images/sesion-trabajo.webp"
+        width="2048"
+        height="1432"
+        loading="lazy"
+        decoding="async"
+        alt="Participantes de AI Safety Mexico en una sesión de trabajo en círculo"
+      />
+    </div>
+  </section>
+
+  <!-- 5 · Trabajo reciente: proyecto, publicación y evento (bg-2) -->
+  <section class="section section--warm">
     <div class="container">
       <SectionHeading
         eyebrow="Destacados"
-        title="Trabajo reciente."
-        description="Un proyecto y una publicación para asomarse al pulso de la organización."
-        align="center"
+        title="Trabajo reciente"
+        description="Un proyecto, una publicación y un evento para asomarse al pulso de la organización."
       />
 
+      {/* The paper keeps its official English title, marked lang="en" through
+          Card's `titleLang`. The \u00A0 no-break spaces keep each « · » unit
+          and the title's «A Pilot» on one line. Each card links straight to
+          its item; the paper's goes to the papers section of /research
+          (#publicaciones). */}
       <div class="home-highlights">
         <Card
           href="/projects/vigia"
           badge="Proyecto insignia"
           title="VIGÍA"
-          description="Plataforma para observar el ecosistema regulatorio de IA en México. Special Recognition · AI Safety Collab 2025."
+          description={'Plataforma para observar el ecosistema regulatorio de IA en México. Special Recognition\u00A0·\u00A0AI Safety Collab 2025.'}
+          linkLabel="Ver el proyecto"
           padding="md"
           bordered
         />
         <Card
-          href="/research"
+          href="/research#publicaciones"
           badge="Publicación"
-          title="A Pilot Survey on AI Safety in Yucatan"
-          description="Estudio piloto sobre percepciones, riesgos y prácticas locales en torno a la IA, publicado en RCS · IPN."
+          title={'AI Safety in Mexico: A\u00A0Pilot Survey in Yucatan'}
+          titleLang="en"
+          description={'Estudio piloto sobre percepciones, riesgos y prácticas locales en torno a la IA, publicado en RCS\u00A0·\u00A0IPN.'}
+          linkLabel="Ver la publicación"
+          padding="md"
+          bordered
+        />
+        <Card
+          href="/activities#gsh-2026"
+          badge="Hackatón · Junio 2026"
+          title="Global South AIS Hackathon"
+          description="Sedes de Mérida y Guadalajara con Apart Research: 65 asistentes, 19 proyectos y uno que continuó en el fellowship de Apart."
+          linkLabel="Ver el hackatón"
           padding="md"
           bordered
         />
       </div>
     </div>
   </section>
+
+  <!-- 5b · Recursos abiertos (teaser del directorio) -->
+  <ResourcesTeaser />
 
   <!-- 6 · CTA closing band -->
   <CtaSection
@@ -179,53 +242,55 @@ const currentSpotlight = {
 </BaseLayout>
 
 <style>
-  /* Highlights grid — 2 curated cards: stack on mobile → side-by-side at md+.
-     (Was 3-up; GSH moved to the top spotlight in §2, so we deliberately keep
-     only two well-curated highlights to avoid forcing a filler card.) */
+  /* Upcoming-event spotlight: one Card at full container width, like her
+     `.section-current` card under a left-aligned heading. Card already puts
+     the pill row 18px under the copy, and base.css stacks the pills full
+     width at ≤480px. The copy keeps her 680px description measure instead
+     of running the full card width, and `pretty` keeps a lone word (the
+     last organizer's surname on phones) off its last line. */
+  .home-spotlight :global(.card__description) {
+    max-width: var(--measure-desc);
+    text-wrap: pretty;
+  }
+
+  /* «Trabajo reciente» copy: `pretty`, with the no-break spaces in the
+     strings, keeps a lone word («IPN.», «2025.», «Apart.») off the last
+     line, right above each card's action pill. */
+  .home-highlights :global(.card__description) {
+    text-wrap: pretty;
+    /* Last resort: if a bound unit is still wider than its column, break it
+       there instead of letting the card's overflow:hidden clip it (WCAG
+       1.4.4). */
+    overflow-wrap: break-word;
+  }
+
+  /* Feature photo — her .feature-photo: full container width, large radius,
+     hairline frame. */
+  .home-photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  /* Highlights grid — 3 curated cards (project, publication, GSH): one
+     column up to 768px, three from 48.0625em (769px at the default 16px,
+     her tier), 18px gaps. Grid stretch keeps the three cards the same
+     height, so the action pills Card pins to the bottom share one
+     baseline. */
   .home-highlights {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-    max-width: var(--container-narrow, 860px);
-    margin-inline: auto;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gap-grid);
   }
 
-  @media (min-width: 768px) {
+  /* em, not px: like FeatureGrid, the 3-up row waits for room when the
+     reader enlarges the default font, so the bound « · » units never break
+     mid-word; 769px at the default 16px. */
+  @media (min-width: 48.0625em) {
     .home-highlights {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-9);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .home-highlights {
-      gap: var(--space-10);
-    }
-  }
-
-  /* GSH spotlight — single full-width ActivityCard, mirrored from
-     /activities .spotlight (RAND editorial; no shadow / no lift). On md+,
-     switch the card to a 50/50 image-left, body-right layout. */
-  .home-spotlight :global(.activity-card) {
-    max-width: var(--container-narrow, 860px);
-    margin-inline: auto;
-  }
-
-  @media (min-width: 768px) {
-    .home-spotlight :global(.activity-card) {
-      flex-direction: row;
-      align-items: stretch;
-    }
-    .home-spotlight :global(.activity-card__media) {
-      flex: 0 0 50%;
-      aspect-ratio: auto;
-    }
-    .home-spotlight :global(.activity-card__body) {
-      flex: 1 1 50%;
-      justify-content: center;
-    }
-    .home-spotlight :global(.activity-card__title) {
-      font-size: var(--fs-h4);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 </style>

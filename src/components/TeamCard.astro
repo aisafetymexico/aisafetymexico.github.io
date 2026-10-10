@@ -4,17 +4,22 @@
  *
  * Spec: docs/DESIGN-SYSTEM.md §6.3 (TeamCard).
  *
- * Visual: circular portrait with copper border (matches the existing
- * style.css convention for /images/Equipo/*), name in Playfair, role in
- * Inter small. Optional LinkedIn icon link below.
+ * Design: her `.team-card` (fcacfc4 css/style.css L1075–1126): a left-aligned
+ * hairline card (white, 1px line, 8px radius, no
+ * shadow) with a small 54px round avatar at the top left, then the name,
+ * the role in muted type and a quiet text link «LinkedIn». The card is not
+ * a link, so it has no hover state. The grid columns (3 / 2 / 1) are set by
+ * the page.
  *
  * Photos are served from /images/Equipo/<file>.{jpeg,png} (already in /public).
  *
  * Props:
- *  - name:      Full name (h6 scale).
- *  - role:      Role / title (small Inter).
+ *  - name:      Full name (h3).
+ *  - role:      Role / title (small, muted).
  *  - photo:     ImgRef pointing to /images/Equipo/<file>.
- *  - linkedin?: Optional LinkedIn profile URL.
+ *  - linkedin?: Optional LinkedIn profile URL. The visible text is
+ *               «LinkedIn»; the person's name is added for screen readers
+ *               (language-neutral, so it works on ES and EN pages).
  */
 import type { ImgRef } from '../lib/types';
 
@@ -38,8 +43,8 @@ const photoSrc = typeof photo.src === 'string' ? photo.src : photo.src.src;
       alt={photo.alt || name}
       loading="lazy"
       decoding="async"
-      width="160"
-      height="160"
+      width="54"
+      height="54"
     />
   </div>
 
@@ -50,105 +55,86 @@ const photoSrc = typeof photo.src === 'string' ? photo.src : photo.src.src;
     <a
       class="team-card__social"
       href={linkedin}
-      aria-label={`${name} en LinkedIn`}
       target="_blank"
       rel="noopener noreferrer"
     >
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path
-          fill="currentColor"
-          d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5.001zM3 9h4v12H3V9zm7 0h3.84v1.64h.05c.53-1 1.85-2.05 3.81-2.05 4.07 0 4.82 2.68 4.82 6.16V21h-4v-5.34c0-1.27-.02-2.91-1.77-2.91-1.77 0-2.04 1.39-2.04 2.82V21h-4V9z"
-        />
-      </svg>
+      LinkedIn<span class="visually-hidden">, {name}</span>
     </a>
   )}
 </article>
 
 <style>
-  /* RAND editorial — circular photo, name, role. No chrome on the card. */
+  /* Her .team-card: white, 1px hairline, 8px radius, 26px 22px, left-aligned. */
   .team-card {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: var(--space-6) var(--space-4);
+    align-items: flex-start;
+    text-align: left;
+    padding: 26px 22px;
     background: var(--color-bg-elevated);
-    border-radius: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
   }
 
-  /* Photo wrap drops the copper gradient ring — RAND uses unframed circular
-     portraits. We keep the neutral inner border for visual separation. */
+  /* Her .team-photo-wrapper: 54px circle, hairline, bg-3 while loading. */
   .team-card__photo-wrap {
-    width: 140px;
-    height: 140px;
+    flex-shrink: 0;
+    width: 54px;
+    height: 54px;
+    margin: 0 0 14px;
     border-radius: var(--radius-full);
-    padding: 0;
-    background: transparent;
-    margin-bottom: var(--space-4);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-muted);
+    overflow: hidden;
   }
 
   .team-card__photo {
     display: block;
     width: 100%;
     height: 100%;
-    border-radius: var(--radius-full);
     object-fit: cover;
-    background: var(--color-bg-warm);
   }
 
+  /* Her .team-name (no own line-height: it inherits the body's 1.65). */
   .team-card__name {
-    margin: 0 0 var(--space-1);
+    margin: 0 0 3px;
     font-family: var(--font-display);
-    font-size: var(--fs-h6);
-    font-weight: var(--fw-bold);
-    line-height: var(--lh-snug);
+    font-size: 0.98rem;
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-relaxed);
+    letter-spacing: -0.015em;
     color: var(--color-text-heading);
   }
 
+  /* Her .team-role, in the AA-safe muted grey. */
   .team-card__role {
-    margin: 0;
+    margin: 0 0 10px;
     font-family: var(--font-body);
-    font-size: var(--fs-small);
-    font-weight: var(--fw-medium);
+    font-size: 0.84rem;
     line-height: var(--lh-normal);
-    color: var(--color-text-secondary);
+    color: var(--color-text-muted);
   }
 
+  .team-card__role:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Her .team-linkedin: a quiet text link. */
   .team-card__social {
-    margin-top: var(--space-3);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-full);
-    background: transparent;
-    color: var(--color-text-muted);
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: var(--fw-medium);
+    color: var(--color-text-secondary);
+    text-decoration: none;
     transition: color var(--transition);
   }
   .team-card__social:hover {
-    color: var(--color-accent);
+    color: var(--color-link-hover);
   }
   .team-card__social:focus-visible {
     outline: 2px solid var(--color-focus-ring);
-    outline-offset: 3px;
-  }
-  .team-card__social svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  @media (min-width: 768px) {
-    .team-card {
-      padding: var(--space-7) var(--space-5);
-    }
-    .team-card__photo-wrap {
-      width: 160px;
-      height: 160px;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .team-card__social { transition: none; }
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
   }
 </style>

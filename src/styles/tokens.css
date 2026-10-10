@@ -1,287 +1,213 @@
 /*
- * AI Safety Mexico — Design Tokens (Dark Mode · Subtle variant)
+ * AI Safety Mexico — Design Tokens ("Editorial mínimo", light)
  *
- * Single source of truth for color, typography, spacing, radii, shadows,
- * transitions, z-index, breakpoints, and container widths.
+ * Single source of truth for colour, typography, spacing, radii, shadows,
+ * transitions, z-index, breakpoints and container widths.
  *
- * This file applies the SUBTLE mapping from `docs/PALETTE-MAPPING.md` §2,
- * sourced from the desaturated/lifted Greywall poster primitives in
- * `docs/POSTER-PALETTE.md` §2. Page surface is `#1E1E1C` (warm near-black,
- * lifted ~+8L over faithful) with cream-rotated foregrounds and peach-500
- * (`#D49E86`) inline accent.
+ * Design source: the collaborator's 2026 light redesign (legacy
+ * `css/style.css` at fcacfc4): white page, warm-neutral surfaces, 1px
+ * hairlines instead of shadows, Inter only, palette taken from the 2026
+ * logo (clay #C87551 · blue #3A5F87). Light only: there is no dark theme.
  *
- * Critical guardrails (PALETTE-MAPPING §0):
- *   1. Body links + inline accents MUST resolve to peach-500. Indigo-500
- *      (2.21:1 on bg-base) and sky-500 (4.07:1) fail AA at body sizes;
- *      both are reserved as decorative / display-only primitives.
- *   2. `--color-accent-secondary` resolves to sky-300 (`#92A0CD`, 6.33:1)
- *      — never sky-500 — so eyebrows / ornament rules clear AA body.
- *   3. CTA color INVERTS: peach fill + bg-base text. Cream-on-peach fails
- *      (~2:1); bg-base-on-peach scores 6.36:1. See `--color-cta-text`.
+ * Layers:
+ *   §0    Her primitives, under her own names (port her rules almost verbatim).
+ *   §1.1  Her compatibility aliases (navy/copper/…), kept as she shipped them.
+ *         (The old dark-theme primitives of §1.1b are gone: every consumer
+ *         now reads a §1.3 token.)
+ *   §1.3  Semantic tokens. Components and pages consume THESE.
+ *   §2–5  Type, spacing, radii, shadows, motion, z-index, breakpoints,
+ *         containers. Mobile-first: the :root block holds the ≤480px values;
+ *         the media queries at the end hold her 481 / 769 / 1025px tiers.
  *
- * Component CSS MUST consume the semantic tokens (§1.3). The primitives in
- * §1.1 / §1.1b / §1.2 live here exclusively. Legacy light-mode primitives
- * (§1.1) are retained as back-compat aliases pending component migration
- * in tasks #2 / #3 / #4 (base shell, components, pages).
+ * Contrast (WCAG 2.x, on white): ink 18.0 · ink-2 6.82 · muted text #6E6E78
+ * 5.04 · clay-dark 5.64 · blue 6.63. Her ink-3 #8E8E98 (3.24) and clay
+ * #C87551 (3.43 with white) fail AA for small text, so they are reserved
+ * for non-text marks (hover borders, brackets, dots, featured borders).
  */
 
 :root {
-  /* ============================================================
-   * 1.1 Legacy color primitives (light-mode aliases — pending migration)
-   * ------------------------------------------------------------
-   * These tokens are no longer used by the semantic layer below. They
-   * remain only so components that still reference `--navy`, `--copper`,
-   * etc. directly do not break the build. Component-darkmode tasks
-   * (#2 / #3 / #4) will migrate consumers; this section can be deleted
-   * after that migration lands.
-   * ============================================================ */
-  --navy: #1B2340;
-  --navy-light: #2A3456;
-  --copper: #C4854A;
-  --copper-dark: #8B5A2B;
-  --gold: #E8BD68;
-  --cream: #FAF3E8;
-  --white: #FFFFFF;
-  --text: #3A3A4A;
-  --text-light: #6A6A7A;
-  --text-muted: #8A8A9A;
-  --border: #E2DED6;
+  color-scheme: light;
 
   /* ============================================================
-   * 1.1b Dark-mode primitives (SUBTLE — POSTER-PALETTE §2)
-   * ------------------------------------------------------------
-   * Desaturated / lifted variant of the Greywall poster palette. Page
-   * surface is `--bg-base #1E1E1C`; all semantic tokens in §1.3 resolve
-   * to entries in this block (or the legacy alpha mixes in §1.2).
-   *
-   * Display-only watch:
-   *   --indigo-500 (#404F96)  → 2.21:1 on bg-base. Decorative wordmark
-   *                             / ornamental dots ONLY. Never a link or
-   *                             body text color.
-   *   --sky-500    (#6A7ABC)  → 4.07:1 on bg-base. Large-text only
-   *                             (≥18pt regular / ≥14pt bold). For
-   *                             inline secondary accent step UP to
-   *                             --sky-300.
+   * 0 · Primitives — her :root (fcacfc4 css/style.css L13–31)
    * ============================================================ */
+  /* Ink */
+  --ink: #16161A;
+  --ink-2: #5A5A63;
+  --ink-3: #8E8E98;        /* NON-TEXT only (3.24:1): hover borders, brackets, glyphs */
+  --ink-3-aa: #6E6E78;     /* text-safe muted (5.04:1 on white, 4.79 on bg-2) */
   /* Surfaces */
-  --bg-base: #1E1E1C;
-  --bg-elevated: #262624;
-  --bg-overlay: #2D2D2A;
-
-  /* Peach (primary brand accent in dark mode) */
-  --peach-50: #EED2C0;
-  --peach-100: #E5BFA9;
-  --peach-300: #DCB099;
-  --peach-500: #D49E86;   /* primary inline accent / link / focus */
-  --peach-700: #B88069;   /* CTA hover — see watch item §1.3 below */
-  --peach-900: #825642;
-
-  /* Indigo — display-only at -500/-700; -300/-900 OK at component spec */
-  --indigo-300: #7081B0;
-  --indigo-500: #404F96;  /* DECORATIVE DISPLAY ONLY — fails AA body */
-  --indigo-700: #2D376A;
-  --indigo-900: #1F274D;  /* impact band surface */
-
-  /* Sky — -300 is the inline secondary; -500 large-text only */
-  --sky-300: #92A0CD;     /* secondary inline accent (eyebrows, rules) */
-  --sky-500: #6A7ABC;     /* LARGE-TEXT ONLY — ≥18pt / ≥14pt bold */
-  --sky-700: #4D5A89;
-
-  /* Cream — foreground rotation (replaces white as text base) */
-  --cream-50: #F7F3E8;
-  --cream-100: #EFE9D8;
-  --cream-300: #E5DECB;
-  --cream-500: #EBE7DD;   /* primary body / heading text */
-
-  /* Gray — neutral support */
-  --gray-300: #BAB6AE;
-  --gray-500: #979593;
-  --gray-700: #5C5B57;
-  --gray-900: #2E2D2A;
-
-  /* Code highlight set (shared verbatim with faithful variant) */
-  --code-orange: #DC8149;
-  --code-green: #3F9C38;
-  --code-yellow: #E7B772;
-  --code-cyan: #88A9E5;
+  --bg: #FFFFFF;
+  --bg-2: #FAF9F6;
+  --bg-3: #F4F2ED;
+  /* Hairlines */
+  --line: #E6E3DD;
+  --line-soft: #F0EEE9;
+  /* Logo accents */
+  --clay: #C87551;         /* NON-TEXT only: underline hover, active dot, featured border */
+  --clay-dark: #9C5430;    /* text-safe accent (5.64:1) and filled accent buttons */
+  --clay-wash: #FBF1EA;
+  --blue: #3A5F87;
+  --blue-soft: #84A8CC;
+  --blue-wash: #EEF3F9;
+  /* Her one-off literals, promoted to tokens */
+  --clay-line: #F0DCCD;                      /* .prize-badge border */
+  --band-caracol: #070707;                   /* .hero-banner band = the PNG's side bars */
+  --scrim: rgba(22, 22, 26, 0.94);           /* .lightbox */
+  --header-glass: rgba(255, 255, 255, 0.88); /* .site-header */
 
   /* ============================================================
-   * 1.2 Derived alpha / overlay primitives
-   * ------------------------------------------------------------
-   * Subtle dark-mode alphas added below the legacy block. Legacy alphas
-   * (navy/cream/white) retained as back-compat for unmigrated consumers.
+   * 1.1 · Her compatibility aliases (fcacfc4 L38–51), kept verbatim
+   * so her event-page rules port unchanged. Prefer §1.3 tokens.
    * ============================================================ */
-  /* Legacy (light-mode) alphas — pending migration */
-  --navy-overlay-strong: rgba(27, 35, 64, 0.85);
-  --navy-overlay: rgba(27, 35, 64, 0.75);
-  --navy-overlay-soft: rgba(27, 35, 64, 0.55);
-  --surface-cream-overlay: rgba(250, 243, 232, 0.85);
-  --surface-white-overlay: rgba(255, 255, 255, 0.92);
-  --copper-tint: rgba(196, 133, 74, 0.08);
-  --copper-tint-strong: rgba(196, 133, 74, 0.10);
-  --copper-border-soft: rgba(196, 133, 74, 0.25);
-  --copper-border: rgba(196, 133, 74, 0.30);
-  --white-text-strong: rgba(255, 255, 255, 0.85);
-  --white-text: rgba(255, 255, 255, 0.80);
-  --white-text-soft: rgba(255, 255, 255, 0.70);
-  --white-text-muted: rgba(255, 255, 255, 0.60);
-  --white-text-faint: rgba(255, 255, 255, 0.40);
-
-  /* Dark-mode subtle alphas — semantic layer below resolves to these */
-  --bg-base-overlay-strong: rgba(30, 30, 28, 0.92);
-  --bg-base-overlay: rgba(30, 30, 28, 0.75);
-  --bg-elevated-overlay: rgba(38, 38, 36, 0.85);
-  --peach-tint: rgba(212, 158, 134, 0.08);
-  --peach-tint-strong: rgba(212, 158, 134, 0.10);
-  --peach-border-soft: rgba(212, 158, 134, 0.25);
-  --peach-border: rgba(212, 158, 134, 0.30);
-  --cream-text-strong: rgba(235, 231, 221, 0.85);
-  --cream-text: rgba(235, 231, 221, 0.80);
-  --cream-text-soft: rgba(235, 231, 221, 0.70);
-  --cream-text-muted: rgba(235, 231, 221, 0.60);
-  --cream-text-faint: rgba(235, 231, 221, 0.40);
-  --cream-border: rgba(235, 231, 221, 0.5);
+  --navy: #16161A;
+  --navy-light: #2C2C34;
+  --copper: #C87551;
+  --copper-dark: #9C5430;
+  --gold: #C87551;
+  --cream: #FAF9F6;
+  --white: #FFFFFF;
+  --text: #16161A;
+  --text-light: #5A5A63;
+  --text-muted: #8E8E98;
+  --border: #E6E3DD;
 
   /* ============================================================
-   * 1.3 Semantic color tokens (DESIGN-SYSTEM §1.3 · SUBTLE remap)
-   * Components consume THESE, never the primitives directly.
-   * ------------------------------------------------------------
-   * Mapping table & contrast verdicts: docs/PALETTE-MAPPING.md §2 / §3.2.
+   * 1.3 · Semantic colour — components consume THESE
    * ============================================================ */
 
-  /* Texto */
-  --color-text-primary: var(--cream-500);            /* #EBE7DD · 13.52:1 */
-  --color-text-secondary: var(--gray-300);           /* #BAB6AE · 8.26:1  */
-  --color-text-muted: var(--gray-500);               /* #979593 · 5.59:1  */
-  --color-text-heading: var(--cream-500);            /* hero h1 overrides → peach at component level */
-  --color-text-on-dark: var(--cream-500);            /* page is dark; "on-dark" stays cream */
-  --color-text-on-dark-muted: var(--cream-text-strong); /* rgba(235,231,221,0.85) */
-  --color-text-inverse: var(--bg-base);              /* used on rare cream-50/100 islands */
+  /* Text */
+  --color-text-primary: var(--ink);
+  --color-text-heading: var(--ink);
+  --color-text-secondary: var(--ink-2);
+  --color-text-muted: var(--ink-3-aa);           /* her ink-3 role, AA-safe */
+  --color-text-on-dark: #FFFFFF;                 /* ONLY on genuinely dark surfaces (scrim, ink band) */
+  --color-text-on-dark-muted: rgba(255, 255, 255, 0.72);
+  --color-text-inverse: #FFFFFF;
 
-  /* Superficies */
-  --color-bg-base: var(--bg-base);                   /* #1E1E1C */
-  --color-bg-warm: var(--bg-elevated);               /* collapses to bg-elevated — see PALETTE-MAPPING §4.6 */
-  --color-bg-elevated: var(--bg-elevated);           /* #262624 */
-  --color-bg-section-warm: var(--bg-elevated-overlay);    /* rgba(38,38,36,0.85) */
-  --color-bg-section-base: var(--bg-base-overlay-strong); /* rgba(30,30,28,0.92) */
-  --color-bg-impact: var(--indigo-900);              /* #1F274D — preserves "MÉXICO indigo" rhythm */
-  --color-bg-overlay-dark: var(--bg-base-overlay);   /* rgba(30,30,28,0.75) */
+  /* Surfaces */
+  --color-bg-base: var(--bg);                    /* page, white sections */
+  --color-bg-elevated: var(--bg);                /* cards: white + 1px hairline */
+  --color-bg-warm: var(--bg-2);                  /* tinted sections, panels, footer */
+  --color-bg-muted: var(--bg-3);                 /* quiet fills: secondary button, placeholders */
+  --color-bg-subtle: var(--bg-3);                /* alias of --color-bg-muted */
+  --color-bg-section-base: var(--bg);
+  --color-bg-section-warm: var(--bg-2);
+  --color-bg-impact: var(--ink);                 /* the only dark surface (ink band); rare */
+  --color-bg-overlay-dark: var(--scrim);
+  --color-header-bg: var(--header-glass);
+  --color-banner-band: var(--band-caracol);
 
-  /* Acentos */
-  --color-accent: var(--peach-500);                  /* #D49E86 · 7.18:1 */
-  --color-accent-hover: var(--peach-300);            /* hover LIFTS in dark mode (RAND/Brookings convention) */
-  --color-accent-soft: var(--peach-tint);            /* rgba(212,158,134,0.08) */
-  --color-accent-secondary: var(--sky-300);          /* #92A0CD · 6.33:1 — sky-500 fails body AA */
+  /* Accents */
+  --color-accent: var(--clay-dark);              /* text-safe accent: category labels, inline links */
+  --color-accent-hover: var(--clay-dark);
+  --color-accent-soft: var(--clay-wash);         /* selection, badges, :target washes */
+  --color-accent-secondary: var(--ink-3-aa);     /* was sky; her eyebrows are neutral grey */
+  --color-accent-decor: var(--clay);             /* NON-TEXT: underline hover, active dot, featured border */
 
-  /* CTA — INVERTED: peach fill + bg-base text
-     Cream-on-peach scores 1.97:1 (fail). Bg-base-on-peach scores 6.36:1.
-     WATCH: cta-bg-hover (#1E1E1C on #B88069) = 4.55:1 — clears body AA
-     by only 0.05. If color-managed displays drop it below threshold,
-     promote hover to peach-500 and reserve peach-700 for active/pressed.
-     See PALETTE-MAPPING §4.7. */
-  --color-cta-bg: var(--peach-500);
-  --color-cta-bg-hover: var(--peach-700);            /* watch: 4.55:1 — see comment above */
-  --color-cta-text: var(--bg-base);                  /* INVERTED from white — guardrail #3 */
+  /* Primary CTA (her ink pill) */
+  --color-cta-bg: var(--ink);
+  --color-cta-bg-hover: var(--clay-dark);
+  --color-cta-text: #FFFFFF;
 
-  /* Bordes */
-  --color-border: var(--gray-700);                   /* #5C5B57 hairline */
-  --color-border-accent: var(--peach-border-soft);   /* rgba(212,158,134,0.25) */
-  --color-border-on-dark: var(--cream-border);       /* rgba(235,231,221,0.5) */
+  /* Borders */
+  --color-border: var(--line);                   /* cards, controls, dividers */
+  --color-border-soft: var(--line-soft);         /* between sections, header at rest */
+  --color-border-strong: var(--ink-3);           /* hover / emphasis border (clickable cards) */
+  --color-border-accent: var(--ink-3);           /* legacy name of the hover border */
+  --color-border-on-dark: rgba(255, 255, 255, 0.2);
 
-  /* Estado / utilidades */
-  --color-link: var(--peach-500);                    /* body links MUST be peach — guardrail #1 */
-  --color-link-hover: var(--peach-300);
-  --color-focus-ring: var(--peach-500);              /* visible against bg-base (7.18:1) */
+  /* Links + focus (VF-10: unclassed links are ink, clay-dark on hover) */
+  --color-link: var(--ink);
+  --color-link-hover: var(--clay-dark);
+  --color-link-inline: var(--clay-dark);         /* in-text links (her .inline-link) */
+  --color-link-underline: var(--line);
+  --color-link-underline-hover: var(--clay);
+  --color-focus-ring: var(--blue);               /* 6.63:1 on white */
+  --color-focus-ring-on-dark: #FFFFFF;           /* rings on the scrim / ink band */
 
-  /* Sucesos puntuales (registro/CTA verde — heredado del hackathon)
-     Kept verbatim per PALETTE-MAPPING §1 / §2 ("Special-case unchanged").
-     Already passes (~12:1 on bg-base — intentionally electric). */
-  --color-cta-register: #3df284;
-  --color-cta-register-hover: #33e37d;
-  --color-cta-register-text: #06110c;
-  --color-prize-badge-bg: #80ffca;
-  --color-prize-badge-text: #0f2b20;
+  /* Information (blue flag pairing) */
+  --color-info: var(--blue);
+  --color-info-soft: var(--blue-wash);
+
+  /* Overlays */
+  --color-scrim: var(--scrim);                   /* lightbox */
+  --color-on-scrim: #FFFFFF;
+  --color-backdrop: rgba(22, 22, 26, 0.2);       /* mobile-drawer backdrop */
+
+  /* Special purpose */
+  --color-cta-register: var(--clay-dark);        /* filled accent button; her clay fails AA with white */
+  --color-cta-register-hover: var(--ink);
+  --color-cta-register-text: #FFFFFF;
+  --color-prize-badge-bg: var(--clay-wash);
+  --color-prize-badge-text: var(--clay-dark);
+  --color-prize-badge-border: var(--clay-line);
+  --color-flag-es: var(--blue);
+  --color-flag-es-bg: var(--blue-wash);
+  --color-flag-latam: var(--clay-dark);
+  --color-flag-latam-bg: var(--clay-wash);
+  --color-verified: var(--blue);                 /* certificate "verified" badge text */
+  --color-verified-bg: var(--blue-wash);
 
   /* ============================================================
-   * 1.4 Gradientes canónicos (DESIGN-SYSTEM §1.4)
-   * ------------------------------------------------------------
-   * Polish-rand pass (RAND-DIFF §8): RAND uses solid surfaces with
-   * hairline rules — never decorative gradient ornaments. The tokens
-   * below are flattened to solid color references. In dark-mode subtle
-   * they resolve to the dark semantic tokens above. Preferred path for
-   * new code: consume `--color-bg-*`, `--color-border`, etc. directly
-   * and treat these tokens as deprecated.
+   * 2.1 · Families — Inter only (Playfair removed)
    * ============================================================ */
-  --gradient-navy-impact: var(--color-bg-impact);    /* indigo-900 dark band */
-  --gradient-cream-paper: var(--color-bg-warm);      /* bg-elevated warm surface */
-  --gradient-edge-accent: var(--color-border);       /* neutral hairline */
-  --gradient-badge-warm: var(--color-accent);        /* peach-500 (was copper) */
-  --gradient-event-promo: var(--color-bg-overlay-dark); /* near-black image overlay */
-
-  /* ============================================================
-   * 2.1 Familias tipográficas (frozen)
-   * ============================================================ */
-  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-features: 'cv02', 'cv03', 'cv04';      /* Inter open 4 / 6 / 9 */
 
   /* ============================================================
-   * 2.2 Pesos canónicos
+   * 2.2 · Weights — Google Fonts loads 400;450;500;550;600 only
    * ============================================================ */
   --fw-regular: 400;
-  --fw-medium: 500;
+  --fw-book: 450;         /* nav links, tags, chips, stat labels */
+  --fw-medium: 500;       /* buttons, in-text links */
+  --fw-display: 500;      /* hero / page titles, stat numbers, numerals */
+  --fw-heading: 550;      /* h2–h6, card titles, active nav */
   --fw-semibold: 600;
-  --fw-bold: 700;
-  --fw-extrabold: 800;
+  --fw-label: 600;        /* eyebrows, wordmark */
+  --fw-bold: 600;         /* capped to the loaded range (was 700) */
 
   /* ============================================================
-   * 2.3 Escala fluida tipográfica (clamp — mobile-first)
-   * Min ≈ ≤480px, max ≈ ≥1280px.
+   * 2.3 · Sizes — ≤480px values here; 481 / 769 / 1025 tiers below
    * ============================================================ */
+  --fs-display: 1.52rem;  /* home hero title */
+  --fs-h1: 1.42rem;       /* page titles */
+  --fs-h2: 1.18rem;       /* section headings */
+  --fs-h3: 1.15rem;
+  --fs-h4: 1.1rem;
+  --fs-h5: 1.08rem;       /* card titles (her .program-card-title) */
+  --fs-h6: 1rem;
+  --fs-lead: 1rem;        /* section description, page subtitle */
+  --fs-body: 0.9375rem;   /* 15px on phones, 16px from 481px */
+  --fs-small: 0.88rem;
+  --fs-caption: 0.8rem;
+  --fs-eyebrow: 0.7rem;
+  --fs-nav: 0.855rem;
+  --fs-btn: 0.9rem;
+  --fs-stat: 1.65rem;
 
-  /* Display / titulares — Playfair
-   * RAND-DIFF §10.1: H1 max bumped from 38.4px → 56–72px to make page-hero
-   * titles the focal weight. Display (home hero) bumped to ~64px max. */
-  --fs-display: clamp(2.25rem, 1.50rem + 3.40vw, 4.00rem); /* hero-title  ~36→64px */
-  --fs-h1: clamp(2.25rem, 1.40rem + 3.80vw, 4.50rem);      /* page-hero-title ~36→72px */
-  --fs-h2: clamp(1.75rem, 1.30rem + 2.00vw, 2.50rem);      /* section-heading ~28→40px */
-  --fs-h3: clamp(1.30rem, 1.10rem + 0.85vw, 1.75rem);      /* event-promo h3 / project-spotlight */
-  --fs-h4: clamp(1.20rem, 1.05rem + 0.55vw, 1.40rem);      /* team-subheading */
-  --fs-h5: clamp(1.10rem, 1.00rem + 0.45vw, 1.30rem);      /* program-card / event-hub-card titles */
-  --fs-h6: clamp(1.05rem, 0.98rem + 0.30vw, 1.20rem);      /* collab-title, pillar-title */
+  --lh-tight: 1.16;       /* display */
+  --lh-snug: 1.25;        /* h2 */
+  --lh-heading: 1.35;     /* card titles, h3–h6 */
+  --lh-normal: 1.55;
+  --lh-relaxed: 1.65;     /* body */
+  --lh-loose: 1.7;        /* descriptions, card copy */
 
-  /* Cuerpo y soporte — Inter
-   * RAND body reads ~17px. Bumped from 16→18px max for editorial weight. */
-  --fs-lead: clamp(1.10rem, 1.05rem + 0.25vw, 1.25rem);   /* hero-subtitle, page-hero-subtitle */
-  --fs-body: clamp(1.00rem, 0.95rem + 0.25vw, 1.125rem);  /* body 16→18px desktop */
-  --fs-small: clamp(0.88rem, 0.85rem + 0.12vw, 0.95rem);  /* fact-list, card secondary */
-  --fs-caption: clamp(0.80rem, 0.78rem + 0.10vw, 0.88rem);/* footer copy, partner labels */
-  --fs-eyebrow: clamp(0.78rem, 0.74rem + 0.15vw, 0.82rem);/* hero-overline, section-eyebrow ~12.5→13.1px */
-
-  /* Numérico de impacto */
-  --fs-stat: clamp(1.70rem, 1.20rem + 2.20vw, 2.80rem);   /* stat-number */
-
-  /* Line-heights
-   * RAND-DIFF §10.6: tight 1.05 on heavy display H1; snug 1.10 on H2; 1.15
-   * on smaller headings. Body keeps relaxed (1.65) for editorial breathing. */
-  --lh-tight: 1.05;
-  --lh-snug: 1.10;
-  --lh-heading: 1.15;
-  --lh-normal: 1.50;
-  --lh-relaxed: 1.65;
-  --lh-loose: 1.75;
-
-  /* Letter-spacing
-   * RAND-DIFF §10.3: eyebrow tracking pulled from 0.35em → 0.10em (RAND
-   * eyebrows are tight). H1 keeps -0.01em; H2 uses subtle -0.005em. */
-  --ls-tight: -0.01em;
-  --ls-snug: -0.005em;
+  --ls-tight: -0.03em;
+  --ls-display: -0.03em;  /* hero / page titles */
+  --ls-snug: -0.02em;
+  --ls-heading: -0.02em;  /* h2–h6, card titles */
   --ls-normal: 0;
-  --ls-wide: 0.3px;
-  --ls-uppercase: 0.10em;
+  --ls-wide: 0.01em;      /* wordmark */
+  --ls-btn: -0.01em;
+  --ls-stat: -0.035em;
+  --ls-label: 0.09em;     /* in-card label */
+  --ls-uppercase: 0.14em; /* eyebrow */
   --ls-uppercase-xl: 0.14em;
 
   /* ============================================================
-   * 3. Sistema de espaciado (8-base; DESIGN-SYSTEM §3)
+   * 3 · Spacing — 8-base scale + her rhythm as semantic tokens
    * ============================================================ */
   --space-0: 0;
   --space-1: 4px;
@@ -299,32 +225,28 @@
   --space-16: 96px;
   --space-20: 112px;
 
-  /* ============================================================
-   * 4.1 Border radius (DESIGN-SYSTEM §4.1)
-   * ============================================================ */
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 22px;
-  --radius-pill: 999px;
-  --radius-full: 50%;
+  --gap-grid: 18px;             /* card grids */
+  --gap-actions: 10px;          /* button rows */
+  --pad-card: 22px 20px;        /* 28px from 769px */
+  --section-pad: 48px;          /* 72px from 481px */
+  --section-pad-stats: 48px;    /* 52px from 481px */
+  --section-pad-contact: 48px;  /* 80px from 481px */
+  --scroll-offset: 88px;        /* scroll-margin-top for #anchors (sticky header + 16px) */
 
   /* ============================================================
-   * 4.2 Sombras (DESIGN-SYSTEM §4.2)
-   * ------------------------------------------------------------
-   * Polish-rand pass (RAND-DIFF §1.5, §5, §6, §13.3): RAND is a flat
-   * editorial surface — no card shadows, no hover lifts, no inset
-   * shadows on coloured bands, no shadow-cta on buttons, no shadow on
-   * hero photos. The decorative shadow tokens below are flattened to
-   * `none`. Only TWO shadow tokens stay live:
-   *   --shadow-header  → subtle drop on the sticky header (functional)
-   *   --shadow-modal   → modal/lightbox elevation (functional)
-   *   --shadow-mobile-nav → side drawer (functional)
-   * Any component still consuming the deprecated tokens will resolve
-   * to `none` (a valid box-shadow value) until it's migrated away.
+   * 4.1 · Radii
    * ============================================================ */
-  /* Decorative shadow tokens — DEPRECATED, kept for back-compat as `none` */
+  --radius-xs: 4px;       /* flags */
+  --radius-sm: 8px;
+  --radius: 8px;          /* cards, inputs, embeds */
+  --radius-lg: 14px;      /* large media, panels */
+  --radius-xl: 14px;
+  --radius-pill: 999px;   /* buttons, chips, tags */
+  --radius-full: 50%;     /* avatars, icon circles */
+
+  /* ============================================================
+   * 4.2 · Shadows — none. Elevation = white on bg-2 + a 1px hairline.
+   * ============================================================ */
   --shadow-xs: none;
   --shadow-sm: none;
   --shadow: none;
@@ -333,28 +255,20 @@
   --shadow-cta: none;
   --shadow-spotlight: none;
   --shadow-event-note: none;
-
-  /* Functional / kept shadows */
-  --shadow-header: 0 2px 20px rgba(0, 0, 0, 0.25);
-  --shadow-mobile-nav: -4px 0 30px rgba(0, 0, 0, 0.30);
-  --shadow-modal: 0 24px 60px rgba(0, 0, 0, 0.30);
-
-  /* Insets on coloured bands — DEPRECATED (RAND-DIFF §1.5: zero inset
-     shadows site-wide). Tokens kept as `none` for back-compat. */
-  --inset-section-warm: none;
-  --inset-section-impact: none;
-  --inset-section-stats: none;
+  --shadow-header: none;
+  --shadow-mobile-nav: none;
+  --shadow-modal: none;
 
   /* ============================================================
-   * 4.3 Transitions (DESIGN-SYSTEM §4.3)
+   * 4.3 · Motion — colour / border / background only; nothing lifts
    * ============================================================ */
   --transition-fast: 0.15s ease;
-  --transition: 0.25s ease;
+  --transition: 0.2s ease;
   --transition-slow: 0.35s ease;
-  --transition-carousel: 0.5s ease;
+  --transition-carousel: 0.55s cubic-bezier(0.4, 0, 0.2, 1);
 
   /* ============================================================
-   * 4.4 Z-index scale (DESIGN-SYSTEM §4.4)
+   * 4.4 · Z-index
    * ============================================================ */
   --z-base: 1;
   --z-decoration: 2;
@@ -364,22 +278,58 @@
   --z-lightbox: 9999;
 
   /* ============================================================
-   * 5. Breakpoints (referencia — usados como min-width en media queries)
-   * Mobile-first: defaults aplican <480px; cada breakpoint añade.
+   * 5 · Breakpoints (reference only: custom properties cannot be used
+   * inside @media). Her tiers are max-width 1024 / 768 / 480, i.e.
+   * mobile-first min-width 1025 / 769 / 481. The header switches from
+   * the drawer to the one-row nav at 1080px (see Nav.astro).
    * ============================================================ */
   --bp-sm: 480px;
   --bp-md: 768px;
   --bp-lg: 1024px;
+  --bp-nav: 1080px;
   --bp-xl: 1280px;
   --bp-2xl: 1440px;
 
   /* ============================================================
-   * Container widths (DESIGN-SYSTEM §5)
+   * Containers and measures
    * ============================================================ */
-  --container-max: 1200px;
+  --container-max: 67.5rem; /* 1080px at the default 16px; grows with the reader's base font */
   --container-narrow: 800px;
   --container-hero: 1080px;
-  --container-carousel: 860px;
-  --container-padding: 12px;       /* mobile ≤480 */
-  --container-padding-md: 20px;    /* desktop default */
+  --container-carousel: 880px;
+  --container-padding: 18px;      /* ≤480 */
+  --container-padding-md: 24px;   /* 481–1024; 32px from 1025 */
+  --measure-hero: 720px;
+  --measure-title: 760px;
+  --measure-lead: 780px;
+  --measure-desc: 680px;
+  --measure-sub: 580px;
+  --measure-page-sub: 600px;
+}
+
+@media (min-width: 481px) {
+  :root {
+    --fs-display: 1.72rem;
+    --fs-h1: clamp(1.7rem, 3.6vw, 2.35rem);
+    --fs-body: 1rem;
+    --section-pad: 72px;
+    --section-pad-stats: 52px;
+    --section-pad-contact: 80px;
+  }
+}
+
+@media (min-width: 769px) {
+  :root {
+    --fs-display: clamp(1.9rem, 4.2vw, 2.85rem);
+    --fs-h2: 1.32rem;
+    --fs-stat: 1.8rem;
+    --pad-card: 28px;
+  }
+}
+
+@media (min-width: 1025px) {
+  :root {
+    --fs-stat: 2.1rem;
+    --container-padding-md: 32px;
+  }
 }

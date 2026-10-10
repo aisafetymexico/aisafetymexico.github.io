@@ -6,6 +6,11 @@
  * Cada certificado enlaza a /certificados/<id>, la pagina publica de
  * verificacion (misma URL que codifica el QR).
  *
+ * Búsqueda: ignora acentos y mayúsculas («perez» encuentra «Pérez») y exige
+ * cada término por separado («betzi perez» encuentra «Betzi Fernanda Pérez
+ * Ortega»), con etiqueta visible y un conteo en vivo, como el directorio de
+ * /resources.
+ *
  * Nota i18n: esta seccion es una herramienta de verificacion orientada a
  * datos (nombres, fechas, roles), no contenido editorial, asi que por ahora
  * no se duplica bajo /en/ (ver docs/I18N-ARCHITECTURE.md — Strategy B aplica
@@ -32,6 +37,9 @@ const breadcrumb: Breadcrumb = {
 };
 
 const sorted = [...certificates].sort((a, b) => a.name.localeCompare(b.name, 'es'));
+
+// Search key: no accents, lower case. The script folds the query the same way.
+const fold = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 ---
 
 <BaseLayout
@@ -43,30 +51,31 @@ const sorted = [...certificates].sort((a, b) => a.name.localeCompare(b.name, 'es
 
   <PageHero
     title="Certificados verificables"
-    description={`${sorted.length} certificados de ${EVENT_NAME}, emitidos por AI Safety Mexico. Busca un nombre para abrir su pagina de verificacion publica y el codigo QR.`}
+    description={`${sorted.length} certificados de ${EVENT_NAME}, emitidos por AI Safety Mexico. Busca un nombre para abrir su página de verificación pública y el código QR.`}
     breadcrumb={breadcrumb}
   />
 
   <section class="certs-section">
     <div class="certs-section__inner">
+      <label for="cert-search" class="certs-label">Buscar por nombre</label>
       <input
         id="cert-search"
         type="search"
         class="certs-search"
-        placeholder="Buscar por nombre..."
         autocomplete="off"
-        aria-label="Buscar certificado por nombre"
       />
+
+      <p class="certs-count" id="certs-count" role="status" aria-live="polite" aria-atomic="true">Mostrando <strong>{sorted.length}</strong> de {sorted.length} certificados</p>
 
       <ul class="certs-grid" id="certs-grid">
         {sorted.map((c) => (
-          <li class="certs-item" data-name={c.name.toLowerCase()}>
+          <li class="certs-item" data-name={fold(c.name)}>
             <a href={`/certificados/${c.id}`}>
               <div class="certs-item__thumb">
                 <img src={c.image} alt={`Certificado de ${c.name}`} loading="lazy" decoding="async" />
               </div>
               <div class="certs-item__info">
-                <span class="certs-item__name">{c.name}</span>
+                <span class="certs-item__name" title={c.name}>{c.name}</span>
                 <span class="certs-item__role">{c.role}</span>
               </div>
             </a>
@@ -82,9 +91,10 @@ const sorted = [...certificates].sort((a, b) => a.name.localeCompare(b.name, 'es
 </BaseLayout>
 
 <style>
+  /* Directory: her search input over a grid of white hairline cards. */
   .certs-section {
     background: var(--color-bg-base);
-    padding-block: var(--space-2) var(--space-14);
+    padding-block: var(--section-pad);
   }
 
   .certs-section__inner {
@@ -94,29 +104,73 @@ const sorted = [...certificates].sort((a, b) => a.name.localeCompare(b.name, 'es
     padding-inline: var(--container-padding);
   }
 
-  @media (min-width: 480px) {
+  @media (min-width: 481px) {
     .certs-section__inner {
       padding-inline: var(--container-padding-md);
     }
   }
 
+  /* Her field label (as on /resources): the eyebrow family over the input.
+     It replaces the old placeholder and aria-label. */
+  .certs-label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-label);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+  }
+
+  /* Her `.filter-field` search input: 8px corners and a border that turns
+     ink on focus. The global focus ring still draws on top. At rest the
+     border is ink-3, not her hairline: a field boundary needs 3:1
+     (WCAG 1.4.11) and the hairline is 1.28:1. */
   .certs-search {
     display: block;
     width: 100%;
     max-width: 28rem;
-    padding: var(--space-3) var(--space-4);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--color-border);
-    background: var(--color-bg-elevated);
+    padding: 11px 13px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius);
+    background: var(--color-bg-base);
     color: var(--color-text-primary);
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    margin-bottom: var(--space-8);
+    font-family: inherit;
+    font-size: 0.92rem;
+    margin-bottom: 18px;
+    transition: border-color var(--transition);
+    -webkit-appearance: none;
+    appearance: none;
   }
 
-  .certs-search:focus-visible {
-    outline: 2px solid var(--color-focus-ring);
-    outline-offset: 2px;
+  .certs-search:focus {
+    border-color: var(--color-text-primary);
+  }
+
+  /* 16px on phones and tablets, so iOS Safari does not zoom in on focus. */
+  @media (max-width: 768px) {
+    .certs-search {
+      font-size: 1rem;
+    }
+  }
+
+  /* Live count over the grid, closed by a hairline (her `.resource-toolbar`
+     count, as on /resources). */
+  .certs-count {
+    margin: 0 0 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.86rem;
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+  }
+
+  /* :global because the script re-creates this <strong> on every search, and
+     elements built in the browser carry no Astro scope attribute. */
+  .certs-count :global(strong) {
+    color: var(--color-text-primary);
+    font-weight: var(--fw-semibold);
   }
 
   .certs-grid {
@@ -125,11 +179,17 @@ const sorted = [...certificates].sort((a, b) => a.name.localeCompare(b.name, 'es
     padding: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: var(--space-5);
+    gap: var(--gap-grid);
   }
 
+  /* Clickable card: only the border darkens on hover and focus. A column
+     flex box, so the label below the name sits on the card's bottom edge
+     and lines up across a row even when one name wraps to two lines (her
+     `.resource-card` meta row). */
   .certs-item a {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     text-decoration: none;
     color: inherit;
     background: var(--color-bg-elevated);
@@ -141,18 +201,14 @@ const sorted = [...certificates].sort((a, b) => a.name.localeCompare(b.name, 'es
 
   .certs-item a:hover,
   .certs-item a:focus-visible {
-    border-color: var(--color-accent);
-  }
-
-  .certs-item a:focus-visible {
-    outline: 2px solid var(--color-focus-ring);
-    outline-offset: 2px;
+    border-color: var(--color-border-strong);
   }
 
   .certs-item__thumb {
+    flex-shrink: 0;
     aspect-ratio: 1754 / 1240;
     overflow: hidden;
-    background: var(--color-bg-base);
+    background: var(--color-bg-warm);
   }
 
   .certs-item__thumb img {
@@ -163,34 +219,50 @@ const sorted = [...certificates].sort((a, b) => a.name.localeCompare(b.name, 'es
   }
 
   .certs-item__info {
-    padding: var(--space-3) var(--space-4);
+    flex: 1;
+    padding: 12px 16px;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
   }
 
+  /* Team certificates list every member: two lines at most, with the full
+     list in the title tooltip and in the link's accessible name. */
   .certs-item__name {
     font-family: var(--font-body);
     font-weight: var(--fw-semibold);
     font-size: var(--fs-small);
     color: var(--color-text-heading);
-    white-space: nowrap;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
   }
 
+  /* Category label: the in-card label in clay-dark (her `.resource-type`). */
   .certs-item__role {
+    margin-top: auto;
     font-family: var(--font-body);
-    font-size: var(--fs-caption);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-label);
     text-transform: uppercase;
-    letter-spacing: var(--ls-uppercase);
     color: var(--color-accent);
   }
 
+  /* No-match state: her `.resource-empty` panel. It sets no `display`, so
+     the `hidden` attribute keeps hiding it. */
   .certs-empty {
-    margin-top: var(--space-8);
-    color: var(--color-text-muted);
+    padding: 56px 24px;
+    text-align: center;
     font-family: var(--font-body);
+    font-size: 0.92rem;
+    color: var(--color-text-secondary);
+    background: var(--color-bg-warm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
   }
 </style>
 
@@ -198,15 +270,25 @@ const sorted = [...certificates].sort((a, b) => a.name.localeCompare(b.name, 'es
   const search = document.getElementById('cert-search') as HTMLInputElement | null;
   const items = Array.from(document.querySelectorAll<HTMLLIElement>('.certs-item'));
   const emptyState = document.getElementById('certs-empty');
+  const count = document.getElementById('certs-count');
 
   search?.addEventListener('input', () => {
-    const q = search.value.trim().toLowerCase();
+    // Folded like data-name (no accents, lower case): «perez» finds «Pérez».
+    // Every space-, comma- or semicolon-separated term must appear:
+    // «betzi perez» finds «Betzi Fernanda Pérez Ortega».
+    const terms = search.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().split(/[\s,;]+/).filter(Boolean);
     let visible = 0;
     for (const item of items) {
-      const match = !q || (item.dataset.name || '').includes(q);
+      const match = terms.length === 0 || terms.every((t) => (item.dataset.name || '').includes(t));
       item.hidden = !match;
       if (match) visible += 1;
     }
     if (emptyState) emptyState.hidden = visible !== 0;
+    // Rebuilt without innerHTML; the live region announces the new count.
+    count?.replaceChildren(
+      'Mostrando ',
+      Object.assign(document.createElement('strong'), { textContent: String(visible) }),
+      ` de ${items.length} certificados`,
+    );
   });
 </script>

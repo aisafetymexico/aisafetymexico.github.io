@@ -1,113 +1,229 @@
 ---
 /**
- * Hero — Home variant.
+ * Hero — Home variant: her "Editorial mínimo" hero (fcacfc4 css/style.css
+ * L296–424, markup fcacfc4:index.html L42–58).
  *
- * Spec: docs/DESIGN-SYSTEM.md §6.2; Task #8.
+ * Layout: white, a centered text column (max 720px) — h1 (Inter 500,
+ * -0.03em, balanced) with an optional muted trailing phrase, subtitle, up to
+ * three pill CTAs and an optional scroll hint — then the full-bleed El Caracol
+ * halftone band as the last child of the section.
  *
- * Pattern reference (docs/INSPIRATION.md):
- *  - A1 (Editorial hero with serif/heavy headline + supporting paragraph)
- *  - A2 (Two-column hero on desktop → single-column stack on mobile,
- *        adapted as image + centered content stack here)
- *  - A8 (Solid brand band — navy overlay surface for high contrast)
- *
- * Layout: full-bleed navy-overlay band. Image stacks above centered content
- * (eyebrow → h1 → subtitle → CTAs) on mobile; on desktop the image keeps the
- * top of the column and the content centers below within the hero container.
+ * Banner technique (her L401–424):
+ *  - The <img> is width 100% with max-width 2659px (its native width, so the
+ *    dither is never upscaled), centered on a #070707 band that matches the
+ *    PNG's side bars exactly; on wider screens the band simply continues.
+ *  - ≤768px: aspect-ratio 1749/984 + object-fit: cover crops only the black
+ *    side bars, not the photo.
+ *  - The section has no bottom padding or hairline: the band closes it.
+ *  - Never lossy-recompress the PNG (it is a dither).
  *
  * Props:
- *  - overline?:    small uppercase wayfinding label (e.g. "AI SAFETY MEXICO")
- *  - title:        main headline (Playfair display)
- *  - subtitle?:    supporting paragraph
- *  - image:        ImgRef shown above the content block
- *  - primaryCta:   primary CTA (filled copper)
- *  - secondaryCta?:secondary CTA (outline on dark)
+ *  - title:        main headline (required).
+ *  - titleAccent?: a phrase of `title` (normally the trailing one) shown in
+ *                  muted grey, like her `.accent` span. Must be a literal
+ *                  substring of `title` (its last occurrence is used);
+ *                  otherwise the title renders plain.
+ *  - subtitle?:    supporting paragraph.
+ *  - ctas?:        up to three pills: { label, href, variant?: 'primary' |
+ *                  'outline', external? }. Without `variant`, the first is
+ *                  primary (ink) and the rest outline.
+ *  - scrollHint?:  small line under the CTAs, e.g. "Desplázate para explorar ↓".
+ *  - banner?:      { src, alt, width?, height? } | false. Defaults to the El
+ *                  Caracol band (2659×984) with a localized alt; `false`
+ *                  drops it (the hero then gets her bottom padding + rule).
+ *  - lang?:        'es' | 'en' (default: Astro.currentLocale, else 'es');
+ *                  only used for the default banner alt.
+ *  - overline?:    optional eyebrow above the title (her hero has none).
+ *  - primaryCta? / secondaryCta?: DEPRECATED, still honoured when `ctas` is
+ *                  not passed (mapped to a primary and an outline pill).
+ *  - image?:       DEPRECATED and ignored: the colour photo above the title
+ *                  was replaced by the banner.
  *
- * Tokens only — no literal hex values, no new hues introduced.
+ * Example:
+ *   <Hero
+ *     title="Seguridad y gobernanza de la IA, desde México."
+ *     titleAccent="desde México"
+ *     subtitle="…"
+ *     ctas={[
+ *       { label: 'Cómo participar', href: '/get-involved#participa' },
+ *       { label: 'Ver recursos', href: '/resources', variant: 'outline' },
+ *       { label: 'Nuestros programas', href: '/programs', variant: 'outline' },
+ *     ]}
+ *     scrollHint="Desplázate para explorar ↓"
+ *   />
+ *
+ * Tokens only — no literal hex values.
  */
 import type { ImgRef, CtaRef } from '../lib/types';
+import type { Locale } from '../lib/i18n';
+
+export interface HeroCta {
+  label: string;
+  href: string;
+  variant?: 'primary' | 'outline';
+  external?: boolean;
+}
+
+export interface HeroBanner {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+}
 
 export interface Props {
-  overline?: string;
   title: string;
+  titleAccent?: string;
   subtitle?: string;
-  image: ImgRef;
-  primaryCta: Pick<CtaRef, 'label' | 'href'> & { external?: boolean };
+  ctas?: HeroCta[];
+  scrollHint?: string;
+  banner?: HeroBanner | false;
+  lang?: Locale;
+  overline?: string;
+  /** @deprecated Use `ctas`. */
+  primaryCta?: Pick<CtaRef, 'label' | 'href'> & { external?: boolean };
+  /** @deprecated Use `ctas`. */
   secondaryCta?: Pick<CtaRef, 'label' | 'href'> & { external?: boolean };
+  /** @deprecated Ignored: the banner replaced the photo above the title. */
+  image?: ImgRef;
 }
 
-const { overline, title, subtitle, image, primaryCta, secondaryCta } = Astro.props;
+const {
+  title,
+  titleAccent,
+  subtitle,
+  ctas,
+  scrollHint,
+  banner,
+  lang = (Astro.currentLocale as Locale | undefined) ?? 'es',
+  overline,
+  primaryCta,
+  secondaryCta,
+} = Astro.props;
 
 if (!title) throw new Error('Hero: `title` is required.');
-if (!image || !image.src) throw new Error('Hero: `image` (with src + alt) is required.');
-if (!primaryCta?.href || !primaryCta?.label) {
-  throw new Error('Hero: `primaryCta` requires `label` and `href`.');
+
+// Title with an optional muted phrase (her `.hero-title .accent`).
+let titleLead = title;
+let titleAccentText = '';
+let titleTail = '';
+if (titleAccent) {
+  const at = title.lastIndexOf(titleAccent);
+  if (at >= 0) {
+    titleLead = title.slice(0, at);
+    titleAccentText = titleAccent;
+    titleTail = title.slice(at + titleAccent.length);
+  }
 }
 
-const imgSrc = typeof image.src === 'string' ? image.src : image.src.src;
-const ctaRel = (cta?: { external?: boolean }) =>
-  cta?.external ? 'noopener noreferrer' : undefined;
-const ctaTarget = (cta?: { external?: boolean }) =>
-  cta?.external ? '_blank' : undefined;
+// CTAs: `ctas` wins; otherwise the legacy primary/secondary pair.
+const legacyCtas: HeroCta[] = [
+  ...(primaryCta ? [{ ...primaryCta, variant: 'primary' as const }] : []),
+  ...(secondaryCta ? [{ ...secondaryCta, variant: 'outline' as const }] : []),
+];
+const resolvedCtas: HeroCta[] = (ctas ?? legacyCtas).map((cta, i) => ({
+  ...cta,
+  variant: cta.variant ?? (i === 0 ? 'primary' : 'outline'),
+}));
+for (const cta of resolvedCtas) {
+  if (!cta?.href || !cta?.label) {
+    throw new Error('Hero: every CTA requires `label` and `href`.');
+  }
+}
+
+// The El Caracol band (default) with a localized alt.
+const BANNER_ALT: Record<Locale, string> = {
+  es: 'El Caracol, observatorio astronómico maya de Chichén Itzá',
+  en: 'El Caracol, the Maya astronomical observatory at Chichén Itzá',
+};
+const resolvedBanner: HeroBanner | null =
+  banner === false
+    ? null
+    : banner ?? {
+        src: '/images/banner-caracol.png',
+        alt: BANNER_ALT[lang] ?? BANNER_ALT.es,
+        width: 2659,
+        height: 984,
+      };
+
+const ctaRel = (cta: HeroCta) => (cta.external ? 'noopener noreferrer' : undefined);
+const ctaTarget = (cta: HeroCta) => (cta.external ? '_blank' : undefined);
 ---
 
-<section class="hero" aria-labelledby="hero-title">
+<section
+  class:list={['hero', { 'hero--banner': resolvedBanner }]}
+  aria-labelledby="hero-title"
+>
   <div class="hero__inner">
-    <div class="hero__image">
-      <img src={imgSrc} alt={image.alt} loading="eager" decoding="async" />
-    </div>
-
     <div class="hero__content">
       {overline && (
-        <p class="hero__overline role-eyebrow role-eyebrow--xl">{overline}</p>
+        <p class="hero__overline role-eyebrow">{overline}</p>
       )}
 
-      <h1 id="hero-title" class="hero__title">{title}</h1>
+      <h1 id="hero-title" class="hero__title">{titleLead}{titleAccentText && (
+        <span class="hero__accent">{titleAccentText}</span>
+      )}{titleTail}</h1>
 
       {subtitle && <p class="hero__subtitle">{subtitle}</p>}
 
-      <div class="hero__actions">
-        <a
-          class="hero__cta hero__cta--primary"
-          href={primaryCta.href}
-          target={ctaTarget(primaryCta)}
-          rel={ctaRel(primaryCta)}
-        >{primaryCta.label}</a>
-
-        {secondaryCta && (
-          <a
-            class="hero__cta hero__cta--secondary"
-            href={secondaryCta.href}
-            target={ctaTarget(secondaryCta)}
-            rel={ctaRel(secondaryCta)}
-          >{secondaryCta.label}</a>
-        )}
-      </div>
+      {resolvedCtas.length > 0 && (
+        <div class="hero__actions">
+          {resolvedCtas.map((cta) => (
+            <a
+              class:list={['btn', cta.variant === 'primary' ? 'btn-primary' : 'btn-outline']}
+              href={cta.href}
+              target={ctaTarget(cta)}
+              rel={ctaRel(cta)}
+            >{cta.label}</a>
+          ))}
+        </div>
+      )}
     </div>
+
+    {scrollHint && <p class="hero__scroll-hint">{scrollHint}</p>}
   </div>
+
+  {resolvedBanner && (
+    <div class="hero__banner">
+      <img
+        src={resolvedBanner.src}
+        alt={resolvedBanner.alt}
+        width={resolvedBanner.width}
+        height={resolvedBanner.height}
+        loading="eager"
+        decoding="async"
+      />
+    </div>
+  )}
 </section>
 
 <style>
+  /* Padding tiers, mobile-first: her 42/40 (≤480), 52/46 (≤768),
+     68/56 (≤1024), 88/72 (desktop). */
   .hero {
-    background-color: var(--color-bg-overlay-dark);
-    color: var(--color-text-on-dark);
-    /* Mobile-first: tighter padding; scaled up on tablet/desktop */
-    padding-block: var(--space-12) var(--space-10);
-    display: flex;
-    align-items: center;
+    background: var(--color-bg-base);
+    color: var(--color-text-primary);
+    padding: 42px 0 40px;
+    border-bottom: 1px solid var(--color-border-soft);
   }
 
-  @media (min-width: 768px) {
-    .hero {
-      padding-block: var(--space-14) var(--space-12);
-      min-height: 540px;
-    }
+  @media (min-width: 481px) {
+    .hero { padding: 52px 0 46px; }
   }
 
-  @media (min-width: 1024px) {
-    .hero {
-      padding-block: var(--space-16) var(--space-14);
-      min-height: 620px;
-    }
+  @media (min-width: 769px) {
+    .hero { padding: 68px 0 56px; }
+  }
+
+  @media (min-width: 1025px) {
+    .hero { padding: 88px 0 72px; }
+  }
+
+  /* The banner closes the hero: no bottom padding, no rule (double class on
+     purpose, so the tiers above can't put the padding back). */
+  .hero.hero--banner {
+    padding-bottom: 0;
+    border-bottom: 0;
   }
 
   .hero__inner {
@@ -115,149 +231,112 @@ const ctaTarget = (cta?: { external?: boolean }) =>
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: var(--space-8);
     width: 100%;
     max-width: var(--container-hero);
     margin-inline: auto;
     padding-inline: var(--container-padding);
   }
 
-  @media (min-width: 480px) {
+  @media (min-width: 481px) {
     .hero__inner {
       padding-inline: var(--container-padding-md);
     }
   }
 
-  @media (min-width: 768px) {
-    .hero__inner {
-      gap: var(--space-9);
-    }
-  }
-
-  .hero__image {
-    width: 100%;
-    max-width: 260px;
-    margin-inline: auto;
-    order: 0;
-  }
-
-  @media (min-width: 768px) {
-    .hero__image {
-      max-width: 480px;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .hero__image {
-      max-width: 820px;
-    }
-  }
-
-  .hero__image img {
-    width: 100%;
-    height: auto;
-    /* Polish-rand (RAND-DIFF §2.5): RAND home photo is square-edge editorial,
-       no radius, no drop shadow. */
-    border-radius: 0;
-  }
-
   .hero__content {
     width: 100%;
-    max-width: 780px;
-    order: 1;
+    max-width: var(--measure-hero);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .hero__overline {
-    /* Use gold on navy surface for stronger contrast (per §1.3) */
-    color: var(--color-accent-secondary);
-    margin-bottom: var(--space-4);
+    margin: 0 0 16px;
   }
 
   .hero__title {
     font-family: var(--font-display);
-    font-weight: var(--fw-extrabold);
     font-size: var(--fs-display);
+    font-weight: var(--fw-display);
     line-height: var(--lh-tight);
-    letter-spacing: var(--ls-tight);
-    /* Dark-mode subtle (PALETTE-MAPPING §4.5): align with PageHero h1 →
-       peach so the home headline carries the same focal poster weight as
-       interior pages. (QA-DARKMODE-VISUAL top-5 #2 / EDITORIAL-DARKMODE.) */
-    color: var(--color-accent);
-    margin-bottom: var(--space-6);
+    letter-spacing: var(--ls-display);
+    color: var(--color-text-heading);
+    margin: 0 0 20px;
+    text-wrap: balance;
+  }
+
+  /* Her second tone: grey, not a colour. #8E8E98 is large text here
+     (≥24px at every width), where it passes AA-large (3.24:1). */
+  .hero__accent {
+    color: var(--ink-3);
+    font-style: normal;
   }
 
   .hero__subtitle {
-    font-family: var(--font-body);
-    font-size: var(--fs-lead);
-    font-weight: var(--fw-regular);
+    font-size: 0.96rem;
     line-height: var(--lh-loose);
-    color: var(--color-text-on-dark-muted);
-    margin-inline: auto;
-    margin-bottom: var(--space-8);
-    max-width: 640px;
+    color: var(--color-text-secondary);
+    max-width: var(--measure-sub);
+    margin: 0 0 30px;
+    /* Centred copy: balance, so the last line is never a two-word runt. */
+    text-wrap: balance;
+  }
+
+  @media (min-width: 769px) {
+    .hero__subtitle { font-size: 1.02rem; }
   }
 
   .hero__actions {
     display: flex;
-    gap: var(--space-4);
     flex-wrap: wrap;
     justify-content: center;
+    gap: var(--gap-actions);
   }
 
-  /* Hero CTAs — token-only treatment matching .btn-hero from style.css.
-     Polish-rand (RAND-DIFF §6.1, §6.2): no shadow-cta, no transform on
-     hover; only background/border colour shifts. */
-  .hero__cta {
-    display: inline-flex;
-    align-items: center;
+  .hero__scroll-hint {
+    margin: 30px 0 0;
+    font-size: 0.76rem;
+    line-height: var(--lh-relaxed);
+    letter-spacing: 0.02em;
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 769px) {
+    .hero__scroll-hint { margin-top: 44px; }
+  }
+
+  /* Full-bleed band: last child of the section, outside the centered
+     column, so it spans the viewport without a 100vw hack. */
+  .hero__banner {
+    display: flex;
     justify-content: center;
-    padding: var(--space-4) var(--space-9);
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    font-weight: var(--fw-semibold);
-    letter-spacing: var(--ls-wide);
-    border-radius: var(--radius-pill);
-    border: 1px solid transparent;
-    text-decoration: none;
-    transition:
-      background var(--transition),
-      border-color var(--transition),
-      color var(--transition);
+    width: 100%;
+    margin-top: 34px;
+    background: var(--color-banner-band);
   }
 
-  .hero__cta--primary {
-    /* CTA tokens INVERT in dark-subtle (PALETTE-MAPPING §0/§4):
-       --color-cta-bg = peach-500, --color-cta-text = bg-base. */
-    background: var(--color-cta-bg);
-    color: var(--color-cta-text);
-    border-color: var(--color-cta-bg);
-  }
-  .hero__cta--primary:hover,
-  .hero__cta--primary:focus-visible {
-    background: var(--color-cta-bg-hover);
-    border-color: var(--color-cta-bg-hover);
-    color: var(--color-cta-text);
+  @media (min-width: 769px) {
+    .hero__banner { margin-top: 44px; }
   }
 
-  .hero__cta--secondary {
-    background: transparent;
-    color: var(--color-text-on-dark);
-    border-color: var(--color-border-on-dark);
-  }
-  .hero__cta--secondary:hover,
-  .hero__cta--secondary:focus-visible {
-    background: var(--cream-text-faint);
-    border-color: var(--color-text-on-dark);
-    color: var(--color-text-on-dark);
+  @media (min-width: 1025px) {
+    .hero__banner { margin-top: 56px; }
   }
 
-  /* Tight mobile (≤480) — slightly smaller image cap to keep title prominent */
-  @media (max-width: 479px) {
-    .hero__image {
-      max-width: 200px;
-    }
-    .hero__cta {
-      width: 100%;
+  .hero__banner img {
+    display: block;
+    width: 100%;
+    max-width: 2659px;
+    height: auto;
+  }
+
+  /* Narrow screens: 1749/984 is exactly the photo area inside the PNG, so
+     `cover` crops only the black side bars. */
+  @media (max-width: 768px) {
+    .hero__banner img {
+      aspect-ratio: 1749 / 984;
+      object-fit: cover;
     }
   }
 </style>

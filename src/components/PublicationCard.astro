@@ -4,14 +4,18 @@
  *
  * Spec: docs/DESIGN-SYSTEM.md §6.3 (PublicationCard).
  *
- * Visual: editorial card with title, byline (authors · year · journal),
- * optional abstract, and CTA links to paper and/or podcast. Eyebrow uses the
- * year as the timestamp-style chronology marker (INSPIRATION X5 — research is
- * one of the few areas where dates *are* legitimate signal).
+ * Design: her boxed research card (`.program-card` in `.research-grid`,
+ * fcacfc4 css/style.css L1006–1065): white, 1px hairline, 8px radius, no
+ * shadow. The year is a clay-dark category label with the venue beside it,
+ * then the title, the byline (authors), an optional abstract and a row of
+ * pill actions: the first is the ink `.btn-primary` ("Paper"), the rest the
+ * quiet `.btn-secondary` ("Podcast"), as in her card. Research is one of the
+ * few areas where dates *are* legitimate signal (INSPIRATION X5).
  *
  * Props:
- *  - title:        Publication title (h5 scale).
- *  - authors:      Comma-joined author byline (string OR string[]).
+ *  - title:        Publication title (h3).
+ *  - authors:      Author byline: a comma-joined string, or a string[] whose
+ *                  names each stay whole on one line when they fit.
  *  - year:         Publication year (number or string).
  *  - journal?:     Venue / journal / workshop name.
  *  - paperUrl?:    Link to paper PDF / DOI.
@@ -43,7 +47,10 @@ const {
   lang = 'es',
 } = Astro.props;
 
-const authorString = Array.isArray(authors) ? authors.join(', ') : authors;
+// An array renders one inline-block per name, so a name («Silvia Fernández»,
+// «Alejandro Molina-Villegas») moves to the next line whole instead of
+// splitting at a space or its hyphen; a name wider than the line still wraps.
+const authorList = Array.isArray(authors) ? authors : null;
 ---
 
 <article class="publication-card">
@@ -62,25 +69,30 @@ const authorString = Array.isArray(authors) ? authors.join(', ') : authors;
     )}
   </h3>
 
-  <p class="publication-card__authors">{authorString}</p>
+  <p class="publication-card__authors">
+    {authorList
+      ? authorList.map((name, i) => (
+          <Fragment>{i > 0 && ' '}<span class="publication-card__author">{name}{i < authorList.length - 1 && ','}</span></Fragment>
+        ))
+      : authors}
+  </p>
 
   {abstract && <p class="publication-card__abstract">{abstract}</p>}
 
   {(paperUrl || podcastUrl) && (
-    <div class="publication-card__actions">
+    <div class="publication-card__actions program-actions">
       {paperUrl && (
-        <a class="publication-card__link" href={paperUrl} target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="16" height="16">
-            <path fill="currentColor" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 7V3.5L19.5 9H14z"/>
-          </svg>
+        <a class="publication-card__link btn btn-primary" href={paperUrl} target="_blank" rel="noopener noreferrer">
           {t(lang, 'pub.readPaper')}
         </a>
       )}
       {podcastUrl && (
-        <a class="publication-card__link" href={podcastUrl} target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="16" height="16">
-            <path fill="currentColor" d="M12 1a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V5a4 4 0 0 0-4-4zm5 10a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/>
-          </svg>
+        <a
+          class:list={['publication-card__link', 'btn', paperUrl ? 'btn-secondary' : 'btn-primary']}
+          href={podcastUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           {t(lang, 'pub.listenPodcast')}
         </a>
       )}
@@ -89,79 +101,71 @@ const authorString = Array.isArray(authors) ? authors.join(', ') : authors;
 </article>
 
 <style>
-  /* RAND editorial card — square edges, no shadow, no copper stripe.
-     Stacked publications separate via a top hairline rule (the parent grid
-     can opt into this; standalone cards still read as a single block). */
+  /* Her boxed .program-card: white, 1px hairline, 8px radius, her card
+     padding; no top-rule list style, no shadow. The card itself is not a
+     link, so it has no hover state. */
   .publication-card {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
-    padding: var(--space-7) 0;
+    padding: var(--pad-card);
     background: var(--color-bg-elevated);
-    border-radius: 0;
-    border-top: 1px solid var(--color-border);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
   }
 
-  /* If the publication-card lives inside a `.publication-card-list` (or any
-     parent that wants a clean leading edge), the first card drops its top
-     hairline. Most consumers already use grid `gap` so this is harmless. */
-  .publication-card:first-child {
-    border-top: 0;
-  }
-
+  /* Year = category label (clay-dark, like her .resource-type); the venue
+     sits beside it in small muted type. */
   .publication-card__head {
-    display: inline-flex;
+    display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-2);
+    align-items: baseline;
+    gap: 2px 8px;
+    margin: 0 0 8px;
     font-family: var(--font-body);
-    font-size: var(--fs-eyebrow);
-    font-weight: var(--fw-bold);
-    letter-spacing: var(--ls-uppercase);
-    text-transform: uppercase;
-    line-height: 1;
+    line-height: var(--lh-relaxed);
   }
 
   .publication-card__year {
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
     color: var(--color-accent);
   }
 
   .publication-card__journal {
+    font-size: var(--fs-caption);
     color: var(--color-text-muted);
-    font-weight: var(--fw-semibold);
-    letter-spacing: var(--ls-wide);
-    text-transform: none;
   }
   .publication-card__journal::before {
     content: '·';
-    margin-right: var(--space-2);
-    color: var(--color-text-muted);
+    content: '·' / '';
+    margin-right: 8px;
   }
 
+  /* Her .program-card-title */
   .publication-card__title {
-    margin: 0;
+    margin: 0 0 10px;
     font-family: var(--font-display);
     font-size: var(--fs-h5);
-    font-weight: var(--fw-bold);
-    line-height: var(--lh-snug);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
     color: var(--color-text-heading);
   }
 
+  /* Same link hover as ProjectCard: colour only. */
   .publication-card__title-link {
     color: inherit;
     text-decoration: none;
-    background-image: linear-gradient(currentColor, currentColor);
-    background-size: 0% 1px;
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    transition: background-size var(--transition);
+    transition: color var(--transition);
   }
   .publication-card__title-link:hover {
-    background-size: 100% 1px;
+    color: var(--color-link-hover);
   }
   .publication-card__title-link:focus-visible {
     outline: 2px solid var(--color-focus-ring);
-    outline-offset: 3px;
+    outline-offset: 2px;
     border-radius: var(--radius-xs);
   }
 
@@ -169,56 +173,25 @@ const authorString = Array.isArray(authors) ? authors.join(', ') : authors;
     margin: 0;
     font-family: var(--font-body);
     font-size: var(--fs-small);
-    font-weight: var(--fw-medium);
-    color: var(--color-text-secondary);
     line-height: var(--lh-normal);
+    color: var(--color-text-secondary);
+  }
+  /* One unit per name (see the frontmatter); it still wraps inside when it
+     is wider than the line, so enlarged text never overflows the card. */
+  .publication-card__author {
+    display: inline-block;
   }
 
+  /* Card copy (her `.program-card p`: ink-2, line-height 1.7, 11px apart) */
   .publication-card__abstract {
-    margin: 0;
+    margin: 11px 0 0;
     font-family: var(--font-body);
     font-size: var(--fs-body);
-    line-height: var(--lh-relaxed);
-    color: var(--color-text-primary);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
   }
 
-  .publication-card__actions {
-    margin-top: var(--space-2);
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-4);
-  }
-
-  .publication-card__link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    font-weight: var(--fw-semibold);
-    color: var(--color-link);
-    text-decoration: none;
-    transition: color var(--transition);
-  }
-  .publication-card__link:hover {
-    color: var(--color-link-hover);
-  }
-  .publication-card__link:focus-visible {
-    outline: 2px solid var(--color-focus-ring);
-    outline-offset: 3px;
-    border-radius: var(--radius-xs);
-  }
-  .publication-card__link svg {
-    flex-shrink: 0;
-  }
-
-  @media (min-width: 768px) {
-    .publication-card {
-      padding: var(--space-8) 0;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .publication-card__link { transition: none; }
-  }
+  /* The action row and the pills are the shared .program-actions / .btn
+     utilities (base.css): 18px under the copy, gap 10px, full-width pills
+     stacked on ≤480px. */
 </style>

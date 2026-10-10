@@ -1,31 +1,45 @@
 ---
 /**
- * Footer — global site footer.
+ * Footer — global site footer, her centered light layout
+ * (fcacfc4 css/style.css L1217–1273).
  *
  * Spec: docs/ARCHITECTURE.md §4.
  *
- * Layout:
- *   ┌────────────────────────────────────────────────────────┐
- *   │  Brand row: logo + name + tagline + social icons       │
- *   ├────────────────────────────────────────────────────────┤
- *   │  Col 1: Explora │ Col 2: Trabajo │ Col 3: Conecta      │
- *   ├────────────────────────────────────────────────────────┤
- *   │  Legal row: © year · org name                          │
- *   └────────────────────────────────────────────────────────┘
+ * Layout (one centered column on bg-2, 1px top rule):
+ *   ┌──────────────────────────────────────────────────────────┐
+ *   │      [logo] AI Safety Mexico   (in) (ig) (yt)            │  brand row
+ *   │  Inicio · Sobre nosotros · Equipo · … · Recursos · Blog  │  row 1: the site
+ *   │          Colabora · Contacto · Calendario                │  row 2: connect
+ *   │   © 2026 AI Safety Mexico. Todos los derechos reservados.│
+ *   └──────────────────────────────────────────────────────────┘
+ *
+ * Every destination of the former 3-column footer is kept: the pages of
+ * "Explora" + "Trabajo" form row 1, "Conecta" forms row 2, and its LinkedIn,
+ * Instagram and YouTube links are the round icons of the brand row. On
+ * narrower screens each row wraps into balanced lines (`text-wrap: balance`,
+ * as does the copyright) rather than a full line plus a short remainder.
  *
  * Props:
- *  - social: optional override of social icons (default: LinkedIn + Instagram).
- *  - tagline: short institutional tagline shown below the wordmark.
+ *  - social: optional override of the social icons
+ *    (default: LinkedIn + Instagram + YouTube).
+ *  - tagline: optional line under the brand row. Her footer has none, so it
+ *    renders only when passed.
  *  - year: override displayed copyright year (defaults to current year).
+ *  - logoSrc / logoAlt / siteName: brand overrides (default: the 2026 logo
+ *    derivative, an empty alt and "AI Safety Mexico"). The logo is decorative
+ *    by default: the brand link carries its own aria-label and the visible
+ *    name sits right next to it, so a text alt would only repeat it.
+ *  - lang: 'es' (default) | 'en'.
  *
  * A11y:
  *  - <footer role="contentinfo"> via the implicit role.
- *  - Each column nav has its own aria-label.
+ *  - The link rows sit in one <nav> with its own aria-label.
  *  - Social icons have aria-label; SVGs are aria-hidden.
  */
 import type { SocialLink } from '../lib/types';
 import { t, localizedPath, type Locale } from '../lib/i18n';
 
+/** A group of footer links, rendered as one centered row. */
 export interface FooterColumn {
   heading: string;
   items: { label: string; href: string; external?: boolean }[];
@@ -45,31 +59,26 @@ const {
   social,
   tagline,
   year = new Date().getFullYear(),
-  logoSrc = '/images/aisafetymx_logo.webp',
-  logoAlt = 'AI Safety Mexico',
+  logoSrc = '/images/aismx-logo-2026-160.png',
+  logoAlt = '',
   siteName = 'AI Safety Mexico',
   lang = 'es',
 } = Astro.props;
 
-const defaultColumns: FooterColumn[] = [
+const rows: FooterColumn[] = [
   {
-    heading: t(lang, 'footer.col.explore'),
+    heading: `${t(lang, 'footer.col.explore')} · ${t(lang, 'footer.col.work')}`,
     items: [
       { label: t(lang, 'footer.item.home'),       href: localizedPath(lang, '/') },
       { label: t(lang, 'footer.item.about'),      href: localizedPath(lang, '/about') },
       { label: t(lang, 'footer.item.team'),       href: localizedPath(lang, '/team') },
       { label: t(lang, 'footer.item.activities'), href: localizedPath(lang, '/activities') },
-    ],
-  },
-  {
-    heading: t(lang, 'footer.col.work'),
-    items: [
-      { label: t(lang, 'footer.item.research'), href: localizedPath(lang, '/research') },
-      { label: t(lang, 'footer.item.programs'), href: localizedPath(lang, '/programs') },
-      { label: t(lang, 'footer.item.projects'), href: localizedPath(lang, '/projects') },
-      { label: t(lang, 'footer.item.gsh'),      href: localizedPath(lang, '/global-south-challenge') },
-      { label: t(lang, 'footer.item.resources'), href: localizedPath(lang, '/resources') },
-      { label: t(lang, 'footer.item.blog'),     href: localizedPath(lang, '/blog') },
+      { label: t(lang, 'footer.item.research'),   href: localizedPath(lang, '/research') },
+      { label: t(lang, 'footer.item.programs'),   href: localizedPath(lang, '/programs') },
+      { label: t(lang, 'footer.item.projects'),   href: localizedPath(lang, '/projects') },
+      { label: t(lang, 'footer.item.gsh'),        href: localizedPath(lang, '/global-south-challenge') },
+      { label: t(lang, 'footer.item.resources'),  href: localizedPath(lang, '/resources') },
+      { label: t(lang, 'footer.item.blog'),       href: localizedPath(lang, '/blog') },
     ],
   },
   {
@@ -77,10 +86,7 @@ const defaultColumns: FooterColumn[] = [
     items: [
       { label: t(lang, 'footer.item.getInvolved'), href: localizedPath(lang, '/get-involved') },
       { label: t(lang, 'footer.item.contact'),     href: localizedPath(lang, '/contact') },
-      { label: 'LinkedIn',  href: 'https://www.linkedin.com/company/ai-safety-mexico/', external: true },
-      { label: 'Instagram', href: 'https://www.instagram.com/aisafetymx/', external: true },
-      { label: 'YouTube', href: 'https://www.youtube.com/@AISafetyMéxico', external: true },
-      { label: 'Calendario', href: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5', external: true },
+      { label: t(lang, 'footer.item.calendar'),    href: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5', external: true },
     ],
   },
 ];
@@ -92,19 +98,18 @@ const DEFAULT_SOCIAL: SocialLink[] = [
 ];
 
 const resolvedSocial = social ?? DEFAULT_SOCIAL;
-const resolvedTagline = tagline ?? t(lang, 'footer.tagline');
-const columns = defaultColumns;
 
 const brandHref = localizedPath(lang, '/');
 const brandAria = t(lang, 'footer.aria.brandHome');
 const socialAria = t(lang, 'footer.aria.social');
+const navAria = t(lang, 'footer.aria.nav');
 const copyrightSuffix = t(lang, 'footer.copyright');
 ---
 
 <footer class="site-footer">
   <div class="site-footer__inner">
 
-    <!-- Brand row -->
+    <!-- Brand row: logo + name, then the round social icons -->
     <div class="site-footer__brand">
       <a class="site-footer__brand-link" href={brandHref} aria-label={brandAria}>
         <img
@@ -112,14 +117,12 @@ const copyrightSuffix = t(lang, 'footer.copyright');
           src={logoSrc}
           alt={logoAlt}
           width="40"
-          height="40"
+          height="38"
           loading="lazy"
           decoding="async"
         />
         <span class="site-footer__name">{siteName}</span>
       </a>
-
-      {resolvedTagline && <p class="site-footer__tagline">{resolvedTagline}</p>}
 
       {resolvedSocial.length > 0 && (
         <ul class="site-footer__social" aria-label={socialAria}>
@@ -136,7 +139,7 @@ const copyrightSuffix = t(lang, 'footer.copyright');
                   <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                     <path
                       fill="currentColor"
-                      d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5.001zM3 9h4v12H3V9zm7 0h3.84v1.64h.05c.53-1 1.85-2.05 3.81-2.05 4.07 0 4.82 2.68 4.82 6.16V21h-4v-5.34c0-1.27-.02-2.91-1.77-2.91-1.77 0-2.04 1.39-2.04 2.82V21h-4V9z"
+                      d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
                     />
                   </svg>
                 )}
@@ -163,106 +166,95 @@ const copyrightSuffix = t(lang, 'footer.copyright');
       )}
     </div>
 
-    <!-- Edge divider -->
-    <div class="site-footer__divider" aria-hidden="true"></div>
+    {tagline && <p class="site-footer__tagline">{tagline}</p>}
 
-    <!-- 3-column nav -->
-    <div class="site-footer__cols">
-      {columns.map(col => (
-        <nav class="site-footer__col" aria-label={col.heading}>
-          <h2 class="site-footer__col-heading">{col.heading}</h2>
-          <ul class="site-footer__col-list">
-            {col.items.map(item => (
-              <li>
-                <a
-                  class="site-footer__link"
-                  href={item.href}
-                  {...(item.external
-                    ? { target: '_blank', rel: 'noopener noreferrer' }
-                    : {})}
-                >{item.label}</a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+    <!-- Link rows: the site, then the ways to connect -->
+    <nav class="site-footer__nav" aria-label={navAria}>
+      {rows.map(row => (
+        <ul class="site-footer__links" aria-label={row.heading}>
+          {row.items.map(item => (
+            <li>
+              <a
+                class="site-footer__link"
+                href={item.href}
+                {...(item.external
+                  ? { target: '_blank', rel: 'noopener noreferrer' }
+                  : {})}
+              >{item.label}</a>
+            </li>
+          ))}
+        </ul>
       ))}
-    </div>
+    </nav>
 
-    <!-- Legal row -->
-    <div class="site-footer__legal">
-      <p class="site-footer__copy">
-        © {year} {siteName}. {copyrightSuffix}
-      </p>
-    </div>
+    <p class="site-footer__copy">
+      © {year} {siteName}. {copyrightSuffix}
+    </p>
 
   </div>
 </footer>
 
 <style>
-  /* Polish-rand (RAND-DIFF §1.5): no inset-section-impact shadow. */
   .site-footer {
-    background: var(--color-bg-impact);
-    color: var(--color-text-on-dark-muted);
-    padding: var(--space-12) 0 var(--space-8);
+    background: var(--color-bg-warm);
+    color: var(--color-text-secondary);
+    padding: 48px 0 36px;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+    font-size: var(--fs-small);
   }
 
   .site-footer__inner {
     width: 100%;
     max-width: var(--container-max);
     margin: 0 auto;
-    padding-inline: var(--container-padding-md);
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 481px) {
+    .site-footer__inner {
+      padding-inline: var(--container-padding-md);
+    }
   }
 
   /* Brand row */
   .site-footer__brand {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    column-gap: var(--space-5);
-    row-gap: var(--space-3);
-    margin-bottom: var(--space-8);
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
   }
 
   .site-footer__brand-link {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
-    color: var(--color-text-on-dark);
+    gap: 10px;
+    color: var(--color-text-primary);
     text-decoration: none;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-xs);
   }
-  .site-footer__brand-link:hover { color: var(--color-text-on-dark); }
-  .site-footer__brand-link:focus-visible {
-    outline: 2px solid var(--color-accent-secondary);
-    outline-offset: 4px;
+  .site-footer__brand-link:hover {
+    color: var(--color-text-primary);
   }
 
   .site-footer__logo {
-    height: 40px;
+    height: 38px;
     width: auto;
   }
 
   .site-footer__name {
-    font-family: var(--font-display);
-    font-weight: var(--fw-bold);
-    font-size: 1.1rem;
-    letter-spacing: 0.5px;
-    color: var(--color-text-on-dark);
-    white-space: nowrap;
-  }
-
-  .site-footer__tagline {
-    margin: 0;
     font-family: var(--font-body);
-    font-size: var(--fs-caption);
-    color: var(--cream-text-soft);
-    line-height: var(--lh-normal);
-    max-width: 56ch;
+    font-weight: var(--fw-label);
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    white-space: nowrap;
   }
 
   .site-footer__social {
     display: flex;
-    gap: var(--space-2);
+    gap: 10px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -272,118 +264,76 @@ const copyrightSuffix = t(lang, 'footer.copyright');
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: var(--radius-full);
-    background: var(--peach-tint);
-    color: var(--cream-text-strong);
-    transition: background var(--transition), color var(--transition);
+    background: var(--color-bg-base);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    transition: color var(--transition), border-color var(--transition);
   }
   .site-footer__social-icon:hover {
-    background: var(--peach-tint-strong);
-    color: var(--color-text-on-dark);
-  }
-  .site-footer__social-icon:focus-visible {
-    outline: 2px solid var(--color-accent-secondary);
-    outline-offset: 3px;
+    color: var(--color-text-primary);
+    border-color: var(--color-border-strong);
   }
   .site-footer__social-icon svg {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
   }
 
-  /* Edge divider — Polish-rand (RAND-DIFF §1.4): copper→gold gradient
-     replaced by a 1px neutral hairline. Dark-subtle: cream-border alpha
-     keeps the rule legible on the indigo-900 footer band. */
-  .site-footer__divider {
-    height: 1px;
-    background: var(--color-border-on-dark);
-    margin: 0 0 var(--space-8);
+  .site-footer__tagline {
+    max-width: 56ch;
+    margin: 0 auto 20px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-secondary);
   }
 
-  /* Columns */
-  .site-footer__cols {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-    margin-bottom: var(--space-9);
-  }
-
-  @media (min-width: 768px) {
-    .site-footer__cols {
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-10);
-    }
-  }
-
-  .site-footer__col-heading {
-    font-family: var(--font-body);
-    font-size: var(--fs-eyebrow);
-    font-weight: var(--fw-bold);
-    letter-spacing: var(--ls-uppercase);
-    text-transform: uppercase;
-    color: var(--color-accent-secondary);
-    margin: 0 0 var(--space-4);
-  }
-
-  .site-footer__col-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  /* Link rows: a balanced inline flow (centred by .site-footer), so a row
+     that wraps splits evenly (5 + 5, 4 / 3 / 3…) instead of leaving one or
+     two links on their own line. The items are inline-blocks spaced by their
+     own 3px 11px margins; the list's negative margin cancels them at its
+     outer edges, so each line holds exactly what the former flex row with a
+     6px 22px gap held (line counts never grow) and the vertical rhythm is
+     unchanged. */
+  .site-footer__nav {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .site-footer__links {
+    display: block;
+    list-style: none;
+    margin: -3px -11px;
+    padding: 0;
+    text-wrap: balance;
+  }
+
+  .site-footer__links > li {
+    display: inline-block;
+    margin: 3px 11px;
   }
 
   .site-footer__link {
-    color: var(--cream-text-muted);
+    color: var(--color-text-secondary);
     font-family: var(--font-body);
-    font-size: var(--fs-small);
+    font-size: 0.86rem;
+    line-height: var(--lh-relaxed);
     text-decoration: none;
     transition: color var(--transition);
-    border-radius: var(--radius-xs);
   }
   .site-footer__link:hover {
-    color: var(--color-text-on-dark);
-  }
-  .site-footer__link:focus-visible {
-    outline: 2px solid var(--color-accent-secondary);
-    outline-offset: 3px;
+    color: var(--color-text-primary);
   }
 
-  /* Legal row */
-  .site-footer__legal {
-    border-top: 1px solid var(--color-border-on-dark);
-    padding-top: var(--space-5);
-  }
-  /* Dark-subtle (validated by editor pipeline): copy was --white-text-faint
-     (rgba 255 0.40 → 4.4:1 effective on indigo-900 — borderline). Bumped to
-     --color-text-on-dark-muted (cream 0.85) so legal copy clears AA cleanly. */
   .site-footer__copy {
     margin: 0;
-    color: var(--color-text-on-dark-muted);
     font-family: var(--font-body);
     font-size: var(--fs-caption);
-    line-height: var(--lh-normal);
-  }
-
-  /* Mobile brand row stacks vertically */
-  @media (max-width: 767.98px) {
-    .site-footer__brand {
-      grid-template-columns: 1fr;
-      justify-items: start;
-    }
-    .site-footer__tagline {
-      grid-column: 1;
-    }
-    .site-footer__social {
-      grid-column: 1;
-    }
-  }
-
-  @media (max-width: 479.98px) {
-    .site-footer__inner {
-      padding-inline: var(--container-padding);
-    }
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-muted);
+    text-wrap: balance;
   }
 </style>

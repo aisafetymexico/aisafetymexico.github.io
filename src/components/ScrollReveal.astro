@@ -4,12 +4,15 @@
  *
  * Spec:
  *  - docs/DESIGN-SYSTEM.md §6.5 (`ScrollReveal.astro`).
+ *  - Design: her design has no entrance animations and nothing moves,
+ *    so keep this unused. If it is ever
+ *    used, it only fades: no translate.
  *
  * Behaviour:
  *  - Renders `as` element (default: <div>) wrapping the slot.
- *  - Initial state: opacity 0, slight translateY.
+ *  - Initial state: opacity 0.
  *  - When the element intersects viewport (threshold), `is-revealed` is added
- *    → triggers transition.
+ *    → triggers the opacity transition.
  *  - One-shot: observer disconnects after reveal.
  *  - Respects `prefers-reduced-motion`: no transform/opacity animation, simply
  *    visible immediately.
@@ -113,21 +116,16 @@ const {
 <style>
   .scroll-reveal {
     opacity: 0;
-    transform: translateY(16px);
-    transition:
-      opacity var(--sr-duration, 600ms) ease var(--sr-delay, 0ms),
-      transform var(--sr-duration, 600ms) ease var(--sr-delay, 0ms);
-    will-change: opacity, transform;
+    transition: opacity var(--sr-duration, 600ms) ease var(--sr-delay, 0ms);
+    will-change: opacity;
   }
   .scroll-reveal.is-revealed {
     opacity: 1;
-    transform: none;
   }
 
   @media (prefers-reduced-motion: reduce) {
     .scroll-reveal {
       opacity: 1;
-      transform: none;
       transition: none;
     }
   }

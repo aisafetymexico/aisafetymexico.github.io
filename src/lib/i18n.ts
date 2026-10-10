@@ -31,6 +31,7 @@ export type StringKey =
   | 'header.nav.programs'
   | 'header.nav.projects'
   | 'header.nav.activities'
+  | 'header.nav.resources'
   | 'header.nav.getInvolved'
   | 'header.aria.primaryNav'
   | 'header.aria.brandHome'
@@ -58,10 +59,12 @@ export type StringKey =
   | 'footer.item.blog'
   | 'footer.item.getInvolved'
   | 'footer.item.contact'
+  | 'footer.item.calendar'
   | 'footer.tagline'
   | 'footer.copyright'
   | 'footer.aria.social'
   | 'footer.aria.brandHome'
+  | 'footer.aria.nav'
 
   // Breadcrumb ---------------------------------------------------------------
   | 'breadcrumb.home'
@@ -101,6 +104,7 @@ const strings: Record<Locale, Record<StringKey, string>> = {
     'header.nav.programs': 'Programas',
     'header.nav.projects': 'Proyectos',
     'header.nav.activities': 'Actividades',
+    'header.nav.resources': 'Recursos',
     'header.nav.getInvolved': 'Colabora',
     'header.aria.primaryNav': 'Navegación principal',
     'header.aria.brandHome': 'AI Safety Mexico — Inicio',
@@ -128,10 +132,12 @@ const strings: Record<Locale, Record<StringKey, string>> = {
     'footer.item.blog': 'Blog',
     'footer.item.getInvolved': 'Colabora',
     'footer.item.contact': 'Contacto',
+    'footer.item.calendar': 'Calendario',
     'footer.tagline': 'Investigación, educación y gobernanza de IA en México.',
     'footer.copyright': 'Todos los derechos reservados.',
     'footer.aria.social': 'Redes sociales',
     'footer.aria.brandHome': 'AI Safety Mexico — Inicio',
+    'footer.aria.nav': 'Enlaces del sitio',
 
     // Breadcrumb
     'breadcrumb.home': 'Inicio',
@@ -150,9 +156,10 @@ const strings: Record<Locale, Record<StringKey, string>> = {
     'pub.readPaper': 'Leer paper',
     'pub.listenPodcast': 'Escuchar podcast',
 
-    // Language switcher
-    'switcher.toEs': 'Cambiar a español',
-    'switcher.toEn': 'Switch to English',
+    // Language switcher. The names start with the visible «ES» / «EN»
+    // (WCAG 2.5.3, label in name).
+    'switcher.toEs': 'ES, cambiar a español',
+    'switcher.toEn': 'EN, switch to English',
     'switcher.label': 'Idioma / Language',
     'switcher.es': 'ES',
     'switcher.en': 'EN',
@@ -172,6 +179,7 @@ const strings: Record<Locale, Record<StringKey, string>> = {
     'header.nav.programs': 'Programs',
     'header.nav.projects': 'Projects',
     'header.nav.activities': 'Activities',
+    'header.nav.resources': 'Resources',
     'header.nav.getInvolved': 'Get involved',
     'header.aria.primaryNav': 'Primary navigation',
     'header.aria.brandHome': 'AI Safety Mexico — Home',
@@ -199,10 +207,12 @@ const strings: Record<Locale, Record<StringKey, string>> = {
     'footer.item.blog': 'Blog',
     'footer.item.getInvolved': 'Get involved',
     'footer.item.contact': 'Contact',
+    'footer.item.calendar': 'Calendar',
     'footer.tagline': 'AI safety research, education, and governance in Mexico.',
     'footer.copyright': 'All rights reserved.',
     'footer.aria.social': 'Social media',
     'footer.aria.brandHome': 'AI Safety Mexico — Home',
+    'footer.aria.nav': 'Site links',
 
     // Breadcrumb
     'breadcrumb.home': 'Home',
@@ -221,9 +231,10 @@ const strings: Record<Locale, Record<StringKey, string>> = {
     'pub.readPaper': 'Read paper',
     'pub.listenPodcast': 'Listen to podcast',
 
-    // Language switcher
-    'switcher.toEs': 'Cambiar a español',
-    'switcher.toEn': 'Switch to English',
+    // Language switcher (same names in both locales; each link is marked
+    // up in its own language).
+    'switcher.toEs': 'ES, cambiar a español',
+    'switcher.toEn': 'EN, switch to English',
     'switcher.label': 'Idioma / Language',
     'switcher.es': 'ES',
     'switcher.en': 'EN',
@@ -270,6 +281,31 @@ export function switchLocalePath(currentPath: string): {
 /** Derive locale from a URL pathname. */
 export function localeFromPath(pathname: string): Locale {
   return pathname === '/en' || pathname.startsWith('/en/') ? 'en' : 'es';
+}
+
+/**
+ * Sections published only in Spanish: the certificate verification pages
+ * behind printed QR codes. They have no `/en` twin.
+ */
+export const ES_ONLY_PREFIXES = ['/certificados', '/programas/certificados'] as const;
+
+/** Closest English page for each Spanish-only section (the switcher's EN link there). */
+export const ES_ONLY_EN_FALLBACK: Record<(typeof ES_ONLY_PREFIXES)[number], string> = {
+  '/certificados': '/en/global-south-challenge',
+  '/programas/certificados': '/en/programs',
+};
+
+/** True when `pathname` (a Spanish path) has an English twin under `/en`. */
+export function hasEnglishTwin(pathname: string): boolean {
+  return !ES_ONLY_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(prefix + '/'),
+  );
+}
+
+/** English destination for a Spanish path without a twin: its section's fallback, else `/en`. */
+export function englishFallback(pathname: string): string {
+  const prefix = ES_ONLY_PREFIXES.find((p) => pathname === p || pathname.startsWith(p + '/'));
+  return prefix ? ES_ONLY_EN_FALLBACK[prefix] : '/en';
 }
 
 /**

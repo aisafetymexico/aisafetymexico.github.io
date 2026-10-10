@@ -4,7 +4,9 @@
  *
  * English sibling of src/pages/projects/index.astro. Mirrors structure 1:1
  * per docs/I18N-ARCHITECTURE.md §2 (Strategy B). Same components, same
- * data source — only prose changes.
+ * data source, same design (full-container sections; a label on every
+ * project card; criteria cards on the one bg-2 band; default og:image) —
+ * only prose changes, including English summaries, labels and cover alts.
  */
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
@@ -38,13 +40,26 @@ const enSummaries: Record<string, string> = {
     'A platform to systematically map AI safety research and reduce the gap between academia and communities of practice.',
 };
 
+// English cover alts: the collection's alts are Spanish.
+const enCoverAlts: Record<string, string> = {
+  vigia: 'El Caracol, the Maya observatory at Chichén Itzá, at dusk',
+  'ai-safety-connect': 'AI Safety Connect project poster',
+};
+
+// In-card labels for projects whose entry has no `badge`, so every card has
+// the same anatomy (label → title) and titles line up in the 2-up row. AI
+// Safety Connect reuses the label /en/research already shows for it.
+const fallbackBadges: Record<string, string> = {
+  'ai-safety-connect': 'SPAR collaboration',
+};
+
 const cards = projects.map((p) => {
   const slug = p.data.slug ?? p.slug;
   return {
     title: p.data.title,
-    badge: p.data.badge,
+    badge: p.data.badge ?? fallbackBadges[slug],
     description: enSummaries[slug] ?? p.data.summary,
-    image: p.data.cover,
+    image: p.data.cover && { ...p.data.cover, alt: enCoverAlts[slug] ?? p.data.cover.alt },
     href: `/en/projects/${slug}`,
     external: false,
   };
@@ -84,7 +99,6 @@ const criteria = [
   description="Flagship initiatives of AI Safety Mexico — VIGÍA, AI Safety Connect, and collaborative projects in governance, alignment, and community."
   lang="en"
   pathname="/en/projects"
-  ogImage="/images/aisafetymx_logo.webp"
 >
   <Header slot="header" currentPath="/en/projects" lang="en" />
 
@@ -96,8 +110,8 @@ const criteria = [
   />
 
   {/* Intro */}
-  <section class="section section--base">
-    <div class="container container--narrow">
+  <section class="section section--base projects-intro">
+    <div class="container">
       <SectionHeading
         eyebrow="What we mean by project"
         title="Applied research with a public purpose"
@@ -107,7 +121,7 @@ const criteria = [
   </section>
 
   {/* Project grid */}
-  <section class="section section--base section--edge-accent" aria-labelledby="projects-grid-heading">
+  <section class="section section--base" aria-labelledby="projects-grid-heading">
     <div class="container">
       <SectionHeading
         eyebrow="Portfolio"
@@ -119,7 +133,7 @@ const criteria = [
       {cards.length === 0 ? (
         <p class="projects-empty">
           We will publish details of the current projects soon. In the meantime,
-          write to us at <a href="mailto:contact@aismx.org">contact@aismx.org</a>.
+          write to us at <a class="inline-link" href="mailto:contact@aismx.org">contact@aismx.org</a>.
         </p>
       ) : (
         <div class="projects-grid">
@@ -140,8 +154,8 @@ const criteria = [
   </section>
 
   {/* Criteria */}
-  <section class="section section--base" aria-labelledby="projects-criteria-heading">
-    <div class="container container--narrow">
+  <section class="section section--warm" aria-labelledby="projects-criteria-heading">
+    <div class="container">
       <SectionHeading
         eyebrow="How we choose"
         title="Selection criteria"
@@ -171,94 +185,83 @@ const criteria = [
 </BaseLayout>
 
 <style>
+  /* The intro is a heading-only band: drop the heading's 34px bottom margin
+     so the band keeps an even top and bottom. */
+  .projects-intro :global(.section-heading) {
+    margin-bottom: 0;
+  }
+
+  /* Project grid: her 2-up card grid, 18px gap, one column up to 768px. */
   .projects-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-8);
+    gap: var(--gap-grid);
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     .projects-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-10);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  @media (min-width: 1024px) {
-    .projects-grid {
-      gap: var(--space-12);
-    }
-  }
-
+  /* Empty state; its mail link is the global .inline-link. */
   .projects-empty {
-    font-family: var(--font-body);
     font-size: var(--fs-lead);
     line-height: var(--lh-relaxed);
     color: var(--color-text-secondary);
-    margin: 0;
+    max-width: var(--measure-desc);
   }
 
-  .projects-empty a {
-    color: var(--color-link);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-  .projects-empty a:hover {
-    color: var(--color-link-hover);
-  }
-
-  /* Criteria list */
+  /* Criteria list — white hairline cards on the bg-2 band (her theory
+     grid). They are not links, so they have no hover state. */
   .projects-criteria {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-6);
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    gap: var(--gap-grid);
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     .projects-criteria {
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-7);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
   .projects-criteria__item {
+    display: flex;
+    flex-direction: column;
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    padding: var(--space-6);
-    box-shadow: var(--shadow-xs);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
+    padding: var(--pad-card);
   }
 
+  /* Decorative numeral (aria-hidden): Inter 500 in ink-3, which passes
+     AA-large at this size; the accent stays off large type. */
   .projects-criteria__number {
-    font-family: var(--font-display);
-    font-size: 2.4rem;
-    font-weight: var(--fw-bold);
-    line-height: 1;
-    color: var(--color-accent);
-    letter-spacing: -0.02em;
+    margin-bottom: var(--space-3);
+    font-size: 1.5rem;
+    font-weight: var(--fw-display);
+    line-height: 1.1;
+    letter-spacing: var(--ls-display);
+    color: var(--ink-3);
     font-variant-numeric: lining-nums tabular-nums;
   }
 
+  /* Card title — her .program-card-title (1.08rem / 550 / -.02em). */
   .projects-criteria__title {
-    margin: 0;
-    font-family: var(--font-display);
+    margin: 0 0 10px;
     font-size: var(--fs-h5);
-    font-weight: var(--fw-bold);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
     color: var(--color-text-heading);
-    line-height: var(--lh-snug);
   }
 
+  /* Same card copy as FeatureGrid's numbered tiles (.92rem / 1.7, ink-2). */
   .projects-criteria__description {
     margin: 0;
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    line-height: var(--lh-relaxed);
+    font-size: 0.92rem;
+    line-height: var(--lh-loose);
     color: var(--color-text-secondary);
   }
 </style>

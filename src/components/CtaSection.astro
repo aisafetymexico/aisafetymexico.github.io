@@ -1,14 +1,18 @@
 ---
 /**
- * CtaSection — large navy band with a centered title, optional supporting
- * paragraph, and a single primary CTA. Used as the closing module of pages
- * (Home, About, Get-Involved, etc.).
+ * CtaSection — closing band of a page: a centered title, optional
+ * supporting paragraph and one primary CTA. Used as the closing module of
+ * pages (Home, About, Get-Involved, etc.).
  *
  * Spec:
  *  - Task #10 props: `{ title, description?, ctaLabel, ctaHref }`.
- *  - docs/DESIGN-SYSTEM.md §6.4 / §1.4 — navy impact surface, copper accent.
- *  - docs/INSPIRATION.md A8 — solid brand band hero pattern.
- *  - Mobile-first: stacked + comfortable touch target on phones.
+ *  - Design: her light closing band (`.section-contact`, fcacfc4
+ *    css/style.css L1173–1190: "claro, no bloque oscuro"): white, centered,
+ *    80px padding (48px on phones), section-sized Inter 550 heading, ink-2
+ *    copy capped at 560px, and the ink pill CTA (`.btn .btn-primary`). It
+ *    stays white on purpose: the footer under it is bg-2, so a tinted band
+ *    here would stack two tinted surfaces.
+ *  - The global section hairline (base.css) closes it, as in her design.
  */
 
 export interface Props {
@@ -31,24 +35,19 @@ const externalAttrs = ctaExternal
   <div class="cta-section__inner">
     <h2 class="cta-section__title">{title}</h2>
     {description && <p class="cta-section__description">{description}</p>}
-    <a class="cta-section__cta" href={ctaHref} {...externalAttrs}>
+    <a class="cta-section__cta btn btn-primary" href={ctaHref} {...externalAttrs}>
       {ctaLabel}
-      <span class="cta-section__cta-arrow" aria-hidden="true">&rarr;</span>
     </a>
   </div>
 </section>
 
 <style>
-  /* Polish-rand (RAND-DIFF §1.5, §6.3, §8.4):
-   *  - Solid navy band (no 135° gradient wash).
-   *  - No inset-section-impact box-shadow.
-   *  - Decorative copper→gold ::before edge bar removed entirely. */
   .cta-section {
     position: relative;
-    background: var(--color-bg-impact);
-    color: var(--color-text-on-dark);
-    padding-block: var(--space-12);
-    overflow: hidden;
+    background: var(--color-bg-base);
+    color: var(--color-text-primary);
+    padding-block: var(--section-pad-contact);
+    text-align: center;
   }
 
   .cta-section__inner {
@@ -56,100 +55,40 @@ const externalAttrs = ctaExternal
     max-width: var(--container-narrow);
     margin-inline: auto;
     padding-inline: var(--container-padding);
-    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-4);
   }
 
-  .cta-section__title {
-    font-family: var(--font-display);
-    font-size: var(--fs-h1);
-    font-weight: var(--fw-bold);
-    line-height: var(--lh-snug);
-    letter-spacing: var(--ls-tight);
-    color: var(--color-text-on-dark);
-    margin: 0;
-    max-width: 24ch;
-  }
-
-  .cta-section__description {
-    font-family: var(--font-body);
-    font-size: var(--fs-lead);
-    line-height: var(--lh-loose);
-    color: var(--color-text-on-dark-muted);
-    margin: 0;
-    max-width: 56ch;
-  }
-
-  /* Polish-rand (RAND-DIFF §6.1, §6.2): no shadow-cta, no translateY hover,
-     no shadow-lg on hover — only a colour shift. */
-  .cta-section__cta {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    margin-top: var(--space-3);
-    padding: var(--space-3) var(--space-7);
-    /* CTA tokens INVERT in dark-subtle (PALETTE-MAPPING §0/§4):
-       --color-cta-bg = peach-500, --color-cta-text = bg-base.
-       Dark text on peach scores 6.36:1 — clears AA body. */
-    background: var(--color-cta-bg);
-    color: var(--color-cta-text);
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    font-weight: var(--fw-semibold);
-    text-decoration: none;
-    letter-spacing: var(--ls-wide);
-    border-radius: var(--radius-pill);
-    transition: background var(--transition);
-  }
-
-  .cta-section__cta:hover,
-  .cta-section__cta:focus-visible {
-    background: var(--color-cta-bg-hover);
-    color: var(--color-cta-text);
-  }
-
-  .cta-section__cta-arrow {
-    display: inline-block;
-    transition: transform var(--transition);
-  }
-  .cta-section__cta:hover .cta-section__cta-arrow {
-    transform: translateX(3px);
-  }
-
-  @media (min-width: 480px) {
+  @media (min-width: 481px) {
     .cta-section__inner {
       padding-inline: var(--container-padding-md);
     }
   }
 
-  @media (min-width: 768px) {
-    .cta-section {
-      padding-block: var(--space-14);
-    }
-    .cta-section__inner {
-      gap: var(--space-5);
-    }
-    .cta-section__cta {
-      padding: var(--space-4) var(--space-9);
-    }
+  .cta-section__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+    margin: 0 0 14px;
+    text-wrap: balance;
   }
 
-  @media (min-width: 1024px) {
-    .cta-section {
-      padding-block: var(--space-16);
-    }
+  .cta-section__description {
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    max-width: 560px;
+    margin: 0 auto;
+    /* Centred copy: balance, so the last line is never a two-word runt. */
+    text-wrap: balance;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .cta-section__cta,
-    .cta-section__cta-arrow {
-      transition: none;
-    }
-    .cta-section__cta:hover .cta-section__cta-arrow {
-      transform: none;
-    }
+  .cta-section__cta {
+    margin-top: 22px;
   }
 </style>

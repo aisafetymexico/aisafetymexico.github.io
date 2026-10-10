@@ -2,9 +2,11 @@
 /**
  * `/en/` — Home (curated gateway · English).
  *
- * English mirror of `/` (src/pages/index.astro). Structure, imports and assets
- * are deliberately identical; only user-facing strings and in-locale links
- * change. See docs/I18N-ARCHITECTURE.md (Strategy B — sibling page files).
+ * English mirror of `/` (src/pages/index.astro). Structure, section order,
+ * ids, imports, assets and styles are deliberately identical; only
+ * user-facing strings and in-locale links change. See the ES file for the
+ * section map and design notes, and docs/I18N-ARCHITECTURE.md (Strategy B —
+ * sibling page files).
  */
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -15,32 +17,34 @@ import SectionHeading from '../../components/SectionHeading.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
 import StatBar from '../../components/StatBar.astro';
 import Card from '../../components/Card.astro';
-import ActivityCard from '../../components/ActivityCard.astro';
+import ResourcesTeaser from '../../components/ResourcesTeaser.astro';
 import CtaSection from '../../components/CtaSection.astro';
 
+// «AI\u00A0safety» is bound with a no-break space so the balanced tile copy
+// never ends a line on «AI» (FeatureGrid balances its descriptions).
 const pillars = [
   {
     title: 'Research',
     description:
-      'Original and collaborative work in alignment, interpretability, and technical governance. Learn more →',
+      'Original and collaborative work in alignment, interpretability, and technical governance.',
     href: '/en/research',
   },
   {
     title: 'Programs',
     description:
-      'Open and bespoke courses that adapt contemporary AI safety frameworks to the Mexican context. Learn more →',
+      'Open and bespoke courses that adapt contemporary AI\u00A0safety frameworks to the Mexican context.',
     href: '/en/programs',
   },
   {
     title: 'Projects',
     description:
-      'Applied initiatives like VIGÍA and AI Safety Connect: open, auditable, and oriented toward producing usable knowledge. Learn more →',
+      'Applied initiatives like VIGÍA and AI\u00A0Safety Connect: open, auditable, and oriented toward producing usable knowledge.',
     href: '/en/projects',
   },
   {
     title: 'Team',
     description:
-      'Researchers, engineers, and multidisciplinary professionals working together from Mexico. Learn more →',
+      'Researchers, engineers, and multidisciplinary professionals working together from Mexico.',
     href: '/en/team',
   },
 ];
@@ -52,20 +56,23 @@ const stats = [
   { number: '8', label: 'People on the team' },
 ];
 
-// -------- GSH spotlight (section 2) --------
-// Mirrors the spotlight on /en/activities (single ActivityCard, side-by-side
-// at md+). Copy is kept aligned with that page so both surfaces tell the same
-// story.
-const gshSpotlight = {
-  title: 'The Global South AIS Hackathon',
-  date: 'March 2026',
+// -------- Upcoming event (section 2) --------
+// Teaser of the full block on /en/activities#proximo-evento (venue,
+// organizers and the Luma registration embed). Like her Mexico Tech Week
+// card, it is not a link: two visible pills register on Luma (new tab) or
+// open the full block. The card title stays in Spanish, marked lang="es"
+// through Card's `titleLang`: it is the event's official name. The date is
+// the card's in-card label, so it stays human-readable. The title binds
+// «AI\u00A0Safety» with a no-break space so the balanced heading never splits
+// the field's name across lines (same string as on /en/activities).
+// EXPIRES 2026-10-27: after the panel, swap this spotlight for the next event
+// and move the panel to past activities (here and on /en/activities).
+const upcomingSpotlight = {
+  title: 'Impulsando la comunidad de AI\u00A0Safety en México: Tech Policy Panel',
+  date: 'Tuesday, October 27, 2026',
   description:
-    'A regional AI safety hackathon organized with Apart Research. It convenes researchers, engineers, and practitioners from the Global South to produce prototypes, evaluations, and governance proposals over an intensive weekend.',
-  link: '/en/global-south-challenge',
-  image: {
-    src: '/images/gsh-event-card.png',
-    alt: 'Promotional image for the Global South AIS Hackathon.',
-  },
+    'Growing the AI safety community in Mexico: a panel on how AI regulation will affect the tech ecosystem in Mexico and Latin America. At MXTW AI House (Juárez, Mexico City). Organized by Marta Kosmyna, Isabel Montalvo, Janeth Valdivia, and Oscar Mata.',
+  link: 'https://luma.com/event/evt-0jdNWFu6jYVQ148',
 };
 ---
 
@@ -78,45 +85,62 @@ const gshSpotlight = {
 >
   <Header slot="header" currentPath="/en" lang="en" />
 
+  {/* The subtitle binds «AI\u00A0safety» so the balanced lines never split it. */}
   <Hero
-    overline="AI SAFETY MEXICO"
     title="AI safety and governance, from Mexico."
-    subtitle="We research, train, and build community around AI safety. We lay the technical and governance foundations Mexico needs to make informed decisions about AI."
-    image={{ src: '/images/observatorio.png', alt: 'AI Safety Mexico observatory' }}
-    primaryCta={{ label: 'Explore our projects', href: '/en/projects' }}
-    secondaryCta={{ label: 'Get involved', href: '/en/get-involved' }}
+    titleAccent="from Mexico"
+    subtitle={'We research, train, and build community around AI\u00A0safety. We lay the technical and governance foundations Mexico needs to make informed decisions about AI.'}
+    ctas={[
+      { label: 'How to get involved', href: '/en/get-involved#participa' },
+      { label: 'Browse resources', href: '/en/resources', variant: 'outline' },
+      { label: 'Our programs', href: '/en/programs', variant: 'outline' },
+    ]}
+    scrollHint="Scroll to explore ↓"
+    lang="en"
   />
 
-  <!-- 2 · GSH spotlight (Global South AIS Hackathon) -->
-  <section class="section section--base section--compact" aria-labelledby="home-gsh-spotlight">
+  <!-- 2 · Upcoming event (spotlight; bg-2 like her .section-current) -->
+  <section class="section section--warm" aria-labelledby="home-spotlight">
     <div class="container">
       <SectionHeading
-        eyebrow="Featured event"
-        title="Global South AIS Hackathon"
-        description="Our most visible regional initiative: an open hackathon that convenes the Global South community to produce concrete work in AI safety."
-        align="center"
-        id="home-gsh-spotlight"
+        eyebrow="Upcoming event"
+        title="Mexico Tech Week 2026"
+        description="A tech policy panel funded by a BlueDot Impact grant. Our full agenda is on Luma."
+        id="home-spotlight"
       />
       <div class="home-spotlight">
-        <ActivityCard
-          title={gshSpotlight.title}
-          date={gshSpotlight.date}
-          description={gshSpotlight.description}
-          image={gshSpotlight.image}
-          link={gshSpotlight.link}
-        />
+        <Card
+          badge={upcomingSpotlight.date}
+          title={upcomingSpotlight.title}
+          titleLang="es"
+          description={upcomingSpotlight.description}
+          padding="md"
+        >
+          <div class="program-actions">
+            <a
+              class="btn btn-register"
+              href={upcomingSpotlight.link}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Register on Luma
+            </a>
+            <a class="btn btn-outline" href="/en/activities#proximo-evento">
+              Event details
+            </a>
+          </div>
+        </Card>
       </div>
     </div>
   </section>
 
   <!-- 3 · Featured pillars (gateway of 4) -->
-  <section class="section section--base section--edge-accent">
+  <section class="section section--base">
     <div class="container">
       <SectionHeading
         eyebrow="What we do"
-        title="Four fronts, a single mission."
+        title="Four fronts, a single mission"
         description="Each pillar links to a dedicated page with details, materials, and ways to collaborate."
-        align="center"
       />
       <FeatureGrid items={pillars} />
     </div>
@@ -125,36 +149,68 @@ const gshSpotlight = {
   <!-- 4 · Stat bar -->
   <StatBar stats={stats} />
 
-  <!-- 5 · Curated highlights (GSH already lives in the spotlight above) -->
+  <!-- 4b · Photo of a working session (her .section-photo) -->
   <section class="section section--base">
+    <div class="container">
+      <img
+        class="home-photo"
+        src="/images/sesion-trabajo.webp"
+        width="2048"
+        height="1432"
+        loading="lazy"
+        decoding="async"
+        alt="AI Safety Mexico participants in a working session, seated in a circle"
+      />
+    </div>
+  </section>
+
+  <!-- 5 · Recent work: a project, a publication and an event (bg-2) -->
+  <section class="section section--warm">
     <div class="container">
       <SectionHeading
         eyebrow="Highlights"
-        title="Recent work."
-        description="A project and a publication that capture where the organization is right now."
-        align="center"
+        title="Recent work"
+        description="A project, a publication, and an event that capture where the organization is right now."
       />
 
+      {/* The \u00A0 no-break spaces keep each « · » unit, the paper title's
+          «A Pilot» and «Apart fellowship.» on one line. Each card links
+          straight to its item; the paper's goes to the papers section of
+          /en/research (#publicaciones). */}
       <div class="home-highlights">
         <Card
           href="/en/projects/vigia"
           badge="Flagship project"
           title="VIGÍA"
-          description="A platform for observing Mexico's AI regulatory ecosystem. Special Recognition · AI Safety Collab 2025."
+          description={"A platform for observing Mexico's AI regulatory ecosystem. Special Recognition\u00A0·\u00A0AI Safety Collab 2025."}
+          linkLabel="See the project"
           padding="md"
           bordered
         />
         <Card
-          href="/en/research"
+          href="/en/research#publicaciones"
           badge="Publication"
-          title="A Pilot Survey on AI Safety in Yucatan"
-          description="A pilot study on local perceptions, risks, and practices around AI, published in RCS · IPN."
+          title={'AI Safety in Mexico: A\u00A0Pilot Survey in Yucatan'}
+          description={'A pilot study on local perceptions, risks, and practices around AI, published in RCS\u00A0·\u00A0IPN.'}
+          linkLabel="See the publication"
+          padding="md"
+          bordered
+        />
+        <Card
+          href="/en/activities#gsh-2026"
+          badge="Hackathon · June 2026"
+          title="Global South AIS Hackathon"
+          description={'Mérida and Guadalajara hubs with Apart Research: 65 attendees, 19 projects, and one that continued into the Apart\u00A0fellowship.'}
+          linkLabel="See the hackathon"
           padding="md"
           bordered
         />
       </div>
     </div>
   </section>
+
+  <!-- 5b · Open resources (directory teaser) -->
+  <ResourcesTeaser lang="en" />
 
   <!-- 6 · CTA closing band -->
   <CtaSection
@@ -168,53 +224,55 @@ const gshSpotlight = {
 </BaseLayout>
 
 <style>
-  /* Highlights grid — 2 curated cards: stack on mobile → side-by-side at md+.
-     (Was 3-up; GSH moved to the top spotlight in §2, so we deliberately keep
-     only two well-curated highlights to avoid forcing a filler card.) */
+  /* Upcoming-event spotlight: one Card at full container width, like her
+     `.section-current` card under a left-aligned heading. Card already puts
+     the pill row 18px under the copy, and base.css stacks the pills full
+     width at ≤480px. The copy keeps her 680px description measure instead
+     of running the full card width, and `pretty` keeps a lone word (the
+     last organizer's surname on phones) off its last line. */
+  .home-spotlight :global(.card__description) {
+    max-width: var(--measure-desc);
+    text-wrap: pretty;
+  }
+
+  /* «Recent work» copy: `pretty`, with the no-break spaces in the strings,
+     keeps a lone word («IPN.», «2025.», «fellowship.») off the last line,
+     right above each card's action pill. */
+  .home-highlights :global(.card__description) {
+    text-wrap: pretty;
+    /* Last resort: if a bound unit is still wider than its column, break it
+       there instead of letting the card's overflow:hidden clip it (WCAG
+       1.4.4). */
+    overflow-wrap: break-word;
+  }
+
+  /* Feature photo — her .feature-photo: full container width, large radius,
+     hairline frame. */
+  .home-photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  /* Highlights grid — 3 curated cards (project, publication, GSH): one
+     column up to 768px, three from 48.0625em (769px at the default 16px,
+     her tier), 18px gaps. Grid stretch keeps the three cards the same
+     height, so the action pills Card pins to the bottom share one
+     baseline. */
   .home-highlights {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-    max-width: var(--container-narrow, 860px);
-    margin-inline: auto;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gap-grid);
   }
 
-  @media (min-width: 768px) {
+  /* em, not px: like FeatureGrid, the 3-up row waits for room when the
+     reader enlarges the default font, so the bound « · » units never break
+     mid-word; 769px at the default 16px. */
+  @media (min-width: 48.0625em) {
     .home-highlights {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-9);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .home-highlights {
-      gap: var(--space-10);
-    }
-  }
-
-  /* GSH spotlight — single full-width ActivityCard, mirrored from
-     /activities .spotlight (RAND editorial; no shadow / no lift). On md+,
-     switch the card to a 50/50 image-left, body-right layout. */
-  .home-spotlight :global(.activity-card) {
-    max-width: var(--container-narrow, 860px);
-    margin-inline: auto;
-  }
-
-  @media (min-width: 768px) {
-    .home-spotlight :global(.activity-card) {
-      flex-direction: row;
-      align-items: stretch;
-    }
-    .home-spotlight :global(.activity-card__media) {
-      flex: 0 0 50%;
-      aspect-ratio: auto;
-    }
-    .home-spotlight :global(.activity-card__body) {
-      flex: 1 1 50%;
-      justify-content: center;
-    }
-    .home-spotlight :global(.activity-card__title) {
-      font-size: var(--fs-h4);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 </style>

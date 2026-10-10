@@ -1,14 +1,31 @@
 ---
 /*
- * /en/resources — Open AI safety resource directory (EN).
+ * /en/resources — Open directory of AI safety resources (EN).
  *
- * Twin of src/pages/resources.astro. The catalogue itself was curated in
- * Spanish; ResourceDirectory surfaces a note about that on this locale.
+ * Twin of src/pages/resources.astro: same sections, same order, same ids.
+ *   1. Centered PageHero.
+ *   2. "How to use this directory" + topic tags (KeyFacts).
+ *   3. ResourceDirectory: catalog figures + filterable directory.
+ *   4. "An open commons": 4 cards on bg-2 (her .section-contribute).
+ *   5. CtaSection (white; the footer is bg-2, so no two tints in a row).
+ *      "Suggest a resource" opens an email to contact@aismx.org with a
+ *      subject line, the same mailto pattern as /en/get-involved.
+ *
+ * No section heading carries an eyebrow, as on her recursos.html. The H1
+ * reads "Open resources for…" so it cannot be misread as "OpenAI…", and
+ * "AI safety" is bound with a no-break space (\u00A0) so the balanced title
+ * never ends a line on "AI" ("Open resources for AI" / "safety and…").
+ *
+ * The catalog itself was curated in Spanish; ResourceDirectory surfaces a
+ * note about that on this locale. New strings live here, not in i18n.ts.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import KeyFacts from '../../components/KeyFacts.astro';
+import Card from '../../components/Card.astro';
 import CtaSection from '../../components/CtaSection.astro';
 import ResourceDirectory from '../../components/ResourceDirectory.astro';
 import type { Breadcrumb } from '../../lib/types';
@@ -16,31 +33,121 @@ import type { Breadcrumb } from '../../lib/types';
 const breadcrumb: Breadcrumb = {
   items: [{ label: 'Home', href: '/en' }, { label: 'Resources' }],
 };
+
+const topics = [
+  { text: 'Courses and curricula' },
+  { text: 'Research programs' },
+  { text: 'Governance and policy' },
+  { text: 'Funding' },
+  { text: 'Communities' },
+  { text: 'Resources in Spanish' },
+];
+
+const LUMA_CAL = 'https://luma.com/calendar/cal-WjnM2llUGXz17t5';
 ---
 
 <BaseLayout
   title="Resources — AI Safety Mexico"
-  description="An open directory of AI safety courses, research programmes, fellowships, funding and communities, with hand-verified links and a selection relevant to Latin America."
+  description="An open directory of AI safety courses, research programs, fellowships, funding and communities, with hand-verified links and a selection relevant to Latin America."
   pathname="/en/resources"
   lang="en"
 >
   <Header slot="header" currentPath="/en/resources" lang="en" />
 
   <PageHero
-    title="Open AI safety resources"
-    description="A curated directory of courses, research programmes, fellowships, funding sources and communities. Every link is verified by hand and the full catalogue can be downloaded and reused."
+    title={'Open resources for AI\u00A0safety and governance'}
+    description="A curated directory of courses, research programs, fellowships, funding sources and communities. Every link is verified by hand and the full catalog can be downloaded and reused."
     breadcrumb={breadcrumb}
     lang="en"
   />
 
+  <!-- How to use this directory -->
+  <section class="section section--base" aria-labelledby="como-usar">
+    <div class="container">
+      <SectionHeading
+        title="How to use this directory"
+        description="Getting into AI safety is often confusing: information is scattered, many calls for applications expire, and several reference links stop working. We have gathered here the resources we consider current and useful, with a note on their format and duration so you can quickly decide what fits where you are. If this is your first time, we recommend starting with an introductory course and a map of the field."
+        id="como-usar"
+      />
+      <KeyFacts facts={topics} />
+    </div>
+  </section>
+
   <ResourceDirectory lang="en" />
+
+  <!-- An open commons -->
+  <section class="section section--warm" aria-labelledby="espacio-abierto">
+    <div class="container">
+      <SectionHeading
+        title="An open commons"
+        description="This directory is a commons. The data is available to download and reuse, and community suggestions are welcome."
+        id="espacio-abierto"
+      />
+      <div class="open-grid">
+        <Card title="Suggest or correct a resource" bordered interactive={false} elevated={false}>
+          <p>
+            If you know of a program that is missing, spot a broken link, or find
+            an outdated description, write to us at
+            <a class="inline-link" href="mailto:contact@aismx.org">contact@aismx.org</a>.
+            We are especially interested in adding resources in Spanish and
+            opportunities open to people in Latin America.
+          </p>
+        </Card>
+        <Card title="Reuse the data" bordered interactive={false} elevated={false}>
+          <p>
+            The “Download JSON” button exports the full catalog so you can
+            integrate it into your own materials, workshops, or sites. If you
+            reuse it, we appreciate attribution to AI Safety Mexico.
+          </p>
+        </Card>
+        <Card title="Ecosystem references" bordered interactive={false} elevated={false}>
+          <p>
+            We build on the work of
+            <a class="inline-link" href="https://aisafety.com" target="_blank" rel="noopener noreferrer">AISafety.com</a>,
+            which maintains the most complete map and directories in the field,
+            and of
+            <a class="inline-link" href="https://www.enais.co" target="_blank" rel="noopener noreferrer">ENAIS</a>.
+            For calls with a deadline, always check the original source.
+          </p>
+        </Card>
+        <Card title="Get involved with us" bordered interactive={false} elevated={false}>
+          <p>
+            We offer in-house courses for institutions, residencies with UPY,
+            working sessions on the first Friday of each month, and a
+            <a class="inline-link" href={LUMA_CAL} target="_blank" rel="noopener noreferrer">Luma calendar</a>.
+            Start with <a class="inline-link" href="/en/get-involved#participa">how to get involved</a>.
+          </p>
+        </Card>
+      </div>
+    </div>
+  </section>
 
   <CtaSection
     title="Missing something, or found a broken link?"
     description="This directory is maintained by hand and depends on the community to correct it. Tell us what you would add, especially if it is in Spanish or from Latin America."
     ctaLabel="Suggest a resource"
-    ctaHref="/en/get-involved"
+    ctaHref="mailto:contact@aismx.org?subject=Resource%20suggestion"
   />
 
   <Footer slot="footer" lang="en" />
 </BaseLayout>
+
+<style>
+  /* Her .contribute-grid: 1 column, 2 from 769px, 18px gaps. The heading
+     above already carries the 34px gap, so the grid adds no top margin. */
+  .open-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  @media (min-width: 769px) {
+    .open-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* Card copy: her .program-card p (ink-2, line-height 1.7). */
+  .open-grid p {
+    color: var(--color-text-secondary);
+    line-height: var(--lh-loose);
+  }
+</style>

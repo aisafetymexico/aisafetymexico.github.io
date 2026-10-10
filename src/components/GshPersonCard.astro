@@ -1,9 +1,18 @@
 ---
 /**
  * GshPersonCard -- speaker / judge card for /global-south-challenge (ES + EN).
- * Flat bordered card (RAND editorial, no shadow), mirroring the gsh-* surfaces.
- * Circular portrait or initials placeholder, name, affiliation, optional talk
- * title (highlight) and location, a short body, and an optional LinkedIn link.
+ * Design: her team-card language (fcacfc4 css/style.css L1075–1126): a white
+ * hairline card (1px line, 8px radius, no shadow, no hover: it is not a link)
+ * with a 54px round portrait or initials placeholder, name, affiliation as an
+ * in-card label, optional talk title (highlight) and location, a short body,
+ * an in-text "watch talk" link and an outlined LinkedIn circle (her footer
+ * social icon).
+ * Affiliation labels and talk titles are balanced, so no line ends on a lone
+ * word or splits AI safety.
+ *
+ * `highlightLang` is the language of the talk title when it differs from the
+ * page (BCP 47, e.g. 'en' for an English talk title on the Spanish page); it
+ * sets `lang` on the highlight so screen readers switch pronunciation.
  */
 export interface Props {
   name: string;
@@ -13,6 +22,7 @@ export interface Props {
   initials?: string;
   linkedin?: string | null;
   highlight?: string | null;
+  highlightLang?: string;
   location?: string | null;
   talkUrl?: string | null;
   talkLabel?: string;
@@ -26,6 +36,7 @@ const {
   initials = '',
   linkedin = null,
   highlight = null,
+  highlightLang,
   location = null,
   talkUrl = null,
   talkLabel = 'Ver charla',
@@ -41,8 +52,8 @@ const {
         alt=""
         loading="lazy"
         decoding="async"
-        width="72"
-        height="72"
+        width="54"
+        height="54"
       />
     ) : (
       <span class="gperson__photo gperson__photo--ph" aria-hidden="true">{initials}</span>
@@ -54,7 +65,7 @@ const {
     </div>
   </div>
 
-  {highlight && <p class="gperson__highlight">{highlight}</p>}
+  {highlight && <p class="gperson__highlight" lang={highlightLang}>{highlight}</p>}
   <p class="gperson__body">{body}</p>
 
   {(talkUrl || linkedin) && (
@@ -91,117 +102,141 @@ const {
 </article>
 
 <style>
+  /* Her .team-card: white, 1px hairline, 8px radius, 26px 22px. */
   .gperson {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: 12px;
     height: 100%;
-    padding: var(--space-6);
+    padding: 26px 22px;
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
   }
-  .gperson__head { display: flex; align-items: center; gap: var(--space-4); }
+  .gperson__head { display: flex; align-items: center; gap: 14px; }
+
+  /* Her .team-photo-wrapper: 54px circle with a hairline, bg-3 placeholder. */
   .gperson__photo {
     flex: 0 0 auto;
-    width: 72px;
-    height: 72px;
+    width: 54px;
+    height: 54px;
     border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
     object-fit: cover;
-    background: var(--color-bg-warm);
+    background: var(--color-bg-muted);
   }
   .gperson__photo--ph {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-display);
+    font-family: var(--font-body);
     font-size: var(--fs-h6);
-    font-weight: var(--fw-bold);
-    color: var(--color-accent);
-    background: var(--color-accent-soft);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-wide);
+    color: var(--color-text-muted);
+    background: var(--color-bg-muted);
   }
   .gperson__id { min-width: 0; }
+
+  /* Her .team-name */
   .gperson__name {
     margin: 0;
     font-family: var(--font-display);
-    font-size: var(--fs-h6);
-    font-weight: var(--fw-bold);
-    line-height: var(--lh-snug);
+    font-size: 0.98rem;
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: -0.015em;
     color: var(--color-text-heading);
   }
+
+  /* In-card label (her .theory-label) */
   .gperson__affil {
-    margin: var(--space-1) 0 0;
+    margin: 4px 0 0;
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
-    font-weight: var(--fw-bold);
-    letter-spacing: var(--ls-uppercase);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-normal);
+    letter-spacing: var(--ls-label);
     text-transform: uppercase;
-    color: var(--color-accent-hover);
+    color: var(--color-text-muted);
+    text-wrap: balance;
   }
   .gperson__loc {
-    margin: var(--space-1) 0 0;
+    margin: 2px 0 0;
     font-family: var(--font-body);
-    font-size: var(--fs-small);
+    font-size: 0.84rem;
+    line-height: var(--lh-normal);
     color: var(--color-text-muted);
   }
+
+  /* Talk title: Inter 500, upright (no serif italic). */
   .gperson__highlight {
     margin: 0;
-    font-family: var(--font-display);
-    font-size: var(--fs-body);
-    font-style: italic;
-    line-height: var(--lh-snug);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-style: normal;
+    font-weight: var(--fw-medium);
+    line-height: 1.5;
     color: var(--color-text-heading);
+    text-wrap: balance;
   }
   .gperson__body {
     margin: 0;
     font-family: var(--font-body);
     font-size: var(--fs-small);
-    line-height: var(--lh-relaxed);
+    line-height: 1.6;
     color: var(--color-text-secondary);
   }
   .gperson__links {
     margin-top: auto;
-    padding-top: var(--space-1);
+    padding-top: 4px;
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    gap: 16px;
   }
+
+  /* In-text link (her .inline-link): clay-dark 500 with a hairline underline
+     that turns clay on hover. */
   .gperson__talk {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: 6px;
     font-family: var(--font-body);
     font-size: var(--fs-small);
-    font-weight: var(--fw-semibold);
-    color: var(--color-link);
+    font-weight: var(--fw-medium);
+    color: var(--color-link-inline);
     text-decoration: none;
-    border-bottom: 1px solid currentColor;
-    padding-bottom: 1px;
-    transition: color var(--transition);
+    border-bottom: 1px solid var(--color-link-underline);
+    transition: color var(--transition), border-color var(--transition);
   }
-  .gperson__talk:hover,
-  .gperson__talk:focus-visible { color: var(--color-link-hover); }
+  .gperson__talk:hover {
+    color: var(--color-link-inline);
+    border-bottom-color: var(--color-link-underline-hover);
+  }
   .gperson__talk:focus-visible {
     outline: 2px solid var(--color-focus-ring);
-    outline-offset: 3px;
+    outline-offset: 2px;
     border-radius: var(--radius-xs);
   }
-  .gperson__talk-icon { width: 13px; height: 13px; flex: 0 0 auto; }
+  .gperson__talk-icon { width: 12px; height: 12px; flex: 0 0 auto; }
+
+  /* Outlined 32px circle (her .footer-social-icon). */
   .gperson__social {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     border-radius: var(--radius-full);
-    color: var(--color-text-muted);
-    transition: color var(--transition);
+    background: var(--color-bg-base);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    transition: color var(--transition), border-color var(--transition);
   }
-  .gperson__social:hover { color: var(--color-accent); }
-  .gperson__social:focus-visible { outline: 2px solid var(--color-focus-ring); outline-offset: 3px; }
-  .gperson__social svg { width: 18px; height: 18px; }
-  @media (prefers-reduced-motion: reduce) {
-    .gperson__social,
-    .gperson__talk { transition: none; }
+  .gperson__social:hover {
+    color: var(--color-text-primary);
+    border-color: var(--color-border-strong);
   }
+  .gperson__social:focus-visible { outline: 2px solid var(--color-focus-ring); outline-offset: 2px; }
+  .gperson__social svg { width: 16px; height: 16px; }
 </style>

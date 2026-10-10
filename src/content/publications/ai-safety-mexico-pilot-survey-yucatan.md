@@ -2,10 +2,12 @@
 title: "AI Safety in Mexico: A Pilot Survey in Yucatan"
 abstract: "Trabajo destinado a capturar preocupaciones locales acerca de la seguridad en inteligencia artificial en Mérida, Yucatán. La encuesta piloto explora percepciones, riesgos y prioridades locales como insumo para la agenda de AI safety en México."
 authors:
-  - "Janet Valdivia"
-  - "Silvia Fernández"
+  - "Janeth Valdivia"
   - "Valeria Ramírez"
+  - "Silvia Fernández"
   - "Angel Tenorio"
+  - "Alejandro Molina-Villegas"
+  - "Oscar Sánchez Sordia"
 venue: "RCS · IPN"
 year: 2025
 location: "Mérida, Yucatán"

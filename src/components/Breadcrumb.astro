@@ -5,14 +5,20 @@
  * Spec: docs/ARCHITECTURE.md §5.
  *  - Show on every page EXCEPT `/`.
  *  - Format: `Inicio › <Section> › <Page>` with `›` separator.
- *  - Final item is the current page (not linked, bold-ish).
+ *  - Final item is the current page (not linked, ink 500).
  *  - Mobile: when path depth ≥ 2 AND viewport <500px, collapse to a
  *    "‹ <Parent>" back-link (handled in CSS).
  *  - Emits BreadcrumbList JSON-LD for SEO.
  *
+ * Look ("Editorial mínimo"): a quiet .8rem trail — ink-2 links that turn
+ * clay-dark on hover, ink current page, ink-3 separators. It has no box of
+ * its own: the parent places it (PageHero centers it above the H1; the blog
+ * article keeps it left-aligned).
+ *
  * Props:
  *  - items: ordered list, including the current page as last entry.
  *           Set `href` on every entry except the last (current).
+ *  - align: 'start' (default) | 'center' — trail alignment.
  *
  * Example:
  *   <Breadcrumb items={[
@@ -29,9 +35,10 @@ export interface Props {
   /** Optional override for the back-link label shown on small mobile. */
   backLabel?: string;
   lang?: Locale;
+  align?: 'start' | 'center';
 }
 
-const { items, backLabel, lang = 'es' } = Astro.props;
+const { items, backLabel, lang = 'es', align = 'start' } = Astro.props;
 
 if (!items || items.length === 0) {
   throw new Error('Breadcrumb: `items` must contain at least one entry.');
@@ -72,7 +79,10 @@ const jsonLd = {
 };
 ---
 
-<nav class="breadcrumb" aria-label={navAriaLabel}>
+<nav
+  class:list={['breadcrumb', { 'breadcrumb--center': align === 'center' }]}
+  aria-label={navAriaLabel}
+>
   {/* Mobile back-link (only renders on small screens with depth ≥ 2). */}
   {items.length >= 2 && (
     <a class="breadcrumb__back" href={parentHref} rel="up">
@@ -113,13 +123,10 @@ const jsonLd = {
 <style>
   .breadcrumb {
     width: 100%;
-    max-width: var(--container-max, 1200px);
-    margin: 0 auto;
-    padding: 16px 20px 0;
-    font-family: var(--font-body, 'Inter', sans-serif);
-    font-size: 14px;
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
     line-height: 1.4;
-    color: var(--color-text-secondary);
+    color: var(--color-text-muted);
   }
 
   .breadcrumb__trail {
@@ -132,6 +139,18 @@ const jsonLd = {
     gap: 6px;
   }
 
+  .breadcrumb--center {
+    display: flex;
+    justify-content: center;
+  }
+  /* min-width: 0 lets the trail (a flex item here) shrink to the row, so a
+     long current page truncates with its ellipsis instead of spilling past
+     the gutters. */
+  .breadcrumb--center .breadcrumb__trail {
+    justify-content: center;
+    min-width: 0;
+  }
+
   .breadcrumb__item {
     display: inline-flex;
     align-items: center;
@@ -140,24 +159,18 @@ const jsonLd = {
   }
 
   .breadcrumb__link {
-    color: var(--color-link);
+    color: var(--color-text-secondary);
     text-decoration: none;
-    border-radius: 4px;
-    transition: color 0.15s ease;
+    border-radius: var(--radius-xs);
+    transition: color var(--transition);
   }
-  .breadcrumb__link:hover,
-  .breadcrumb__link:focus-visible {
+  .breadcrumb__link:hover {
     color: var(--color-link-hover);
-    text-decoration: underline;
-  }
-  .breadcrumb__link:focus-visible {
-    outline: 2px solid var(--color-focus-ring);
-    outline-offset: 2px;
   }
 
   .breadcrumb__current {
-    color: var(--color-text-heading);
-    font-weight: 600;
+    color: var(--color-text-primary);
+    font-weight: var(--fw-medium);
     /* Truncate gracefully on tight rows */
     overflow: hidden;
     text-overflow: ellipsis;
@@ -166,8 +179,7 @@ const jsonLd = {
   }
 
   .breadcrumb__sep {
-    color: var(--color-text-muted);
-    font-size: 14px;
+    color: var(--color-border-strong);
     line-height: 1;
     user-select: none;
   }
@@ -178,19 +190,13 @@ const jsonLd = {
     display: none;
     align-items: center;
     gap: 6px;
-    color: var(--color-link);
+    color: var(--color-text-secondary);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: var(--fw-medium);
     padding: 4px 0;
   }
-  .breadcrumb__back:hover,
-  .breadcrumb__back:focus-visible {
+  .breadcrumb__back:hover {
     color: var(--color-link-hover);
-    text-decoration: underline;
-  }
-  .breadcrumb__back:focus-visible {
-    outline: 2px solid var(--color-focus-ring);
-    outline-offset: 2px;
   }
 
   /* Tight-mobile collapse: when the trail is multi-level, swap full trail

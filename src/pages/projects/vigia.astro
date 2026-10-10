@@ -18,6 +18,15 @@
  *   7. External resources.
  *   8. RelatedProjects — link to AI Safety Connect.
  *   9. CtaSection — visit the platform.
+ *
+ * Design: the collaborator's light "Editorial mínimo" (fcacfc4
+ * css/style.css). Every section shares the full container; prose sections
+ * keep a left-aligned 680px reading column (`.project-column`). Recognition,
+ * team and related projects are the bg-2 bands (they alternate with white,
+ * never two in a row; the Callout turns white on its tinted band), and the
+ * platform link is the global ink pill (`.btn .btn-primary`) in her
+ * `.program-actions` row. On this Spanish page both platform links open
+ * the platform's Spanish edition (`platformUrl`).
  */
 import { getEntry, getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -36,6 +45,11 @@ if (!project) {
   throw new Error('VIGÍA project entry missing in src/content/projects/vigia.md');
 }
 const data = project.data;
+
+// The platform's Spanish edition lives at its root. The collection's
+// `externalUrl` is the English edition (index-en.html, used by
+// /en/projects/vigia), so here it only gates whether the platform links show.
+const platformUrl = 'https://vigia-observatorio.github.io/';
 
 // Meta bar chips (KeyFacts component) — type-only, no leading glyph.
 const metaChips = [
@@ -61,7 +75,12 @@ const resourceItems = [
   { label: 'Reconocimiento', value: 'AI Safety Collab 2025' },
 ].filter(Boolean) as { label: string; value: string }[];
 
-// Related project — AI Safety Connect
+// Related project — AI Safety Connect. Its entry has no `badge`, so the card
+// takes the same in-card label as on /projects (label → title).
+const fallbackBadges: Record<string, string> = {
+  'ai-safety-connect': 'Colaboración SPAR',
+};
+
 const allProjects = await getCollection('projects', ({ data: d }: { data: { draft?: boolean } }) => d.draft !== true);
 const related = allProjects
   .filter((p) => (p.data.slug ?? p.slug) !== 'vigia')
@@ -70,7 +89,7 @@ const related = allProjects
     const slug = p.data.slug ?? p.slug;
     return {
       title: p.data.title,
-      badge: p.data.badge,
+      badge: p.data.badge ?? fallbackBadges[slug],
       description: p.data.summary,
       image: p.data.cover,
       href: `/projects/${slug}`,
@@ -109,7 +128,7 @@ const breadcrumb = {
 
   {/* Overview */}
   <section class="section section--base" aria-labelledby="vigia-overview-heading">
-    <div class="container container--narrow">
+    <div class="container project-column">
       <SectionHeading
         eyebrow="Resumen"
         title="¿Qué es VIGÍA?"
@@ -136,8 +155,8 @@ const breadcrumb = {
   </section>
 
   {/* Recognition */}
-  <section class="section section--base" aria-labelledby="vigia-recognition-heading">
-    <div class="container container--narrow">
+  <section class="section section--warm" aria-labelledby="vigia-recognition-heading">
+    <div class="container project-column">
       <SectionHeading
         eyebrow="Reconocimiento"
         title="Special Recognition · AI Safety Collab 2025"
@@ -157,14 +176,17 @@ const breadcrumb = {
 
   {/* Methodology */}
   <section class="section section--base" aria-labelledby="vigia-methodology-heading">
-    <div class="container container--narrow">
+    <div class="container project-column">
       <SectionHeading
         eyebrow="Metodología"
         title="Cómo trabajamos"
-        description="VIGÍA combina rastreo documental, análisis cualitativo y comunicación estructurada."
         id="vigia-methodology-heading"
       />
       <div class="prose">
+        <p>
+          VIGÍA combina rastreo documental, análisis cualitativo y comunicación
+          estructurada.
+        </p>
         <p>
           La plataforma articula tres capas de trabajo: (1) <strong>rastreo
           documental</strong> de adquisiciones, regulaciones, consultas públicas y
@@ -185,8 +207,8 @@ const breadcrumb = {
   </section>
 
   {/* Team */}
-  <section class="section section--base" aria-labelledby="vigia-team-heading">
-    <div class="container container--narrow">
+  <section class="section section--warm" aria-labelledby="vigia-team-heading">
+    <div class="container project-column">
       <SectionHeading
         eyebrow="Equipo"
         title="Quiénes lo construyen"
@@ -199,7 +221,7 @@ const breadcrumb = {
 
   {/* Resources */}
   <section class="section section--base" aria-labelledby="vigia-resources-heading">
-    <div class="container container--narrow">
+    <div class="container project-column">
       <SectionHeading
         eyebrow="Recursos"
         title="Enlaces y referencias"
@@ -208,19 +230,19 @@ const breadcrumb = {
       <FactList items={resourceItems} />
 
       {data.externalUrl && (
-        <p class="vigia-link">
-          <a class="vigia-link__cta" href={data.externalUrl} target="_blank" rel="noopener noreferrer">
+        <div class="program-actions">
+          <a class="btn btn-primary" href={platformUrl} target="_blank" rel="noopener noreferrer">
             Visitar la plataforma VIGÍA
             <span aria-hidden="true">↗</span>
           </a>
-        </p>
+        </div>
       )}
     </div>
   </section>
 
   {/* Related projects */}
   {related.length > 0 && (
-    <section class="section section--base" aria-labelledby="vigia-related-heading">
+    <section class="section section--warm" aria-labelledby="vigia-related-heading">
       <div class="container">
         <SectionHeading
           eyebrow="Sigue explorando"
@@ -246,7 +268,7 @@ const breadcrumb = {
     title="Conoce VIGÍA en vivo"
     description="La plataforma se actualiza con cada nuevo caso documentado. Visítala para explorar el observatorio."
     ctaLabel="Ir a vigia-observatorio.github.io"
-    ctaHref={data.externalUrl ?? 'https://vigia-observatorio.github.io/index-en.html'}
+    ctaHref={platformUrl}
     ctaExternal={true}
   />
 
@@ -254,12 +276,31 @@ const breadcrumb = {
 </BaseLayout>
 
 <style>
+  /* Reading column: the body of each prose section keeps her editorial
+     measure (680px, the section-description width), left-aligned in the
+     full container so every heading shares the header's left edge. As in
+     her CSS, the measure sits on the elements, not on the container.
+     `:global` reaches the root of child components (SectionHeading,
+     Callout, FactList). */
+  .project-column > :global(*) {
+    max-width: var(--measure-desc);
+  }
+
+  /* The column's last block must not add to the section's bottom padding
+     (e.g. the Callout's own block margin), so every band stays even. */
+  .project-column > :global(:last-child) {
+    margin-bottom: 0;
+  }
+
+  /* Long-form copy: her .content-card paragraphs (ink-2, lh 1.7), with
+     bold lead-ins in ink. `pretty` keeps a lone word off the last line, as
+     in SectionHeading descriptions. */
   .prose p {
-    font-family: var(--font-body);
     font-size: var(--fs-body);
-    line-height: var(--lh-relaxed);
-    color: var(--color-text-primary);
-    margin: 0 0 var(--space-4);
+    line-height: var(--lh-loose);
+    text-wrap: pretty;
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-3);
   }
 
   .prose p:last-child {
@@ -267,61 +308,20 @@ const breadcrumb = {
   }
 
   .prose strong {
-    color: var(--color-text-heading);
+    color: var(--color-text-primary);
     font-weight: var(--fw-semibold);
   }
 
-  .vigia-link {
-    margin: var(--space-6) 0 0;
-  }
-
-  .vigia-link__cta {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-3) var(--space-6);
-    background: var(--color-cta-bg);
-    color: var(--color-cta-text);
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    font-weight: var(--fw-semibold);
-    text-decoration: none;
-    letter-spacing: var(--ls-wide);
-    border-radius: var(--radius-pill);
-    box-shadow: var(--shadow-cta);
-    transition:
-      background var(--transition),
-      transform var(--transition),
-      box-shadow var(--transition);
-  }
-
-  .vigia-link__cta:hover,
-  .vigia-link__cta:focus-visible {
-    background: var(--color-cta-bg-hover);
-    color: var(--color-cta-text);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-  }
-
+  /* Related projects: her 2-up card grid, 18px gap, one column up to 768px. */
   .vigia-related-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-7);
+    gap: var(--gap-grid);
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     .vigia-related-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-8);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .vigia-link__cta {
-      transition: none;
-    }
-    .vigia-link__cta:hover {
-      transform: none;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 </style>

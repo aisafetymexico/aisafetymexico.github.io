@@ -3,8 +3,11 @@
  * /en/projects/ai-safety-connect — AI Safety Connect deep-dive (English locale).
  *
  * English sibling of src/pages/projects/ai-safety-connect.astro. Mirrors
- * structure 1:1 per docs/I18N-ARCHITECTURE.md §2. The PDF embed pattern is
- * preserved verbatim — only labels change to English.
+ * structure 1:1 per docs/I18N-ARCHITECTURE.md §2, design included (reading
+ * column, full-width paper block whose viewer shows from 769px, bg-2
+ * methodology, team and related-project bands). The PDF embed pattern is
+ * preserved verbatim — only labels change to English, and the related
+ * card's cover alt comes from `enCoverAlts`.
  */
 import { getEntry, getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
@@ -53,10 +56,14 @@ const methodologyItems = [
   },
 ];
 
-// Role translations for the international SPAR team.
+// Role translations for the international SPAR team. Both Spanish spellings
+// map, so the rows read «Co-researcher» before and after the collection
+// moves to the RAE «Coinvestigador».
 const roleEn: Record<string, string> = {
   'Co-investigador': 'Co-researcher',
   'Co-investigadora': 'Co-researcher',
+  'Coinvestigador': 'Co-researcher',
+  'Coinvestigadora': 'Co-researcher',
 };
 
 const teamItems = data.team.map((person) => ({
@@ -70,6 +77,12 @@ const enRelatedSummaries: Record<string, string> = {
     'A platform for analyzing AI governance and digital sovereignty in Mexico, born out of the AI Governance course in collaboration with ENAIS.',
 };
 
+// English cover alts: the collection's alts are Spanish.
+const enCoverAlts: Record<string, string> = {
+  vigia: 'El Caracol, the Maya observatory at Chichén Itzá, at dusk',
+  'ai-safety-connect': 'AI Safety Connect project poster',
+};
+
 const allProjects = await getCollection('projects', ({ data: d }: { data: { draft?: boolean } }) => d.draft !== true);
 const related = allProjects
   .filter((p) => (p.data.slug ?? p.slug) !== 'ai-safety-connect')
@@ -80,7 +93,7 @@ const related = allProjects
       title: p.data.title,
       badge: p.data.badge,
       description: enRelatedSummaries[slug] ?? p.data.summary,
-      image: p.data.cover,
+      image: p.data.cover && { ...p.data.cover, alt: enCoverAlts[slug] ?? p.data.cover.alt },
       href: `/en/projects/${slug}`,
     };
   });
@@ -119,7 +132,7 @@ const breadcrumb = {
 
   {/* Overview */}
   <section class="section section--base" aria-labelledby="aisc-overview-heading">
-    <div class="container container--narrow">
+    <div class="container project-column">
       <SectionHeading
         eyebrow="Summary"
         title="What is AI Safety Connect?"
@@ -153,8 +166,8 @@ const breadcrumb = {
   </section>
 
   {/* Methodology */}
-  <section class="section section--base" aria-labelledby="aisc-methodology-heading">
-    <div class="container container--narrow">
+  <section class="section section--warm" aria-labelledby="aisc-methodology-heading">
+    <div class="container project-column">
       <SectionHeading
         eyebrow="Methodology"
         title="How it is built"
@@ -166,8 +179,8 @@ const breadcrumb = {
   </section>
 
   {/* Paper / Publication */}
-  <section class="section section--base section--edge-accent" aria-labelledby="aisc-paper-heading">
-    <div class="container container--narrow">
+  <section class="section section--base" aria-labelledby="aisc-paper-heading">
+    <div class="container">
       <SectionHeading
         eyebrow="Publication"
         title="Final report"
@@ -175,9 +188,9 @@ const breadcrumb = {
         id="aisc-paper-heading"
       />
 
-      <div class="aisc-paper-actions">
+      <div class="program-actions aisc-paper-actions">
         <a
-          class="aisc-paper-cta aisc-paper-cta--primary"
+          class="btn btn-primary"
           href={paperPath}
           target="_blank"
           rel="noopener noreferrer"
@@ -186,7 +199,7 @@ const breadcrumb = {
           <span aria-hidden="true">↗</span>
         </a>
         <a
-          class="aisc-paper-cta aisc-paper-cta--secondary"
+          class="btn btn-outline"
           href={paperPath}
           download
         >
@@ -195,7 +208,7 @@ const breadcrumb = {
         </a>
       </div>
 
-      <div class="aisc-pdf-viewer" aria-label="AI Safety Connect final report viewer">
+      <div class="aisc-pdf-viewer" role="group" aria-label="AI Safety Connect final report viewer">
         <object
           data={paperPath}
           type="application/pdf"
@@ -204,9 +217,7 @@ const breadcrumb = {
         >
           <p class="aisc-pdf-fallback">
             Your browser cannot display the embedded PDF.
-            <a href={paperPath} target="_blank" rel="noopener noreferrer">
-              Open the report in a new tab
-            </a>.
+            <a class="inline-link" href={paperPath} target="_blank" rel="noopener noreferrer">Open the report in a new tab</a>.
           </p>
         </object>
       </div>
@@ -214,8 +225,8 @@ const breadcrumb = {
   </section>
 
   {/* Team */}
-  <section class="section section--base" aria-labelledby="aisc-team-heading">
-    <div class="container container--narrow">
+  <section class="section section--warm" aria-labelledby="aisc-team-heading">
+    <div class="container project-column">
       <SectionHeading
         eyebrow="International team"
         title="Co-researchers"
@@ -228,7 +239,7 @@ const breadcrumb = {
 
   {/* Acknowledgements */}
   <section class="section section--base" aria-labelledby="aisc-ack-heading">
-    <div class="container container--narrow">
+    <div class="container project-column">
       <SectionHeading
         eyebrow="Acknowledgements"
         title="Programs and partners"
@@ -254,7 +265,7 @@ const breadcrumb = {
 
   {/* Related projects */}
   {related.length > 0 && (
-    <section class="section section--base" aria-labelledby="aisc-related-heading">
+    <section class="section section--warm" aria-labelledby="aisc-related-heading">
       <div class="container">
         <SectionHeading
           eyebrow="Keep exploring"
@@ -289,12 +300,31 @@ const breadcrumb = {
 </BaseLayout>
 
 <style>
+  /* Reading column: the body of each prose section keeps her editorial
+     measure (680px, the section-description width), left-aligned in the
+     full container so every heading shares the header's left edge. As in
+     her CSS, the measure sits on the elements, not on the container.
+     `:global` reaches the root of child components (SectionHeading,
+     Callout, FactList). */
+  .project-column > :global(*) {
+    max-width: var(--measure-desc);
+  }
+
+  /* The column's last block must not add to the section's bottom padding
+     (e.g. the Callout's own block margin), so every band stays even. */
+  .project-column > :global(:last-child) {
+    margin-bottom: 0;
+  }
+
+  /* Long-form copy: her .content-card paragraphs (ink-2, lh 1.7), with
+     bold lead-ins in ink. `pretty` keeps a lone word off the last line, as
+     in SectionHeading descriptions. */
   .prose p {
-    font-family: var(--font-body);
     font-size: var(--fs-body);
-    line-height: var(--lh-relaxed);
-    color: var(--color-text-primary);
-    margin: 0 0 var(--space-4);
+    line-height: var(--lh-loose);
+    text-wrap: pretty;
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-3);
   }
 
   .prose p:last-child {
@@ -302,119 +332,65 @@ const breadcrumb = {
   }
 
   .prose strong {
-    color: var(--color-text-heading);
+    color: var(--color-text-primary);
     font-weight: var(--fw-semibold);
   }
 
-  /* Paper actions */
+  /* Paper actions: her pill pair (ink primary + outline). The global
+     .program-actions supplies the row and the full-width stack on phones;
+     sitting right under the heading, it needs no top margin. */
   .aisc-paper-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    margin-bottom: var(--space-7);
+    margin-top: 0;
   }
 
-  .aisc-paper-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-3) var(--space-6);
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    font-weight: var(--fw-semibold);
-    text-decoration: none;
-    letter-spacing: var(--ls-wide);
-    border-radius: var(--radius-pill);
-    transition:
-      background var(--transition),
-      color var(--transition),
-      transform var(--transition),
-      box-shadow var(--transition);
-  }
-
-  .aisc-paper-cta--primary {
-    background: var(--color-cta-bg);
-    color: var(--color-cta-text);
-    box-shadow: var(--shadow-cta);
-  }
-  .aisc-paper-cta--primary:hover,
-  .aisc-paper-cta--primary:focus-visible {
-    background: var(--color-cta-bg-hover);
-    color: var(--color-cta-text);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .aisc-paper-cta--secondary {
-    background: transparent;
-    color: var(--color-link);
-    border: 1px solid var(--color-border-accent);
-  }
-  .aisc-paper-cta--secondary:hover,
-  .aisc-paper-cta--secondary:focus-visible {
-    background: var(--color-accent-soft);
-    color: var(--color-link-hover);
-    transform: translateY(-2px);
-  }
-
-  /* PDF viewer */
+  /* PDF viewer — her .pdf-viewer: white, 1px hairline, 8px radius, no
+     shadow, 16px under the actions. It shows only from 769px, where desktop
+     browsers embed the PDF. Phone browsers (Android Chrome, Samsung
+     Internet, the WhatsApp/Instagram/Facebook in-app browsers) cannot: they
+     would show an empty frame whose fallback line repeats the pills. So on
+     phones the two pills above end the block; they open and download the
+     report. The object's 800px height is set here, not as a min-height; its
+     `height="800"` attribute is only the no-CSS fallback. */
   .aisc-pdf-viewer {
+    display: none;
     width: 100%;
-    background: var(--color-bg-warm);
+    margin-top: var(--space-4);
+    background: var(--color-bg-base);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
   }
 
-  .aisc-pdf-viewer object {
-    display: block;
-    width: 100%;
-    min-height: 480px;
-  }
+  @media (min-width: 769px) {
+    .aisc-pdf-viewer {
+      display: block;
+    }
 
-  @media (min-width: 768px) {
     .aisc-pdf-viewer object {
-      min-height: 800px;
+      display: block;
+      width: 100%;
+      height: 800px;
     }
   }
 
+  /* Inside the viewer (769px and up), shown only when the browser cannot
+     embed the PDF; its link is the global .inline-link. */
   .aisc-pdf-fallback {
     padding: var(--space-6);
     margin: 0;
-    font-family: var(--font-body);
     color: var(--color-text-secondary);
   }
 
-  .aisc-pdf-fallback a {
-    color: var(--color-link);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-  .aisc-pdf-fallback a:hover {
-    color: var(--color-link-hover);
-  }
-
-  /* Related grid */
+  /* Related projects: her 2-up card grid, 18px gap, one column up to 768px. */
   .aisc-related-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-7);
+    gap: var(--gap-grid);
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     .aisc-related-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-8);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .aisc-paper-cta {
-      transition: none;
-    }
-    .aisc-paper-cta:hover {
-      transform: none;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 </style>

@@ -5,6 +5,9 @@
  * Spec:
  *  - docs/DESIGN-SYSTEM.md §6.5 (`ContactForm.astro`).
  *  - INSPIRATION.md A8 (Get Involved page = solid brand band, single CTA).
+ *  - Design: her filter-field controls and eyebrow labels,
+ *    the ink pill submit (`.btn .btn-primary`), and a clay-wash error note.
+ *    No route renders it today.
  *
  * A11y guarantees:
  *  - Every <input> has a <label for=…>.
@@ -142,7 +145,7 @@ const formId = id || `contact-form-${Math.random().toString(36).slice(2, 9)}`;
   </div>
 
   <div class="contact-form__actions">
-    <button type="submit" class="contact-form__submit" data-contact-submit>
+    <button type="submit" class="contact-form__submit btn btn-primary" data-contact-submit>
       <span data-submit-label>Enviar mensaje</span>
       <span data-submit-loading hidden>Enviando…</span>
     </button>
@@ -300,19 +303,23 @@ const formId = id || `contact-form-${Math.random().toString(36).slice(2, 9)}`;
 </script>
 
 <style>
+  /* Her form controls (from her .filter-field, fcacfc4
+     css/style.css L1365–1437): eyebrow labels, white fields with a
+     hairline and an 8px radius, ink border on focus (plus the global blue
+     ring), and the ink pill submit (`.btn .btn-primary`). No glow. */
   .contact-form {
     width: 100%;
-    max-width: var(--container-narrow, 800px);
+    max-width: var(--container-narrow);
     margin-inline: auto;
-    font-family: var(--font-body, 'Inter', sans-serif);
+    font-family: var(--font-body);
   }
 
   .contact-form__grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-5, 20px);
+    gap: var(--space-5);
   }
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     .contact-form__grid { grid-template-columns: 1fr 1fr; }
     .contact-form__field--full { grid-column: 1 / -1; }
   }
@@ -320,59 +327,62 @@ const formId = id || `contact-form-${Math.random().toString(36).slice(2, 9)}`;
   .contact-form__field {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2, 8px);
+    gap: 7px;
   }
 
+  /* Her eyebrow family (.7rem / 600 / .14em / uppercase / muted). */
   .contact-form__label {
-    font-size: var(--fs-small, 0.92rem);
-    font-weight: var(--fw-semibold, 600);
-    color: var(--color-text-heading);
-    letter-spacing: var(--ls-wide, 0.3px);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-label);
+    line-height: var(--lh-normal);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
   }
 
   .contact-form__required {
     color: var(--color-accent);
-    font-weight: var(--fw-bold, 700);
+    font-weight: var(--fw-semibold);
   }
 
   .contact-form__input {
+    -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    padding: var(--space-3, 12px) var(--space-4, 16px);
-    background: var(--color-bg-elevated);
+    padding: 11px 13px;
+    background-color: var(--color-bg-base);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm, 6px);
+    border-radius: var(--radius);
     color: var(--color-text-primary);
     font-family: inherit;
-    font-size: var(--fs-body, 1rem);
-    line-height: var(--lh-normal, 1.5);
-    transition: border-color var(--transition, 0.25s ease), box-shadow var(--transition, 0.25s ease);
+    font-size: 0.92rem;
+    line-height: 1.25;
+    transition: border-color var(--transition);
   }
-  .contact-form__input:hover {
-    border-color: var(--color-accent);
-  }
-  .contact-form__input:focus-visible,
   .contact-form__input:focus {
-    outline: none;
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px var(--color-border-accent);
+    border-color: var(--color-text-primary);
   }
-  .contact-form__input:invalid:not(:placeholder-shown):not(:focus) {
-    border-color: var(--code-orange);
+  /* :user-invalid waits for the person to interact, so untouched required
+     fields don't load already marked as errors. */
+  .contact-form__input:user-invalid {
+    border-color: var(--color-accent);
   }
 
   .contact-form__textarea {
     min-height: 7rem;
+    line-height: var(--lh-normal);
     resize: vertical;
   }
 
+  /* Her chevron (stroke = ink-3, a non-text glyph). Inline SVG can't read
+     CSS variables, hence the literal. */
   .contact-form__select {
-    /* Inline SVG can't consume CSS variables; primitive hex matches --peach-500 (color-accent). */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 5l5 6 5-6' fill='none' stroke='%23D49E86' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238E8E98' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 14px center;
-    background-size: 14px;
-    padding-right: 40px;
+    background-position: right 11px center;
+    background-size: 15px;
+    padding-right: 34px;
+    cursor: pointer;
   }
 
   /* Honeypot — visually + a11y hidden but still focusable for bots that ignore tabindex */
@@ -385,53 +395,35 @@ const formId = id || `contact-form-${Math.random().toString(36).slice(2, 9)}`;
   }
 
   .contact-form__actions {
-    margin-top: var(--space-6, 24px);
+    margin-top: var(--space-6);
     display: flex;
     justify-content: flex-start;
   }
 
-  .contact-form__submit {
-    appearance: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-3, 12px) var(--space-7, 28px);
-    border: none;
-    border-radius: var(--radius-pill, 999px);
-    background: var(--color-cta-bg);
-    color: var(--color-cta-text);
-    font-family: var(--font-body, 'Inter', sans-serif);
-    font-size: var(--fs-body, 1rem);
-    font-weight: var(--fw-semibold, 600);
-    cursor: pointer;
-    transition: background var(--transition, 0.25s ease), transform var(--transition, 0.25s ease);
-  }
-  .contact-form__submit:hover {
-    background: var(--color-cta-bg-hover);
-  }
-  .contact-form__submit:focus-visible {
-    outline: 2px solid var(--color-focus-ring);
-    outline-offset: 3px;
-  }
+  /* Look comes from the global `.btn .btn-primary`; only the busy state is
+     local. */
   .contact-form__submit:disabled {
     opacity: 0.7;
     cursor: progress;
   }
 
   .contact-form__status {
-    margin-top: var(--space-4, 16px);
+    margin-top: var(--space-4);
+    font-size: var(--fs-small);
     color: var(--color-accent);
-    font-weight: var(--fw-semibold, 600);
+    font-weight: var(--fw-semibold);
     min-height: 1.2em;
   }
   .contact-form__status:empty { display: none; }
 
+  /* Error note: clay-dark on clay-wash with the clay-line hairline. */
   .contact-form__error {
-    margin-top: var(--space-3, 12px);
-    padding: var(--space-3, 12px) var(--space-4, 16px);
+    margin-top: var(--space-3);
+    padding: 12px 16px;
+    font-size: var(--fs-small);
+    color: var(--color-accent);
     background: var(--color-accent-soft);
-    border-left: 3px solid var(--code-orange);
-    color: var(--code-orange);
-    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--clay-line);
+    border-radius: var(--radius);
   }
 </style>

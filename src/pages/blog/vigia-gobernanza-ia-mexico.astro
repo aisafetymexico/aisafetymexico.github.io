@@ -6,10 +6,12 @@
  * riesgos de la IA en el discurso oficial mexicano.
  *
  * El cuerpo del texto se mantiene verbatim respecto del original; solo se
- * remapean los estilos a los tokens del design system (docs/PALETTE-MAPPING.md):
- * fondo bg-base, texto cream, peach-500 en enlaces y cifras, sky-300 en
- * eyebrows. Playfair para titulares, Inter para cuerpo, monoespaciada
- * reservada a cifras, terminos lexicos y etiquetas.
+ * remapean los estilos a los tokens del design system ("Editorial mínimo"):
+ * fondo blanco, cuerpo en tinta a una medida de
+ * ~680px, Inter para titulares y cuerpo, cajas en bg-2 con filete de 1px,
+ * clay-dark en enlaces y en el acento del diagrama, etiquetas en gris
+ * apagado (AA). Monoespaciada reservada a cifras, terminos lexicos y
+ * etiquetas.
  */
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -80,7 +82,7 @@ const breadcrumb = [
   <p class="epigraph">Lo que no se menciona no existe.</p>
 
   <div class="defbox">
-    <h4>Términos importantes</h4>
+    <h3>Términos importantes</h3>
     <dl>
       <dt>Pipeline</dt>
       <dd>La estrategia que proponemos, dividida en pasos, para destrabar el cuello de botella y con ello acelerar la Gobernanza de la IA.</dd>
@@ -141,7 +143,7 @@ const breadcrumb = [
   <p>Un LLM (Claude Opus 4.8) lee cada ejemplar completo, identifica menciones explícitas e implícitas de uso de IA y clasifica cada una contra las 15 categorías del Apéndice A con un nivel de severidad. Por cada hallazgo se emite el fragmento textual original, su ubicación en el documento, el análisis de relevancia, las categorías de riesgo con su severidad y una o más recomendaciones. Los pasos 5 y 6 quedan fuera del alcance de esta iteración. El observatorio con los resultados de esta implementación está publicado en <a href="https://vigia-3-0-21536470668.us-central1.run.app">vigia-3-0.us-central1.run.app</a>.</p>
 
   <figure class="figure wide">
-    <div class="figure__frame">
+    <div class="figure__frame" tabindex="0" role="region" aria-labelledby="fig-1-title">
       <svg viewBox="0 0 920 440" role="img"
            aria-label="Arquitectura del pipeline VIGIA. El Diario Oficial de la Federación alimenta a un modelo de lenguaje que detecta menciones de uso de IA y clasifica su riesgo. El resultado es un hallazgo con fragmento, categoría de riesgo, severidad y recomendación. Los reportes por audiencia y la capa de monitoreo del discurso público quedan previstos pero no implementados en esta iteración."
            class="diagram">
@@ -150,7 +152,7 @@ const breadcrumb = [
             <path d="M0,1 L9,5 L0,9 z" fill="currentColor"></path>
           </marker>
           <marker id="ar-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M0,1 L9,5 L0,9 z" fill="var(--accent)"></path>
+            <path d="M0,1 L9,5 L0,9 z" class="d-arrowhead--accent" fill="var(--color-accent)"></path>
           </marker>
         </defs>
 
@@ -229,8 +231,9 @@ const breadcrumb = [
         <text x="364" y="414" class="d-legend">previsto o extensible</text>
       </svg>
     </div>
+    <p class="figure__hint" aria-hidden="true">Desliza para ver el diagrama completo →</p>
     <figcaption>
-      <strong>Figura 1. Arquitectura de alto nivel del pipeline.</strong> Nótese que en este caso representamos la implementación para México, VIGIA, donde se utilizó el DOF como único documento. «Doc N» indica que se pueden añadir más documentos al pipeline, lo mismo para los reportes. Que el léxico vuelva al discurso oficial, marcado en color, es la señal de que el pipeline estaría funcionando.
+      <strong id="fig-1-title">Figura 1. Arquitectura de alto nivel del pipeline.</strong> Nótese que en este caso representamos la implementación para México, VIGIA, donde se utilizó el DOF como único documento. «Doc N» indica que se pueden añadir más documentos al pipeline, lo mismo para los reportes. Que el léxico vuelva al discurso oficial, marcado en color, es la señal de que el pipeline estaría funcionando.
     </figcaption>
   </figure>
 </section>
@@ -396,9 +399,9 @@ const breadcrumb = [
   <p>Al verificar las fuentes para este texto encontramos que ninguna de las dos es una taxonomía formal, y conviene decirlo antes de la tabla. El Anexo A británico no contiene una tabla de categorías con nombres y definiciones: su párrafo 85 es una lista de ocho oraciones sueltas y sin etiqueta, precedida de la advertencia de que no es exhaustiva, y su párrafo 89 enumera aparte tres vías hacia riesgo catastrófico. Por su parte, el texto de BlueDot es una entrada de blog pedagógica con trece encabezados de riesgo más un cajón de riesgos desconocidos, sin definiciones formales. Las etiquetas R1 a R15 son nuestras y la correspondencia con las fuentes es de inspiración y no de cita.</p>
 
   <div class="tablewrap wide">
-    <table>
+    <table class="cats">
       <caption>Categorías R1 a R15</caption>
-      <thead><tr><th></th><th>Categoría</th><th>Qué cubre</th><th class="n-col">Pares</th></tr></thead>
+      <thead><tr><th><span class="visually-hidden">Clave</span></th><th>Categoría</th><th>Qué cubre</th><th class="n-col">Pares</th></tr></thead>
       <tbody>
         <tr><td class="rid">R1</td><td>Fallos y errores</td><td>El sistema se equivoca o se comporta de forma no prevista y la decisión errónea produce daño.</td><td class="n-col">233</td></tr>
         <tr><td class="rid">R2</td><td>Discriminación y sesgo</td><td>El sistema reproduce o amplifica desventajas sobre grupos determinados.</td><td class="n-col">301</td></tr>
@@ -493,19 +496,26 @@ const breadcrumb = [
 
 <style>
   /* ============================================================
-   * Entrada de blog — long-form.
-   * Todo el color sale de los tokens semánticos (§1.3 de tokens.css):
-   * fondo bg-base, texto cream, acento peach-500 en enlaces y cifras
-   * destacadas, sky-300 en eyebrows. Sin colores literales salvo la
-   * monoespaciada, que no tiene token en el sistema.
+   * Entrada de blog — long-form, "Editorial mínimo". Inter en todo, medida de
+   * lectura de 680px, cuerpo en
+   * tinta (ink) a 1.7. Cajas (índice, definiciones, figura, cifras) en bg-2
+   * con filete de 1px y 8px de radio; enlaces en el texto como su
+   * `.inline-link`. Todo el color sale de los tokens semánticos; la
+   * monoespaciada (cifras, términos, etiquetas) no tiene token en el sistema.
    * ============================================================ */
 
   .post {
-    --measure: 44rem;
+    --measure: var(--measure-desc);
     --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'IBM Plex Mono', monospace;
-    padding-inline: var(--container-padding-md, 20px);
-    padding-block: var(--space-8) var(--space-16);
+    padding-inline: var(--container-padding);
+    padding-block: var(--space-8) var(--section-pad);
     color: var(--color-text-primary);
+  }
+
+  @media (min-width: 481px) {
+    .post {
+      padding-inline: var(--container-padding-md);
+    }
   }
 
   .post__crumb,
@@ -517,26 +527,31 @@ const breadcrumb = [
     margin-inline: auto;
   }
 
+  /* Los destinos de ancla (secciones, referencias) libran el header fijo. */
+  .post__body :global([id]) {
+    scroll-margin-top: var(--scroll-offset);
+  }
+
   /* ---------- cabecera ---------- */
   .post__masthead { padding-block: var(--space-8) var(--space-9); }
 
   .post__kicker {
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-label);
     letter-spacing: var(--ls-uppercase);
     text-transform: uppercase;
-    color: var(--color-accent-secondary);
-    margin: 0 0 var(--space-5);
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-4);
   }
 
+  /* Su título de página: Inter 500, -0.03em, a la escala --fs-h1. */
   .post__title {
     font-family: var(--font-display);
-    /* Un paso por debajo de --fs-h1: los titulos de entrada son mas largos
-       que los de page-hero y a 72px ocupan cuatro lineas. */
-    font-size: clamp(2.00rem, 1.35rem + 2.60vw, 3.20rem);
-    font-weight: var(--fw-bold);
-    line-height: var(--lh-tight);
-    letter-spacing: var(--ls-tight);
+    font-size: var(--fs-h1);
+    font-weight: var(--fw-display);
+    line-height: 1.18;
+    letter-spacing: var(--ls-display);
     color: var(--color-text-heading);
     text-wrap: balance;
     margin: 0 0 var(--space-6);
@@ -552,7 +567,7 @@ const breadcrumb = [
 
   /* ---------- índice ---------- */
   .post-toc {
-    background: var(--color-bg-elevated);
+    background: var(--color-bg-warm);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     padding: var(--space-5) var(--space-6) var(--space-6);
@@ -561,7 +576,7 @@ const breadcrumb = [
   .post-toc__heading {
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
-    font-weight: var(--fw-semibold);
+    font-weight: var(--fw-label);
     letter-spacing: var(--ls-uppercase);
     text-transform: uppercase;
     color: var(--color-text-muted);
@@ -576,15 +591,14 @@ const breadcrumb = [
     break-inside: avoid;
     font-size: var(--fs-small);
   }
+  /* Lista de navegación, no texto corrido: enlaces ink-2 sin el filete de
+     los enlaces en el texto (base.css se lo pone a los <a> sin clase en <li>). */
   .post-toc :global(a) {
     color: var(--color-text-secondary);
-    text-decoration: none;
+    font-weight: var(--fw-regular);
+    border-bottom: 0;
   }
-  .post-toc :global(a:hover) {
-    color: var(--color-link-hover);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
+  .post-toc :global(a:hover) { color: var(--color-link-hover); }
   .post-toc :global(.tn) {
     font-family: var(--mono);
     font-size: 0.78em;
@@ -597,15 +611,15 @@ const breadcrumb = [
   .post__body {
     font-family: var(--font-body);
     font-size: var(--fs-body);
-    line-height: var(--lh-relaxed);
+    line-height: var(--lh-loose);
   }
 
   .post__body :global(h2) {
     font-family: var(--font-display);
     font-size: var(--fs-h2);
-    font-weight: var(--fw-bold);
+    font-weight: var(--fw-heading);
     line-height: var(--lh-snug);
-    letter-spacing: var(--ls-snug);
+    letter-spacing: var(--ls-heading);
     color: var(--color-text-heading);
     text-wrap: balance;
     margin: var(--space-14) 0 var(--space-5);
@@ -619,7 +633,7 @@ const breadcrumb = [
     font-size: 0.72rem;
     font-weight: var(--fw-regular);
     letter-spacing: 0.04em;
-    color: var(--color-accent-secondary);
+    color: var(--color-text-muted);
     margin-bottom: var(--space-2);
   }
   @media (min-width: 68rem) {
@@ -630,9 +644,10 @@ const breadcrumb = [
 
   .post__body :global(h3) {
     font-family: var(--font-display);
-    font-size: var(--fs-h4);
-    font-weight: var(--fw-bold);
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
     line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
     color: var(--color-text-heading);
     margin: var(--space-9) 0 var(--space-3);
   }
@@ -640,23 +655,41 @@ const breadcrumb = [
   .post__body :global(h4) {
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
-    font-weight: var(--fw-semibold);
+    font-weight: var(--fw-label);
     letter-spacing: var(--ls-uppercase);
     text-transform: uppercase;
     color: var(--color-text-muted);
     margin: var(--space-7) 0 var(--space-3);
   }
 
-  .post__body :global(p) { margin: 0 0 var(--space-5); text-wrap: pretty; }
-  .post__body :global(a) {
-    color: var(--color-link);
-    text-underline-offset: 2px;
-    text-decoration-thickness: 1px;
+  .post__body :global(p) {
+    margin: 0 0 var(--space-5);
+    line-height: var(--lh-loose);
+    text-wrap: pretty;
   }
-  .post__body :global(a:hover) { color: var(--color-link-hover); }
+
+  /* Enlaces en el texto: su `.inline-link` (clay-dark 500 sobre un filete
+     que se vuelve clay al pasar el cursor), para no depender solo del color.
+     Las URL largas se parten en vez de desbordar (texto al 200 % en móvil). */
+  .post__body :global(a) {
+    color: var(--color-link-inline);
+    font-weight: var(--fw-medium);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-link-underline);
+    overflow-wrap: anywhere;
+    transition: color var(--transition), border-color var(--transition);
+  }
+  .post__body :global(a:hover) {
+    color: var(--color-link-inline);
+    border-bottom-color: var(--color-link-underline-hover);
+  }
   .post__body :global(strong) { font-weight: var(--fw-semibold); color: var(--color-text-primary); }
+  /* base.css quita las viñetas en todo el sitio; aquí las listas las
+     conservan (los pasos de §3 se citan por número). */
   .post__body :global(ul),
   .post__body :global(ol) { margin: 0 0 var(--space-5); padding-left: var(--space-6); }
+  .post__body :global(ul) { list-style: disc; }
+  .post__body :global(ol) { list-style: decimal; }
   .post__body :global(li) { margin-bottom: var(--space-2); }
   .post__body :global(li::marker) { color: var(--color-text-muted); }
 
@@ -669,8 +702,8 @@ const breadcrumb = [
   .post__body :global(.term) {
     font-family: var(--mono);
     font-size: 0.86em;
-    background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border);
+    background: var(--color-bg-warm);
+    border: 1px solid var(--color-border-soft);
     border-radius: var(--radius-xs);
     padding: 0.06em 0.34em;
     white-space: nowrap;
@@ -680,26 +713,32 @@ const breadcrumb = [
   .post__body :global(.epigraph) {
     margin: 0 0 var(--space-7);
     padding-left: var(--space-4);
-    border-left: 2px solid var(--color-accent);
-    font-family: var(--font-display);
+    border-left: 2px solid var(--color-accent-decor);
+    font-family: var(--font-body);
     font-size: var(--fs-lead);
     line-height: var(--lh-normal);
-    color: var(--color-text-primary);
+    color: var(--color-text-secondary);
   }
 
   /* ---------- cita textual del DOF ---------- */
   .post__body :global(.gazette) {
     margin: var(--space-6) 0;
     padding: var(--space-4) var(--space-5);
-    background: var(--color-bg-elevated);
+    background: var(--color-bg-warm);
     border: 1px solid var(--color-border);
-    border-left: 2px solid var(--color-accent-secondary);
+    border-left: 2px solid var(--blue-soft);
     border-radius: var(--radius-sm);
     font-size: var(--fs-small);
     line-height: var(--lh-normal);
     color: var(--color-text-secondary);
   }
-  .post__body :global(.gazette p) { margin: 0; }
+  /* La cita toma el tamaño y el color de la caja, no los del <p> global. */
+  .post__body :global(.gazette p) {
+    margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+  }
   .post__body :global(.gazette .src) {
     display: block;
     font-family: var(--mono);
@@ -722,10 +761,11 @@ const breadcrumb = [
   .post__body :global(.nota .lbl) {
     display: block;
     font-family: var(--font-body);
-    font-size: 0.66rem;
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-label);
     letter-spacing: var(--ls-uppercase);
     text-transform: uppercase;
-    color: var(--color-accent-secondary);
+    color: var(--color-text-muted);
     margin-bottom: var(--space-1);
   }
   @media (min-width: 82rem) {
@@ -739,13 +779,23 @@ const breadcrumb = [
 
   /* ---------- caja de definiciones ---------- */
   .post__body :global(.defbox) {
-    background: var(--color-bg-elevated);
+    background: var(--color-bg-warm);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     padding: var(--space-5) var(--space-6) var(--space-4);
     margin: var(--space-7) 0;
   }
-  .post__body :global(.defbox h4) { margin-top: 0; color: var(--color-accent-secondary); }
+  /* The box title is an h3 (it follows the section h2) set as an eyebrow. */
+  .post__body :global(.defbox h3) {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-label);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-3);
+  }
   .post__body :global(.defbox dl) { margin: 0; }
   .post__body :global(.defbox dt) {
     font-weight: var(--fw-semibold);
@@ -761,22 +811,48 @@ const breadcrumb = [
   }
 
   /* ---------- bloque ancho ---------- */
+  /* Bloque más ancho que la columna, sobre la rejilla del sitio: la caja de
+     contenido del header en escritorio (1080 menos sus márgenes) y el margen
+     del texto en pantallas menores (18px hasta 480, 24px hasta 1024). Es un
+     centrado estático, no una animación. */
   .post__body :global(.wide) {
-    width: min(var(--container-max), calc(100vw - 2.5rem));
+    width: min(calc(var(--container-max) - 2 * var(--container-padding-md)), calc(100vw - 2 * var(--container-padding)));
     margin-inline: auto;
     position: relative;
     left: 50%;
     transform: translateX(-50%);
   }
+  @media (min-width: 481px) {
+    .post__body :global(.wide) {
+      width: min(calc(var(--container-max) - 2 * var(--container-padding-md)), calc(100vw - 2 * var(--container-padding-md)));
+    }
+  }
 
   /* ---------- figura ---------- */
-  .post__body :global(.figure) { margin: var(--space-9) auto var(--space-10); }
+  .post__body :global(.figure) { margin: var(--space-9) 0 var(--space-10); }
   .post__body :global(.figure__frame) {
-    background: var(--color-bg-elevated);
+    background: var(--color-bg-warm);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     padding: var(--space-5) var(--space-4);
     overflow-x: auto;
+  }
+  /* Hasta 701px el diagrama (620px mínimo) se desplaza dentro del marco:
+     el marco es una región con nombre que se alcanza con el teclado
+     (tabindex) y una pista visible invita a deslizar. El corte de la pista
+     sigue al ancho del bloque `.wide` (100vw − 48px desde 481px). */
+  .post__body :global(.figure__frame:focus-visible) {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+  .post__body :global(.figure__hint) {
+    display: none;
+    margin: 8px 0 0;
+    font-size: var(--fs-caption);
+    color: var(--color-text-muted);
+  }
+  @media (max-width: 701px) {
+    .post__body :global(.figure__hint) { display: block; }
   }
   .post__body :global(.diagram) {
     display: block; width: 100%; height: auto; min-width: 620px;
@@ -791,29 +867,33 @@ const breadcrumb = [
   }
   .post__body :global(figcaption strong) { color: var(--color-text-primary); }
 
-  /* clases del SVG */
+  /* clases del SVG: cajas blancas con trazo ink-2 sobre el marco bg-2; la
+     caja del modelo en bg-3; el acento (paso, bucle) en clay-dark. */
   .post__body :global(.d-box)   { fill: var(--color-bg-base); stroke: var(--color-text-secondary); stroke-width: 1; }
-  .post__body :global(.d-box--fill)  { fill: var(--bg-overlay); }
+  .post__body :global(.d-box--fill)  { fill: var(--color-bg-muted); }
   .post__body :global(.d-box--ghost) { stroke: var(--color-text-muted); stroke-dasharray: 4 3; fill: none; }
-  .post__body :global(.d-title) { font-family: var(--font-display); font-size: 14px; font-weight: 700; fill: var(--color-text-primary); }
-  .post__body :global(.d-title--ghost) { fill: var(--color-text-secondary); font-weight: 400; }
+  .post__body :global(.d-title) { font-family: var(--font-display); font-size: 14px; font-weight: var(--fw-semibold); fill: var(--color-text-primary); }
+  .post__body :global(.d-title--ghost) { fill: var(--color-text-secondary); font-weight: var(--fw-regular); }
   .post__body :global(.d-body)  { font-family: var(--font-body); font-size: 12.5px; fill: var(--color-text-primary); }
   .post__body :global(.d-sub)   { font-family: var(--font-body); font-size: 11.5px; fill: var(--color-text-muted); }
   .post__body :global(.d-num)   { font-family: var(--mono); font-size: 10px; fill: var(--color-text-muted); }
-  .post__body :global(.d-step)  { font-family: var(--mono); font-size: 11px; fill: var(--color-accent); font-weight: 600; }
-  .post__body :global(.d-eyebrow) { font-family: var(--font-body); font-size: 9.5px; letter-spacing: 0.13em; text-transform: uppercase; fill: var(--color-accent-secondary); }
+  .post__body :global(.d-step)  { font-family: var(--mono); font-size: 11px; fill: var(--color-accent); font-weight: var(--fw-semibold); }
+  .post__body :global(.d-eyebrow) { font-family: var(--font-body); font-size: 9.5px; letter-spacing: 0.13em; text-transform: uppercase; fill: var(--color-text-muted); }
   .post__body :global(.d-edge)  { font-family: var(--mono); font-size: 9.5px; fill: var(--color-text-muted); }
   .post__body :global(.d-edge--accent) { fill: var(--color-accent); }
   .post__body :global(.d-legend) { font-family: var(--mono); font-size: 9.5px; fill: var(--color-text-muted); }
   .post__body :global(.d-line)  { stroke: var(--color-text-secondary); stroke-width: 1; fill: none; }
   .post__body :global(.d-line--ghost) { stroke: var(--color-text-muted); stroke-dasharray: 4 3; }
   .post__body :global(.d-loop)  { stroke: var(--color-accent); stroke-width: 1.2; fill: none; stroke-dasharray: 5 3; }
+  .post__body :global(.d-arrowhead--accent) { fill: var(--color-accent); }
   .post__body :global(.d-rule)  { stroke: var(--color-border); stroke-width: 1; }
-  .post__body :global(.d-rule--faint) { stroke: var(--gray-900); }
+  .post__body :global(.d-rule--faint) { stroke: var(--color-border-soft); }
   .post__body :global(.d-dots)  { font-size: 15px; fill: var(--color-text-muted); }
 
   /* ---------- tablas ---------- */
-  .post__body :global(.tablewrap) { overflow-x: auto; margin: var(--space-6) 0 var(--space-3); }
+  /* Filas con filete, sin rellenos ni cebra. 32px hasta el
+     párrafo siguiente. */
+  .post__body :global(.tablewrap) { overflow-x: auto; margin: var(--space-6) 0 var(--space-8); }
   .post__body :global(table) {
     width: 100%;
     border-collapse: collapse;
@@ -824,26 +904,27 @@ const breadcrumb = [
     caption-side: top; text-align: left;
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-label);
     letter-spacing: var(--ls-uppercase);
     text-transform: uppercase;
-    color: var(--color-accent-secondary);
+    color: var(--color-text-muted);
     padding-bottom: var(--space-3);
   }
   .post__body :global(th) {
     text-align: left;
     font-family: var(--font-body);
-    font-size: 0.7rem;
+    font-size: var(--fs-eyebrow);
     font-weight: var(--fw-semibold);
-    letter-spacing: 0.09em;
+    letter-spacing: var(--ls-label);
     text-transform: uppercase;
     color: var(--color-text-muted);
     padding: 0 var(--space-4) var(--space-2) 0;
-    border-bottom: 1px solid var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border);
     white-space: nowrap;
   }
   .post__body :global(td) {
     padding: var(--space-2) var(--space-4) var(--space-2) 0;
-    border-bottom: 1px solid var(--gray-900);
+    border-bottom: 1px solid var(--color-border-soft);
     vertical-align: top;
     color: var(--color-text-secondary);
   }
@@ -855,12 +936,24 @@ const breadcrumb = [
     white-space: nowrap;
     padding-left: var(--space-6);
   }
+  /* Los encabezados llevan la etiqueta en Inter; la
+     monoespaciada queda para las cifras. */
+  .post__body :global(th.n-col) { font-family: var(--font-body); }
+  /* Hasta 360px: menos relleno en las celdas, para que las tablas de tres
+     columnas quepan sin desplazarse de lado. */
+  @media (max-width: 360px) {
+    .post__body :global(th),
+    .post__body :global(td) { padding-right: var(--space-3); }
+    .post__body :global(td:last-child),
+    .post__body :global(th:last-child) { padding-right: 0; }
+    .post__body :global(.n-col) { padding-left: var(--space-3); }
+  }
   .post__body :global(.rid) { font-family: var(--mono); font-size: 0.8rem; color: var(--color-text-muted); }
   .post__body :global(td strong) { color: var(--color-text-primary); }
 
-  /* la tabla del léxico: la ausencia se ve como ausencia */
+  /* la tabla del léxico: la ausencia se ve como ausencia (muted, AA) */
   .post__body :global(.lex .zero td),
-  .post__body :global(.lex .zero .n-col) { color: var(--gray-700); }
+  .post__body :global(.lex .zero .n-col) { color: var(--color-text-muted); }
   .post__body :global(.lex .hit .n-col) { color: var(--color-accent); font-weight: var(--fw-semibold); }
   .post__body :global(.lex .hit .t) { color: var(--color-text-primary); }
   .post__body :global(.lex .t) { font-family: var(--mono); font-size: 0.8rem; }
@@ -868,6 +961,41 @@ const breadcrumb = [
   .post__body :global(.lex td:first-child) { width: 22rem; }
   .post__body :global(.lex th:nth-child(2)),
   .post__body :global(.lex td:nth-child(2)) { width: 5.5rem; }
+
+  /* Hasta 700px (teléfonos y tabletas pequeñas): el léxico y las categorías
+     R1 a R15 se apilan por fila en vez de desplazarse de lado o de estrechar
+     la nota a unas pocas palabras por línea. Cada fila es una rejilla:
+     término y cifra arriba y la nota debajo (léxico); clave, categoría y
+     pares arriba y «qué cubre» debajo (categorías). El tercer encabezado
+     queda solo para lectores de pantalla, porque su columna ya no tiene
+     lugar propio. El corte acompaña al de la pista de la figura (701px). */
+  @media (max-width: 700px) {
+    .post__body :global(.lex th:first-child),
+    .post__body :global(.lex td:first-child) { width: auto; }
+    .post__body :global(:is(.lex, .cats) tr) {
+      display: grid;
+      column-gap: var(--space-3);
+      border-bottom: 1px solid var(--color-border-soft);
+    }
+    .post__body :global(:is(.lex, .cats) thead tr) { border-bottom-color: var(--color-border); }
+    .post__body :global(:is(.lex, .cats) :is(th, td)) { border-bottom: 0; }
+    .post__body :global(.lex tr) { grid-template-columns: 1fr auto; }
+    /* La columna de la cifra toma el ancho de su contenido (los 5.5rem de
+       la tabla no alcanzan para el encabezado «Ocurrencias») y el espacio
+       entre columnas sustituye su relleno lateral. */
+    .post__body :global(.lex :is(th, td):nth-child(2)) { width: auto; padding-inline: 0; }
+    .post__body :global(.lex td:nth-child(3)) { grid-column: 1 / -1; padding-top: 0; }
+    .post__body :global(.lex td:nth-child(3):empty) { display: none; }
+    .post__body :global(.cats tr) { grid-template-columns: 2.5rem 1fr auto; }
+    .post__body :global(.cats td:nth-child(3)) { grid-column: 2 / -1; grid-row: 2; padding-top: 0; }
+    .post__body :global(:is(.lex, .cats) th:nth-child(3)) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+  }
 
   /* nota bajo tabla, explica las columnas */
   .post__body :global(.tnote) {
@@ -886,17 +1014,28 @@ const breadcrumb = [
   }
 
   /* ---------- cifras destacadas ---------- */
+  /* Panel bg-2 de celdas separadas por filetes: una columna hasta 623px y
+     tres desde 624px, así que las tres cifras nunca se parten 2+1. Cifras en
+     tinta y el cero atenuado. Cada celda dibuja su filete superior e
+     izquierdo; los exteriores quedan fuera de la caja recortada. */
   .post__body :global(.stats) {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-    gap: 1px;
-    background: var(--color-border);
+    grid-template-columns: minmax(0, 1fr);
+    background: var(--color-bg-warm);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     margin: var(--space-7) 0;
     overflow: hidden;
   }
-  .post__body :global(.stat) { background: var(--color-bg-elevated); padding: var(--space-4) var(--space-5) var(--space-5); }
+  @media (min-width: 624px) {
+    .post__body :global(.stats) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  .post__body :global(.stat) {
+    margin: -1px 0 0 -1px;
+    border-top: 1px solid var(--color-border);
+    border-left: 1px solid var(--color-border);
+    padding: var(--space-4) var(--space-5) var(--space-5);
+  }
   .post__body :global(.stat .v) {
     display: block;
     font-family: var(--mono);
@@ -904,9 +1043,10 @@ const breadcrumb = [
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    color: var(--color-accent);
+    color: var(--color-text-primary);
   }
-  .post__body :global(.stat .v.is-zero) { color: var(--gray-700); }
+  /* Aquí sí cabe su ink-3: la cifra es texto grande (≥24px, AA-large). */
+  .post__body :global(.stat .v.is-zero) { color: var(--ink-3); }
   .post__body :global(.stat .k) {
     display: block;
     font-size: var(--fs-caption);
@@ -928,14 +1068,18 @@ const breadcrumb = [
     font-size: 0.78rem;
     color: var(--color-text-muted);
   }
+  /* Llamadas a referencia: «[n]» en mono, elevadas, con filete solo al pasar
+     el cursor. */
   .post__body :global(a[href^="#r"]) {
     font-family: var(--mono);
     font-size: 0.78em;
-    text-decoration: none;
+    font-weight: var(--fw-regular);
     vertical-align: 0.18em;
+    border-bottom-color: transparent;
   }
-  .post__body :global(a[href^="#r"]:hover) { text-decoration: underline; }
-  .post__body :global(:target) { background: var(--color-accent-soft); }
+  .post__body :global(a[href^="#r"]:hover) { border-bottom-color: var(--color-link-underline-hover); }
+  /* La referencia de destino recibe su lavado clay-wash de :target. */
+  .post__body :global(ol.refs li:target) { background: var(--color-accent-soft); }
 
   /* ---------- pie ---------- */
   .post__body :global(.endnote) {

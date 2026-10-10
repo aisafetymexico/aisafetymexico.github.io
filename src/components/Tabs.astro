@@ -4,6 +4,9 @@
  *
  * Spec:
  *  - docs/DESIGN-SYSTEM.md §6.5 (interactive components, vanilla JS only).
+ *  - Design: her bracketed-nav idiom — `[ Tab ]` brackets
+ *    fade in on hover/focus (.45) and on the active tab (.5, weight 550),
+ *    over a 1px hairline. No route renders it today.
  *
  * A11y guarantees:
  *  - role="tablist" / role="tab" / role="tabpanel".
@@ -137,6 +140,10 @@ const rootId = id || `tabs-${Math.random().toString(36).slice(2, 9)}`;
 </script>
 
 <style>
+  /* Her bracketed-nav idiom applied to tabs: plain ink-2
+     labels; hover/focus and the active tab turn ink and show faint square
+     brackets. The list sits on a 1px hairline, with no coloured underline
+     and no fills. */
   .tabs {
     width: 100%;
   }
@@ -144,47 +151,76 @@ const rootId = id || `tabs-${Math.random().toString(36).slice(2, 9)}`;
   .tabs__list {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-1, 4px);
+    gap: 2px;
     border-bottom: 1px solid var(--color-border);
-    margin-bottom: var(--space-6, 24px);
+    margin-bottom: var(--space-6);
   }
 
   .tabs__tab {
     appearance: none;
     background: transparent;
     border: none;
-    padding: var(--space-3, 12px) var(--space-5, 20px);
-    font-family: var(--font-body, 'Inter', sans-serif);
-    font-size: var(--fs-body, 1rem);
-    font-weight: var(--fw-semibold, 600);
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: var(--fw-book);
+    line-height: var(--lh-normal);
     color: var(--color-text-secondary);
+    white-space: nowrap;
     cursor: pointer;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -1px; /* overlap the list border */
-    transition: color var(--transition, 0.25s ease), border-color var(--transition, 0.25s ease), background var(--transition, 0.25s ease);
-    border-radius: var(--radius-sm, 6px) var(--radius-sm, 6px) 0 0;
+    transition: color var(--transition);
   }
-  .tabs__tab:hover {
-    color: var(--color-text-heading);
-    background: var(--color-accent-soft);
+
+  /* The brackets always reserve their width (opacity 0), so nothing shifts
+     on hover. `content: '[' / ''` gives them empty alt text. */
+  .tabs__tab::before {
+    content: '[';
+    content: '[' / '';
+    margin-right: 1px;
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+  .tabs__tab::after {
+    content: ']';
+    content: ']' / '';
+    margin-left: 1px;
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .tabs__tab:hover,
+  .tabs__tab:focus-visible {
+    color: var(--color-text-primary);
+  }
+  .tabs__tab:hover::before,
+  .tabs__tab:hover::after,
+  .tabs__tab:focus-visible::before,
+  .tabs__tab:focus-visible::after {
+    opacity: 0.45;
   }
   .tabs__tab:focus-visible {
     outline: 2px solid var(--color-focus-ring);
     outline-offset: 2px;
   }
+
   .tabs__tab.is-active {
-    color: var(--color-text-heading);
-    border-bottom-color: var(--color-accent);
+    color: var(--color-text-primary);
+    font-weight: var(--fw-heading);
+  }
+  .tabs__tab.is-active::before,
+  .tabs__tab.is-active::after {
+    opacity: 0.5;
   }
 
   .tabs__panel {
     color: var(--color-text-primary);
-    line-height: var(--lh-relaxed, 1.7);
+    line-height: var(--lh-relaxed);
   }
   .tabs__panel:focus-visible {
     outline: 2px solid var(--color-focus-ring);
     outline-offset: 4px;
-    border-radius: var(--radius-sm, 6px);
+    border-radius: var(--radius);
   }
   .tabs__panel[hidden] { display: none; }
 </style>

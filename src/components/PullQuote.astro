@@ -1,16 +1,18 @@
 ---
 /**
- * PullQuote — large editorial Playfair quote with curly quotation marks and
- * optional attribution line.
+ * PullQuote — editorial quote with curly quotation marks and an optional
+ * attribution line.
  *
  * Spec:
  *  - Task #10 props: `{ quote: string, attribution?: string }`.
- *  - docs/DESIGN-SYSTEM.md §2.4 — Display family + tight line-height.
- *  - Mobile-first: smaller scale on phones, scales up at 768/1024.
+ *  - docs/DESIGN-SYSTEM.md §2.4 — display family (Inter since the redesign).
+ *  - Design: her editorial language, not a display serif.
+ *    A 2px clay rule on the left (decorative, non-text), the quote in Inter
+ *    500 at 1.15rem (1.32rem from 769px) with -0.02em tracking, ink. No giant
+ *    quote glyph, no shadow.
  *
  * Renders as a <figure> + <blockquote> for semantics; attribution becomes
- * <figcaption>. The decorative leading quote glyph is aria-hidden so it does
- * not pollute the screen-reader experience.
+ * <figcaption> in the AA muted grey. The leading dash is aria-hidden.
  */
 
 export interface Props {
@@ -22,7 +24,6 @@ const { quote, attribution } = Astro.props;
 ---
 
 <figure class="pull-quote">
-  <span class="pull-quote__mark" aria-hidden="true">&ldquo;</span>
   <blockquote class="pull-quote__text">
     <p>{quote}</p>
   </blockquote>
@@ -36,23 +37,14 @@ const { quote, attribution } = Astro.props;
 
 <style>
   .pull-quote {
-    position: relative;
-    margin: var(--space-8) 0;
-    padding: var(--space-6) 0 var(--space-6) var(--space-8);
-    border-inline-start: 2px solid var(--color-accent);
+    margin: 32px 0;
+    padding: 4px 0 4px 22px;
+    border-inline-start: 2px solid var(--color-accent-decor);
   }
 
-  .pull-quote__mark {
-    position: absolute;
-    top: -8px;
-    left: var(--space-3);
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 1.8rem + 4vw, 5rem);
-    font-weight: var(--fw-extrabold);
-    color: var(--color-accent-soft);
-    line-height: 1;
-    pointer-events: none;
-    user-select: none;
+  /* At the end of its container the section padding sets the gap. */
+  .pull-quote:last-child {
+    margin-bottom: 0;
   }
 
   .pull-quote__text {
@@ -62,12 +54,13 @@ const { quote, attribution } = Astro.props;
 
   .pull-quote__text p {
     font-family: var(--font-display);
-    font-size: var(--fs-h3);
-    font-weight: var(--fw-bold);
-    line-height: var(--lh-snug);
-    letter-spacing: var(--ls-tight);
+    font-size: 1.15rem;
+    font-weight: var(--fw-display);
+    line-height: 1.4;
+    letter-spacing: var(--ls-heading);
     color: var(--color-text-heading);
     margin: 0;
+    text-wrap: pretty;
   }
 
   /* Curly quotes around the visible blockquote text */
@@ -75,33 +68,21 @@ const { quote, attribution } = Astro.props;
   .pull-quote__text p::after  { content: '\201D'; }
 
   .pull-quote__attribution {
-    margin-top: var(--space-4);
+    margin-top: 14px;
     font-family: var(--font-body);
-    font-size: var(--fs-small);
-    font-weight: var(--fw-medium);
+    font-size: 0.86rem;
     line-height: var(--lh-normal);
-    color: var(--color-text-secondary);
-    letter-spacing: var(--ls-wide);
+    color: var(--color-text-muted);
   }
 
   .pull-quote__attribution-dash {
     margin-inline-end: var(--space-1);
-    color: var(--color-accent);
+    color: var(--color-accent-decor);
   }
 
-  @media (min-width: 768px) {
-    .pull-quote {
-      margin: var(--space-10) 0;
-      padding: var(--space-7) 0 var(--space-7) var(--space-10);
-    }
+  @media (min-width: 769px) {
     .pull-quote__text p {
-      font-size: var(--fs-h2);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .pull-quote {
-      padding-inline-start: var(--space-12);
+      font-size: 1.32rem;
     }
   }
 </style>

@@ -78,7 +78,7 @@ function parseSpanishDate(raw) {
   const month = MONTHS[monthName] || null;
   const day = (day2 || day1).padStart(2, '0');
   const iso = month ? `${year}-${month}-${day}` : null;
-  const displayMonth = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+  const displayMonth = monthName;
   const display = day2
     ? `${day1}-${day2} de ${displayMonth} del ${year}`
     : `${day1} de ${displayMonth} del ${year}`;

@@ -1,6 +1,6 @@
 ---
 /**
- * /contact — Lowest-friction email contact page.
+ * /contact — Lowest-friction contact page.
  *
  * Spec: docs/ARCHITECTURE.md §2 (`/contact`) + §6 (ContentPage template).
  *
@@ -12,19 +12,32 @@
  *       region/location context.
  *     - The footer (Footer.astro) already links to `/contact` — having a
  *       real page avoids a redirect hop.
- *     - User-intent split: /get-involved is for higher-intent
- *       collaboration inquiries (form + 3 vías). /contact is for visitors
- *       who only want the email + socials with no form friction.
- *   This page does NOT include the ContactForm: visitors who want a form
- *   are funneled to /get-involved#contacto via the CTA at the bottom.
+ *     - User-intent split: /get-involved lays out the ways to collaborate
+ *       with us. /contact is for visitors who only want the email and our
+ *       channels, with no friction.
+ *   This page has no form: visitors with a collaboration proposal are sent
+ *   to /get-involved#participa via the CTA at the bottom.
  *
  * Page composition:
  *   1. SiteHeader (sticky)
- *   2. PageHero — eyebrow + h1 + lede + breadcrumb
- *   3. Direct-contact channels (email canónico + LinkedIn + Instagram)
+ *   2. PageHero — breadcrumb + h1 + lede (centered)
+ *   3. Channels: email (canonical) + LinkedIn + Instagram + Calendario
+ *      (Luma) + YouTube — the channels of her contact band (fcacfc4
+ *      index.html L489–500)
  *   4. Response-time / region-context note
- *   5. CtaSection — "¿Quieres colaborar?" → /get-involved
+ *   5. CtaSection — "¿Quieres colaborar?" → /get-involved#participa. Its
+ *      description writes «in-house» with a non-breaking hyphen (\u2011,
+ *      same advance in Inter), so the balanced, centred copy never splits
+ *      it as «in- / house».
  *   6. SiteFooter
+ *
+ * Design ("Editorial mínimo", fcacfc4 css/style.css): white channel cards
+ * with a 1px hairline and 8px radius (no shadow), the global in-card label
+ * (.role-label), and values styled as her .contact-email link (clay-dark,
+ * hairline underline that turns clay on hover). One column; two from 769px
+ * with the email spanning the row. The section sits on the shared 1080px
+ * container, so «Canales» starts on the same left edge as every inner page;
+ * the notes under the cards keep her 680px reading measure.
  */
 
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -45,25 +58,24 @@ const breadcrumb = {
 
 <BaseLayout
   title="Contacto — AI Safety Mexico"
-  description="Escríbenos a contact@aismx.org o conéctate con nosotros en LinkedIn e Instagram. Respondemos a la mayoría de los mensajes en una semana."
+  description="Escríbenos a contact@aismx.org o síguenos en LinkedIn, Instagram, YouTube y nuestro calendario de Luma. Respondemos a la mayoría de los mensajes en una semana."
   pathname={pathname}
-  ogImage="/images/aisafetymx_logo.webp"
 >
   <Header slot="header" currentPath={pathname} />
 
   <PageHero
     title="Escríbenos"
-    description="Si tienes una pregunta, una propuesta o quieres saber más sobre nuestros programas e investigaciones, puedes contactarnos por cualquiera de los canales abajo."
+    description="Para cursos in-house, estancias, investigación o para colaborar con nosotros, escríbenos por cualquiera de estos canales."
     breadcrumb={breadcrumb}
   />
 
   <section class="page-section" aria-labelledby="channels-heading">
-    <div class="container container--narrow">
+    <div class="container">
       <h2 id="channels-heading" class="contact__heading">Canales</h2>
 
       <ul class="contact__list" role="list">
-        <li class="contact__item">
-          <span class="contact__label">Correo electrónico</span>
+        <li class="contact__item contact__item--primary">
+          <span class="contact__label role-label">Correo electrónico</span>
           <a class="contact__value" href="mailto:contact@aismx.org">
             contact@aismx.org
           </a>
@@ -71,7 +83,7 @@ const breadcrumb = {
         </li>
 
         <li class="contact__item">
-          <span class="contact__label">LinkedIn</span>
+          <span class="contact__label role-label">LinkedIn</span>
           <a
             class="contact__value"
             href="https://www.linkedin.com/company/ai-safety-mexico/"
@@ -84,7 +96,7 @@ const breadcrumb = {
         </li>
 
         <li class="contact__item">
-          <span class="contact__label">Instagram</span>
+          <span class="contact__label role-label">Instagram</span>
           <a
             class="contact__value"
             href="https://www.instagram.com/aisafetymx/"
@@ -94,6 +106,32 @@ const breadcrumb = {
             @aisafetymx
           </a>
           <p class="contact__hint">Para seguir actividades, eventos y galería de la comunidad.</p>
+        </li>
+
+        <li class="contact__item">
+          <span class="contact__label role-label">Calendario</span>
+          <a
+            class="contact__value"
+            href="https://luma.com/calendar/cal-WjnM2llUGXz17t5"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Eventos en Luma
+          </a>
+          <p class="contact__hint">Agenda de eventos y mesas de trabajo, con registro.</p>
+        </li>
+
+        <li class="contact__item">
+          <span class="contact__label role-label">YouTube</span>
+          <a
+            class="contact__value"
+            href="https://www.youtube.com/@AISafetyMéxico"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @AISafetyMéxico
+          </a>
+          <p class="contact__hint">Pre-talks y talks de nuestros eventos.</p>
         </li>
       </ul>
 
@@ -112,121 +150,116 @@ const breadcrumb = {
 
   <CtaSection
     title="¿Quieres colaborar con nosotros?"
-    description="Si tu mensaje es una propuesta de colaboración —investigación conjunta, programas educativos o eventos—, visita Colabora para más detalles y un formulario dedicado."
-    ctaLabel="Ver formas de colaborar"
-    ctaHref="/get-involved#contacto"
+    description={'Si tu mensaje es una propuesta de colaboración —cursos in\u2011house, estancias, investigación conjunta o eventos—, en Colabora encontrarás los caminos para trabajar con nosotros.'}
+    ctaLabel="Cómo participar"
+    ctaHref="/get-involved#participa"
   />
 
   <Footer slot="footer" />
 </BaseLayout>
 
 <style>
+  /* Channels section: her section rhythm (72px; 48px on phones) on white.
+     The hairline under it comes from base.css (`main > section`); the
+     global .container gives the shared 1080px column, so the heading and
+     cards line up with every other inner page. */
   .page-section {
-    padding-block: var(--space-10);
-    background: var(--color-bg-base);
-  }
-  @media (min-width: 768px) {
-    .page-section {
-      padding-block: var(--space-12);
-    }
+    padding-block: var(--section-pad);
+    background: var(--color-bg-section-base);
   }
 
-  .container {
-    width: 100%;
-    max-width: var(--container-max);
-    margin-inline: auto;
-    padding-inline: var(--container-padding);
-  }
-  .container--narrow {
-    max-width: var(--container-narrow);
-  }
-  @media (min-width: 480px) {
-    .container {
-      padding-inline: var(--container-padding-md);
-    }
-  }
-
+  /* Her .section-heading (Inter 550, 1.32rem; 1.18rem on ≤768px). No
+     description follows, so 14px to the cards (VF-8). */
   .contact__heading {
-    font-family: var(--font-display);
     font-size: var(--fs-h2);
-    font-weight: var(--fw-bold);
+    font-weight: var(--fw-heading);
     line-height: var(--lh-snug);
-    letter-spacing: var(--ls-tight);
+    letter-spacing: var(--ls-heading);
     color: var(--color-text-heading);
-    margin: 0 0 var(--space-7);
+    margin: 0 0 14px;
   }
 
+  /* Channel cards: one column; two from 769px with the canonical channel
+     (email) spanning the row. 18px gaps, as in her card grids. */
   .contact__list {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-8);
+    gap: var(--gap-grid);
     margin: 0 0 var(--space-9);
     padding: 0;
     list-style: none;
   }
 
+  @media (min-width: 769px) {
+    .contact__list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .contact__item--primary {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* White card, 1px hairline, 8px radius; no shadow and no hover (only the
+     link inside is interactive). Padding as her .event-note. The label is
+     the global in-card label (.role-label, 8px below it). */
   .contact__item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    padding: var(--space-5) var(--space-6);
-    background: var(--color-bg-base);
+    min-width: 0;
+    padding: 22px 24px;
+    background: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    box-shadow: var(--shadow-xs);
   }
 
-  .contact__label {
-    font-family: var(--font-body);
-    font-size: var(--fs-eyebrow);
-    font-weight: var(--fw-bold);
-    letter-spacing: var(--ls-uppercase);
-    text-transform: uppercase;
-    color: var(--color-accent);
-  }
-
+  /* Her .contact-email link: clay-dark, 500, 1.05rem, hairline underline
+     that turns clay on hover. Long handles and URLs wrap on phones. */
   .contact__value {
-    font-family: var(--font-body);
-    font-size: var(--fs-h6);
-    font-weight: var(--fw-semibold);
-    color: var(--color-text-heading);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
+    font-size: 1.05rem;
+    font-weight: var(--fw-medium);
+    color: var(--color-link-inline);
+    border-bottom: 1px solid var(--color-link-underline);
+    padding-bottom: 1px;
+    overflow-wrap: anywhere;
     transition: color var(--transition), border-color var(--transition);
-    word-break: break-word;
-  }
-  .contact__value:hover,
-  .contact__value:focus-visible {
-    color: var(--color-link-hover);
-    border-bottom-color: var(--color-link-hover);
   }
 
+  .contact__value:hover {
+    color: var(--color-link-inline);
+    border-bottom-color: var(--color-link-underline-hover);
+  }
+
+  /* One- or two-line hints: `balance` splits a two-line hint evenly instead
+     of leaving a single word («actualizaciones.») on the second line. */
   .contact__hint {
-    font-family: var(--font-body);
     font-size: var(--fs-small);
-    line-height: var(--lh-relaxed);
+    line-height: 1.6;
     color: var(--color-text-secondary);
-    margin: 0;
+    margin: 8px 0 0;
+    text-wrap: balance;
   }
 
+  /* Response time / location: two short notes under a full-width hairline,
+     ink-2 with ink lead-ins (as her .metric-list). The notes keep her
+     reading measure (680px), and `pretty` keeps a lone word off their last
+     line. */
   .contact__meta {
-    border-top: 1px solid var(--color-border);
-    padding-top: var(--space-6);
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
   }
 
   .contact__meta-item {
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
+    max-width: var(--measure-desc);
     line-height: var(--lh-relaxed);
-    color: var(--color-text-primary);
+    color: var(--color-text-secondary);
     margin: 0;
+    text-wrap: pretty;
   }
 
-  .contact__meta-item :global(strong) {
-    color: var(--color-text-heading);
-    font-weight: var(--fw-semibold);
+  .contact__meta-item strong {
+    color: var(--color-text-primary);
+    font-weight: var(--fw-heading);
   }
 </style>

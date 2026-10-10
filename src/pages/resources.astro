@@ -2,13 +2,27 @@
 /*
  * /resources — Directorio abierto de recursos de seguridad en IA (ES).
  *
- * El contenido vive en ResourceDirectory.astro; esta página solo aporta el
- * chrome y los metadatos. Gemela: src/pages/en/resources.astro.
+ * Estructura (su recursos.html, fcacfc4):
+ *   1. PageHero centrado.
+ *   2. «Cómo usar este directorio» + etiquetas temáticas (KeyFacts).
+ *   3. ResourceDirectory: cifras del catálogo + directorio filtrable.
+ *   4. «Un espacio abierto»: 4 tarjetas sobre bg-2 (su .section-contribute).
+ *   5. CtaSection (blanca; el pie es bg-2, así que no hay dos tintes seguidos).
+ *      «Proponer un recurso» abre un correo a contact@aismx.org con asunto,
+ *      el mismo patrón mailto de /get-involved.
+ *
+ * Ningún encabezado de sección lleva eyebrow, como en su recursos.html.
+ *
+ * Los textos nuevos viven aquí, no en i18n.ts. Gemela con la
+ * misma estructura e ids: src/pages/en/resources.astro.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import KeyFacts from '../components/KeyFacts.astro';
+import Card from '../components/Card.astro';
 import CtaSection from '../components/CtaSection.astro';
 import ResourceDirectory from '../components/ResourceDirectory.astro';
 import type { Breadcrumb } from '../lib/types';
@@ -16,6 +30,17 @@ import type { Breadcrumb } from '../lib/types';
 const breadcrumb: Breadcrumb = {
   items: [{ label: 'Inicio', href: '/' }, { label: 'Recursos' }],
 };
+
+const temas = [
+  { text: 'Cursos y currículos' },
+  { text: 'Programas de investigación' },
+  { text: 'Gobernanza y política' },
+  { text: 'Financiamiento' },
+  { text: 'Comunidades' },
+  { text: 'Recursos en español' },
+];
+
+const LUMA_CAL = 'https://luma.com/calendar/cal-WjnM2llUGXz17t5';
 ---
 
 <BaseLayout
@@ -26,19 +51,97 @@ const breadcrumb: Breadcrumb = {
   <Header slot="header" currentPath="/resources" />
 
   <PageHero
-    title="Recursos abiertos de seguridad en IA"
+    title="Recursos abiertos de seguridad y gobernanza de IA"
     description="Un directorio curado de cursos, programas de investigación, fellowships, fuentes de financiamiento y comunidades. Cada enlace se verifica a mano y el catálogo completo puede descargarse para reutilizarse."
     breadcrumb={breadcrumb}
   />
 
+  <!-- Cómo usar este directorio -->
+  <section class="section section--base" aria-labelledby="como-usar">
+    <div class="container">
+      <SectionHeading
+        title="Cómo usar este directorio"
+        description="Entrar al campo de la seguridad en inteligencia artificial suele ser confuso: la información está dispersa, muchas convocatorias caducan y varios enlaces de referencia dejan de funcionar. Reunimos aquí los recursos que consideramos vigentes y útiles, con una nota sobre su formato y duración para que puedas decidir rápido qué se ajusta a tu momento. Si es tu primera vez, te recomendamos comenzar por un curso introductorio y por el mapa del campo."
+        id="como-usar"
+      />
+      <KeyFacts facts={temas} />
+    </div>
+  </section>
+
   <ResourceDirectory lang="es" />
+
+  <!-- Un espacio abierto -->
+  <section class="section section--warm" aria-labelledby="espacio-abierto">
+    <div class="container">
+      <SectionHeading
+        title="Un espacio abierto"
+        description="Este directorio es un bien común. Los datos están disponibles para descarga y reutilización, y las propuestas de la comunidad son bienvenidas."
+        id="espacio-abierto"
+      />
+      <div class="open-grid">
+        <Card title="Propón o corrige un recurso" bordered interactive={false} elevated={false}>
+          <p>
+            Si conoces un programa que falta, detectas un enlace roto o una
+            descripción desactualizada, escríbenos a
+            <a class="inline-link" href="mailto:contact@aismx.org">contact@aismx.org</a>.
+            Nos interesa especialmente sumar recursos en español y oportunidades
+            accesibles desde América Latina.
+          </p>
+        </Card>
+        <Card title="Reutiliza los datos" bordered interactive={false} elevated={false}>
+          <p>
+            El botón «Descargar JSON» exporta el catálogo completo para que puedas
+            integrarlo en tus propios materiales, talleres o sitios. Si lo
+            reutilizas, agradecemos la atribución a AI Safety Mexico.
+          </p>
+        </Card>
+        <Card title="Referencias del ecosistema" bordered interactive={false} elevated={false}>
+          <p>
+            Nos apoyamos en el trabajo de
+            <a class="inline-link" href="https://aisafety.com" target="_blank" rel="noopener noreferrer">AISafety.com</a>,
+            que mantiene el mapa y los directorios más completos del campo, y en
+            <a class="inline-link" href="https://www.enais.co" target="_blank" rel="noopener noreferrer">ENAIS</a>.
+            Para convocatorias con fecha límite, consulta siempre la fuente original.
+          </p>
+        </Card>
+        <Card title="Participa con nosotros" bordered interactive={false} elevated={false}>
+          <p>
+            Hay cursos in-house para instituciones, estancias con la UPY, mesas el
+            primer viernes de cada mes y un
+            <a class="inline-link" href={LUMA_CAL} target="_blank" rel="noopener noreferrer">calendario en Luma</a>.
+            Empieza por <a class="inline-link" href="/get-involved#participa">cómo participar</a>.
+          </p>
+        </Card>
+      </div>
+    </div>
+  </section>
 
   <CtaSection
     title="¿Falta algo o encontraste un enlace roto?"
     description="El directorio se mantiene a mano y depende de que la comunidad lo corrija. Cuéntanos qué recurso agregarías, sobre todo si es en español o de América Latina."
     ctaLabel="Proponer un recurso"
-    ctaHref="/get-involved"
+    ctaHref="mailto:contact@aismx.org?subject=Propuesta%20de%20recurso"
   />
 
   <Footer slot="footer" />
 </BaseLayout>
+
+<style>
+  /* Her .contribute-grid: 1 column, 2 from 769px, 18px gaps. The heading
+     above already carries the 34px gap, so the grid adds no top margin. */
+  .open-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  @media (min-width: 769px) {
+    .open-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* Card copy: her .program-card p (ink-2, line-height 1.7). */
+  .open-grid p {
+    color: var(--color-text-secondary);
+    line-height: var(--lh-loose);
+  }
+</style>

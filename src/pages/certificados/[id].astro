@@ -5,6 +5,10 @@
  *
  * Esta es la URL canonica de verificacion: cualquiera que la abra puede
  * confirmar que el certificado fue emitido por AI Safety Mexico.
+ *
+ * Certificados de equipo: el título (H1 del PageHero) lista a todos los
+ * integrantes, hasta 201 caracteres, así que baja al tamaño de un h2 con la
+ * medida de 680px (`.verify-page--team`). Los individuales no cambian.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
@@ -26,6 +30,7 @@ if (!cert) {
 }
 
 const pathname = `/certificados/${cert.id}`;
+const isTeam = cert.names.length > 1;
 
 const breadcrumb: Breadcrumb = {
   items: [
@@ -47,10 +52,10 @@ const breadcrumb: Breadcrumb = {
 
   <PageHero title={cert.name} breadcrumb={breadcrumb} />
 
-  <section class="verify-page">
+  <section class:list={['verify-page', { 'verify-page--team': isTeam }]}>
     <div class="verify-page__inner">
       <div class="badge-row">
-        <span class="badge">&#10003; Credencial verificada</span>
+        <span class="badge"><span aria-hidden="true">&#10003;</span> Credencial verificada</span>
         {cert.needsReview && <span class="badge badge-warn">Revisar datos</span>}
       </div>
 
@@ -65,7 +70,7 @@ const breadcrumb: Breadcrumb = {
 
       <dl class="meta">
         <div>
-          <dt>Issued on</dt>
+          <dt>Fecha de emisión</dt>
           <dd>{cert.issuedOnDisplay ?? 'Por confirmar'}</dd>
         </div>
         <div>
@@ -84,9 +89,22 @@ const breadcrumb: Breadcrumb = {
 </BaseLayout>
 
 <style>
+  /* Verification page: the centered PageHero names the holder; below it, a
+     narrow column with the status badge, the certificate in a hairline card
+     and a 3-column definition list. */
   .verify-page {
     background: var(--color-bg-base);
-    padding-block: var(--space-2) var(--space-5);
+    padding-block: var(--section-pad);
+  }
+
+  /* Team certificates: the PageHero H1 holds every member's name (up to 201
+     characters), so it drops to the h2 size on the 680px measure instead of
+     a 5–7 line display title. PageHero takes no class, hence :has(). */
+  :global(main:has(.verify-page--team) .page-hero__title) {
+    font-size: var(--fs-h2);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-heading);
+    max-width: var(--measure-desc);
   }
 
   .verify-page__inner {
@@ -99,7 +117,7 @@ const breadcrumb: Breadcrumb = {
     gap: var(--space-5);
   }
 
-  @media (min-width: 480px) {
+  @media (min-width: 481px) {
     .verify-page__inner {
       padding-inline: var(--container-padding-md);
     }
@@ -111,30 +129,33 @@ const breadcrumb: Breadcrumb = {
     flex-wrap: wrap;
   }
 
+  /* Status pill in her `.prize-badge` metrics. "Verified" is blue on
+     blue-wash (5.94:1, AA), never neon green on white. */
   .badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    background: rgba(61, 242, 132, 0.13);
-    color: var(--color-cta-register);
-    border: 1px solid rgba(61, 242, 132, 0.35);
-    padding: 0.35rem 0.75rem;
+    gap: 6px;
+    padding: 7px 14px;
+    border: 1px solid transparent;
     border-radius: var(--radius-pill);
+    background: var(--color-verified-bg);
+    color: var(--color-verified);
     font-family: var(--font-body);
-    font-size: var(--fs-small);
+    font-size: 0.82rem;
     font-weight: var(--fw-semibold);
   }
 
+  /* "Review data": clay-dark on clay-wash with her prize-badge border. */
   .badge-warn {
-    background: rgba(220, 129, 73, 0.15);
-    color: var(--code-orange);
-    border-color: rgba(220, 129, 73, 0.4);
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-color: var(--color-prize-badge-border);
   }
 
   .subtitle {
-    margin: 0;
     font-family: var(--font-body);
     font-size: var(--fs-body);
+    line-height: var(--lh-relaxed);
     color: var(--color-text-secondary);
   }
 
@@ -158,22 +179,29 @@ const breadcrumb: Breadcrumb = {
     margin: 0;
   }
 
+  /* Eyebrow labels over ink values. */
   .meta dt {
-    color: var(--color-text-muted);
     font-family: var(--font-body);
-    font-size: var(--fs-caption);
-    text-transform: uppercase;
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-label);
     letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
   }
 
   .meta dd {
-    margin: 2px 0 0;
+    margin: 4px 0 0;
     font-family: var(--font-body);
     font-size: var(--fs-body);
     color: var(--color-text-primary);
   }
 
-  @media (max-width: 700px) {
+  .meta code {
+    font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
+    font-size: 0.92em;
+  }
+
+  @media (max-width: 768px) {
     .meta {
       grid-template-columns: 1fr;
     }

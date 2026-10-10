@@ -7,7 +7,7 @@ status: active
 focusArea: governance
 cover:
   src: "/images/observatorio.png"
-  alt: "Vista de la plataforma VIGÍA — Observatorio de gobernanza de IA"
+  alt: "El Caracol, el observatorio maya de Chichén Itzá, al atardecer"
 team:
   - name: "Pilar Carolina Moncada Santana"
     role: "Cofundadora · Concepción de la plataforma"

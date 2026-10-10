@@ -1,18 +1,38 @@
 ---
 /**
- * Nav — primary site navigation.
+ * Nav — primary site navigation: the desktop row + the mobile drawer.
  *
- * Spec: docs/ARCHITECTURE.md §3 + docs/I18N-ARCHITECTURE.md §3.
- *  - Flat horizontal nav, 6 items max (no mega menu — pattern A7 in
- *    docs/INSPIRATION.md).
- *  - Order: About, Research, Programs, Projects, Activities, Get involved.
- *  - "Get involved" rendered as CTA button (visually distinct).
- *  - On <768px the desktop list hides and the MobileMenu drawer takes over.
+ * Spec: docs/ARCHITECTURE.md §3 + docs/I18N-ARCHITECTURE.md §3. Design: her
+ * bracketed nav (fcacfc4 css/style.css L226–268), kept on ONE row.
+ *  - Flat horizontal nav, 7 items (no mega menu — pattern A7 in
+ *    docs/INSPIRATION.md). Order: About, Research, Programs, Projects,
+ *    Activities, Resources, then "Get involved" as the ink CTA pill.
+ *  - Links are plain grey text. On hover, focus and active, faint square
+ *    brackets frame the label, `[ Programas ]`. The brackets are always
+ *    rendered at opacity 0 so they reserve their width and nothing shifts;
+ *    active also raises the weight from 450 to 550.
+ *  - ALWAYS one row: the list never wraps. It shows from 1080px up, where
+ *    the header reaches its full 1016px content width: measured with Inter
+ *    and "Sobre nosotros" active, the Spanish row (logo + wordmark, 7 items,
+ *    ES | EN) needs 994px and the English one 921px. Below 1080px the row
+ *    hides and the MobileMenu drawer takes over. Keep 1080px in sync with
+ *    MobileMenu.astro and Header.astro (custom properties cannot be used in
+ *    media queries).
+ *  - Safety net: if the row still does not fit (a wider fallback font when
+ *    Inter is blocked, text-only zoom), Header adds `.site-header--compact`
+ *    and the drawer takes over at any width instead of overflowing.
  *  - Active state: exact match on currentPath, OR currentPath is a child of
  *    the link href (so /projects/vigia highlights /projects).
+ *    aria-current="page" on the current page's link, "true" on its section
+ *    (a child page, or a section set through Header's navActivePath, e.g.
+ *    «Actividades» on /global-south-challenge).
  *
  * Labels are sourced from the i18n module by default. Pass `items` to
  * override (rare — only for content-specific overrides).
+ *
+ * Slot: rendered between the desktop row and the hamburger toggle. Header
+ * passes the ES | EN switcher here so the DOM order matches the visual order
+ * at every width.
  */
 import type { NavItem } from '../lib/types';
 import MobileMenu from './MobileMenu.astro';
@@ -32,6 +52,7 @@ const defaultItems: NavItem[] = [
   { label: t(lang, 'header.nav.programs'),    href: localizedPath(lang, '/programs') },
   { label: t(lang, 'header.nav.projects'),    href: localizedPath(lang, '/projects') },
   { label: t(lang, 'header.nav.activities'),  href: localizedPath(lang, '/activities') },
+  { label: t(lang, 'header.nav.resources'),   href: localizedPath(lang, '/resources') },
   { label: t(lang, 'header.nav.getInvolved'), href: localizedPath(lang, '/get-involved'), cta: true },
 ];
 
@@ -42,10 +63,15 @@ const isActive = (href: string): boolean => {
   if (href === '/' || href === '/en') return currentPath === href;
   return currentPath === href || currentPath.startsWith(href + '/');
 };
+
+// The real page path; `currentPath` may be a section set through navActivePath.
+const realPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const ariaCurrent = (href: string): 'page' | 'true' | undefined =>
+  isActive(href) ? (realPath === href ? 'page' : 'true') : undefined;
 ---
 
 <nav class="main-nav" aria-label={t(lang, 'header.aria.primaryNav')}>
-  {/* Desktop horizontal list — hidden on mobile via media query */}
+  {/* Desktop row — hidden below 1080px, where the drawer takes over */}
   <ul class="main-nav__list">
     {resolvedItems.map((item: NavItem) => (
       <li>
@@ -56,15 +82,17 @@ const isActive = (href: string): boolean => {
             { 'is-active': isActive(item.href) },
           ]}
           href={item.href}
-          aria-current={isActive(item.href) ? 'page' : undefined}
+          aria-current={ariaCurrent(item.href)}
         >{item.label}</a>
       </li>
     ))}
   </ul>
-
-  {/* Mobile drawer + hamburger toggle (renders only <768px) */}
-  <MobileMenu items={resolvedItems} currentPath={currentPath} lang={lang} />
 </nav>
+
+<slot />
+
+{/* Hamburger toggle + backdrop + drawer (visible below 1080px only) */}
+<MobileMenu items={resolvedItems} currentPath={currentPath} lang={lang} />
 
 <style>
   .main-nav {
@@ -77,58 +105,101 @@ const isActive = (href: string): boolean => {
     margin: 0;
     padding: 0;
     display: flex;
+    flex-wrap: nowrap;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
   }
 
+  /* Her links use 7px 11px. The horizontal padding is 8px here so that the
+     7-item Spanish row, plus the ES | EN switcher she did not have, fits the
+     1016px content box on one row (her 9-item nav wrapped to two rows). */
   .main-nav__link {
+    position: relative;
+    display: inline-block;
+    padding: 7px 8px;
+    border-radius: var(--radius);
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: var(--fs-nav);
+    font-weight: var(--fw-book);
+    line-height: var(--lh-relaxed);
+    white-space: nowrap;
+    text-decoration: none;
+    transition: color var(--transition), background var(--transition);
+  }
+
+  /* The brackets. `content: '[' / ''` gives them empty alt text, so screen
+     readers that support it don't read them as part of the link name. */
+  .main-nav__link::before {
+    content: '[';
+    content: '[' / '';
+    margin-right: 1px;
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+  .main-nav__link::after {
+    content: ']';
+    content: ']' / '';
+    margin-left: 1px;
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .main-nav__link:hover,
+  .main-nav__link:focus-visible {
+    color: var(--color-text-primary);
+  }
+  .main-nav__link:hover::before,
+  .main-nav__link:hover::after,
+  .main-nav__link:focus-visible::before,
+  .main-nav__link:focus-visible::after {
+    opacity: 0.45;
+  }
+
+  .main-nav__link.is-active {
+    color: var(--color-text-primary);
+    font-weight: var(--fw-heading);
+  }
+  .main-nav__link.is-active::before,
+  .main-nav__link.is-active::after {
+    opacity: 0.5;
+  }
+
+  /* The only filled thing in the header: the CTA as an ink pill (her
+     .btn-nav). It keeps the pill look when active, without brackets. */
+  .main-nav__link--cta {
     display: inline-flex;
     align-items: center;
-    padding: 8px 14px;
-    border-radius: 6px;
-    color: var(--color-text-on-dark-muted);
-    font-family: var(--font-body, 'Inter', sans-serif);
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: background 0.15s ease, color 0.15s ease;
+    justify-content: center;
+    margin-left: 8px;
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+    background: var(--color-cta-bg);
+    color: var(--color-cta-text);
+    font-weight: var(--fw-medium);
   }
-  .main-nav__link:hover {
-    color: var(--color-text-on-dark);
-    background: var(--peach-tint);
+  .main-nav__link--cta::before,
+  .main-nav__link--cta::after {
+    content: none;
   }
-  .main-nav__link:focus-visible {
-    outline: 2px solid var(--color-accent-secondary);
-    outline-offset: 2px;
-  }
-  .main-nav__link.is-active {
-    color: var(--color-text-on-dark);
-    background: var(--peach-border-soft);
-  }
-
-  /* "Colabora" link — demoted from pill to plain text-only nav link
-     (RAND nav has no filled CTAs in the bar). Slightly heavier weight
-     than peers to subtly hint it's the action item, but no fill / radius. */
-  .main-nav__link--cta {
-    margin-left: 6px;
-    padding: 8px 14px;
-    border-radius: 6px;
-    background: transparent;
-    color: var(--color-text-on-dark);
-    font-weight: 600;
-  }
-  .main-nav__link--cta:hover {
-    background: var(--peach-tint);
-    color: var(--color-text-on-dark);
+  .main-nav__link--cta:hover,
+  .main-nav__link--cta:focus-visible {
+    background: var(--color-cta-bg-hover);
+    color: var(--color-cta-text);
   }
   .main-nav__link--cta.is-active {
-    background: var(--peach-border-soft);
-    color: var(--color-text-on-dark);
+    color: var(--color-cta-text);
+    font-weight: var(--fw-medium);
   }
 
-  /* Hide desktop list on tablet + mobile (MobileMenu takes over).
-     RAND only shows the full inline nav at ≥1024px. */
-  @media (max-width: 1023.98px) {
-    .main-nav__list { display: none; }
+  /* Below the one-row width the drawer takes over; hiding the whole <nav>
+     avoids an empty navigation landmark (the drawer has its own). */
+  @media (max-width: 1079.98px) {
+    .main-nav { display: none; }
+  }
+
+  /* Safety net set by Header when the row would overflow (see docblock). */
+  :global(.site-header--compact) .main-nav {
+    display: none;
   }
 </style>

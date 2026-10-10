@@ -1,20 +1,19 @@
 ---
 /**
- * PageHero — Interior page variant.
+ * PageHero — Interior page variant: her centered inner-page hero
+ * (fcacfc4 css/style.css L427–450).
  *
- * Spec: docs/DESIGN-SYSTEM.md §6.2; Task #8; RAND-DIFF §2 / §4 (color-restrainer).
+ * Spec: docs/DESIGN-SYSTEM.md §6.2.
  *
- * Pattern reference (docs/INSPIRATION.md):
- *  - A1 (single editorial headline + supporting paragraph)
- *
- * White surface, left-aligned, breadcrumb above an extra-bold sans H1 with an
- * optional lead paragraph. No eyebrow, no navy band, no decorative chrome —
- * the breadcrumb carries wayfinding and the H1 carries focal weight.
+ * White surface, CENTERED: the breadcrumb (centered, quiet .8rem trail),
+ * then the H1 (Inter 500, -0.03em, balanced, max 760px) and an optional
+ * lead paragraph (ink-2, max 600px). No eyebrow, no band colour. The
+ * section ends in the global line-soft hairline (base.css `main > section`).
  *
  * Props:
  *  - eyebrow?:     LEGACY — accepted for backwards compatibility but no longer
  *                  rendered. Pages should drop the prop.
- *  - title:        page H1 (Playfair, --fs-h1)
+ *  - title:        page H1 (--fs-h1)
  *  - description?: lead paragraph
  *  - breadcrumb?:  ordered list of breadcrumb items; rendered via Breadcrumb
  *
@@ -44,7 +43,7 @@ const hasBreadcrumb = breadcrumb && breadcrumb.items && breadcrumb.items.length 
   <div class="page-hero__inner">
     {hasBreadcrumb && (
       <div class="page-hero__breadcrumb">
-        <Breadcrumb items={breadcrumb!.items} lang={lang} />
+        <Breadcrumb items={breadcrumb!.items} lang={lang} align="center" />
       </div>
     )}
 
@@ -57,59 +56,61 @@ const hasBreadcrumb = breadcrumb && breadcrumb.items && breadcrumb.items.length 
 </section>
 
 <style>
+  /* Padding tiers, mobile-first: her 38/28 (≤480), 48/34 (≤768), 72/46. */
   .page-hero {
     background-color: var(--color-bg-base);
     color: var(--color-text-primary);
-    padding-block: var(--space-9) var(--space-8);
-    text-align: start;
+    padding: 38px 0 28px;
+    text-align: center;
   }
 
-  @media (min-width: 768px) {
-    .page-hero {
-      padding-block: var(--space-12) var(--space-10);
-    }
+  @media (min-width: 481px) {
+    .page-hero { padding: 48px 0 34px; }
+  }
+
+  @media (min-width: 769px) {
+    .page-hero { padding: 72px 0 46px; }
   }
 
   .page-hero__inner {
     width: 100%;
-    max-width: var(--container-narrow);
+    max-width: var(--container-max);
     margin-inline: auto;
     padding-inline: var(--container-padding);
   }
 
-  @media (min-width: 480px) {
+  @media (min-width: 481px) {
     .page-hero__inner {
       padding-inline: var(--container-padding-md);
     }
   }
 
-  /* Breadcrumb sits above the H1 in the same column. Keep tones light-mode. */
   .page-hero__breadcrumb {
-    text-align: start;
-    margin-bottom: var(--space-4);
+    display: flex;
+    justify-content: center;
+    margin-bottom: 14px;
   }
 
   .page-hero__title {
     font-family: var(--font-display);
-    font-weight: var(--fw-bold);
     font-size: var(--fs-h1);
-    line-height: var(--lh-snug);
-    letter-spacing: var(--ls-tight);
-    /* Dark-mode subtle (PALETTE-MAPPING §4.5): hero h1 overrides default
-       cream heading color to peach so it carries the focal poster weight. */
-    color: var(--color-accent);
-    margin-bottom: var(--space-3);
+    font-weight: var(--fw-display);
+    line-height: 1.18;
+    letter-spacing: var(--ls-display);
+    color: var(--color-text-heading);
+    max-width: var(--measure-title);
+    margin: 0 auto 14px;
+    text-wrap: balance;
   }
 
   .page-hero__description {
     font-family: var(--font-body);
     font-size: var(--fs-lead);
     font-weight: var(--fw-regular);
-    line-height: var(--lh-loose);
-    color: var(--color-text-primary);
-    max-width: 640px;
-    margin-inline-start: 0;
-    margin-inline-end: 0;
-    margin-bottom: 0;
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    max-width: var(--measure-page-sub);
+    margin: 0 auto;
+    text-wrap: pretty;
   }
 </style>

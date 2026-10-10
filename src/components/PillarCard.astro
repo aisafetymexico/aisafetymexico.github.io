@@ -5,15 +5,16 @@
  * Spec: docs/DESIGN-SYSTEM.md §6.3 (PillarCard) + docs/RAND-AESTHETIC.md §8
  * (numeral-as-anchor pattern adapted from RAND.org).
  *
- * Visual: a typographic numeral (e.g. `01`) in Playfair display sits above the
- * h6 serif title — it replaces the previous decorative emoji disc. The card
- * sits on a cream surface with a copper top accent line. No CTA; pillars
- * describe the organisation's pillars of work, not destinations.
+ * Design: her card language (`.program-card`, fcacfc4 css/style.css
+ * L1006–1050): white, 1px hairline, 8px radius, her card padding, no shadow,
+ * no hover (pillars describe the organisation's work, not destinations, so
+ * there is no CTA). A quiet typographic numeral (e.g. `01`, Inter 500 in
+ * the decorative ink-3 grey) sits above the title.
  *
  * Props:
  *  - number:      optional 2-digit string (e.g. "01") shown as the typographic
  *                 anchor above the title. Falls back to no anchor.
- *  - title:       short pillar name (Playfair, h6 scale).
+ *  - title:       short pillar name (h3).
  *  - description: optional 1–2 sentence body.
  *
  * Backwards-compat: legacy callers passing `icon` (emoji) are silently
@@ -39,59 +40,50 @@ const { number, title, description } = Astro.props;
 </article>
 
 <style>
-  /* RAND editorial — typographic pillar row. Hairline top rule replaces the
-     decorative copper edge accent; no shadow, no hover lift. */
+  /* Her card: white, 1px hairline, 8px radius, no shadow, no lift. */
   .pillar-card {
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-3);
-    padding: var(--space-7) var(--space-6);
+    padding: var(--pad-card);
     background: var(--color-bg-elevated);
-    border-radius: 0;
-    border-top: 1px solid var(--color-border);
-    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
   }
 
-  /* Numeral anchor: Playfair display, copper, large — replaces the old icon
-     disc. Sits above the title with tight line-height so it doesn't add
-     vertical noise. */
+  /* Decorative numeral: Inter 500 in ink-3 (#8E8E98). Large (24px) and
+     aria-hidden, so the non-text grey is fine. */
   .pillar-card__number {
+    margin-bottom: 14px;
     font-family: var(--font-display);
-    font-size: 2.4rem;
-    font-weight: var(--fw-bold);
+    font-size: 1.5rem;
+    font-weight: var(--fw-display);
     line-height: 1;
-    color: var(--color-accent);
-    letter-spacing: -0.02em;
+    letter-spacing: var(--ls-display);
+    color: var(--ink-3);
     font-variant-numeric: lining-nums tabular-nums;
   }
 
+  /* Her .program-card-title */
   .pillar-card__title {
-    margin: 0;
+    margin: 0 0 10px;
     font-family: var(--font-display);
-    font-size: var(--fs-h6);
-    font-weight: var(--fw-bold);
-    line-height: var(--lh-snug);
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
     color: var(--color-text-heading);
+  }
+
+  .pillar-card__title:last-child {
+    margin-bottom: 0;
   }
 
   .pillar-card__text {
     margin: 0;
     font-family: var(--font-body);
-    font-size: var(--fs-small);
-    line-height: var(--lh-relaxed);
+    font-size: 0.92rem;
+    line-height: var(--lh-loose);
     color: var(--color-text-secondary);
   }
-
-  @media (min-width: 768px) {
-    .pillar-card {
-      padding: var(--space-8) var(--space-7);
-    }
-    .pillar-card__number {
-      font-size: 2.8rem;
-    }
-  }
-
-  /* No transitions / hover transforms remain on .pillar-card itself. */
 </style>

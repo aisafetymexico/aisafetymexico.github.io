@@ -1,18 +1,30 @@
 ---
 /**
- * ActivityCard — past / current activity card for /activities and home strip.
+ * ActivityCard — past / current activity card for /activities.
  *
  * Spec: docs/DESIGN-SYSTEM.md §6.3 (ActivityCard).
- * Pattern: INSPIRATION A4 (eyebrow + 16:9 image + title) + A5 (photo grid 4-up).
+ * Design: her `.event-preview` link card (fcacfc4 css/style.css L718–761):
+ * white, 1px hairline, 8px radius, 24px padding, no shadow. An in-card date
+ * label, a 1.05rem title and a small ink-2 blurb. Linked cards darken their
+ * border on hover; with `linkLabel` they also end in her
+ * `.event-preview-link` pill (bg-3), which fills ink while the card is
+ * hovered or focused. Nothing moves, and the card text keeps its colours.
  * Activities are one of the few card types where dates ARE legitimate signal
  * (chronological gallery, see INSPIRATION X5).
  *
+ * Keep `.activity-card`, `__media`, `__body`, `__title` and `__description`
+ * stable: pages may restyle them through `:global()` (/activities caps
+ * `__description` at her reading measure; the home spotlight is now a Card).
+ *
  * Props:
- *  - title:        Activity name (h6 scale).
+ *  - title:        Activity name.
  *  - date?:        ISO string ("2026-03-05") OR human-readable (e.g. "Marzo 2026").
  *  - description:  Short blurb.
- *  - image?:       ImgRef hero image.
+ *  - image?:       ImgRef hero image (4:3).
  *  - link?:        Optional URL — when present, the entire card becomes a link.
+ *  - external?:    With `link`, open in a new tab (rel="noopener noreferrer").
+ *  - linkLabel?:   Visible action shown as her pill when the card is a link
+ *                  (ignored without `link`).
  */
 import type { ImgRef } from '../lib/types';
 
@@ -23,9 +35,10 @@ export interface Props {
   image?: ImgRef;
   link?: string;
   external?: boolean;
+  linkLabel?: string;
 }
 
-const { title, date, description, image, link, external = false } = Astro.props;
+const { title, date, description, image, link, external = false, linkLabel } = Astro.props;
 
 const imageSrc = image && (typeof image.src === 'string' ? image.src : image.src.src);
 
@@ -44,6 +57,9 @@ function formatDate(d?: string): string | undefined {
 
 const formattedDate = formatDate(date);
 const dateAttr = date && /^\d{4}-\d{2}/.test(date) ? date : undefined;
+// <time> needs a machine-readable datetime; a human-readable date without
+// one (e.g. "Martes 27 de octubre de 2026") renders as a plain <span>.
+const DateTag = dateAttr ? 'time' : 'span';
 
 const Tag = (link ? 'a' : 'article') as any;
 const linkAttrs = link
@@ -69,36 +85,41 @@ const linkAttrs = link
 
   <div class="activity-card__body">
     {formattedDate && (
-      <time class="activity-card__date" datetime={dateAttr}>{formattedDate}</time>
+      <DateTag class="activity-card__date" datetime={dateAttr}>{formattedDate}</DateTag>
     )}
     <h3 class="activity-card__title">{title}</h3>
     <p class="activity-card__description">{description}</p>
+    {link && linkLabel && <span class="activity-card__cta">{linkLabel}</span>}
   </div>
 </Tag>
 
 <style>
-  /* RAND editorial — flat photo + label + headline, no chrome. */
+  /* Her .event-preview: white, 1px hairline, 8px radius, no shadow. */
   .activity-card {
     display: flex;
     flex-direction: column;
     background: var(--color-bg-elevated);
-    border-radius: 0;
-    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden; /* clips the media to the rounded corners */
     color: var(--color-text-primary);
     text-decoration: none;
+    transition: border-color var(--transition);
+  }
+
+  /* Linked cards: the border darkens; text keeps its colours (her
+     `.event-preview a { color: inherit }`). */
+  .activity-card--link:hover {
+    border-color: var(--color-border-strong);
+    color: var(--color-text-primary);
   }
 
   .activity-card--link:focus-visible {
     outline: 2px solid var(--color-focus-ring);
-    outline-offset: 3px;
+    outline-offset: 2px;
   }
 
-  /* Hover affordance lives on the title color shift only — no card lift. */
-  .activity-card--link:hover .activity-card__title {
-    color: var(--color-accent);
-  }
-
-  /* Media — A5 uses 4:5 portrait for "browse all" galleries */
+  /* Media — 4:3 photo above the body */
   .activity-card__media {
     aspect-ratio: 4 / 3;
     width: 100%;
@@ -113,41 +134,36 @@ const linkAttrs = link
     display: block;
   }
 
-  .activity-card__media-placeholder {
-    width: 100%;
-    height: 100%;
-    background:
-      radial-gradient(circle at 70% 30%, var(--color-accent-soft), transparent 60%),
-      var(--color-bg-warm);
-  }
-
-  /* Body */
+  /* Body — her 24px card padding, kept on phones */
   .activity-card__body {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
-    padding: var(--space-5) var(--space-6) var(--space-6);
+    padding: 24px;
     flex: 1;
   }
 
+  /* In-card label (her .theory-label) */
   .activity-card__date {
+    display: block;
+    margin-bottom: 8px;
     font-family: var(--font-body);
     font-size: var(--fs-eyebrow);
-    font-weight: var(--fw-bold);
-    letter-spacing: var(--ls-uppercase);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-label);
     text-transform: uppercase;
-    color: var(--color-accent);
-    line-height: 1;
+    color: var(--color-text-muted);
   }
 
+  /* Her .event-preview-header */
   .activity-card__title {
-    margin: 0;
+    margin: 0 0 6px;
     font-family: var(--font-display);
-    font-size: var(--fs-h6);
-    font-weight: var(--fw-bold);
-    line-height: var(--lh-snug);
+    font-size: 1.05rem;
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
     color: var(--color-text-heading);
-    transition: color var(--transition);
   }
 
   .activity-card__description {
@@ -158,13 +174,29 @@ const linkAttrs = link
     color: var(--color-text-secondary);
   }
 
-  @media (min-width: 768px) {
-    .activity-card__body {
-      padding: var(--space-6) var(--space-7) var(--space-7);
-    }
+  /* Her .event-preview-link: a bg-3 pill 16px under the copy (her subtitle
+     margin). Hers inherits the body's 1.65 line-height, which makes it 40px
+     tall; set here so it holds wherever the card sits. The whole card is
+     the link, so hovering or focusing the card fills the pill ink. */
+  .activity-card__cta {
+    align-self: flex-start;
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 18px;
+    border-radius: var(--radius-pill);
+    background: var(--color-bg-muted);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-relaxed);
+    transition: background var(--transition), color var(--transition);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .activity-card__title { transition: none; }
+  .activity-card--link:hover .activity-card__cta,
+  .activity-card--link:focus-visible .activity-card__cta {
+    background: var(--color-cta-bg);
+    color: var(--color-cta-text);
   }
 </style>

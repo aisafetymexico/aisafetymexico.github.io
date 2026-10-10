@@ -6,24 +6,34 @@
  *
  * Page composition (ContentPage template):
  *   1. SiteHeader (sticky)
- *   2. PageHero — eyebrow + h1 + lede + breadcrumb
- *   3. Intro / KeyFacts (chips de aliados / contexto colaborativo)
- *   4. 3 vías de colaboración — feature cards with anchorable ids
- *      (#research, #training, #events) so other pages can deep-link.
- *   5. Aliados y colaboradores — SectionHeading + KeyFacts chips.
- *   6. Contact info directa (sección "Escríbenos") con id="contacto" —
- *      email canónico + LinkedIn + Instagram. Cuando integremos Formspree o
- *      backend real, reintroducir el formulario de contacto aquí (componente
- *      reusable en src/components/).
- *   7. CtaSection — cierre con email canónico contact@aismx.org.
- *   8. SiteFooter
+ *   2. PageHero — h1 + lede + breadcrumb (centered)
+ *   3. Intro — SectionHeading only (quiénes colaboran con nosotros)
+ *   4. #participa — «Cuatro caminos»: one card per audience with an
+ *      anchorable id (#training, #vigia, #students, #agenda). Like her path
+ *      card, it reads audience label → title → paragraphs → actions, with
+ *      no numeral.
+ *   5. «Otras formas de colaborar» — sibling section with the two base
+ *      offerings, #research and #events. /research and /activities deep-link
+ *      to these ids: keep them.
+ *   6. #colaboraciones — named collaborations (cards) + allies (KeyFacts).
+ *   7. #contacto — direct channels (email, LinkedIn, Instagram, Luma,
+ *      YouTube). Cuando integremos Formspree o backend real, reintroducir el
+ *      formulario de contacto aquí (componente reusable en src/components/).
+ *   8. CtaSection — cierre con email canónico contact@aismx.org.
+ *   9. SiteFooter
  *
- * Note on the 3 vías cards:
- *   FeatureGrid does not expose per-item ids on its <li>. Since the spec
- *   requires deep-linkable anchors per card (`/get-involved#research`, etc.),
- *   the 3 cards are rendered with markup that mirrors FeatureGrid visually
- *   (4-up tile pattern from docs/DESIGN-SYSTEM.md §6.4) but adds an `id` per
- *   <li>. See `.collab-vias__item` styles below.
+ * Note on the path cards:
+ *   FeatureGrid does not expose per-item ids on its <li>. Since other pages
+ *   deep-link to single cards (`/get-involved#training`, `#research`,
+ *   `#events`, etc.), the cards are rendered with page markup in her
+ *   `.program-card` look (white, 1px hairline, 8px radius,
+ *   no shadow) plus an `id` per <li>. The card a link points at gets the
+ *   clay featured border through `:target`. See `.collab-vias__*` below.
+ *
+ * Design: her "Editorial mínimo". Sections
+ * alternate white and bg-2, never two tinted bands in a row (the CtaSection
+ * is white, the footer bg-2); actions are the global `.btn` pills inside
+ * `.program-actions`; labels use the global `.role-label`.
  */
 
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -43,43 +53,119 @@ const breadcrumb = {
   ],
 };
 
-const vias = [
+interface ViaCta {
+  label: string;
+  href: string;
+  /** Pill variant; defaults to the ink primary pill. */
+  variant?: 'primary' | 'outline';
+  external?: boolean;
+}
+
+interface Via {
+  /** Deep-link anchor, identical in ES and EN. */
+  id: string;
+  label?: string;
+  title: string;
+  paragraphs: string[];
+  ctas: ViaCta[];
+}
+
+// Cuatro caminos (#participa).
+// EXPIRES 2026-10-27: after the Mexico Tech Week panel, rewrite the first
+// sentence of #agenda (the panel becomes a past activity), here and in EN.
+const vias: Via[] = [
   {
     id: 'training',
-    number: '01',
+    label: 'Instituciones',
     title: 'Pedir un curso in-house',
-    description:
-      'Llevamos a facultades y centros de investigación los cursos de fundamentos, gobernanza y el curso técnico de seguridad en IA. Ya lo hicimos en el Centro de Investigación Geoestadística y en la Facultad de Matemáticas de la UADY.',
-    href: 'mailto:contact@aismx.org?subject=Curso%20in-house%20de%20seguridad%20en%20IA',
-    cta: 'Solicitar un curso',
+    paragraphs: [
+      'Llevamos a facultades y centros de investigación los cursos de fundamentos, gobernanza y el curso técnico de seguridad en IA. Ya lo hicimos en Centro Geo y en la Facultad de Matemáticas de la UADY.',
+      'Si tu institución quiere una edición a la medida, cuéntanos el público, las fechas tentativas y si necesitan la versión introductoria o la técnica.',
+    ],
+    ctas: [
+      {
+        label: 'Solicitar un curso',
+        href: 'mailto:contact@aismx.org?subject=Curso%20in-house%20de%20seguridad%20en%20IA',
+      },
+    ],
   },
   {
-    id: 'research',
-    number: '02',
-    title: 'VIGÍA, para investigadores',
-    description:
-      'VIGÍA es el recurso abierto para quien investiga gobernanza de IA y soberanía digital en México: un observatorio del Diario Oficial que identifica menciones de IA, huecos regulatorios y riesgos.',
-    href: '/projects/vigia',
-    cta: 'Abrir VIGÍA',
+    id: 'vigia',
+    label: 'Investigadores',
+    title: 'VIGÍA',
+    paragraphs: [
+      'VIGÍA es el recurso abierto para quien investiga gobernanza de IA y soberanía digital en México: un observatorio del Diario Oficial de la Federación que identifica menciones de IA, huecos regulatorios y riesgos.',
+      'Sirve como base de datos, metodología y punto de partida para papers, notas de política o periodismo de investigación.',
+    ],
+    ctas: [{ label: 'Abrir VIGÍA', href: '/projects/vigia' }],
   },
   {
     id: 'students',
-    number: '03',
+    label: 'Estudiantes',
     title: 'Estancias AISMx × UPY',
-    description:
-      'Programa de estancias de AI Safety México en colaboración con la Universidad Politécnica de Yucatán, para estudiantes que quieran pasar de los cursos a trabajar con el equipo en un proyecto concreto.',
-    href: 'mailto:contact@aismx.org?subject=Estancias%20AISMx%20%C3%97%20UPY',
-    cta: 'Preguntar por estancias',
+    paragraphs: [
+      'Programa de estancias de AI Safety Mexico en colaboración con la Universidad Politécnica de Yucatán. Está pensado para estudiantes que quieran pasar de los cursos a trabajar con el equipo en un proyecto concreto.',
+      'Si estudias en UPY o en otra universidad y quieres postular, escríbenos con tu formación y qué te interesa trabajar.',
+    ],
+    ctas: [
+      {
+        label: 'Preguntar por estancias',
+        href: 'mailto:contact@aismx.org?subject=Estancias%20AISMx%20%C3%97%20UPY',
+      },
+    ],
+  },
+  {
+    id: 'agenda',
+    label: 'Agenda y archivo',
+    title: 'Eventos y talks',
+    paragraphs: [
+      'El próximo evento es el panel de Mexico Tech Week. El resto de la agenda —mesas de trabajo el primer viernes de cada mes, talleres y pre-talks— vive en Luma. Las pre-talks y talks del Global South AIS Hackathon están en nuestro canal de YouTube.',
+    ],
+    ctas: [
+      {
+        label: 'Calendario en Luma',
+        href: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5',
+        external: true,
+      },
+      {
+        label: 'YouTube',
+        href: 'https://www.youtube.com/@AISafetyMéxico',
+        variant: 'outline',
+        external: true,
+      },
+    ],
+  },
+];
+
+// Otras formas de colaborar: the two base offerings (852dfbb), restored with
+// their original ids so the /research (#research) and /activities (#events)
+// CTAs land on the matching card.
+const otrasVias: Via[] = [
+  {
+    id: 'research',
+    title: 'Investigación conjunta',
+    paragraphs: [
+      'Sumamos esfuerzos con grupos académicos y laboratorios para codesarrollar proyectos de investigación en seguridad y alineación de IA, con énfasis en preguntas relevantes para México.',
+    ],
+    ctas: [
+      {
+        label: 'Propón una colaboración',
+        href: 'mailto:contact@aismx.org?subject=Investigaci%C3%B3n%20conjunta',
+      },
+    ],
   },
   {
     id: 'events',
-    number: '04',
-    title: 'Agenda y talks',
-    description:
-      'El próximo evento es el panel de México Tech Week. Las mesas son el primer viernes del mes: fecha y registro están en el calendario de Luma. Las pre-talks y talks del Global South están en YouTube.',
-    href: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5',
-    cta: 'Calendario en Luma',
-    external: true,
+    title: 'Eventos y advisory',
+    paragraphs: [
+      'Participamos como ponentes, panelistas y asesores en eventos, mesas de trabajo y conversaciones sobre gobernanza de IA en México.',
+    ],
+    ctas: [
+      {
+        label: 'Propón un evento',
+        href: 'mailto:contact@aismx.org?subject=Eventos%20y%20advisory',
+      },
+    ],
   },
 ];
 
@@ -106,7 +192,7 @@ const colaboraciones = [
     eyebrow: 'Subvención',
     title: 'BlueDot Impact',
     description:
-      'Obtuvimos una subvención de BlueDot Impact para llevar a cabo el panel Impulsando la comunidad de AI Safety en México: Tech Policy Panel en el marco de México Tech Week.',
+      'Obtuvimos una subvención de BlueDot Impact para llevar a cabo el panel «Impulsando la comunidad de AI Safety en México: Tech Policy Panel» en el marco de Mexico Tech Week.',
   },
 ];
 
@@ -117,13 +203,14 @@ const aliados = [
   { text: 'Universidad Politécnica de Yucatán' },
   { text: 'SPAR Research' },
 ];
+
+const externalAttrs = { target: '_blank', rel: 'noopener noreferrer' };
 ---
 
 <BaseLayout
   title="Colabora con nosotros — AI Safety Mexico"
   description="Investigación conjunta, programas educativos para instituciones y advisory. Escríbenos a contact@aismx.org para explorar formas de trabajar juntos en seguridad de IA."
   pathname={pathname}
-  ogImage="/images/aisafetymx_logo.webp"
 >
   <Header slot="header" currentPath={pathname} />
 
@@ -134,7 +221,7 @@ const aliados = [
   />
 
   <section class="page-section page-section--intro" aria-labelledby="intro-heading">
-    <div class="container container--narrow">
+    <div class="container">
       <SectionHeading
         eyebrow="Quiénes colaboran con nosotros"
         title="Trabajamos con organizaciones académicas, laboratorios, gobierno y comunidades"
@@ -144,7 +231,11 @@ const aliados = [
     </div>
   </section>
 
-  <section class="page-section page-section--vias" aria-labelledby="vias-heading">
+  <section
+    id="participa"
+    class="page-section page-section--vias"
+    aria-labelledby="vias-heading"
+  >
     <div class="container">
       <SectionHeading
         eyebrow="Formas de colaborar"
@@ -157,18 +248,22 @@ const aliados = [
         {vias.map((via) => (
           <li id={via.id} class="collab-vias__item">
             <article class="collab-vias__card">
-              <span class="collab-vias__number" aria-hidden="true">{via.number}</span>
+              {via.label && <span class="collab-vias__label role-label">{via.label}</span>}
               <h3 class="collab-vias__title">{via.title}</h3>
-              <p class="collab-vias__description">{via.description}</p>
-              {via.href && (
-                <a
-                  class="collab-vias__cta"
-                  href={via.href}
-                  {...(via.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                >
-                  {via.cta}
-                </a>
-              )}
+              {via.paragraphs.map((text) => (
+                <p class="collab-vias__text">{text}</p>
+              ))}
+              <div class="program-actions">
+                {via.ctas.map((cta) => (
+                  <a
+                    class:list={['btn', cta.variant === 'outline' ? 'btn-outline' : 'btn-primary']}
+                    href={cta.href}
+                    {...(cta.external ? externalAttrs : {})}
+                  >
+                    {cta.label}
+                  </a>
+                ))}
+              </div>
             </article>
           </li>
         ))}
@@ -176,7 +271,41 @@ const aliados = [
     </div>
   </section>
 
-  <section class="page-section page-section--allies" aria-labelledby="allies-heading">
+  <section class="page-section page-section--more" aria-labelledby="more-vias-heading">
+    <div class="container">
+      <SectionHeading title="Otras formas de colaborar" id="more-vias-heading" />
+
+      <ul class="collab-vias collab-vias--more" role="list">
+        {otrasVias.map((via) => (
+          <li id={via.id} class="collab-vias__item">
+            <article class="collab-vias__card">
+              <h3 class="collab-vias__title">{via.title}</h3>
+              {via.paragraphs.map((text) => (
+                <p class="collab-vias__text">{text}</p>
+              ))}
+              <div class="program-actions">
+                {via.ctas.map((cta) => (
+                  <a
+                    class:list={['btn', cta.variant === 'outline' ? 'btn-outline' : 'btn-primary']}
+                    href={cta.href}
+                    {...(cta.external ? externalAttrs : {})}
+                  >
+                    {cta.label}
+                  </a>
+                ))}
+              </div>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section
+    id="colaboraciones"
+    class="page-section page-section--allies"
+    aria-labelledby="allies-heading"
+  >
     <div class="container">
       <SectionHeading
         eyebrow="Colaboraciones"
@@ -188,7 +317,7 @@ const aliados = [
         {colaboraciones.map((item) => (
           <li class="collab-named__item">
             <article class="collab-named__card">
-              <span class="collab-named__eyebrow">{item.eyebrow}</span>
+              <span class="collab-named__eyebrow role-label">{item.eyebrow}</span>
               <h3 class="collab-named__title">{item.title}</h3>
               <p class="collab-named__description">{item.description}</p>
             </article>
@@ -204,7 +333,7 @@ const aliados = [
     class="page-section page-section--direct"
     aria-labelledby="contacto-heading"
   >
-    <div class="container container--narrow">
+    <div class="container">
       <SectionHeading
         eyebrow="Escríbenos"
         title="Cuéntanos sobre tu organización y tu propuesta"
@@ -214,15 +343,15 @@ const aliados = [
 
       <ul class="direct__list" role="list">
         <li class="direct__item">
-          <span class="direct__label">Correo electrónico</span>
-          <a class="direct__value" href="mailto:contact@aismx.org">
+          <span class="direct__label role-label">Correo electrónico</span>
+          <a class="direct__value inline-link" href="mailto:contact@aismx.org">
             contact@aismx.org
           </a>
         </li>
         <li class="direct__item">
-          <span class="direct__label">LinkedIn</span>
+          <span class="direct__label role-label">LinkedIn</span>
           <a
-            class="direct__value"
+            class="direct__value inline-link"
             href="https://www.linkedin.com/company/ai-safety-mexico/"
             target="_blank"
             rel="noopener noreferrer"
@@ -231,9 +360,9 @@ const aliados = [
           </a>
         </li>
         <li class="direct__item">
-          <span class="direct__label">Instagram</span>
+          <span class="direct__label role-label">Instagram</span>
           <a
-            class="direct__value"
+            class="direct__value inline-link"
             href="https://www.instagram.com/aisafetymx/"
             target="_blank"
             rel="noopener noreferrer"
@@ -242,9 +371,9 @@ const aliados = [
           </a>
         </li>
         <li class="direct__item">
-          <span class="direct__label">Calendario</span>
+          <span class="direct__label role-label">Calendario</span>
           <a
-            class="direct__value"
+            class="direct__value inline-link"
             href="https://luma.com/calendar/cal-WjnM2llUGXz17t5"
             target="_blank"
             rel="noopener noreferrer"
@@ -253,9 +382,9 @@ const aliados = [
           </a>
         </li>
         <li class="direct__item">
-          <span class="direct__label">YouTube</span>
+          <span class="direct__label role-label">YouTube</span>
           <a
-            class="direct__value"
+            class="direct__value inline-link"
             href="https://www.youtube.com/@AISafetyMéxico"
             target="_blank"
             rel="noopener noreferrer"
@@ -278,242 +407,171 @@ const aliados = [
 </BaseLayout>
 
 <style>
-  /* Page-level layout primitives ------------------------------------------- */
+  /* Section shells ---------------------------------------------------------
+     Her 72px rhythm (48px on phones) through --section-pad; the line-soft
+     hairline under each section comes from base.css (`main > section`).
+     White and bg-2 alternate: intro, #participa and #colaboraciones are
+     white; «Otras formas» and #contacto are bg-2, so no two tinted bands
+     touch (the CtaSection below is white, the footer bg-2). Containers are
+     the global `.container`, so every left-aligned heading shares one edge. */
   .page-section {
-    padding-block: var(--space-10);
+    padding-block: var(--section-pad);
+    background: var(--color-bg-section-base);
+    /* Deep-link targets (#participa, #colaboraciones, #contacto) clear the
+       sticky header. */
+    scroll-margin-top: var(--scroll-offset);
   }
 
-  @media (min-width: 768px) {
-    .page-section {
-      padding-block: var(--space-12);
-    }
-  }
-
-  /* Alternating tonal surfaces for rhythm ---------------------------------- */
-  .page-section--intro {
-    background: var(--color-bg-base);
-  }
-  .page-section--vias {
-    background: var(--color-bg-base);
-  }
-  .page-section--allies {
-    background: var(--color-bg-base);
-  }
+  .page-section--more,
   .page-section--direct {
-    background: var(--color-bg-base);
+    background: var(--color-bg-section-warm);
   }
 
-  .container {
-    width: 100%;
-    max-width: var(--container-max);
-    margin-inline: auto;
-    padding-inline: var(--container-padding);
-  }
-  .container--narrow {
-    max-width: var(--container-narrow);
-  }
-  @media (min-width: 480px) {
-    .container {
-      padding-inline: var(--container-padding-md);
-    }
+  /* The intro is a heading-only band: drop the heading's 34px bottom margin
+     so the band keeps an even top and bottom. */
+  .page-section--intro :global(.section-heading) {
+    margin-bottom: 0;
   }
 
-  /* 3 vías cards (FeatureGrid pattern + per-card anchor ids) --------------- */
+  /* Path cards — her .program-card (C.9) ----------------------------------
+     White, 1px hairline, 8px radius, no shadow, block flow: label → title
+     → paragraphs → .program-actions. The cards hold actions but are not
+     links themselves, so they have no hover border. Grid: 1 column up to
+     768px, 2 from 769px (her .path-grid), 18px gap. */
   .collab-vias {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-8);
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    gap: var(--gap-grid);
   }
 
+  /* Cards are deep-link targets (/programs → #training, /research →
+     #research, /activities → #events; EN: /en/…). The extra 56px over the
+     header offset lands a card with the card above, or its section
+     description, still in view instead of sliced by the sticky header. */
   .collab-vias__item {
     display: flex;
-    /* Offset the in-page anchor scroll so the sticky header doesn't cover the card */
-    scroll-margin-top: 100px;
+    scroll-margin-top: calc(var(--scroll-offset) + 56px);
+  }
+
+  /* The first row of #participa (#training, and #vigia at two columns)
+     sits right under the section heading: land it with the whole heading
+     block (eyebrow, title, description) in view instead of slicing the
+     title under the sticky header. In rem, so the room grows with the
+     text size. */
+  @media (max-width: 768px) {
+    #participa .collab-vias__item:first-child {
+      scroll-margin-top: calc(var(--scroll-offset) + 11rem);
+    }
+  }
+  @media (min-width: 769px) {
+    #participa .collab-vias__item:nth-child(-n + 2) {
+      scroll-margin-top: calc(var(--scroll-offset) + 8rem);
+    }
   }
 
   .collab-vias__card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
     width: 100%;
-    padding: var(--space-6);
+    padding: var(--pad-card);
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    color: var(--color-text-primary);
-    transition:
-      transform var(--transition),
-      box-shadow var(--transition),
-      border-color var(--transition);
+    transition: border-color var(--transition);
   }
 
-  /* Highlight a card when its anchor is the active hash target */
+  /* The card a deep link points at (/get-involved#research, …) gets her
+     featured border: clay, a non-text mark. Nothing moves. */
   .collab-vias__item:target .collab-vias__card {
-    border-color: var(--color-border-accent);
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
+    border-color: var(--color-accent-decor);
   }
 
-  .collab-vias__number {
-    font-family: var(--font-display);
-    font-size: 2.4rem;
-    font-weight: var(--fw-bold);
-    line-height: 1;
-    color: var(--color-accent);
-    letter-spacing: -0.02em;
-    font-variant-numeric: lining-nums tabular-nums;
-  }
-
-  .collab-vias__title {
-    font-family: var(--font-display);
-    font-size: var(--fs-h6);
-    font-weight: var(--fw-bold);
-    line-height: var(--lh-snug);
+  /* Card titles — her .program-card-title. */
+  .collab-vias__title,
+  .collab-named__title {
+    margin-bottom: 10px;
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
     color: var(--color-text-heading);
-    margin: 0;
   }
 
-  .collab-vias__description {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    line-height: var(--lh-relaxed);
+  /* Card copy — her .program-card p (ink-2, 1.7, 11px between paragraphs). */
+  .collab-vias__text,
+  .collab-named__description {
+    margin-bottom: 11px;
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
     color: var(--color-text-secondary);
-    margin: 0;
   }
 
-  .collab-vias__cta {
-    margin-top: auto;
-    padding-top: var(--space-4);
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    font-weight: var(--fw-bold);
-    color: var(--color-accent);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    width: fit-content;
-  }
-  .collab-vias__cta:hover,
-  .collab-vias__cta:focus-visible {
-    color: var(--color-link-hover);
-    border-bottom-color: var(--color-link-hover);
+  .collab-vias__text:last-of-type,
+  .collab-named__description:last-of-type {
+    margin-bottom: 0;
   }
 
+  /* Named collaborations — same card; the chips (KeyFacts) follow 28px
+     below, like her .partners-row. */
   .collab-named {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-8);
-    margin: 0 0 var(--space-8);
-    padding: 0;
-    list-style: none;
+    gap: var(--gap-grid);
+    margin-bottom: var(--space-7);
   }
+
   .collab-named__card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
     height: 100%;
-    padding: var(--space-6);
+    padding: var(--pad-card);
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
   }
-  .collab-named__eyebrow {
-    font-family: var(--font-body);
-    font-size: var(--fs-eyebrow);
-    font-weight: var(--fw-bold);
-    letter-spacing: var(--ls-uppercase);
-    text-transform: uppercase;
-    color: var(--color-accent);
-  }
-  .collab-named__title {
-    font-family: var(--font-display);
-    font-size: var(--fs-h6);
-    font-weight: var(--fw-bold);
-    margin: 0;
-    color: var(--color-text-heading);
-  }
-  .collab-named__description {
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    line-height: var(--lh-relaxed);
-    color: var(--color-text-secondary);
-    margin: 0;
+
+  /* Allies chips at her .partner size (40px pills, like the /research
+     partner chips) instead of the smaller KeyFacts .tag; KeyFacts itself
+     keeps the tag size for /about. */
+  .page-section--allies :global(.key-facts__chip) {
+    padding: 8px 16px;
+    font-size: 0.84rem;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     .collab-vias,
     .collab-named {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-9);
-    }
-    .collab-vias__card {
-      padding: var(--space-7);
-    }
-    .collab-vias__number {
-      font-size: 2.8rem;
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .collab-vias__card {
-      transition: none;
-    }
-    .collab-vias__item:target .collab-vias__card {
-      transform: none;
-    }
-  }
-
-  /* Direct-contact list ---------------------------------------------------- */
+  /* Direct-contact list — the same channel cards as /contact, on the bg-2
+     band. One column; two from 769px with the email (the first, canonical
+     channel) spanning the row, so the five channels leave no empty cell.
+     Label: the global in-card .role-label. Value: the global .inline-link
+     (clay-dark, hairline underline) at her .contact-email size; long
+     handles may wrap anywhere. */
   .direct__list {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-4);
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    gap: var(--gap-grid);
   }
 
   .direct__item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    padding: var(--space-4) var(--space-5);
-    background: var(--color-bg-base);
+    padding: 22px 24px;
+    background: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-  }
-
-  .direct__label {
-    font-family: var(--font-body);
-    font-size: var(--fs-eyebrow);
-    font-weight: var(--fw-bold);
-    letter-spacing: var(--ls-uppercase);
-    text-transform: uppercase;
-    color: var(--color-accent);
+    border-radius: var(--radius);
   }
 
   .direct__value {
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    color: var(--color-text-primary);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: color var(--transition), border-color var(--transition);
-    word-break: break-word;
-  }
-  .direct__value:hover,
-  .direct__value:focus-visible {
-    color: var(--color-link-hover);
-    border-bottom-color: var(--color-link-hover);
+    font-size: 1.05rem;
+    overflow-wrap: anywhere;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     .direct__list {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--space-5);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .direct__item:first-child {
+      grid-column: 1 / -1;
     }
   }
 </style>

@@ -8,13 +8,31 @@
  * Template: ContentPage (ARCHITECTURE.md §6).
  *
  * Estructura:
- *   1. PageHero (eyebrow + h1 + lede + breadcrumb)
- *   2. Misión — párrafo expandido + Callout con la frase central
+ *   1. PageHero (breadcrumb + h1 + lede, centrado)
+ *   2. Misión — párrafo expandido + Callout con la frase central (el
+ *      encabezado va sin descripción: 14px a la prosa, como Visión y Origen)
  *   3. Visión — párrafo + PullQuote
- *   4. Pilares — grid de 4 PillarCard con descripciones expandidas
- *   5. Historia / Origen — narrativa de fundación 2025
- *   6. KeyFacts — chips identitarios
- *   7. CtaSection — "Conoce al equipo" → /team
+ *   4. Teoría del cambio (#teoria-del-cambio) — eyebrow «Estrategia» (no
+ *      repite el título), lead, dos Card (North Star / Cómo llegamos) y
+ *      «Cómo medimos el crecimiento». Texto de la colaboradora (fcacfc4
+ *      index.html L78–110), en el orden de su sitio: Sobre nosotros →
+ *      Teoría del cambio.
+ *   5. Pilares — grid de 4 PillarCard con descripciones expandidas
+ *   6. Historia / Origen — narrativa de fundación 2025
+ *   7. KeyFacts — chips identitarios
+ *   8. CtaSection — "Conoce al equipo" → /team
+ *
+ * Diseño ("Editorial mínimo", fcacfc4 css/style.css):
+ *   - Todas las secciones usan el contenedor de 1080px, así los encabezados
+ *     (alineados a la izquierda) arrancan en el mismo borde; el texto corrido
+ *     se limita a 680px, la medida de su .section-description.
+ *   - Ritmo: secciones blancas con filete inferior y su padding de 72px
+ *     (48px en teléfonos), Datos esenciales incluida: lleva encabezado, así
+ *     que no usa el padding compacto de las bandas de cifras. Solo la teoría
+ *     del cambio va en bg-2 con tarjetas blancas, como su .section-theory
+ *     (L523–562).
+ *   - Las métricas usan su lista de filetes (.metric-list, global en
+ *     base.css): rótulo en negritas y texto en ink-2, como en su sitio.
  *
  * Editor-in-chief notes (placeholders editoriales que requieren validación):
  *   - [GAP-4] Historia / Origen — narrativa de fundación basada en
@@ -31,6 +49,7 @@ import PageHero from '../components/PageHero.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import Callout from '../components/Callout.astro';
 import PullQuote from '../components/PullQuote.astro';
+import Card from '../components/Card.astro';
 import PillarCard from '../components/PillarCard.astro';
 import KeyFacts from '../components/KeyFacts.astro';
 import CtaSection from '../components/CtaSection.astro';
@@ -41,6 +60,33 @@ const breadcrumb = {
     { label: 'Sobre nosotros' },
   ],
 };
+
+// Teoría del cambio — «Cómo medimos el crecimiento» (fcacfc4 index.html
+// L101–107). `label` is her bold lead-in; the period is added in the markup.
+const metrics = [
+  {
+    label: 'Postulaciones contrafactuales',
+    value:
+      'Mexicanos que le dan a «enviar» en SPAR, Apart, MATS o en vacantes de Estados Unidos y China. La mayoría será rechazada, por diseño; lo que cuenta es que apliquen.',
+  },
+  {
+    label: 'Autopropulsión y retención',
+    value: 'Cuántos continúan más allá de las primeras veinte horas acompañadas.',
+  },
+  {
+    label: 'Producción de investigación',
+    value: 'Experimentos y artículos publicados, y equipos aceptados en SPAR.',
+  },
+  {
+    label: 'Financiamiento y pista de despegue',
+    value: 'Recursos levantados a lo largo de la escalera de fondeo.',
+  },
+  {
+    label: 'Credibilidad y visibilidad',
+    value:
+      'Academia y tomadores de decisiones en el circuito, y solicitudes de consulta del gobierno.',
+  },
+];
 
 const pillars = [
   {
@@ -92,11 +138,10 @@ const keyFacts = [
 
   <!-- 2. Misión -->
   <section class="section section--base">
-    <div class="container container--narrow">
+    <div class="container">
       <SectionHeading
         eyebrow="Misión"
         title="Por qué existimos"
-        description="Nuestro propósito articulado en una sola declaración."
       />
 
       <div class="prose">
@@ -117,23 +162,23 @@ const keyFacts = [
           internacionales que comparten el compromiso de hacer del sur global
           un actor con voz propia en la conversación sobre seguridad de la IA.
         </p>
-      </div>
 
-      <Callout tone="highlight">
-        <p>
-          <strong>Misión.</strong> Promover la investigación, la educación y la
-          gobernanza responsable de la inteligencia artificial en México,
-          asegurando que los sistemas de IA se desarrollen y desplieguen de
-          forma segura, alineada con valores humanos y sensible al contexto
-          mexicano.
-        </p>
-      </Callout>
+        <Callout tone="highlight">
+          <p>
+            <strong>Misión.</strong> Promover la investigación, la educación y la
+            gobernanza responsable de la inteligencia artificial en México,
+            asegurando que los sistemas de IA se desarrollen y desplieguen de
+            forma segura, alineada con valores humanos y sensible al contexto
+            mexicano.
+          </p>
+        </Callout>
+      </div>
     </div>
   </section>
 
   <!-- 3. Visión -->
   <section class="section section--base">
-    <div class="container container--narrow">
+    <div class="container">
       <SectionHeading
         eyebrow="Visión"
         title="Hacia dónde apuntamos"
@@ -148,16 +193,94 @@ const keyFacts = [
           generaciones y participen activamente en la construcción de marcos
           regulatorios sensibles a las realidades mexicanas.
         </p>
-      </div>
 
-      <PullQuote
-        quote="Un México en el que la voz del sur global tenga peso propio en la definición técnica y normativa de la seguridad de la IA."
-        attribution="Visión · AI Safety Mexico"
-      />
+        <PullQuote
+          quote="Un México en el que la voz del sur global tenga peso propio en la definición técnica y normativa de la seguridad de la IA."
+          attribution="Visión · AI Safety Mexico"
+        />
+      </div>
     </div>
   </section>
 
-  <!-- 4. Pilares profundizados -->
+  <!-- 4. Teoría del cambio -->
+  <section
+    id="teoria-del-cambio"
+    class="section section--warm theory"
+    aria-labelledby="teoria-heading"
+  >
+    <div class="container">
+      <SectionHeading
+        id="teoria-heading"
+        eyebrow="Estrategia"
+        title="Nuestra teoría del cambio"
+      />
+
+      <p class="theory-lead">
+        No estamos construyendo una comunidad para «unirse». Estamos
+        construyendo una plataforma de despegue hacia la frontera de la
+        seguridad en IA y la voz creíble de investigación de México: un puñado
+        de mexicanos de alta agencia persiguiendo la frontera, un cuerpo
+        citable de investigación y un puente en español hacia quienes
+        decidirán cómo México enfrenta la IA avanzada.
+      </p>
+
+      <div class="theory-grid">
+        <Card
+          bordered
+          interactive={false}
+          elevated={false}
+          padding="md"
+          badge="North Star"
+          title="Ambición"
+        >
+          <p>
+            Sembrar en México un cuerpo de trabajo que produzca investigación
+            propia en áreas clave de seguridad en IA. Nuestra referencia son los
+            AI Safety Institutes.
+          </p>
+          <p>
+            De ahí se siguen dos efectos: funcionar como capa de traducción al
+            español de la IA de frontera, y como una voz creíble y no partidista
+            a la que un tomador de decisiones mexicano pueda llamar.
+          </p>
+          <p>
+            Ese es el norte de largo plazo; todo lo que hacemos hoy construye
+            hacia allá.
+          </p>
+        </Card>
+
+        <Card
+          bordered
+          interactive={false}
+          elevated={false}
+          padding="md"
+          badge="Cómo llegamos"
+          title="Política guía"
+        >
+          <p>
+            Lograr que un número pequeño de personas de alta agencia se
+            autopropulsen hacia la frontera, producir un cuerpo de investigación
+            citable y traducirlo para tomadores de decisiones mexicanos y para el
+            mundo hispanohablante.
+          </p>
+          <p>
+            Todo apoyándonos en infraestructura que ya existe (Apart, SPAR,
+            BlueDot, Atlas, instituciones académicas en México) en lugar de
+            construir la nuestra desde cero.
+          </p>
+        </Card>
+      </div>
+
+      <h3 class="theory-subheading">Cómo medimos el crecimiento</h3>
+      <ul class="metric-list" role="list">
+        {metrics.map((metric) => (
+          <li><strong>{metric.label}.</strong> {metric.value}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5. Pilares profundizados -->
   <section class="section section--base">
     <div class="container">
       <SectionHeading
@@ -178,9 +301,9 @@ const keyFacts = [
     </div>
   </section>
 
-  <!-- 5. Historia / Origen -->
+  <!-- 6. Historia / Origen -->
   <section class="section section--base">
-    <div class="container container--narrow">
+    <div class="container">
       <SectionHeading
         eyebrow="Origen"
         title="Cómo nació AI Safety Mexico"
@@ -217,9 +340,9 @@ const keyFacts = [
     </div>
   </section>
 
-  <!-- 6. KeyFacts -->
-  <section class="section section--base section--compact">
-    <div class="container container--narrow">
+  <!-- 7. KeyFacts -->
+  <section class="section section--base">
+    <div class="container">
       <SectionHeading
         eyebrow="Identidad"
         title="Datos esenciales"
@@ -230,7 +353,7 @@ const keyFacts = [
     </div>
   </section>
 
-  <!-- 7. CTA -->
+  <!-- 8. CTA -->
   <CtaSection
     title="¿Quieres conocer al equipo?"
     description="Detrás de AI Safety Mexico hay un grupo multidisciplinario de investigadoras, ingenieros y educadores comprometidos con la seguridad de la IA en México."
@@ -242,44 +365,79 @@ const keyFacts = [
 </BaseLayout>
 
 <style>
-  /* Local prose tuning for the About narrative blocks. The site uses Inter
-     for body and Playfair for display headings; here we set comfortable
-     line-height and bottom margin between paragraphs. */
+  /* Narrative blocks (Misión, Visión, Origen). Left-aligned under the
+     section heading and capped at her running-text measure (680px, her
+     .section-description); the Callout / PullQuote inside share it and
+     carry their own outer spacing. Copy is ink-2 at 1.7 with 11px between
+     paragraphs, as in her content cards. */
   .prose {
-    max-width: 64ch;
-    margin-inline: auto;
+    max-width: var(--measure-desc);
   }
 
-  .prose p {
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
+  .prose > p {
     line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .prose > p + p {
+    margin-top: 11px;
+  }
+
+  /* Teoría del cambio — her .section-theory internals (fcacfc4 L523–562):
+     h2 → lead (ink, 1.1rem, max 780px) → two white cards on bg-2 (grid
+     margin 44px) → subheading (mb 4px) → hairline .metric-list. The card
+     copy is the Card's own default-slot paragraph style (her
+     .program-card p: ink-2, 1.7). */
+  .theory {
+    scroll-margin-top: var(--scroll-offset);
+  }
+
+  .theory-lead {
+    font-size: 1.02rem;
+    line-height: var(--lh-relaxed);
     color: var(--color-text-primary);
-    margin: 0 0 var(--space-4);
+    max-width: var(--measure-lead);
+    margin: 0 0 32px;
+    text-wrap: pretty;
   }
 
-  .prose p:last-child {
-    margin-bottom: 0;
+  .theory-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+    margin-bottom: 44px;
   }
 
-  /* Pillar grid: 1-up mobile → 2-up tablet → 4-up desktop. */
+  /* Her .theory-subheading: 1rem / 550 / -.01em; the line-height is the
+     body's 1.65 (VF-3). */
+  .theory-subheading {
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-relaxed);
+    letter-spacing: -0.01em;
+    color: var(--color-text-heading);
+    margin: 0 0 4px;
+  }
+
+  /* Pillar grid: her 2-up card grid (theory, paths, collaborations): one
+     column up to 768px, two from 769px, 18px gaps. Two-up keeps the pillar
+     copy at a readable measure (a 4-up row left ~25 characters a line). */
   .pillar-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-8);
+    gap: var(--gap-grid);
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 769px) {
+    .theory-lead {
+      font-size: 1.1rem;
+    }
+
+    .theory-grid,
     .pillar-grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-9);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .pillar-grid {
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-9);
     }
   }
 </style>

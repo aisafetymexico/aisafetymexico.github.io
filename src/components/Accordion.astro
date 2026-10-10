@@ -5,6 +5,8 @@
  * Spec:
  *  - docs/DESIGN-SYSTEM.md §6.5.
  *  - WAI-ARIA Authoring Practices: "Disclosure (Show/Hide)" / "Accordion".
+ *  - Design: a hairline list, no fills, Inter 550 triggers
+ *    without side padding, ink-2 panels. No route renders it today.
  *
  * A11y guarantees:
  *  - Each item is a <button aria-expanded> that toggles a region by aria-controls.
@@ -160,6 +162,8 @@ const rootId = id || `accordion-${Math.random().toString(36).slice(2, 9)}`;
 </script>
 
 <style>
+  /* Hairline list in her language: 1px rules, no fills,
+     Inter 550 triggers that turn clay-dark on hover, an ink-3 chevron. */
   .accordion {
     width: 100%;
     border-top: 1px solid var(--color-border);
@@ -179,36 +183,39 @@ const rootId = id || `accordion-${Math.random().toString(36).slice(2, 9)}`;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-4, 16px);
+    gap: var(--space-4);
     width: 100%;
-    padding: var(--space-5, 20px) var(--space-4, 16px);
+    padding: 18px 0;
     background: transparent;
     border: none;
     cursor: pointer;
     text-align: left;
-    font-family: var(--font-display, 'Playfair Display', serif);
-    font-size: var(--fs-h6, 1.1rem);
-    font-weight: var(--fw-bold, 700);
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
     color: var(--color-text-heading);
-    transition: background var(--transition, 0.25s ease), color var(--transition, 0.25s ease);
+    transition: color var(--transition);
   }
   .accordion__trigger:hover {
-    background: var(--color-accent-soft);
+    color: var(--color-link-hover);
   }
   .accordion__trigger:focus-visible {
     outline: 2px solid var(--color-focus-ring);
-    outline-offset: -2px;
+    outline-offset: 2px;
   }
 
   .accordion__title { flex: 1; }
 
+  /* Chevron: a non-text mark, so ink-3 (3.24:1) is enough. */
   .accordion__icon {
     flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-accent);
-    transition: transform var(--transition, 0.25s ease);
+    color: var(--ink-3);
+    transition: transform var(--transition);
   }
   .accordion__trigger.is-open .accordion__icon { transform: rotate(180deg); }
 
@@ -218,11 +225,11 @@ const rootId = id || `accordion-${Math.random().toString(36).slice(2, 9)}`;
   .accordion__panel[hidden] { display: none; }
 
   .accordion__content {
-    padding: 0 var(--space-4, 16px) var(--space-5, 20px);
-    color: var(--color-text-primary);
-    line-height: var(--lh-relaxed, 1.7);
-    font-family: var(--font-body, 'Inter', sans-serif);
-    font-size: var(--fs-body, 1rem);
+    padding: 0 0 18px;
+    color: var(--color-text-secondary);
+    line-height: var(--lh-loose);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
   }
 
   @media (prefers-reduced-motion: reduce) {

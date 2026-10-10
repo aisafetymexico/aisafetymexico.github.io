@@ -8,13 +8,21 @@
  *  - docs/CONTENT-MAP.md §1.7.
  *
  * Sections:
- *  1. PageHero (eyebrow · h1 · description · breadcrumb)
+ *  1. PageHero (centered: breadcrumb · h1 · description)
  *  2. Áreas de investigación (FeatureGrid 4 ejes temáticos)
- *  3. Publicaciones (PublicationCard grid; sourced from publications collection)
+ *  3. Publicaciones (#publicaciones): PublicationCard grid, sourced from the
+ *     publications collection
  *  4. Investigación en curso (ProjectCard for ongoing projects, including
  *     cross-link to /projects/ai-safety-connect)
  *  5. Colaboraciones (chips for partner orgs in research)
  *  6. CtaSection — colaboración → /get-involved#research
+ *
+ * Design: the collaborator's light "Editorial mínimo" (fcacfc4
+ * css/style.css). Publications get the page's one bg-2 band, as her
+ * research section does; card grids use the 18px gap, and a lone card
+ * spans the row with its copy kept to the 680px measure; partner chips are
+ * her .partner pills (bg-2, hairline, no lift), and linked partners add her
+ * name-plus-↗ mark.
  *
  * Tokens / surfaces / typography only via design-system tokens.
  */
@@ -114,7 +122,7 @@ const breadcrumb = {
 
   <!-- 1 · Áreas de investigación -->
   <section class="research-section research-section--areas">
-    <div class="research-section__inner">
+    <div class="container">
       <SectionHeading
         eyebrow="Líneas de trabajo"
         title="Áreas de investigación"
@@ -125,8 +133,8 @@ const breadcrumb = {
   </section>
 
   <!-- 2 · Publicaciones -->
-  <section class="research-section research-section--publications">
-    <div class="research-section__inner">
+  <section id="publicaciones" class="research-section research-section--publications">
+    <div class="container">
       <SectionHeading
         eyebrow="Publicaciones"
         title="Papers y trabajos publicados"
@@ -158,7 +166,7 @@ const breadcrumb = {
 
   <!-- 3 · Investigación en curso -->
   <section class="research-section research-section--ongoing">
-    <div class="research-section__inner">
+    <div class="container">
       <SectionHeading
         eyebrow="En curso"
         title="Investigación en desarrollo"
@@ -180,7 +188,7 @@ const breadcrumb = {
 
   <!-- 4 · Colaboraciones (chips) -->
   <section class="research-section research-section--collabs">
-    <div class="research-section__inner">
+    <div class="container">
       <SectionHeading
         eyebrow="Colaboraciones"
         title="Trabajamos con"
@@ -197,6 +205,7 @@ const breadcrumb = {
                 rel="noopener noreferrer"
               >
                 {partner.name}
+                <span aria-hidden="true">↗</span>
               </a>
             ) : (
               <span class="partner-chips__chip">{partner.name}</span>
@@ -219,90 +228,80 @@ const breadcrumb = {
 </BaseLayout>
 
 <style>
+  /* Section shell: her 72px rhythm (48px on phones, via --section-pad);
+     the hairline between sections comes from base.css (`main > section`). */
   .research-section {
-    padding-block: var(--space-12);
+    padding-block: var(--section-pad);
+    background: var(--color-bg-section-base);
   }
 
-  .research-section--areas {
-    background: var(--color-bg-base);
-  }
-
+  /* The page's one tinted band, as her research section (bg-2 with white
+     cards). The partner row stays on white so its bg-2 pills read. */
   .research-section--publications {
-    background: var(--color-bg-base);
+    background: var(--color-bg-section-warm);
   }
 
-  .research-section--ongoing {
-    background: var(--color-bg-base);
+  /* Deep-link target (#publicaciones, from the home «Trabajo reciente»
+     publication pill) clears the sticky header, like /activities#gsh-2026. */
+  .research-section[id] {
+    scroll-margin-top: var(--scroll-offset);
   }
 
-  .research-section--collabs {
-    background: var(--color-bg-base);
-  }
-
-  @media (min-width: 768px) {
-    .research-section {
-      padding-block: var(--space-14);
-    }
-  }
-
-  .research-section__inner {
-    width: 100%;
-    max-width: var(--container-max);
-    margin-inline: auto;
-    padding-inline: var(--container-padding);
-  }
-
-  @media (min-width: 480px) {
-    .research-section__inner {
-      padding-inline: var(--container-padding-md);
-    }
-  }
-
-  /* Publication grid: single column on mobile, 2 cols ≥768px. */
+  /* Publication grid: her 2-up card grid, 18px gap, one column up to 768px. */
   .publication-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-8);
+    gap: var(--gap-grid);
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     .publication-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-10);
     }
   }
 
-  /* Ongoing-projects grid: matches publication grid breakpoints. */
+  /* Ongoing-projects grid: matches the publication grid. */
   .ongoing-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-8);
+    gap: var(--gap-grid);
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     .ongoing-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-10);
     }
   }
 
-  .research-empty {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    line-height: var(--lh-relaxed);
-    color: var(--color-text-secondary);
-    max-width: 60ch;
+  /* A lone card spans the whole row instead of leaving an empty half next
+     to it; its copy keeps the 680px reading measure. With two or more
+     cards, the 2-up grid applies and the measure is a no-op. */
+  @media (min-width: 769px) {
+    .publication-grid > :global(:only-child),
+    .ongoing-grid > :global(:only-child) {
+      grid-column: 1 / -1;
+    }
   }
 
-  /* Partner chips */
+  .publication-grid :global(.publication-card__abstract),
+  .ongoing-grid :global(.project-card__description) {
+    max-width: var(--measure-desc);
+  }
+
+  .research-empty {
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    max-width: var(--measure-desc);
+  }
+
+  /* Partner chips — her .partners-row / .partner: left-aligned row of bg-2
+     pills with a 1px hairline, .84rem at 450 in ink-2. */
   .partner-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-3);
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    align-items: center;
+    gap: var(--space-2);
   }
 
   .partner-chips__item {
@@ -312,40 +311,30 @@ const breadcrumb = {
   .partner-chips__chip {
     display: inline-flex;
     align-items: center;
-    padding: var(--space-2) var(--space-5);
-    background: var(--color-bg-elevated);
-    color: var(--color-text-heading);
-    font-family: var(--font-body);
-    font-size: var(--fs-small);
-    font-weight: var(--fw-semibold);
-    letter-spacing: var(--ls-wide);
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-bg-warm);
+    color: var(--color-text-secondary);
+    font-size: 0.84rem;
+    font-weight: var(--fw-book);
+    line-height: var(--lh-relaxed);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-pill);
     text-decoration: none;
-    line-height: 1.4;
     transition:
-      transform var(--transition),
       border-color var(--transition),
       color var(--transition);
   }
 
-  .partner-chips__chip--link:hover,
-  .partner-chips__chip--link:focus-visible {
-    transform: translateY(-2px);
-    border-color: var(--color-border-accent);
-    color: var(--color-link-hover);
+  /* Linked partners (external sites) carry her name-plus-↗ mark
+     («AISafety.com ↗»; the arrow is aria-hidden), so they read as links at
+     rest. Hover darkens the hairline and the label, as her .chip:hover
+     does. Nothing lifts; the focus ring comes from base.css. */
+  .partner-chips__chip--link {
+    gap: 6px;
   }
 
-  .partner-chips__chip--link:focus-visible {
-    outline: 2px solid var(--color-focus-ring);
-    outline-offset: 3px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .partner-chips__chip { transition: none; }
-    .partner-chips__chip--link:hover,
-    .partner-chips__chip--link:focus-visible {
-      transform: none;
-    }
+  .partner-chips__chip--link:hover {
+    border-color: var(--color-border-strong);
+    color: var(--color-text-primary);
   }
 </style>

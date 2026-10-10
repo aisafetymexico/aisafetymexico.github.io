@@ -1,11 +1,14 @@
 /*
- * AI Safety Mexico — Base styles
+ * AI Safety Mexico — Base styles ("Editorial mínimo", light)
  *
- * Modern reset, base typography (h1–h6, body, links, lists, images, buttons),
- * typography role classes, spacing utilities, container widths, section tone
- * classes (warm / base / impact / cream), print + reduced-motion preferences.
+ * Reset, base typography (body, links, h1–h6), typography role classes,
+ * containers, section shells (padding + the per-section hairline), the
+ * shared utilities her design relies on (pill buttons, eyebrow, in-text
+ * links, tags, hairline lists, Luma embed), skip link, visually-hidden,
+ * print and reduced motion.
  *
- * Mobile-first: defaults are mobile, scale up via @media (min-width: …).
+ * Mobile-first: defaults are the ≤480px phone values; the tokens switch at
+ * her 481 / 769 / 1025px tiers (see tokens.css).
  */
 
 @import './tokens.css';
@@ -62,18 +65,22 @@ ol {
   list-style: none;
 }
 
+/* Her body (fcacfc4 L59–69): Inter 16px / 1.65, ink on white; 15px on
+ * phones through --fs-body. `overflow-x: hidden` propagates to the
+ * viewport, so the sticky header keeps working. */
 body {
   min-height: 100vh;
   font-family: var(--font-body);
   font-size: var(--fs-body);
   font-weight: var(--fw-regular);
-  line-height: var(--lh-loose);
+  line-height: var(--lh-relaxed);
   color: var(--color-text-primary);
   background: var(--color-bg-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  font-feature-settings: 'kern' 1, 'liga' 1;
+  font-feature-settings: var(--font-features);
+  overflow-x: hidden;
 }
 
 img,
@@ -90,17 +97,35 @@ img {
   vertical-align: middle;
 }
 
+/* Links: ink at rest, clay-dark on hover (her L72–73, VF-10). */
 a {
   color: var(--color-link);
   text-decoration: none;
   transition: color var(--transition);
 }
 
-a:hover,
-a:focus-visible {
+a:hover {
   color: var(--color-link-hover);
 }
 
+/* In-text links (her .inline-link): an unclassed <a> directly inside running
+ * text gets clay-dark, weight 500 and a hairline underline, so links are not
+ * told apart by colour alone (WCAG 1.4.1). Specificity is (0,0,1): any
+ * component or page rule overrides it. Anchors that wrap block content
+ * (cards built as <li><a><div>…) are excluded. */
+:where(p, li, dd, td, figcaption, blockquote) > a:where(:not([class]):not(:has(div, img, picture))) {
+  color: var(--color-link-inline);
+  font-weight: var(--fw-medium);
+  border-bottom: 1px solid var(--color-link-underline);
+  transition: color var(--transition), border-color var(--transition);
+}
+
+:where(p, li, dd, td, figcaption, blockquote) > a:where(:not([class]):not(:has(div, img, picture))):hover {
+  border-bottom-color: var(--color-link-underline-hover);
+}
+
+/* Focus: 2px blue ring, offset 2px. The outline follows each element's own
+ * border-radius (pills stay pills). */
 a:focus-visible,
 button:focus-visible,
 [role='button']:focus-visible,
@@ -110,7 +135,6 @@ select:focus-visible,
 summary:focus-visible {
   outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
-  border-radius: var(--radius-xs);
 }
 
 button,
@@ -136,15 +160,15 @@ hr {
 
 ::selection {
   background: var(--color-accent-soft);
-  color: var(--color-text-heading);
+  color: var(--color-accent);
 }
 
 /* ============================================================
  * Typography defaults (h1–h6, p)
  *
- * These set sensible defaults; pages should prefer the explicit
- * role classes (.role-display, .role-h2, etc.) when finer control
- * is needed.
+ * Headings are Inter at medium weights with negative tracking: 550 for
+ * h2–h6, 500 for h1 (her display weight). Pages should prefer the role
+ * classes or component styles when finer control is needed.
  * ============================================================ */
 h1,
 h2,
@@ -154,22 +178,22 @@ h5,
 h6 {
   font-family: var(--font-display);
   color: var(--color-text-heading);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-heading);
   line-height: var(--lh-heading);
-  letter-spacing: var(--ls-normal);
+  letter-spacing: var(--ls-heading);
+  text-wrap: balance;
 }
 
 h1 {
   font-size: var(--fs-h1);
-  line-height: var(--lh-tight);
-  letter-spacing: var(--ls-tight);
-  font-weight: var(--fw-extrabold);
+  font-weight: var(--fw-display);
+  line-height: 1.18;
+  letter-spacing: var(--ls-display);
 }
 
 h2 {
   font-size: var(--fs-h2);
   line-height: var(--lh-snug);
-  letter-spacing: var(--ls-snug);
 }
 
 h3 {
@@ -198,12 +222,10 @@ small {
   font-size: var(--fs-small);
 }
 
-/* RAND-DIFF §10: restrict to two body weights — 400 (regular) + 700 (bold).
- * `strong`/`b` jump straight to bold; 600 (semibold) is reserved for the
- * narrow set of UI affordances that already declare it explicitly. */
+/* The heaviest loaded weight is 600. */
 strong,
 b {
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-semibold);
 }
 
 /* ============================================================
@@ -214,63 +236,63 @@ b {
 .role-display {
   font-family: var(--font-display);
   font-size: var(--fs-display);
-  font-weight: var(--fw-extrabold);
+  font-weight: var(--fw-display);
   line-height: var(--lh-tight);
-  letter-spacing: var(--ls-tight);
+  letter-spacing: var(--ls-display);
   color: var(--color-text-heading);
 }
 
 .role-h1 {
   font-family: var(--font-display);
   font-size: var(--fs-h1);
-  font-weight: var(--fw-extrabold);
-  line-height: var(--lh-tight);
-  letter-spacing: var(--ls-tight);
+  font-weight: var(--fw-display);
+  line-height: 1.18;
+  letter-spacing: var(--ls-display);
   color: var(--color-text-heading);
 }
 
 .role-h2 {
   font-family: var(--font-display);
   font-size: var(--fs-h2);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-heading);
   line-height: var(--lh-snug);
-  letter-spacing: var(--ls-snug);
+  letter-spacing: var(--ls-heading);
   color: var(--color-text-heading);
 }
 
 .role-h3 {
   font-family: var(--font-display);
   font-size: var(--fs-h3);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-heading);
   line-height: var(--lh-heading);
-  letter-spacing: var(--ls-normal);
+  letter-spacing: var(--ls-heading);
   color: var(--color-text-heading);
 }
 
 .role-h4 {
   font-family: var(--font-display);
   font-size: var(--fs-h4);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-heading);
   line-height: var(--lh-heading);
-  letter-spacing: var(--ls-normal);
+  letter-spacing: var(--ls-heading);
   color: var(--color-text-heading);
 }
 
 .role-h5 {
   font-family: var(--font-display);
   font-size: var(--fs-h5);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-heading);
   line-height: var(--lh-heading);
-  letter-spacing: var(--ls-normal);
+  letter-spacing: var(--ls-heading);
   color: var(--color-text-heading);
 }
 
 .role-h6 {
   font-family: var(--font-display);
   font-size: var(--fs-h6);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-heading);
   line-height: var(--lh-heading);
-  letter-spacing: var(--ls-normal);
+  letter-spacing: var(--ls-heading);
   color: var(--color-text-heading);
 }
 
@@ -279,7 +301,7 @@ b {
   font-size: var(--fs-lead);
   font-weight: var(--fw-regular);
   line-height: var(--lh-loose);
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
 }
 
 .role-body {
@@ -306,17 +328,15 @@ b {
   color: var(--color-text-muted);
 }
 
-/* RAND-DIFF §10.3 + §10.5: eyebrow drops from 700/copper/0.35em to a
- * restrained 500/text-secondary/0.10em — close enough to RAND's "tiny grey
- * caption" pattern that it stops competing with the H2 for focal weight. */
-.role-eyebrow {
+/* Section / form eyebrow — her .eyebrow (.7rem / 600 / .14em / uppercase). */
+.role-eyebrow,
+.eyebrow {
   font-family: var(--font-body);
   font-size: var(--fs-eyebrow);
-  font-weight: var(--fw-medium);
-  line-height: 1.1;
+  font-weight: var(--fw-label);
   letter-spacing: var(--ls-uppercase);
   text-transform: uppercase;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
 }
 
 .role-eyebrow--xl {
@@ -327,16 +347,29 @@ b {
   color: var(--color-accent);
 }
 
+/* In-card label — her .theory-label (.7rem / 500 / .09em / uppercase). */
+.role-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 8px;
+}
+
 .role-stat {
   font-family: var(--font-display);
   font-size: var(--fs-stat);
-  font-weight: var(--fw-extrabold);
-  line-height: var(--lh-tight);
+  font-weight: var(--fw-display);
+  line-height: 1.1;
+  letter-spacing: var(--ls-stat);
   color: var(--color-text-heading);
 }
 
 /* ============================================================
- * Container widths
+ * Container widths — 1080px (67.5rem); gutters 18 / 24 / 32px
  * ============================================================ */
 .container {
   width: 100%;
@@ -345,7 +378,7 @@ b {
   padding-inline: var(--container-padding);
 }
 
-@media (min-width: 480px) {
+@media (min-width: 481px) {
   .container {
     padding-inline: var(--container-padding-md);
   }
@@ -368,74 +401,45 @@ b {
 }
 
 /* ============================================================
- * Section tone classes (Type A warm / B base / C impact / D cream)
- * Mapped from current style.css surface treatments.
+ * Sections
+ *
+ * Every section is 72px top and bottom (48px on phones) and ends in a 1px
+ * line-soft hairline. Rhythm: white and bg-2 alternate; avoid two tinted
+ * sections in a row (the footer is bg-2).
  * ============================================================ */
 .section {
   position: relative;
-  padding-block: var(--space-12);
-}
-
-@media (min-width: 768px) {
-  .section {
-    padding-block: var(--space-16);
-  }
-}
-
-@media (min-width: 1024px) {
-  .section {
-    padding-block: var(--space-20);
-  }
+  padding-block: var(--section-pad);
 }
 
 .section--compact {
-  padding-block: var(--space-10);
-}
-
-@media (min-width: 768px) {
-  .section--compact {
-    padding-block: var(--space-14);
-  }
+  padding-block: var(--section-pad-stats);
 }
 
 .section--impact-padding {
-  padding-block: var(--space-14);
-}
-
-@media (min-width: 768px) {
-  .section--impact-padding {
-    padding-block: var(--space-16);
-  }
+  padding-block: var(--section-pad);
 }
 
 .section--xl-padding {
-  padding-block: var(--space-16);
+  padding-block: var(--section-pad-contact);
 }
 
-@media (min-width: 768px) {
-  .section--xl-padding {
-    padding-block: var(--space-20);
-  }
-}
-
-/* Type A: warm cream surface (what-we-do, research) */
+/* Tinted bg-2 surface (her .section-theory, .section-current, …) */
 .section--warm {
   background: var(--color-bg-section-warm);
   color: var(--color-text-primary);
-  box-shadow: var(--inset-section-warm);
 }
 
-/* Type B: base white surface (programs, team) */
+/* White surface */
 .section--base {
   background: var(--color-bg-section-base);
   color: var(--color-text-primary);
 }
 
-/* Type C: navy impact surface (stats, contact) */
+/* Ink band — the only dark surface; rare (no page uses it today). */
 .section--impact {
   background: var(--color-bg-impact);
   color: var(--color-text-on-dark);
-  box-shadow: var(--inset-section-impact);
 }
 
 .section--impact h1,
@@ -451,25 +455,220 @@ b {
   color: var(--color-text-on-dark-muted);
 }
 
-/* Type D: warm cream solid */
+/* Tinted bg-2 surface (alias of --warm) */
 .section--cream {
   background: var(--color-bg-warm);
   color: var(--color-text-primary);
 }
 
-/* Optional decorative top edge accent
- * Polish-rand (RAND-DIFF §1.4, §8.1): copper→gold→copper gradient flattened
- * to a 1px neutral hairline. The class still exists so existing markup keeps
- * rendering a separator; color-restrainer may strip the class outright. */
+/* Legacy top rule. Neutralised: every section already ends in a hairline,
+ * so a top rule would double the previous section's border. */
 .section--edge-accent::before {
-  content: '';
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 1px;
-  background: var(--color-border);
-  z-index: var(--z-decoration);
-  pointer-events: none;
+  content: none;
+  display: none;
+}
+
+/* Per-section hairline (her `border-bottom: 1px solid var(--line-soft)`).
+ * (0,0,2) specificity: component and page rules override it, e.g. the home
+ * hero, whose banner closes the section. */
+main > section {
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+/* ============================================================
+ * Buttons — her pill family (fcacfc4 L101–173)
+ *
+ *   .btn .btn-primary    ink pill, clay-dark on hover (main action)
+ *   .btn .btn-outline    white pill + hairline (action next to a primary)
+ *   .btn .btn-secondary  quiet bg-3 fill
+ *   .btn .btn-ghost      small utility pill (toolbars, downloads)
+ *   .btn .btn-register   filled accent (clay-dark, AA with white)
+ *   .btn-hero            larger size modifier (full width on ≤768px)
+ * ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-btn);
+  line-height: 1;
+  letter-spacing: var(--ls-btn);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.btn-primary {
+  background: var(--color-cta-bg);
+  color: var(--color-cta-text);
+  border-color: var(--color-cta-bg);
+}
+.btn-primary:hover {
+  background: var(--color-cta-bg-hover);
+  border-color: var(--color-cta-bg-hover);
+  color: var(--color-cta-text);
+}
+
+.btn-secondary {
+  background: var(--color-bg-muted);
+  color: var(--color-text-primary);
+  border-color: var(--color-bg-muted);
+}
+.btn-secondary:hover {
+  background: var(--color-bg-base);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+.btn-outline:hover {
+  background: var(--color-bg-warm);
+  border-color: var(--color-border-strong);
+  color: var(--color-text-primary);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+  font-size: 0.85rem;
+  padding: 10px 18px;
+}
+.btn-ghost:hover {
+  background: var(--color-bg-warm);
+  border-color: var(--color-border-strong);
+  color: var(--color-text-primary);
+}
+
+.btn-register {
+  background: var(--color-cta-register);
+  color: var(--color-cta-register-text);
+  border-color: var(--color-cta-register);
+}
+.btn-register:hover {
+  background: var(--color-cta-register-hover);
+  border-color: var(--color-cta-register-hover);
+  color: var(--color-cta-register-text);
+}
+
+.btn-hero {
+  padding: 13px 28px;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 768px) {
+  .btn-hero {
+    width: 100%;
+  }
+}
+
+/* Action row under card copy (her .program-actions). */
+.program-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-actions);
+  margin-top: 18px;
+}
+
+@media (max-width: 480px) {
+  .program-actions {
+    flex-direction: column;
+  }
+  .program-actions .btn {
+    width: 100%;
+  }
+}
+
+/* ============================================================
+ * Links, tags, lists, embeds
+ * ============================================================ */
+
+/* Explicit in-text link (same look as the unclassed rule above). */
+.inline-link {
+  color: var(--color-link-inline);
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-link-underline);
+  transition: color var(--transition), border-color var(--transition);
+}
+.inline-link:hover {
+  color: var(--color-link-inline);
+  border-bottom-color: var(--color-link-underline-hover);
+}
+
+/* Quiet "see all →" link beside a section heading (her .section-link). */
+.section-link {
+  font-size: 0.86rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+.section-link:hover {
+  color: var(--color-link-hover);
+}
+
+/* Pill tags (her .tag-list / .tag). Not interactive. */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 26px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 14px;
+  background: var(--color-bg-warm);
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+  font-weight: var(--fw-book);
+  line-height: var(--lh-relaxed);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+/* Hairline list (her .metric-list). */
+.metric-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 820px;
+}
+.metric-list li {
+  padding: 15px 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  line-height: var(--lh-relaxed);
+}
+.metric-list strong {
+  color: var(--color-text-primary);
+  font-weight: var(--fw-heading);
+}
+
+/* Luma registration embed (her .event-embed): fluid up to 600px, with a
+ * fixed 830px height so Luma's "Request to Join" button stays in view. */
+.event-embed {
+  max-width: 600px;
+  margin-top: 18px;
+}
+.event-embed iframe {
+  display: block;
+  width: 100%;
+  height: 830px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
 }
 
 /* ============================================================
@@ -492,6 +691,26 @@ b {
 .skip-link:focus-visible {
   top: 0;
   color: var(--color-text-on-dark);
+  outline-color: var(--color-focus-ring-on-dark);
+  outline-offset: -4px;
+}
+
+/* The skip link's target clears the sticky header like every other anchor:
+ * <main> starts right under the header, so this lands at the very top of
+ * the page instead of tucking the hero's first lines under the glass. */
+#main {
+  scroll-margin-top: var(--scroll-offset);
+}
+
+/* Keyboard focus never lands under the sticky header (WCAG 2.4.11): when
+ * Shift+Tab scrolls a control into view, it stops below the glass instead of
+ * at the very top of the viewport. `:where()` keeps the specificity at 0, so
+ * any component rule still wins; anchor targets keep their own scroll-margin.
+ * The header's own controls opt out (Header.astro): they are always on
+ * screen, and the margin would make the page jump when one takes focus. */
+:where(a[href], button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])) {
+  scroll-margin-top: var(--scroll-offset);
+  scroll-margin-bottom: 16px;
 }
 
 /* ============================================================
@@ -526,7 +745,6 @@ b {
   .section--impact {
     background: #fff;
     color: #000;
-    box-shadow: none;
   }
 
   .section--impact h1,

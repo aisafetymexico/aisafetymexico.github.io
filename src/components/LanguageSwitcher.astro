@@ -7,19 +7,31 @@
  * Behaviour:
  *  - Renders two plain <a> tags so middle-click / right-click / no-JS all work.
  *  - The active locale gets `.is-active` + `aria-current="true"`. Active state
- *    is signalled by weight + opacity contrast only — no background fill.
+ *    is signalled by weight + colour only — no background fill.
  *  - On click, an inline script writes `localStorage.aismx_locale = <target>`
  *    before the browser follows the link. This pins the user's preference so
  *    the auto-detection script on `/` won't override them on the next visit.
  *  - Path preservation is handled by `switchLocalePath` in `src/lib/i18n.ts`:
  *    `/about` ↔ `/en/about`, `/projects/vigia` ↔ `/en/projects/vigia`,
- *    `/` ↔ `/en`.
+ *    `/` ↔ `/en`. Spanish-only sections (certificate verification pages, see
+ *    `ES_ONLY_PREFIXES`) have no twin, so there EN points to the closest
+ *    English page (`englishFallback`: the GSH page for /certificados, the
+ *    programs page for /programas/certificados).
+ *  - Accessible names start with the visible «ES» / «EN» (WCAG 2.5.3).
  *
- * Placement: rendered by `<Header>` as the last child of `.site-header__inner`,
- * inline next to the nav cluster at every viewport (it does NOT collapse into
- * the mobile drawer — language is a meta-control, kept always-visible).
+ * Placement: rendered by `<Header>` through `<Nav>`'s slot: right of the nav
+ * row on desktop, immediately left of the hamburger below 1080px, where it
+ * stays in the bar (language is a meta-control, kept visible). MobileMenu
+ * also repeats it at the end of the open drawer, which covers the bar; the
+ * inline script below is guarded and binds every `.lang-switcher__option`,
+ * so both copies persist the choice.
+ *
+ * Look: small Inter 500 labels in the nav-link grey (ink-2), ink and 600
+ * when active, with a decorative ink-3 separator. Not the muted grey: the
+ * dark El Caracol band greys the glass behind the bar to about #E1E1E1, where
+ * muted text falls to 3.9:1 (ink-2 keeps 5.2:1).
  */
-import { localeFromPath, switchLocalePath, t } from '../lib/i18n';
+import { englishFallback, hasEnglishTwin, localeFromPath, switchLocalePath, t } from '../lib/i18n';
 
 export interface Props {
   /** Current pathname, e.g. Astro.url.pathname from the parent layout. */
@@ -30,7 +42,7 @@ const { currentPath } = Astro.props;
 const active = localeFromPath(currentPath);
 const { href: other } = switchLocalePath(currentPath);
 const esHref = active === 'es' ? currentPath : other;
-const enHref = active === 'en' ? currentPath : other;
+const enHref = active === 'en' ? currentPath : hasEnglishTwin(currentPath) ? other : englishFallback(currentPath);
 ---
 
 <div class="lang-switcher" role="group" aria-label={t(active, 'switcher.label')}>
@@ -83,51 +95,38 @@ const enHref = active === 'en' ? currentPath : other;
 
 <style>
   /* docs/I18N-ARCHITECTURE.md §4.2 — minimal "ES | EN" toggle, no chip,
-     no border. Active is signalled by weight + opacity contrast only. */
+     no border. Spacing from its neighbours comes from the header cluster. */
   .lang-switcher {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    margin-left: 12px;
+    gap: 2px;
+    flex-shrink: 0;
   }
 
   .lang-switcher__option {
-    font-family: var(--font-body, 'Inter', sans-serif);
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: var(--fw-medium);
     letter-spacing: 0.04em;
-    padding: 4px 6px;
-    border-radius: 4px;
-    color: var(--color-text-on-dark-muted);
+    line-height: var(--lh-relaxed);
+    padding: 4px 5px;
+    border-radius: var(--radius-xs);
+    color: var(--color-text-secondary);
     text-decoration: none;
-    transition: color 0.15s ease;
+    transition: color var(--transition);
   }
   .lang-switcher__option:hover {
-    color: var(--color-text-on-dark);
-  }
-  .lang-switcher__option:focus-visible {
-    outline: 2px solid var(--color-accent-secondary);
-    outline-offset: 2px;
-    border-radius: 4px;
+    color: var(--color-text-primary);
   }
   .lang-switcher__option.is-active {
-    color: var(--color-text-on-dark);
-    font-weight: 700;
-    /* No background fill, no underline — editorial restraint. */
+    color: var(--color-text-primary);
+    font-weight: var(--fw-semibold);
   }
 
   .lang-switcher__sep {
-    color: var(--color-border-on-dark, var(--color-border));
-    user-select: none;
-    font-size: 0.85rem;
+    color: var(--color-border-strong);
+    font-size: 0.8rem;
     line-height: 1;
-  }
-
-  /* Slightly tighter gap below the desktop breakpoint where the switcher
-     sits adjacent to the hamburger toggle. */
-  @media (max-width: 1023.98px) {
-    .lang-switcher {
-      margin-left: 8px;
-    }
+    user-select: none;
   }
 </style>

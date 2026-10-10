@@ -10,17 +10,28 @@
  *  - Task #15 spec.
  *
  * Layout (top → bottom):
- *  1. PageHero (eyebrow · h1 · description · breadcrumb)
- *  2. SectionHeading "Cursos abiertos a la comunidad" + ProgramCard ×2
- *     (Fundamentos + Gobernanza; Curso Técnico ARENA)
+ *  1. PageHero (centered: breadcrumb · h1 · description)
+ *  2. SectionHeading "Cursos para la comunidad" + ProgramCard ×2
+ *     (Fundamentos + Gobernanza; Curso Técnico ARENA), equal height; the
+ *     facilitators and materials ride in each card's chips
  *  3. SectionHeading "Programas para instituciones" + ProgramCard ×2
- *     (Centro Geo; UADY · Facultad de Matemáticas)
- *  4. Galería de certificados — small grid; Lightbox group on click.
+ *     (Centro Geo; UADY · Facultad de Matemáticas), then her outline pill
+ *     «Pedir un curso in-house» → /get-involved#training (PROG-1)
+ *  4. Galería de certificados — small grid of whole documents; Lightbox
+ *     group on click.
  *  5. Trayectoria de formación (mini cards: ML4Good, EAGxCDMX).
  *  6. CtaSection → /get-involved#training.
  *
- * Components used: PageHero, SectionHeading, ProgramCard, FactList, Card,
- * Lightbox, CtaSection, Header, Footer.
+ * Design: the collaborator's light "Editorial mínimo" (fcacfc4
+ * css/style.css). White and bg-2 bands alternate (institutional and
+ * trayectoria are tinted; never two tinted bands in a row), card grids use
+ * the 18px gap, certificate thumbnails follow her .certificate-img (the
+ * whole document, 8px radius, hairline, clay border on hover, no lift),
+ * actions are the global .btn pills and in-text links use the global
+ * .inline-link.
+ *
+ * Components used: PageHero, SectionHeading, ProgramCard, Card, Lightbox,
+ * CtaSection, Header, Footer.
  *
  * Certificates live in /public/images/Certificados/. Filenames contain
  * spaces — the URL-encoded form is used in `src` so HTML and the lightbox
@@ -32,7 +43,6 @@ import Footer from '../components/Footer.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import ProgramCard from '../components/ProgramCard.astro';
-import FactList from '../components/FactList.astro';
 import Card from '../components/Card.astro';
 import Lightbox from '../components/Lightbox.astro';
 import CtaSection from '../components/CtaSection.astro';
@@ -70,7 +80,7 @@ const certSpar = {
 };
 const certAiSafetyConnect = {
   src: '/images/Certificados/AI%20Safety%20Connect.png',
-  alt: 'Reconocimiento AI Safety Connect',
+  alt: 'Póster del proyecto AI Safety Connect',
 };
 
 const certificates = [
@@ -80,30 +90,6 @@ const certificates = [
   certUady,
   certSpar,
   certAiSafetyConnect,
-];
-
-// Open-course factual highlights (rendered next to each ProgramCard via
-// FactList — type-only label/value rows; see docs/RAND-AESTHETIC.md §8).
-const fundamentosFacts = [
-  {
-    label: 'Material',
-    value: 'BlueDot Impact · AI Safety Atlas',
-  },
-  {
-    label: 'Facilitadores',
-    value: 'Janeth Valdivia · Angel Tenorio',
-  },
-];
-
-const arenaFacts = [
-  {
-    label: 'Material',
-    value: 'ARENA · Alignment Research Engineer Accelerator',
-  },
-  {
-    label: 'Facilitadores',
-    value: 'Max Pinelo · Angel Tenorio',
-  },
 ];
 ---
 
@@ -124,33 +110,29 @@ const arenaFacts = [
        Cursos abiertos a la comunidad
        ───────────────────────────────────────────────────────────────── -->
   <section class="programs-section programs-section--open">
-    <div class="programs-section__inner">
+    <div class="container">
       <SectionHeading
         eyebrow="Cohortes pasadas"
         title="Cursos para la comunidad"
         description="Cohortes de formación que hemos impartido para la comunidad, sin requisitos institucionales. Las próximas convocatorias se anunciarán en nuestros canales."
       />
 
+      <!-- Each ProgramCard renders its own article and is a direct grid
+           item, so the row stretches both cards to the same height. -->
       <div class="programs-section__grid">
-        <article class="program-block">
-          <ProgramCard
-            title="Curso de Fundamentos de Seguridad y Gobernanza en IA"
-            description="Curso introductorio que cubrió los marcos conceptuales contemporáneos en alineación, riesgos sistémicos y gobernanza, con enfoque en el contexto mexicano. Impartido en cohortes pasadas."
-            facilitators={['Janeth Valdivia', 'Angel Tenorio']}
-            materials={['BlueDot Impact', 'AI Safety Atlas']}
-          />
-          <FactList items={fundamentosFacts} />
-        </article>
+        <ProgramCard
+          title="Curso de Fundamentos de Seguridad y Gobernanza en IA"
+          description="Curso introductorio que cubrió los marcos conceptuales contemporáneos en alineación, riesgos sistémicos y gobernanza, con enfoque en el contexto mexicano. Impartido en cohortes pasadas."
+          facilitators={['Janeth Valdivia', 'Angel Tenorio']}
+          materials={['BlueDot Impact', 'AI Safety Atlas']}
+        />
 
-        <article class="program-block">
-          <ProgramCard
-            title="Curso Técnico de Seguridad en IA (ARENA)"
-            description="Programa técnico orientado a investigación en alineación e ingeniería: red-teaming, evaluaciones de modelos y prácticas de research engineering, basado en el currículo de ARENA. Impartido en cohortes pasadas."
-            facilitators={['Max Pinelo', 'Angel Tenorio']}
-            materials={['ARENA']}
-          />
-          <FactList items={arenaFacts} />
-        </article>
+        <ProgramCard
+          title="Curso Técnico de Seguridad en IA (ARENA)"
+          description="Programa técnico orientado a investigación en alineación e ingeniería: red-teaming, evaluaciones de modelos y prácticas de research engineering, basado en el currículo de ARENA (Alignment Research Engineer Accelerator). Impartido en cohortes pasadas."
+          facilitators={['Max Pinelo', 'Angel Tenorio']}
+          materials={['ARENA']}
+        />
       </div>
     </div>
   </section>
@@ -159,7 +141,7 @@ const arenaFacts = [
        Programas para instituciones
        ───────────────────────────────────────────────────────────────── -->
   <section class="programs-section programs-section--institutional">
-    <div class="programs-section__inner">
+    <div class="container">
       <SectionHeading
         eyebrow="Instituciones"
         title="Programas para instituciones"
@@ -183,6 +165,12 @@ const arenaFacts = [
           certificateImage={certUady}
         />
       </div>
+
+      <!-- PROG-1: her outline pill (her markup put it in a .program-actions
+           row inside the institutions card). -->
+      <div class="program-actions programs-section__action">
+        <a class="btn btn-outline" href="/get-involved#training">Pedir un curso in-house</a>
+      </div>
     </div>
   </section>
 
@@ -190,7 +178,7 @@ const arenaFacts = [
        Galería de certificados (lightbox)
        ───────────────────────────────────────────────────────────────── -->
   <section class="programs-section programs-section--gallery">
-    <div class="programs-section__inner">
+    <div class="container">
       <SectionHeading
         eyebrow="Acreditaciones"
         title="Galería de certificados"
@@ -228,40 +216,40 @@ const arenaFacts = [
        Trayectoria de formación (mini)
        ───────────────────────────────────────────────────────────────── -->
   <section class="programs-section programs-section--trayectoria">
-    <div class="programs-section__inner">
+    <div class="container">
       <SectionHeading
         eyebrow="Trayectoria"
         title="Formación recibida por el equipo"
         description="Programas internacionales en los que miembros del equipo han participado como egresadas y egresados."
       />
 
+      <!-- The kind of training rides in the card's in-card label (`badge`),
+           above the title, as in her card anatomy. -->
       <div class="trayectoria-grid">
         <Card
           padding="md"
           bordered={true}
           interactive={false}
           elevated={false}
+          badge="Formación avanzada"
           title="ML4Good"
           description="Campamento internacional de formación en machine learning aplicado a seguridad de IA. Egresados del equipo: Angel, Max, Isabel, Janeth."
-        >
-          <span slot="footer" class="trayectoria-tag">Formación avanzada</span>
-        </Card>
+        />
 
         <Card
           padding="md"
           bordered={true}
           interactive={false}
           elevated={false}
+          badge="Conferencia · Taller"
           title="EAGxCDMX"
           description="Conferencia regional de Effective Altruism. El equipo participó con el taller «Not so speedy AI Safety» (Silvia Fernández, Angel Tenorio, Max Pinelo)."
-        >
-          <span slot="footer" class="trayectoria-tag">Conferencia · Taller</span>
-        </Card>
+        />
       </div>
 
       <p class="trayectoria-note">
         Más detalles y calendario completo en
-        <a class="trayectoria-link" href="/activities">Actividades</a>.
+        <a class="inline-link" href="/activities">Actividades</a>.
       </p>
     </div>
   </section>
@@ -280,88 +268,58 @@ const arenaFacts = [
 </BaseLayout>
 
 <style>
+  /* Section shell: her 72px rhythm (48px on phones, via --section-pad).
+     The hairline between sections comes from base.css (`main > section`).
+     Bands alternate white / bg-2 / white / bg-2, then the white CtaSection
+     sits above the bg-2 footer, so no two tinted bands touch. Cards on a
+     tinted band stay white. */
   .programs-section {
-    padding-block: var(--space-10);
+    padding-block: var(--section-pad);
+    background: var(--color-bg-section-base);
   }
 
-  @media (min-width: 768px) {
-    .programs-section {
-      padding-block: var(--space-12);
-    }
-  }
-
-  .programs-section__inner {
-    width: 100%;
-    max-width: var(--container-max);
-    margin-inline: auto;
-    padding-inline: var(--container-padding);
-  }
-
-  @media (min-width: 480px) {
-    .programs-section__inner {
-      padding-inline: var(--container-padding-md);
-    }
-  }
-
-  /* Alternating surfaces help separate sections without extra dividers. */
-  .programs-section--open {
-    background: var(--color-bg-base);
-  }
-  .programs-section--institutional {
-    background: var(--color-bg-base);
-  }
-  .programs-section--gallery {
-    background: var(--color-bg-base);
-  }
+  .programs-section--institutional,
   .programs-section--trayectoria {
-    background: var(--color-bg-base);
+    background: var(--color-bg-section-warm);
   }
 
   /* ── Program cards grid ─────────────────────────────────────────── */
+  /* Her 2-up card grid: 18px gap, one column up to 768px. */
   .programs-section__grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-8);
+    gap: var(--gap-grid);
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     .programs-section__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-10);
     }
   }
 
-  /* Open-course block: ProgramCard + sibling FactList stacked.
-     The FactList sits below the card on mobile and tablets and aligned
-     within the same column on desktop for compact reading. */
-  .program-block {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+  /* «Pedir un curso in-house» under the institutional cards: her outline
+     pill (.btn .btn-outline) in the global .program-actions row. 26px under
+     the grid, her actions-under-grid rhythm (this scoped rule outranks the
+     global 18px); at ≤480 the global rule stretches the pill full width. */
+  .programs-section__action {
+    margin-top: 26px;
   }
 
   /* ── Certificate gallery ────────────────────────────────────────── */
+  /* Full rows only: 2 + 2 + 2 on phones, 3 + 3 from 481px up to 1024px,
+     all six in one row from 1025px. */
   .cert-grid {
-    list-style: none;
-    margin: 0;
-    padding: 0;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-4);
+    gap: var(--gap-grid);
   }
 
-  @media (min-width: 480px) {
+  @media (min-width: 481px) {
     .cert-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
-  @media (min-width: 768px) {
-    .cert-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: var(--space-5);
-    }
-  }
-  @media (min-width: 1024px) {
+  @media (min-width: 1025px) {
     .cert-grid {
       grid-template-columns: repeat(6, minmax(0, 1fr));
     }
@@ -371,6 +329,10 @@ const arenaFacts = [
     margin: 0;
   }
 
+  /* Thumbnail trigger — her .certificate-img: white, 1px hairline, 8px
+     radius, zoom-in cursor. Hover and keyboard focus only warm the hairline
+     to clay (a non-text mark); nothing lifts or casts a shadow. The focus
+     ring itself comes from base.css. */
   .cert-grid__trigger {
     display: block;
     width: 100%;
@@ -378,33 +340,26 @@ const arenaFacts = [
     margin: 0;
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius);
     cursor: zoom-in;
     overflow: hidden;
-    transition:
-      transform var(--transition),
-      box-shadow var(--transition),
-      border-color var(--transition);
+    transition: border-color var(--transition);
   }
 
   .cert-grid__trigger:hover,
   .cert-grid__trigger:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--color-border-accent);
+    border-color: var(--color-accent-decor);
   }
 
-  .cert-grid__trigger:focus-visible {
-    outline: 2px solid var(--color-focus-ring);
-    outline-offset: 3px;
-  }
-
+  /* Each thumbnail shows the whole document (her .certificate-img never
+     crops): contained in a 4:3 frame on an 8px bg-2 mat, so portrait and
+     landscape certificates keep their headers, logos and signatures. */
   .cert-grid__img {
     display: block;
     width: 100%;
     aspect-ratio: 4 / 3;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 8px;
     background: var(--color-bg-warm);
   }
 
@@ -412,53 +367,21 @@ const arenaFacts = [
   .trayectoria-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-5);
+    gap: var(--gap-grid);
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 769px) {
     .trayectoria-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  .trayectoria-tag {
-    font-family: var(--font-body);
-    font-size: var(--fs-eyebrow);
-    font-weight: var(--fw-bold);
-    letter-spacing: var(--ls-uppercase);
-    text-transform: uppercase;
-    color: var(--color-accent);
-    line-height: 1;
-  }
-
+  /* Quiet meta line under the cards, left-aligned like the rest of the
+     section; its link is the global .inline-link. */
   .trayectoria-note {
     margin-top: var(--space-6);
-    font-family: var(--font-body);
     font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
     color: var(--color-text-muted);
-    text-align: center;
-  }
-
-  .trayectoria-link {
-    color: var(--color-accent);
-    font-weight: var(--fw-semibold);
-    text-decoration: none;
-    border-bottom: 1px solid currentColor;
-    padding-bottom: 1px;
-  }
-
-  .trayectoria-link:hover,
-  .trayectoria-link:focus-visible {
-    color: var(--color-accent-hover);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .cert-grid__trigger {
-      transition: none;
-    }
-    .cert-grid__trigger:hover,
-    .cert-grid__trigger:focus-visible {
-      transform: none;
-    }
   }
 </style>
