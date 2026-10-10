@@ -1,0 +1,400 @@
+[
+  {
+    "locale": "es",
+    "route": "/",
+    "url": "http://127.0.0.1:5091/",
+    "langAttr": "es",
+    "skipLink": "Saltar al contenido",
+    "title": "AI Safety Mexico — Investigación, educación y gobernanza de IA",
+    "desc": "Organización mexicana sin fines de lucro dedicada a la investigación, educación y gobernanza responsable de la IA en México.",
+    "ogLocale": "es_MX",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/",
+    "enLeakChromeRaw": [
+      "mobile open: \"Open main menu\"",
+      "mobile close: \"Close main menu\""
+    ],
+    "esLeakChromeRaw": []
+  },
+  {
+    "locale": "es",
+    "route": "/about",
+    "url": "http://127.0.0.1:5091/about",
+    "langAttr": "es",
+    "skipLink": "Saltar al contenido",
+    "title": "Quiénes somos · AI Safety Mexico",
+    "desc": "AI Safety Mexico es una organización sin fines de lucro fundada en 2025 que promueve la investigación, educación y gobernanza responsable de la inteligencia artificial en México.",
+    "ogLocale": "es_MX",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/about",
+    "enLeakChromeRaw": [
+      "mobile open: \"Open main menu\"",
+      "mobile close: \"Close main menu\""
+    ],
+    "esLeakChromeRaw": []
+  },
+  {
+    "locale": "es",
+    "route": "/research",
+    "url": "http://127.0.0.1:5091/research",
+    "langAttr": "es",
+    "skipLink": "Saltar al contenido",
+    "title": "Investigación · AI Safety Mexico",
+    "desc": "Publicaciones, proyectos en curso y agenda de investigación de AI Safety Mexico en seguridad, gobernanza y política pública de IA.",
+    "ogLocale": "es_MX",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/research",
+    "enLeakChromeRaw": [
+      "mobile open: \"Open main menu\"",
+      "mobile close: \"Close main menu\""
+    ],
+    "esLeakChromeRaw": []
+  },
+  {
+    "locale": "es",
+    "route": "/programs",
+    "url": "http://127.0.0.1:5091/programs",
+    "langAttr": "es",
+    "skipLink": "Saltar al contenido",
+    "title": "Programas educativos | AI Safety Mexico",
+    "desc": "Cursos abiertos a la comunidad y programas a la medida para instituciones en seguridad y gobernanza de inteligencia artificial.",
+    "ogLocale": "es_MX",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/programs",
+    "enLeakChromeRaw": [
+      "mobile open: \"Open main menu\"",
+      "mobile close: \"Close main menu\""
+    ],
+    "esLeakChromeRaw": []
+  },
+  {
+    "locale": "es",
+    "route": "/projects",
+    "url": "http://127.0.0.1:5091/projects",
+    "langAttr": "es",
+    "skipLink": "Saltar al contenido",
+    "title": "Proyectos · AI Safety Mexico",
+    "desc": "Iniciativas insignia de AI Safety Mexico — VIGÍA, AI Safety Connect y proyectos colaborativos en gobernanza, alineamiento y comunidad.",
+    "ogLocale": "es_MX",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/projects",
+    "enLeakChromeRaw": [
+      "mobile open: \"Open main menu\"",
+      "mobile close: \"Close main menu\""
+    ],
+    "esLeakChromeRaw": []
+  },
+  {
+    "locale": "es",
+    "route": "/projects/vigia",
+    "url": "http://127.0.0.1:5091/projects/vigia",
+    "langAttr": "es",
+    "skipLink": "Saltar al contenido",
+    "title": "VIGÍA · Proyecto · AI Safety Mexico",
+    "desc": "VIGÍA es la plataforma de AI Safety Mexico para el análisis de gobernanza de IA y soberanía digital en México. Special Recognition · AI Safety Collab 2025.",
+    "ogLocale": "es_MX",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/projects/vigia",
+    "enLeakChromeRaw": [
+      "mobile open: \"Open main menu\"",
+      "mobile close: \"Close main menu\""
+    ],
+    "esLeakChromeRaw": []
+  },
+  {
+    "locale": "es",
+    "route": "/projects/ai-safety-connect",
+    "url": "http://127.0.0.1:5091/projects/ai-safety-connect",
+    "langAttr": "es",
+    "skipLink": "Saltar al contenido",
+    "title": "AI Safety Connect · Proyecto · AI Safety Mexico",
+    "desc": "AI Safety Connect: plataforma desarrollada en el marco de SPAR para mapear sistemáticamente la investigación en seguridad de IA y reducir la brecha entre academia y comunidad.",
+    "ogLocale": "es_MX",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/projects/ai-safety-connect",
+    "enLeakChromeRaw": [
+      "mobile open: \"Open main menu\"",
+      "mobile close: \"Close main menu\""
+    ],
+    "esLeakChromeRaw": []
+  },
+  {
+    "locale": "es",
+    "route": "/team",
+    "url": "http://127.0.0.1:5091/team",
+    "langAttr": "es",
+    "skipLink": "Saltar al contenido",
+    "title": "Equipo · AI Safety Mexico",
+    "desc": "Conoce a las personas detrás de AI Safety Mexico: equipo principal, advisors y colaboradores que sostienen la investigación, formación y gobernanza de IA en México.",
+    "ogLocale": "es_MX",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/team",
+    "enLeakChromeRaw": [
+      "mobile open: \"Open main menu\"",
+      "mobile close: \"Close main menu\""
+    ],
+    "esLeakChromeRaw": []
+  },
+  {
+    "locale": "es",
+    "route": "/activities",
+    "url": "http://127.0.0.1:5091/activities",
+    "langAttr": "es",
+    "skipLink": "Saltar al contenido",
+    "title": "Actividades — AI Safety Mexico",
+    "desc": "Actividades en curso y pasadas de AI Safety Mexico: hackatones, mesas de trabajo, conferencias, talleres y formación avanzada.",
+    "ogLocale": "es_MX",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/activities",
+    "enLeakChromeRaw": [
+      "mobile open: \"Open main menu\"",
+      "mobile close: \"Close main menu\""
+    ],
+    "esLeakChromeRaw": []
+  },
+  {
+    "locale": "es",
+    "route": "/get-involved",
+    "url": "http://127.0.0.1:5091/get-involved",
+    "langAttr": "es",
+    "skipLink": "Saltar al contenido",
+    "title": "Colabora con nosotros — AI Safety Mexico",
+    "desc": "Investigación conjunta, programas educativos para instituciones y advisory. Escríbenos a contact@aismx.org para explorar formas de trabajar juntos en seguridad de IA.",
+    "ogLocale": "es_MX",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/get-involved",
+    "enLeakChromeRaw": [
+      "mobile open: \"Open main menu\"",
+      "mobile close: \"Close main menu\""
+    ],
+    "esLeakChromeRaw": []
+  },
+  {
+    "locale": "es",
+    "route": "/contact",
+    "url": "http://127.0.0.1:5091/contact",
+    "langAttr": "es",
+    "skipLink": "Saltar al contenido",
+    "title": "Contacto — AI Safety Mexico",
+    "desc": "Escríbenos a contact@aismx.org o conéctate con nosotros en LinkedIn e Instagram. Respondemos a la mayoría de los mensajes en una semana.",
+    "ogLocale": "es_MX",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/contact",
+    "enLeakChromeRaw": [
+      "mobile open: \"Open main menu\"",
+      "mobile close: \"Close main menu\""
+    ],
+    "esLeakChromeRaw": []
+  },
+  {
+    "locale": "es",
+    "route": "/global-south-challenge",
+    "url": "http://127.0.0.1:5091/global-south-challenge",
+    "langAttr": "es",
+    "skipLink": "Saltar al contenido",
+    "title": "Global South AIS Challenge · AI Safety Mexico × Apart Research",
+    "desc": "Hackathon regional de seguridad de IA convocado por Apart Research y AI Safety Mexico. Mérida, Guadalajara y formato remoto, 19-21 de junio de 2026. Únete como juez, mentor, speaker, voluntario o sponsor.",
+    "ogLocale": "es_MX",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/global-south-challenge",
+    "enLeakChromeRaw": [
+      "mobile open: \"Open main menu\"",
+      "mobile close: \"Close main menu\""
+    ],
+    "esLeakChromeRaw": []
+  },
+  {
+    "locale": "en",
+    "route": "/",
+    "url": "http://127.0.0.1:5091/en",
+    "langAttr": "en",
+    "skipLink": "Saltar al contenido",
+    "title": "AI Safety Mexico — AI research, education, and governance",
+    "desc": "A Mexican nonprofit dedicated to research, education, and responsible governance of AI in Mexico.",
+    "ogLocale": "en_US",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/en",
+    "enLeakChromeRaw": [],
+    "esLeakChromeRaw": [
+      "skip-link: \"Saltar al contenido\""
+    ]
+  },
+  {
+    "locale": "en",
+    "route": "/about",
+    "url": "http://127.0.0.1:5091/en/about",
+    "langAttr": "en",
+    "skipLink": "Saltar al contenido",
+    "title": "About us · AI Safety Mexico",
+    "desc": "AI Safety Mexico is a nonprofit founded in 2025 that advances research, education, and responsible governance of artificial intelligence in Mexico.",
+    "ogLocale": "en_US",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/en/about",
+    "enLeakChromeRaw": [],
+    "esLeakChromeRaw": [
+      "skip-link: \"Saltar al contenido\""
+    ]
+  },
+  {
+    "locale": "en",
+    "route": "/research",
+    "url": "http://127.0.0.1:5091/en/research",
+    "langAttr": "en",
+    "skipLink": "Saltar al contenido",
+    "title": "Research · AI Safety Mexico",
+    "desc": "Publications, ongoing projects, and the research agenda of AI Safety Mexico in AI safety, governance, and public policy.",
+    "ogLocale": "en_US",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/en/research",
+    "enLeakChromeRaw": [],
+    "esLeakChromeRaw": [
+      "skip-link: \"Saltar al contenido\""
+    ]
+  },
+  {
+    "locale": "en",
+    "route": "/programs",
+    "url": "http://127.0.0.1:5091/en/programs",
+    "langAttr": "en",
+    "skipLink": "Saltar al contenido",
+    "title": "Educational programs | AI Safety Mexico",
+    "desc": "Community courses and tailored programs for institutions on artificial intelligence safety and governance.",
+    "ogLocale": "en_US",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/en/programs",
+    "enLeakChromeRaw": [],
+    "esLeakChromeRaw": [
+      "skip-link: \"Saltar al contenido\"",
+      "breadcrumb aria: \"Migas de pan\""
+    ]
+  },
+  {
+    "locale": "en",
+    "route": "/projects",
+    "url": "http://127.0.0.1:5091/en/projects",
+    "langAttr": "en",
+    "skipLink": "Saltar al contenido",
+    "title": "Projects · AI Safety Mexico",
+    "desc": "Flagship initiatives of AI Safety Mexico — VIGÍA, AI Safety Connect, and collaborative projects in governance, alignment, and community.",
+    "ogLocale": "en_US",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/en/projects",
+    "enLeakChromeRaw": [],
+    "esLeakChromeRaw": [
+      "skip-link: \"Saltar al contenido\""
+    ]
+  },
+  {
+    "locale": "en",
+    "route": "/projects/vigia",
+    "url": "http://127.0.0.1:5091/en/projects/vigia",
+    "langAttr": "en",
+    "skipLink": "Saltar al contenido",
+    "title": "VIGÍA · Project · AI Safety Mexico",
+    "desc": "VIGÍA is AI Safety Mexico's platform for analyzing AI governance and digital sovereignty in Mexico. Special Recognition · AI Safety Collab 2025.",
+    "ogLocale": "en_US",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/en/projects/vigia",
+    "enLeakChromeRaw": [],
+    "esLeakChromeRaw": [
+      "skip-link: \"Saltar al contenido\""
+    ]
+  },
+  {
+    "locale": "en",
+    "route": "/projects/ai-safety-connect",
+    "url": "http://127.0.0.1:5091/en/projects/ai-safety-connect",
+    "langAttr": "en",
+    "skipLink": "Saltar al contenido",
+    "title": "AI Safety Connect · Project · AI Safety Mexico",
+    "desc": "AI Safety Connect: a platform developed within SPAR to systematically map AI safety research and reduce the gap between academia and community.",
+    "ogLocale": "en_US",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/en/projects/ai-safety-connect",
+    "enLeakChromeRaw": [],
+    "esLeakChromeRaw": [
+      "skip-link: \"Saltar al contenido\""
+    ]
+  },
+  {
+    "locale": "en",
+    "route": "/team",
+    "url": "http://127.0.0.1:5091/en/team",
+    "langAttr": "en",
+    "skipLink": "Saltar al contenido",
+    "title": "Team · AI Safety Mexico",
+    "desc": "Meet the people behind AI Safety Mexico: core team, advisors and collaborators sustaining AI research, training and governance in Mexico.",
+    "ogLocale": "en_US",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/en/team",
+    "enLeakChromeRaw": [],
+    "esLeakChromeRaw": [
+      "skip-link: \"Saltar al contenido\"",
+      "breadcrumb aria: \"Migas de pan\""
+    ]
+  },
+  {
+    "locale": "en",
+    "route": "/activities",
+    "url": "http://127.0.0.1:5091/en/activities",
+    "langAttr": "en",
+    "skipLink": "Saltar al contenido",
+    "title": "Activities — AI Safety Mexico",
+    "desc": "Current and past activities of AI Safety Mexico: hackathons, working sessions, conferences, workshops, and advanced training.",
+    "ogLocale": "en_US",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/en/activities",
+    "enLeakChromeRaw": [],
+    "esLeakChromeRaw": [
+      "skip-link: \"Saltar al contenido\""
+    ]
+  },
+  {
+    "locale": "en",
+    "route": "/get-involved",
+    "url": "http://127.0.0.1:5091/en/get-involved",
+    "langAttr": "en",
+    "skipLink": "Saltar al contenido",
+    "title": "Get involved — AI Safety Mexico",
+    "desc": "Joint research, educational programs for institutions, and advisory. Write to contact@aismx.org to explore ways of working together on AI safety.",
+    "ogLocale": "en_US",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/en/get-involved",
+    "enLeakChromeRaw": [],
+    "esLeakChromeRaw": [
+      "skip-link: \"Saltar al contenido\""
+    ]
+  },
+  {
+    "locale": "en",
+    "route": "/contact",
+    "url": "http://127.0.0.1:5091/en/contact",
+    "langAttr": "en",
+    "skipLink": "Saltar al contenido",
+    "title": "Contact — AI Safety Mexico",
+    "desc": "Write to contact@aismx.org or connect with us on LinkedIn and Instagram. We respond to most messages within a week.",
+    "ogLocale": "en_US",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/en/contact",
+    "enLeakChromeRaw": [],
+    "esLeakChromeRaw": [
+      "skip-link: \"Saltar al contenido\""
+    ]
+  },
+  {
+    "locale": "en",
+    "route": "/global-south-challenge",
+    "url": "http://127.0.0.1:5091/en/global-south-challenge",
+    "langAttr": "en",
+    "skipLink": "Saltar al contenido",
+    "title": "Global South AIS Challenge · AI Safety Mexico × Apart Research",
+    "desc": "Regional AI safety hackathon convened by Apart Research and AI Safety Mexico. Mérida, Guadalajara, and remote, June 19–21, 2026. Join as a judge, mentor, speaker, volunteer, or sponsor.",
+    "ogLocale": "en_US",
+    "hrefLangCount": 0,
+    "canonical": "https://www.aismx.org/en/global-south-challenge",
+    "enLeakChromeRaw": [],
+    "esLeakChromeRaw": [
+      "skip-link: \"Saltar al contenido\""
+    ]
+  }
+]

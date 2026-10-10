@@ -1,0 +1,345 @@
+---
+/**
+ * /team — Equipo, advisors y colaboradores destacados.
+ *
+ * Spec:
+ *  - Task #17 (Page Team).
+ *  - docs/ARCHITECTURE.md §2 (`/team` purpose & sections), §6 (IndexPage template).
+ *  - docs/CONTENT-MAP.md §1.10 (origen del contenido).
+ *
+ * Estructura:
+ *   1. PageHero — h1 + descripción + breadcrumb (centrado).
+ *   2. Core team — 7 TeamCard (Janeth, Angel, Max, Isabel, Dexter, Karime, Marco)
+ *      en la `.team-grid` del diseño: 3 / 2 / 1 columnas (≥1025 / 769–1024 /
+ *      ≤768px), con filas de igual altura desde dos columnas.
+ *   3. Advisors — tarjeta de texto de la Dra. Silvia Fernández (la
+ *      `.advisor-card` del diseño) sobre la banda bg-2.
+ *      Nota: GAP-22 (CONTENT-MAP.md) — falta foto oficial; por eso no se usa
+ *      TeamCard hasta que el equipo la provea.
+ *   4. Colaboradores destacados — lista agrupada por contexto (proyectos
+ *      propios y equipo internacional SPAR / AI Safety Connect), una tarjeta
+ *      con filetes por grupo.
+ *   5. CtaSection — "¿Quieres unirte?" → /get-involved#participa.
+ *
+ * Diseño: "Editorial mínimo" de la colaboradora:
+ * blanco y bg-2 se alternan, tarjetas blancas con filete de 1px y radio 8px,
+ * sin sombras.
+ *
+ * Contenido inline (no se usa la colección `team`): la lista de personas
+ * core + advisors + colaboradores cabe en un solo archivo y, dado que
+ * varias entradas (advisors, colaboradores) carecen de foto y bio extendida
+ * (gaps 21–23 en CONTENT-MAP), una colección Markdown agregaría fricción
+ * sin valor incremental para v1.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import TeamCard from '../components/TeamCard.astro';
+import CtaSection from '../components/CtaSection.astro';
+
+import { coreTeam } from '../lib/team';
+
+// ---------- Data ----------
+
+// Advisors — GAP-22: la Dra. Silvia Fernández aún no tiene foto oficial.
+// Mientras no haya material visual, presentamos a las advisors en un bloque
+// de texto sobrio (sin tarjetas con foto) para evitar la lectura de
+// "no tenemos asesoras" que producía el placeholder con logo.
+interface AdvisorEntry {
+  name: string;
+  role: string;
+  affiliation: string;
+}
+
+const advisors: AdvisorEntry[] = [
+  {
+    name: 'Dra. Silvia Fernández',
+    role: 'Advisor',
+    affiliation: 'Investigadora · Centro Geo',
+  },
+];
+
+interface Collaborator {
+  name: string;
+  role: string;
+}
+
+interface CollaboratorGroup {
+  heading: string;
+  description: string;
+  people: Collaborator[];
+}
+
+const collaboratorGroups: CollaboratorGroup[] = [
+  {
+    heading: 'Investigación y proyectos en México',
+    description:
+      'Personas que han contribuido a publicaciones y proyectos liderados desde AI Safety Mexico.',
+    people: [
+      {
+        name: 'Pilar Carolina Moncada',
+        role: 'VIGÍA · Cocreadora de la plataforma',
+      },
+      {
+        name: 'Valeria Ramírez',
+        role: 'Coautora · AI Safety in Mexico: A Pilot Survey in Yucatan',
+      },
+    ],
+  },
+  {
+    // The no-break space keeps «/» with SPAR, so the balanced h3 never
+    // starts a line with a slash.
+    heading: 'Equipo internacional · SPAR\u00A0/ AI Safety Connect',
+    description:
+      'Investigadores con quienes colaboramos a través del programa SPAR para producir AI Safety Connect.',
+    people: [
+      { name: 'Julius A. Odai', role: 'Coautor · AI Safety Connect' },
+      { name: 'Ihor Kendiukhov', role: 'Coautor · AI Safety Connect' },
+      { name: 'Tim Sankara', role: 'Coautor · AI Safety Connect' },
+      { name: 'Jakub K. Nowak', role: 'Coautor · AI Safety Connect' },
+      { name: 'Kailer Laino', role: 'Coautor · AI Safety Connect' },
+    ],
+  },
+];
+
+const breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Equipo' },
+  ],
+};
+
+const pageTitle = 'Equipo · AI Safety Mexico';
+const pageDescription =
+  'Conoce a las personas detrás de AI Safety Mexico: equipo principal, advisors y colaboradores que sostienen la investigación, formación y gobernanza de IA en México.';
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  pathname="/team"
+>
+  <Header slot="header" currentPath="/team" />
+
+  <PageHero
+    title="Las personas detrás de AI Safety Mexico"
+    description="Un colectivo multidisciplinario —ingenieras, investigadores, docentes y profesionales de gobernanza— que trabaja para que la seguridad de la IA sea una conversación nacional, rigurosa y pública."
+    breadcrumb={breadcrumb}
+  />
+
+  <section class="team-section" aria-labelledby="core-team-heading">
+    <div class="container">
+      <SectionHeading
+        id="core-team-heading"
+        eyebrow="Nuestro equipo"
+        title="Equipo principal"
+        description="Personas que sostienen la operación, investigación y formación de AI Safety Mexico de forma continua."
+      />
+      <div class="team-grid">
+        {coreTeam.map(member => (
+          <TeamCard
+            name={member.name}
+            role={member.role}
+            photo={member.photo}
+            linkedin={member.linkedin}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="team-section team-section--alt" aria-labelledby="advisors-heading">
+    <div class="container">
+      <SectionHeading
+        id="advisors-heading"
+        eyebrow="Consejo"
+        title="Advisors"
+        description="Investigadoras e investigadores que orientan nuestras líneas de trabajo y abren puertas a colaboraciones académicas."
+      />
+      <ul class="advisors-list" role="list">
+        {advisors.map(advisor => (
+          <li class="advisors-list__item">
+            <span class="advisors-list__role role-label">{advisor.role}</span>
+            <h3 class="advisors-list__name">{advisor.name}</h3>
+            <span class="advisors-list__affiliation">{advisor.affiliation}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="team-section" aria-labelledby="collaborators-heading">
+    <div class="container">
+      <SectionHeading
+        id="collaborators-heading"
+        eyebrow="Aliados"
+        title="Colaboradores destacados"
+        description="Reconocemos el trabajo de quienes han contribuido a proyectos, publicaciones e iniciativas específicas, dentro y fuera de México."
+      />
+
+      <div class="collab-groups">
+        {collaboratorGroups.map(group => (
+          <article class="collab-group">
+            <h3 class="collab-group__heading">{group.heading}</h3>
+            <p class="collab-group__description">{group.description}</p>
+            <ul class="collab-list" role="list">
+              {group.people.map(p => (
+                <li class="collab-item">
+                  <span class="collab-item__name">{p.name}</span>
+                  <span class="collab-item__role">{p.role}</span>
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaSection
+    title="¿Quieres unirte al equipo?"
+    description="Buscamos colaboraciones puntuales, residencias de investigación y aliados institucionales. Si tu trabajo se alinea con nuestra agenda, escríbenos contándonos qué línea te interesa explorar."
+    ctaLabel="Colabora con nosotros"
+    ctaHref="/get-involved#participa"
+  />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* Section shells: her 72px rhythm (48px on phones) through --section-pad;
+     the line-soft hairline under each section comes from base.css
+     (`main > section`). Like her home (team white, advisors bg-2,
+     collaborations white), only the advisors band is tinted, so no two
+     tinted bands touch (the CtaSection is white, the footer bg-2). */
+  .team-section {
+    padding-block: var(--section-pad);
+    background: var(--color-bg-section-base);
+  }
+
+  .team-section--alt {
+    background: var(--color-bg-section-warm);
+  }
+
+  /* ---- Team grid: her .team-grid, 3 / 2 / 1 columns at
+     ≥1025 / 769–1024 / ≤768px with an 18px gap. The card is TeamCard.
+     From two columns up every row is as tall as the tallest, so a card
+     without a LinkedIn link left alone in the last row (Marco) matches the
+     others. ---- */
+  .team-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  @media (min-width: 769px) {
+    .team-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: 1fr;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .team-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  /* Advisors — her .advisor-card: a content-width hairline card on the
+     bg-2 band, text only while official photos are pending (GAP-22).
+     Role as the in-card label (global .role-label), then the name and the
+     affiliation in her .team-name / .team-role type. */
+  .advisors-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-grid);
+  }
+
+  .advisors-list__item {
+    padding: 22px 26px;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .advisors-list__name {
+    margin-bottom: 3px;
+    font-size: 0.98rem;
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: -0.015em;
+    color: var(--color-text-heading);
+  }
+
+  .advisors-list__affiliation {
+    display: block;
+    font-size: 0.84rem;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+
+  /* ---- Collaborators: one hairline card per group (her .program-card),
+     2 columns from 769px; people as rows split by line-soft rules. ---- */
+  .collab-groups {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  @media (min-width: 769px) {
+    .collab-groups {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .collab-group {
+    padding: var(--pad-card);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .collab-group__heading {
+    margin-bottom: 10px;
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  .collab-group__description {
+    margin-bottom: 14px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+  }
+
+  .collab-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-block: 10px;
+    border-top: 1px solid var(--color-border-soft);
+  }
+
+  .collab-item:last-child {
+    padding-bottom: 0;
+  }
+
+  .collab-item__name {
+    font-size: 0.98rem;
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: -0.015em;
+    color: var(--color-text-heading);
+  }
+
+  .collab-item__role {
+    font-size: 0.84rem;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+</style>

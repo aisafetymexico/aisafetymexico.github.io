@@ -1,0 +1,265 @@
+---
+/**
+ * /projects — Projects index (IndexPage template).
+ *
+ * Spec:
+ *   - docs/ARCHITECTURE.md §2 (`/projects` purpose, sections, CTA).
+ *   - docs/CONTENT-MAP.md §1.6 (Promote/Demote — VIGÍA & AI Safety Connect
+ *     get dedicated subpages; this index surfaces both as cards).
+ *
+ * Sections (per ARCHITECTURE):
+ *   1. PageHero (centered, with breadcrumb).
+ *   2. Intro paragraph — what we mean by "projects" vs. "research".
+ *      Uses the editorial placeholder authored in CONTENT-MAP §4 (GAP-17).
+ *   3. ProjectCard grid (sourced from src/content/projects/*).
+ *   4. "How we choose projects" criteria block (3-column FeatureGrid-like).
+ *   5. CtaSection — propose a project (mailto contact@aismx.org).
+ *
+ * Design: the collaborator's light "Editorial mínimo" (fcacfc4
+ * css/style.css). Every section shares the full container, so headings line
+ * up with the grid; every project card carries an in-card label, so titles
+ * line up across the row; the criteria are white hairline cards on the
+ * page's one bg-2 band (her theory grid), with Inter 500 numerals in ink-3
+ * and FeatureGrid's .92rem copy. The page keeps BaseLayout's default
+ * og:image.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import CtaSection from '../../components/CtaSection.astro';
+
+const allProjects = await getCollection(
+  'projects',
+  ({ data }: { data: { draft?: boolean } }) => data.draft !== true,
+);
+
+// Order by `order` ascending, then alphabetically by title.
+const projects = allProjects.sort((a, b) => {
+  const ao = a.data.order ?? 100;
+  const bo = b.data.order ?? 100;
+  if (ao !== bo) return ao - bo;
+  return a.data.title.localeCompare(b.data.title);
+});
+
+// In-card labels for projects whose entry has no `badge`, so every card has
+// the same anatomy (label → title) and titles line up in the 2-up row. AI
+// Safety Connect reuses the label /research already shows for it.
+const fallbackBadges: Record<string, string> = {
+  'ai-safety-connect': 'Colaboración SPAR',
+};
+
+// Map each entry to ProjectCard props. Internal slugs always resolve to
+// /projects/<slug> (subpages), unless the project is external-only.
+const cards = projects.map((p) => {
+  const slug = p.data.slug ?? p.slug;
+  return {
+    title: p.data.title,
+    badge: p.data.badge ?? fallbackBadges[slug],
+    description: p.data.summary,
+    image: p.data.cover,
+    href: `/projects/${slug}`,
+    external: false,
+  };
+});
+
+const breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Proyectos' },
+  ],
+};
+
+const criteria = [
+  {
+    number: '01',
+    title: 'Pregunta concreta',
+    description:
+      'Cada proyecto parte de una pregunta investigable sobre seguridad o gobernanza de IA, no de una tecnología en busca de un problema.',
+  },
+  {
+    number: '02',
+    title: 'Capacidad técnica',
+    description:
+      'El equipo —propio o aliado— cuenta con la formación y los recursos para abordarla con rigor metodológico.',
+  },
+  {
+    number: '03',
+    title: 'Compromiso de apertura',
+    description:
+      'Los hallazgos, materiales y código se publican abiertamente siempre que la naturaleza del trabajo lo permita.',
+  },
+];
+---
+
+<BaseLayout
+  title="Proyectos · AI Safety Mexico"
+  description="Iniciativas insignia de AI Safety Mexico — VIGÍA, AI Safety Connect y proyectos colaborativos en gobernanza, alineamiento y comunidad."
+  pathname="/projects"
+>
+  <Header slot="header" currentPath="/projects" />
+
+  <PageHero
+    title="Proyectos"
+    description="Iniciativas propias y colaborativas que reflejan el trabajo de AI Safety Mexico en investigación aplicada, gobernanza y comunidad."
+    breadcrumb={breadcrumb}
+  />
+
+  {/* Intro */}
+  <section class="section section--base projects-intro">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Qué entendemos por proyecto"
+        title="Investigación aplicada con vocación pública"
+        description="Los proyectos de AI Safety Mexico nacen en la intersección de tres condiciones: una pregunta concreta sobre seguridad o gobernanza de IA, un equipo técnico capaz de abordarla con rigor, y un compromiso de hacer públicos los hallazgos. Algunos surgen como tesis de cohortes formativas; otros como colaboraciones con organizaciones aliadas. Todos son auditables, abiertos y orientados a producir conocimiento utilizable por quienes investigan, regulan o despliegan IA en México."
+      />
+    </div>
+  </section>
+
+  {/* Project grid */}
+  <section class="section section--base" aria-labelledby="projects-grid-heading">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Portafolio"
+        title="Proyectos insignia"
+        description="Cada tarjeta enlaza a la subpágina del proyecto con el detalle completo: equipo, metodología y enlaces a paper o plataforma externa."
+        id="projects-grid-heading"
+      />
+
+      {cards.length === 0 ? (
+        <p class="projects-empty">
+          Próximamente publicaremos los detalles de los proyectos en curso. Mientras
+          tanto, escríbenos a <a class="inline-link" href="mailto:contact@aismx.org">contact@aismx.org</a>.
+        </p>
+      ) : (
+        <div class="projects-grid">
+          {cards.map((card) => (
+            <ProjectCard
+              title={card.title}
+              badge={card.badge}
+              description={card.description}
+              image={card.image}
+              href={card.href}
+              external={card.external}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  {/* Criteria */}
+  <section class="section section--warm" aria-labelledby="projects-criteria-heading">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Cómo elegimos"
+        title="Criterios de selección"
+        description="Un proyecto entra al portafolio cuando cumple las tres condiciones siguientes."
+        id="projects-criteria-heading"
+      />
+      <ul class="projects-criteria">
+        {criteria.map((c) => (
+          <li class="projects-criteria__item">
+            <span class="projects-criteria__number" aria-hidden="true">{c.number}</span>
+            <h3 class="projects-criteria__title">{c.title}</h3>
+            <p class="projects-criteria__description">{c.description}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <CtaSection
+    title="¿Tienes un proyecto en mente?"
+    description="Si tu pregunta de investigación se alinea con nuestra agenda y buscas un equipo con quien colaborar, nos interesa escucharla."
+    ctaLabel="Escríbenos a contact@aismx.org"
+    ctaHref="mailto:contact@aismx.org?subject=Propuesta%20de%20proyecto"
+  />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* The intro is a heading-only band: drop the heading's 34px bottom margin
+     so the band keeps an even top and bottom. */
+  .projects-intro :global(.section-heading) {
+    margin-bottom: 0;
+  }
+
+  /* Project grid: her 2-up card grid, 18px gap, one column up to 768px. */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  @media (min-width: 769px) {
+    .projects-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Empty state; its mail link is the global .inline-link. */
+  .projects-empty {
+    font-size: var(--fs-lead);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    max-width: var(--measure-desc);
+  }
+
+  /* Criteria list — white hairline cards on the bg-2 band (her theory
+     grid). They are not links, so they have no hover state. */
+  .projects-criteria {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  @media (min-width: 769px) {
+    .projects-criteria {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .projects-criteria__item {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--pad-card);
+  }
+
+  /* Decorative numeral (aria-hidden): Inter 500 in ink-3, which passes
+     AA-large at this size; the accent stays off large type. */
+  .projects-criteria__number {
+    margin-bottom: var(--space-3);
+    font-size: 1.5rem;
+    font-weight: var(--fw-display);
+    line-height: 1.1;
+    letter-spacing: var(--ls-display);
+    color: var(--ink-3);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  /* Card title — her .program-card-title (1.08rem / 550 / -.02em). */
+  .projects-criteria__title {
+    margin: 0 0 10px;
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  /* Same card copy as FeatureGrid's numbered tiles (.92rem / 1.7, ink-2). */
+  .projects-criteria__description {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+  }
+</style>

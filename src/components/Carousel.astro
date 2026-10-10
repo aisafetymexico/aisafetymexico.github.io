@@ -1,0 +1,552 @@
+---
+/**
+ * Carousel — accessible image carousel with prev/next, indicators, and
+ * optional auto-advance.
+ *
+ * Spec:
+ *  - docs/DESIGN-SYSTEM.md §6.5 (`Carousel.astro`).
+ *  - docs/INSPIRATION.md A6 (cream/paper surface, restraint).
+ *  - WAI-ARIA Authoring Practices: "Carousel (Slide Show or Image Rotator)".
+ *  - Design: her carousel: 14px frame with a
+ *    hairline on bg-2, white 36px controls, 5px dots in a white bar under
+ *    the image (active dot clay, 1.5×). Used by the /activities gallery.
+ *  - Copy: the control labels live in the ES/EN table below (same pattern
+ *    as ResourceDirectory), picked from `lang` or `Astro.currentLocale`, so
+ *    /en/activities announces them in English.
+ *
+ * A11y guarantees:
+ *  - Region with role="region" + aria-roledescription="carousel" + aria-label.
+ *  - Each slide is a <div role="group"> (not a list item: a list may only
+ *    hold <li>s with their native role) with aria-roledescription="slide"
+ *    and aria-label "{n} de {total}" / "{n} of {total}".
+ *  - The slide viewport is a live region: aria-live="off" while the carousel
+ *    rotates on its own, "polite" whenever rotation is stopped (paused,
+ *    hovered, focused, off-screen, reduced motion, or no autoplay), so
+ *    manual changes are announced (per APG).
+ *  - Inactive slides get aria-hidden, and tabindex=-1 on their focusables.
+ *  - Prev/Next/indicator buttons are real <button>s with aria-labels.
+ *  - Keyboard: ArrowLeft/ArrowRight/Home/End anywhere in the carousel change
+ *    the slide; on the dots, focus follows the selected dot (roving tabindex).
+ *  - Auto-advance pauses on hover and while focus is inside. Manual
+ *    navigation never restarts it while focus or the pointer is still in
+ *    the carousel; it resumes once both have left.
+ *  - Play/pause toggle when autoplay is enabled. Under
+ *    `prefers-reduced-motion` the carousel starts paused and the toggle says
+ *    so (► «Reanudar…»); pressing it is an explicit request and plays anyway.
+ *  - Forced colours (Windows High Contrast): the dots take ButtonText and the
+ *    active one Highlight, so the indicator bar never goes blank.
+ *
+ * Behaviours:
+ *  - Idempotent script (data-attr guard) — survives view transitions.
+ *  - Pure vanilla JS, zero deps.
+ *
+ * Props:
+ *  - slides: Array<{src, alt, caption?}>
+ *  - autoAdvance?: boolean (default false)
+ *  - interval?: number ms (default 6000)
+ *  - label?: string (aria-label for the region; default "Galería"/"Gallery")
+ *  - lang?: 'es' | 'en' (default: the page locale, `Astro.currentLocale`)
+ */
+import type { ImageMetadata } from 'astro';
+import type { Locale } from '../lib/i18n';
+
+export type CarouselSlide = {
+  src: ImageMetadata | string;
+  alt: string;
+  caption?: string;
+};
+
+export interface Props {
+  slides: CarouselSlide[];
+  autoAdvance?: boolean;
+  interval?: number;
+  label?: string;
+  id?: string;
+  lang?: Locale;
+}
+
+const COPY = {
+  es: {
+    label: 'Galería',
+    prev: 'Imagen anterior',
+    next: 'Imagen siguiente',
+    picker: 'Selector de imagen',
+    goTo: (n: number) => `Ir a imagen ${n}`,
+    slide: (n: number, total: number) => `${n} de ${total}`,
+    pause: 'Pausar reproducción automática',
+    play: 'Reanudar reproducción automática',
+  },
+  en: {
+    label: 'Gallery',
+    prev: 'Previous image',
+    next: 'Next image',
+    picker: 'Image picker',
+    goTo: (n: number) => `Go to image ${n}`,
+    slide: (n: number, total: number) => `${n} of ${total}`,
+    pause: 'Pause autoplay',
+    play: 'Resume autoplay',
+  },
+} as const;
+
+const {
+  slides,
+  autoAdvance = false,
+  interval = 6000,
+  label,
+  id,
+  lang = (Astro.currentLocale as Locale | undefined) ?? 'es',
+} = Astro.props;
+
+const copy = COPY[lang] ?? COPY.es;
+const regionLabel = label ?? copy.label;
+
+const resolveSrc = (s: ImageMetadata | string): string =>
+  typeof s === 'string' ? s : (s as ImageMetadata).src;
+
+const total = slides.length;
+const carouselId = id || `carousel-${Math.random().toString(36).slice(2, 9)}`;
+const slidesId = `${carouselId}-slides`;
+---
+
+{total > 0 && (
+  <section
+    class="carousel"
+    role="region"
+    aria-roledescription="carousel"
+    aria-label={regionLabel}
+    id={carouselId}
+    data-carousel
+    data-autoadvance={autoAdvance ? 'true' : 'false'}
+    data-interval={String(interval)}
+    tabindex="0"
+  >
+    <div
+      class="carousel__viewport"
+      id={slidesId}
+      aria-live={autoAdvance ? 'off' : 'polite'}
+      aria-atomic="false"
+    >
+      <div class="carousel__track" data-carousel-track>
+        {slides.map((slide, idx) => (
+          <div
+            class:list={['carousel__slide', { 'is-active': idx === 0 }]}
+            role="group"
+            aria-roledescription="slide"
+            aria-label={copy.slide(idx + 1, total)}
+            data-carousel-slide
+            data-index={idx}
+            aria-hidden={idx === 0 ? 'false' : 'true'}
+          >
+            <img
+              src={resolveSrc(slide.src)}
+              alt={slide.alt}
+              class="carousel__image"
+              loading={idx === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+            {slide.caption && (
+              <p class="carousel__caption">{slide.caption}</p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {total > 1 && (
+      <>
+        <button
+          type="button"
+          class="carousel__nav carousel__nav--prev"
+          aria-label={copy.prev}
+          aria-controls={slidesId}
+          data-carousel-prev
+        >
+          <span aria-hidden="true">‹</span>
+        </button>
+        <button
+          type="button"
+          class="carousel__nav carousel__nav--next"
+          aria-label={copy.next}
+          aria-controls={slidesId}
+          data-carousel-next
+        >
+          <span aria-hidden="true">›</span>
+        </button>
+
+        <div class="carousel__indicators" role="tablist" aria-label={copy.picker}>
+          {slides.map((_, idx) => (
+            <button
+              type="button"
+              class:list={['carousel__indicator', { 'is-active': idx === 0 }]}
+              role="tab"
+              aria-label={copy.goTo(idx + 1)}
+              aria-selected={idx === 0 ? 'true' : 'false'}
+              aria-controls={slidesId}
+              data-carousel-indicator
+              data-index={idx}
+              tabindex={idx === 0 ? 0 : -1}
+            ></button>
+          ))}
+        </div>
+
+        {autoAdvance && (
+          <button
+            type="button"
+            class="carousel__playpause"
+            aria-label={copy.pause}
+            data-carousel-playpause
+            data-state="playing"
+            data-label-pause={copy.pause}
+            data-label-play={copy.play}
+          >
+            <span aria-hidden="true" data-icon-pause>❚❚</span>
+            <span aria-hidden="true" data-icon-play hidden>►</span>
+          </button>
+        )}
+      </>
+    )}
+  </section>
+)}
+
+<script>
+  /** Idempotent global controller — wires every [data-carousel] not yet bound. */
+  (() => {
+    const ATTR = 'data-carousel-bound';
+
+    const init = (root: HTMLElement) => {
+      if (root.getAttribute(ATTR) === '1') return;
+      root.setAttribute(ATTR, '1');
+
+      const track = root.querySelector<HTMLElement>('[data-carousel-track]');
+      const viewport = root.querySelector<HTMLElement>('.carousel__viewport');
+      const slides = Array.from(
+        root.querySelectorAll<HTMLElement>('[data-carousel-slide]')
+      );
+      const prev = root.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+      const next = root.querySelector<HTMLButtonElement>('[data-carousel-next]');
+      const indicators = Array.from(
+        root.querySelectorAll<HTMLButtonElement>('[data-carousel-indicator]')
+      );
+      const playpause = root.querySelector<HTMLButtonElement>('[data-carousel-playpause]');
+
+      if (!track || slides.length === 0) return;
+
+      const total = slides.length;
+      const autoAdvance = root.getAttribute('data-autoadvance') === 'true';
+      const interval = parseInt(root.getAttribute('data-interval') || '6000', 10);
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      let current = 0;
+      let timer: number | null = null;
+      let paused = false;
+      // Set once the user presses play: that explicit request may play even
+      // under prefers-reduced-motion.
+      let userStarted = false;
+      let hovering = false;
+
+      const setActive = (idx: number) => {
+        const normalized = ((idx % total) + total) % total;
+        slides.forEach((slide, i) => {
+          const active = i === normalized;
+          slide.classList.toggle('is-active', active);
+          slide.setAttribute('aria-hidden', active ? 'false' : 'true');
+          // Inactive slides should not steal focus.
+          slide.querySelectorAll<HTMLElement>('a, button, [tabindex]').forEach(el => {
+            if (!active) el.setAttribute('tabindex', '-1');
+            else el.removeAttribute('tabindex');
+          });
+        });
+        indicators.forEach((btn, i) => {
+          const active = i === normalized;
+          btn.classList.toggle('is-active', active);
+          btn.setAttribute('aria-selected', active ? 'true' : 'false');
+          btn.setAttribute('tabindex', active ? '0' : '-1');
+        });
+        if (track) {
+          track.style.transform = `translateX(-${normalized * 100}%)`;
+        }
+        current = normalized;
+      };
+
+      const go = (delta: number) => setActive(current + delta);
+      const goTo = (idx: number) => setActive(idx);
+
+      const start = () => {
+        if (!autoAdvance || paused || (reduced && !userStarted)) return;
+        stop();
+        timer = window.setInterval(() => go(1), interval);
+        // Rotating on its own: don't announce every slide (APG).
+        viewport?.setAttribute('aria-live', 'off');
+      };
+      const stop = () => {
+        if (timer !== null) {
+          window.clearInterval(timer);
+          timer = null;
+        }
+        // Stopped: changes now come from the user, so announce them.
+        viewport?.setAttribute('aria-live', 'polite');
+      };
+      // After a manual change, restart only once focus and pointer are both
+      // outside the carousel. While a keyboard user operates the controls,
+      // autoplay stays off and each change is announced (WAI-ARIA APG).
+      const resume = () => {
+        if (!hovering && !root.contains(document.activeElement)) start();
+      };
+
+      prev?.addEventListener('click', () => { go(-1); resume(); });
+      next?.addEventListener('click', () => { go(1); resume(); });
+
+      indicators.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.getAttribute('data-index') || '0', 10);
+          goTo(idx);
+          resume();
+        });
+      });
+
+      // Keyboard: ArrowLeft / ArrowRight / Home / End anywhere in the carousel.
+      root.addEventListener('keydown', (e: KeyboardEvent) => {
+        const t = e.target as HTMLElement;
+        // Only respond when focus is inside the carousel (region itself or controls)
+        if (!root.contains(t)) return;
+        // Don't hijack keys inside form fields (none expected, but be safe).
+        if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA') return;
+        if (e.key === 'ArrowLeft') {
+          go(-1);
+        } else if (e.key === 'ArrowRight') {
+          go(1);
+        } else if (e.key === 'Home') {
+          goTo(0);
+        } else if (e.key === 'End') {
+          goTo(total - 1);
+        } else {
+          return;
+        }
+        e.preventDefault();
+        // On the dots, focus follows the selected dot (roving tabindex).
+        if (t.matches('[data-carousel-indicator]')) indicators[current]?.focus();
+        resume();
+      });
+
+      // Pause on hover / focus-within
+      root.addEventListener('mouseenter', () => { hovering = true; stop(); });
+      root.addEventListener('mouseleave', () => { hovering = false; resume(); });
+      root.addEventListener('focusin', stop);
+      root.addEventListener('focusout', (e: FocusEvent) => {
+        const next = e.relatedTarget as HTMLElement | null;
+        if ((!next || !root.contains(next)) && !hovering) start();
+      });
+
+      // Play/Pause toggle (localized labels come from the button's data-*).
+      const labelPause = playpause?.dataset.labelPause || 'Pausar reproducción automática';
+      const labelPlay = playpause?.dataset.labelPlay || 'Reanudar reproducción automática';
+      const setToggle = (playing: boolean) => {
+        if (!playpause) return;
+        playpause.setAttribute('data-state', playing ? 'playing' : 'paused');
+        playpause.setAttribute('aria-label', playing ? labelPause : labelPlay);
+        playpause.querySelector<HTMLElement>('[data-icon-pause]')?.toggleAttribute('hidden', !playing);
+        playpause.querySelector<HTMLElement>('[data-icon-play]')?.toggleAttribute('hidden', playing);
+      };
+      playpause?.addEventListener('click', () => {
+        const isPlaying = playpause.getAttribute('data-state') === 'playing';
+        if (isPlaying) {
+          paused = true;
+          stop();
+          setToggle(false);
+        } else {
+          // An explicit request: it may play even under reduced motion.
+          userStarted = true;
+          paused = false;
+          start();
+          setToggle(true);
+        }
+      });
+
+      // Pause when off-screen for perf + battery.
+      const io = 'IntersectionObserver' in window
+        ? new IntersectionObserver((entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) resume();
+              else stop();
+            }
+          }, { threshold: 0.1 })
+        : null;
+      io?.observe(root);
+
+      // Init
+      setActive(0);
+      // Reduced motion: start paused, and let the toggle say so (► Reanudar).
+      if (reduced && autoAdvance && playpause) {
+        paused = true;
+        setToggle(false);
+      }
+      if (reduced || !autoAdvance) viewport?.setAttribute('aria-live', 'polite');
+      start();
+    };
+
+    const bootstrap = () => {
+      document.querySelectorAll<HTMLElement>('[data-carousel]').forEach(init);
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootstrap);
+    } else {
+      bootstrap();
+    }
+  })();
+</script>
+
+<style>
+  /* Her carousel (fcacfc4 css/style.css L639–703):
+     a 14px-radius frame with a hairline on bg-2, white 36px controls, and
+     a white indicator bar under the image. No shadow. */
+  .carousel {
+    position: relative;
+    width: 100%;
+    max-width: var(--container-carousel);
+    margin-inline: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-bg-warm);
+  }
+  .carousel:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .carousel__viewport {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .carousel__track {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    transition: transform var(--transition-carousel);
+    will-change: transform;
+  }
+
+  .carousel__slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    margin: 0;
+    position: relative;
+  }
+
+  .carousel__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  .carousel__caption {
+    padding: 14px 24px;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-secondary);
+    background: var(--color-bg-warm);
+    text-align: center;
+  }
+
+  /* Her .carousel-btn: white circles at 90% with a hairline and an ink
+     glyph. Prev/next sit 17px above the middle (half the indicator bar) so
+     they centre on the image. */
+  .carousel__nav,
+  .carousel__playpause {
+    position: absolute;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--color-bg-base) 90%, transparent);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--transition);
+  }
+  .carousel__nav:hover,
+  .carousel__playpause:hover {
+    background: var(--color-bg-base);
+  }
+  .carousel__nav:focus-visible,
+  .carousel__playpause:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .carousel__nav {
+    top: calc(50% - 17px);
+    transform: translateY(-50%);
+    font-size: 1.35rem;
+  }
+  .carousel__nav--prev { left: 14px; }
+  .carousel__nav--next { right: 14px; }
+
+  .carousel__playpause {
+    top: 12px;
+    right: 12px;
+    font-size: 12px;
+  }
+
+  /* Her indicator bar: 5px dots on white under a hairline. Each button is
+     24px tall for an easier target while keeping her 11px dot pitch; the
+     dot itself is the ::before. Inactive dots use the ink-3 mark colour so
+     they stay visible (non-text 3:1); the active one is clay at 1.5×. */
+  .carousel__indicators {
+    display: flex;
+    justify-content: center;
+    padding: 5px 0;
+    background: var(--color-bg-base);
+    border-top: 1px solid var(--color-border);
+  }
+  .carousel__indicator {
+    width: 11px;
+    height: 24px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+  }
+  .carousel__indicator::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: var(--radius-full);
+    background: var(--ink-3);
+    transition: background var(--transition), transform var(--transition);
+  }
+  .carousel__indicator.is-active::before {
+    background: var(--color-accent-decor);
+    transform: scale(1.5);
+  }
+  .carousel__indicator:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  /* Forced colours (Windows High Contrast): the dots are ::before
+     backgrounds, which the UA repaints as Canvas. Paint them in system
+     colours; the active dot keeps its 1.5× scale and takes Highlight. */
+  @media (forced-colors: active) {
+    .carousel__indicator::before { background: ButtonText; }
+    .carousel__indicator.is-active::before { background: Highlight; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .carousel__track { transition: none; }
+  }
+</style>

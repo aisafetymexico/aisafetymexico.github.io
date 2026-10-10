@@ -1,0 +1,88 @@
+---
+/**
+ * PullQuote — editorial quote with curly quotation marks and an optional
+ * attribution line.
+ *
+ * Spec:
+ *  - Task #10 props: `{ quote: string, attribution?: string }`.
+ *  - docs/DESIGN-SYSTEM.md §2.4 — display family (Inter since the redesign).
+ *  - Design: her editorial language, not a display serif.
+ *    A 2px clay rule on the left (decorative, non-text), the quote in Inter
+ *    500 at 1.15rem (1.32rem from 769px) with -0.02em tracking, ink. No giant
+ *    quote glyph, no shadow.
+ *
+ * Renders as a <figure> + <blockquote> for semantics; attribution becomes
+ * <figcaption> in the AA muted grey. The leading dash is aria-hidden.
+ */
+
+export interface Props {
+  quote: string;
+  attribution?: string;
+}
+
+const { quote, attribution } = Astro.props;
+---
+
+<figure class="pull-quote">
+  <blockquote class="pull-quote__text">
+    <p>{quote}</p>
+  </blockquote>
+  {attribution && (
+    <figcaption class="pull-quote__attribution">
+      <span class="pull-quote__attribution-dash" aria-hidden="true">—</span>
+      {attribution}
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .pull-quote {
+    margin: 32px 0;
+    padding: 4px 0 4px 22px;
+    border-inline-start: 2px solid var(--color-accent-decor);
+  }
+
+  /* At the end of its container the section padding sets the gap. */
+  .pull-quote:last-child {
+    margin-bottom: 0;
+  }
+
+  .pull-quote__text {
+    margin: 0;
+    padding: 0;
+  }
+
+  .pull-quote__text p {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: var(--fw-display);
+    line-height: 1.4;
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  /* Curly quotes around the visible blockquote text */
+  .pull-quote__text p::before { content: '\201C'; }
+  .pull-quote__text p::after  { content: '\201D'; }
+
+  .pull-quote__attribution {
+    margin-top: 14px;
+    font-family: var(--font-body);
+    font-size: 0.86rem;
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+  }
+
+  .pull-quote__attribution-dash {
+    margin-inline-end: var(--space-1);
+    color: var(--color-accent-decor);
+  }
+
+  @media (min-width: 769px) {
+    .pull-quote__text p {
+      font-size: 1.32rem;
+    }
+  }
+</style>

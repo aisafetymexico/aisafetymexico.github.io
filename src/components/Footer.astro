@@ -1,0 +1,339 @@
+---
+/**
+ * Footer — global site footer, her centered light layout
+ * (fcacfc4 css/style.css L1217–1273).
+ *
+ * Spec: docs/ARCHITECTURE.md §4.
+ *
+ * Layout (one centered column on bg-2, 1px top rule):
+ *   ┌──────────────────────────────────────────────────────────┐
+ *   │      [logo] AI Safety Mexico   (in) (ig) (yt)            │  brand row
+ *   │  Inicio · Sobre nosotros · Equipo · … · Recursos · Blog  │  row 1: the site
+ *   │          Colabora · Contacto · Calendario                │  row 2: connect
+ *   │   © 2026 AI Safety Mexico. Todos los derechos reservados.│
+ *   └──────────────────────────────────────────────────────────┘
+ *
+ * Every destination of the former 3-column footer is kept: the pages of
+ * "Explora" + "Trabajo" form row 1, "Conecta" forms row 2, and its LinkedIn,
+ * Instagram and YouTube links are the round icons of the brand row. On
+ * narrower screens each row wraps into balanced lines (`text-wrap: balance`,
+ * as does the copyright) rather than a full line plus a short remainder.
+ *
+ * Props:
+ *  - social: optional override of the social icons
+ *    (default: LinkedIn + Instagram + YouTube).
+ *  - tagline: optional line under the brand row. Her footer has none, so it
+ *    renders only when passed.
+ *  - year: override displayed copyright year (defaults to current year).
+ *  - logoSrc / logoAlt / siteName: brand overrides (default: the 2026 logo
+ *    derivative, an empty alt and "AI Safety Mexico"). The logo is decorative
+ *    by default: the brand link carries its own aria-label and the visible
+ *    name sits right next to it, so a text alt would only repeat it.
+ *  - lang: 'es' (default) | 'en'.
+ *
+ * A11y:
+ *  - <footer role="contentinfo"> via the implicit role.
+ *  - The link rows sit in one <nav> with its own aria-label.
+ *  - Social icons have aria-label; SVGs are aria-hidden.
+ */
+import type { SocialLink } from '../lib/types';
+import { t, localizedPath, type Locale } from '../lib/i18n';
+
+/** A group of footer links, rendered as one centered row. */
+export interface FooterColumn {
+  heading: string;
+  items: { label: string; href: string; external?: boolean }[];
+}
+
+export interface Props {
+  social?: SocialLink[];
+  tagline?: string;
+  year?: number;
+  logoSrc?: string;
+  logoAlt?: string;
+  siteName?: string;
+  lang?: Locale;
+}
+
+const {
+  social,
+  tagline,
+  year = new Date().getFullYear(),
+  logoSrc = '/images/aismx-logo-2026-160.png',
+  logoAlt = '',
+  siteName = 'AI Safety Mexico',
+  lang = 'es',
+} = Astro.props;
+
+const rows: FooterColumn[] = [
+  {
+    heading: `${t(lang, 'footer.col.explore')} · ${t(lang, 'footer.col.work')}`,
+    items: [
+      { label: t(lang, 'footer.item.home'),       href: localizedPath(lang, '/') },
+      { label: t(lang, 'footer.item.about'),      href: localizedPath(lang, '/about') },
+      { label: t(lang, 'footer.item.team'),       href: localizedPath(lang, '/team') },
+      { label: t(lang, 'footer.item.activities'), href: localizedPath(lang, '/activities') },
+      { label: t(lang, 'footer.item.research'),   href: localizedPath(lang, '/research') },
+      { label: t(lang, 'footer.item.programs'),   href: localizedPath(lang, '/programs') },
+      { label: t(lang, 'footer.item.projects'),   href: localizedPath(lang, '/projects') },
+      { label: t(lang, 'footer.item.gsh'),        href: localizedPath(lang, '/global-south-challenge') },
+      { label: t(lang, 'footer.item.resources'),  href: localizedPath(lang, '/resources') },
+      { label: t(lang, 'footer.item.blog'),       href: localizedPath(lang, '/blog') },
+    ],
+  },
+  {
+    heading: t(lang, 'footer.col.connect'),
+    items: [
+      { label: t(lang, 'footer.item.getInvolved'), href: localizedPath(lang, '/get-involved') },
+      { label: t(lang, 'footer.item.contact'),     href: localizedPath(lang, '/contact') },
+      { label: t(lang, 'footer.item.calendar'),    href: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5', external: true },
+    ],
+  },
+];
+
+const DEFAULT_SOCIAL: SocialLink[] = [
+  { name: 'LinkedIn', href: 'https://www.linkedin.com/company/ai-safety-mexico/', icon: 'linkedin' },
+  { name: 'Instagram', href: 'https://www.instagram.com/aisafetymx/', icon: 'instagram' },
+  { name: 'YouTube', href: 'https://www.youtube.com/@AISafetyMéxico', icon: 'youtube' },
+];
+
+const resolvedSocial = social ?? DEFAULT_SOCIAL;
+
+const brandHref = localizedPath(lang, '/');
+const brandAria = t(lang, 'footer.aria.brandHome');
+const socialAria = t(lang, 'footer.aria.social');
+const navAria = t(lang, 'footer.aria.nav');
+const copyrightSuffix = t(lang, 'footer.copyright');
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+
+    <!-- Brand row: logo + name, then the round social icons -->
+    <div class="site-footer__brand">
+      <a class="site-footer__brand-link" href={brandHref} aria-label={brandAria}>
+        <img
+          class="site-footer__logo"
+          src={logoSrc}
+          alt={logoAlt}
+          width="40"
+          height="38"
+          loading="lazy"
+          decoding="async"
+        />
+        <span class="site-footer__name">{siteName}</span>
+      </a>
+
+      {resolvedSocial.length > 0 && (
+        <ul class="site-footer__social" aria-label={socialAria}>
+          {resolvedSocial.map(s => (
+            <li>
+              <a
+                class="site-footer__social-icon"
+                href={s.href}
+                aria-label={s.name}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {s.icon === 'linkedin' && (
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      fill="currentColor"
+                      d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                    />
+                  </svg>
+                )}
+                {s.icon === 'instagram' && (
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      fill="currentColor"
+                      d="M12 2.2c3.2 0 3.58.012 4.85.07 1.17.054 1.8.249 2.22.413.56.217.96.477 1.38.896.42.42.679.819.896 1.38.164.42.36 1.05.413 2.22.058 1.27.07 1.65.07 4.85s-.012 3.58-.07 4.85c-.054 1.17-.249 1.8-.413 2.22-.217.56-.477.96-.896 1.38-.42.42-.819.679-1.38.896-.42.164-1.05.36-2.22.413-1.27.058-1.65.07-4.85.07s-3.58-.012-4.85-.07c-1.17-.054-1.8-.249-2.22-.413-.56-.217-.96-.477-1.38-.896-.42-.42-.679-.819-.896-1.38-.164-.42-.36-1.05-.413-2.22C2.212 15.58 2.2 15.2 2.2 12s.012-3.58.07-4.85c.054-1.17.249-1.8.413-2.22.217-.56.477-.96.896-1.38.42-.42.819-.679 1.38-.896.42-.164 1.05-.36 2.22-.413C8.42 2.212 8.8 2.2 12 2.2zm0 1.8c-3.146 0-3.498.012-4.73.068-1.022.046-1.578.217-1.948.36-.49.19-.84.418-1.207.785-.367.367-.595.717-.785 1.207-.143.37-.314.926-.36 1.948C2.812 8.502 2.8 8.854 2.8 12s.012 3.498.068 4.73c.046 1.022.217 1.578.36 1.948.19.49.418.84.785 1.207.367.367.717.595 1.207.785.37.143.926.314 1.948.36 1.232.056 1.584.068 4.73.068s3.498-.012 4.73-.068c1.022-.046 1.578-.217 1.948-.36.49-.19.84-.418 1.207-.785.367-.367.595-.717.785-1.207.143-.37.314-.926.36-1.948.056-1.232.068-1.584.068-4.73s-.012-3.498-.068-4.73c-.046-1.022-.217-1.578-.36-1.948-.19-.49-.418-.84-.785-1.207-.367-.367-.717-.595-1.207-.785-.37-.143-.926-.314-1.948-.36C15.498 4.012 15.146 4 12 4zm0 3.2a4.8 4.8 0 1 1 0 9.6 4.8 4.8 0 0 1 0-9.6zm0 1.8a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.05-3.05a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3z"
+                    />
+                  </svg>
+                )}
+                {s.icon === 'youtube' && (
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      fill="currentColor"
+                      d="M23.5 6.2a3.05 3.05 0 00-2.15-2.16C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.35.44A3.05 3.05 0 00.5 6.2 32 32 0 000 12a32 32 0 00.5 5.8 3.05 3.05 0 002.15 2.16C4.5 20.4 12 20.4 12 20.4s7.5 0 9.35-.44a3.05 3.05 0 002.15-2.16A32 32 0 0024 12a32 32 0 00-.5-5.8zM9.75 15.57V8.43L15.84 12l-6.09 3.57z"
+                    />
+                  </svg>
+                )}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+
+    {tagline && <p class="site-footer__tagline">{tagline}</p>}
+
+    <!-- Link rows: the site, then the ways to connect -->
+    <nav class="site-footer__nav" aria-label={navAria}>
+      {rows.map(row => (
+        <ul class="site-footer__links" aria-label={row.heading}>
+          {row.items.map(item => (
+            <li>
+              <a
+                class="site-footer__link"
+                href={item.href}
+                {...(item.external
+                  ? { target: '_blank', rel: 'noopener noreferrer' }
+                  : {})}
+              >{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      ))}
+    </nav>
+
+    <p class="site-footer__copy">
+      © {year} {siteName}. {copyrightSuffix}
+    </p>
+
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-bg-warm);
+    color: var(--color-text-secondary);
+    padding: 48px 0 36px;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+    font-size: var(--fs-small);
+  }
+
+  .site-footer__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 481px) {
+    .site-footer__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  /* Brand row */
+  .site-footer__brand {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .site-footer__brand-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    border-radius: var(--radius-xs);
+  }
+  .site-footer__brand-link:hover {
+    color: var(--color-text-primary);
+  }
+
+  .site-footer__logo {
+    height: 38px;
+    width: auto;
+  }
+
+  .site-footer__name {
+    font-family: var(--font-body);
+    font-weight: var(--fw-label);
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+  }
+
+  .site-footer__social {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-footer__social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--color-bg-base);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    transition: color var(--transition), border-color var(--transition);
+  }
+  .site-footer__social-icon:hover {
+    color: var(--color-text-primary);
+    border-color: var(--color-border-strong);
+  }
+  .site-footer__social-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .site-footer__tagline {
+    max-width: 56ch;
+    margin: 0 auto 20px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-secondary);
+  }
+
+  /* Link rows: a balanced inline flow (centred by .site-footer), so a row
+     that wraps splits evenly (5 + 5, 4 / 3 / 3…) instead of leaving one or
+     two links on their own line. The items are inline-blocks spaced by their
+     own 3px 11px margins; the list's negative margin cancels them at its
+     outer edges, so each line holds exactly what the former flex row with a
+     6px 22px gap held (line counts never grow) and the vertical rhythm is
+     unchanged. */
+  .site-footer__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .site-footer__links {
+    display: block;
+    list-style: none;
+    margin: -3px -11px;
+    padding: 0;
+    text-wrap: balance;
+  }
+
+  .site-footer__links > li {
+    display: inline-block;
+    margin: 3px 11px;
+  }
+
+  .site-footer__link {
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.86rem;
+    line-height: var(--lh-relaxed);
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+  .site-footer__link:hover {
+    color: var(--color-text-primary);
+  }
+
+  .site-footer__copy {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-muted);
+    text-wrap: balance;
+  }
+</style>

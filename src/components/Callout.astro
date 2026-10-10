@@ -1,0 +1,116 @@
+---
+/**
+ * Callout — pull-out box for a single key paragraph or short list inside a
+ * larger editorial flow.
+ *
+ * Spec:
+ *  - Task #10 props: `{ tone?: 'info'|'highlight'|'warning' }` (default highlight).
+ *  - docs/DESIGN-SYSTEM.md §6.4 — Callout component.
+ *  - Design: her `.event-note` (fcacfc4 css/style.css L836–851): 1px
+ *    hairline, 8px radius, 22px 24px padding, ink-2 copy
+ *    at .96rem / 1.7 with pretty wrapping, no side bar and no shadow.
+ *
+ * Tones:
+ *  - highlight (default): bg-2 tint, the inverse of her white note, for
+ *                         callouts on white sections. Inside a tinted
+ *                         `.section--warm` / `.section--cream` it turns
+ *                         white, as her note does on her bg-2 sections.
+ *  - info:                white surface + hairline.
+ *  - warning:             clay-wash surface with the clay-line border.
+ *
+ * Slot:
+ *  - default: arbitrary inline / block content (paragraph, list, etc.).
+ *    Links get her in-text link look (clay-dark, hairline underline).
+ */
+
+export type CalloutTone = 'info' | 'highlight' | 'warning';
+
+export interface Props {
+  tone?: CalloutTone;
+}
+
+const { tone = 'highlight' } = Astro.props;
+---
+
+<aside class:list={['callout', `callout--${tone}`]} role="note">
+  <div class="callout__body">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .callout {
+    margin-block: 24px;
+    padding: 22px 24px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-bg-warm);
+    color: var(--color-text-secondary);
+  }
+
+  /* Directly under a SectionHeading the heading's own bottom margin sets the
+     gap (VF-8); at the edges of its container it adds no extra space. */
+  :global(.section-heading) + .callout,
+  .callout:first-child {
+    margin-top: 0;
+  }
+  .callout:last-child {
+    margin-bottom: 0;
+  }
+
+  .callout__body :global(> :first-child) {
+    margin-top: 0;
+  }
+  .callout__body :global(> :last-child) {
+    margin-bottom: 0;
+  }
+
+  .callout__body :global(p) {
+    font-size: 0.96rem;
+    line-height: var(--lh-loose);
+    /* No one-word last line («práctica.», «mexicano.»); heights unchanged. */
+    text-wrap: pretty;
+    color: var(--color-text-secondary);
+  }
+  .callout__body :global(p + p) {
+    margin-top: var(--space-3);
+  }
+
+  .callout__body :global(strong) {
+    color: var(--color-text-primary);
+    font-weight: var(--fw-heading);
+  }
+
+  /* In-text links: her .inline-link. */
+  .callout__body :global(a) {
+    color: var(--color-link-inline);
+    font-weight: var(--fw-medium);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-link-underline);
+    transition: color var(--transition), border-color var(--transition);
+  }
+  .callout__body :global(a:hover),
+  .callout__body :global(a:focus-visible) {
+    color: var(--color-link-inline);
+    border-bottom-color: var(--color-link-underline-hover);
+  }
+
+  /* Tones */
+  .callout--highlight {
+    background: var(--color-bg-warm);
+  }
+
+  :global(.section--warm) .callout--highlight,
+  :global(.section--cream) .callout--highlight {
+    background: var(--color-bg-base);
+  }
+
+  .callout--info {
+    background: var(--color-bg-base);
+  }
+
+  .callout--warning {
+    background: var(--color-accent-soft);
+    border-color: var(--clay-line);
+  }
+</style>

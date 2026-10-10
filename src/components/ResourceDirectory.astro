@@ -1,0 +1,869 @@
+---
+/**
+ * ResourceDirectory — catálogo filtrable de recursos abiertos de AI safety.
+ *
+ * Usado por /resources y /en/resources. Las tarjetas se renderizan en el
+ * build (SSG), así que la página es indexable y legible sin JavaScript; el
+ * script del cliente solo alterna el atributo `hidden` de tarjetas que ya
+ * existen en el DOM.
+ *
+ * Búsqueda: ignora mayúsculas y acentos («politica» encuentra «política»; la
+ * ñ se pliega a n en ambos lados). Varias palabras sin comas se buscan como
+ * frase cuando la frase aparece tal cual en alguna tarjeta que pasa los
+ * filtros activos («en línea» no encuentra «alineación»; la frase escrita junta
+ * también cuenta, así que «ai safety» encuentra «AISafety.com»); si no
+ * aparece, o si los términos se separaron con comas, deben aparecer todos
+ * («beca remoto», «beca, remoto»). El texto buscable (data-texto) sale ya normalizado del
+ * build e incluye formato y duración; el script normaliza la
+ * consulta con el mismo helper. Al volver con Atrás o al recargar, el script
+ * vuelve a filtrar con los valores que restaure el navegador.
+ *
+ * Diseño: el directorio de su recursos.html (fcacfc4 css/style.css
+ * L1358–1625).
+ *  - Encabezados de sección sin eyebrow, como en su página de recursos.
+ *  - Cifras: rejilla de cifras con filetes (su .resource-preview-grid).
+ *  - Panel de filtros en bg-2 con radio 14px: primero los campos y después
+ *    los filtros rápidos, bajo un filete (su .resource-filters). El orden
+ *    del DOM coincide con el visual, así que el orden de foco también.
+ *  - Barra de resultados con filete inferior (su .resource-toolbar); las
+ *    acciones son pastillas `.btn .btn-ghost` globales.
+ *  - Tarjetas blancas con filete y radio 8px (su .resource-card). El enlace
+ *    del título se extiende a toda la tarjeta, de modo que la tarjeta entera
+ *    es clicable y su hover (borde ink-3 + fondo bg-2) no engaña. Si algún
+ *    día una tarjeta lleva un segundo enlace, ese enlace
+ *    necesita `position: relative; z-index: 1` para quedar por encima.
+ *  - Tipo como eyebrow clay-dark, área en gris, banderas ES (azul) y LatAm
+ *    (barro), pie Formato / Duración con filete suave y hasta 3 etiquetas.
+ *    El «·» va dentro del span del área (su .resource-area::before), así que
+ *    nunca queda colgando al final de una línea.
+ *  - Sin resultados: su .resource-empty, un título y una indicación.
+ *  Ambas secciones son blancas: el panel de filtros ya lleva el tinte, como
+ *  en su .section-resources. El texto pequeño usa el gris AA (#6E6E78).
+ *
+ * Nota de contenido: el catálogo se curó en español. Los resúmenes y la
+ * taxonomía (tipo / área / formato / duración / etiquetas) siguen en español
+ * también en la versión en inglés; solo la interfaz está traducida. En /en
+ * ese texto lleva lang="es" para que los lectores de pantalla lo lean con
+ * reglas del español (WCAG 3.1.2); los títulos, mezcla de nombres propios,
+ * no se marcan. En las etiquetas, lang va en cada <li> y no en la lista, cuyo
+ * nombre accesible («Tags») está en inglés. Traducir los 69 resúmenes es
+ * trabajo pendiente, no un olvido.
+ */
+import SectionHeading from './SectionHeading.astro';
+import { recursos, actualizado, valoresUnicos, totales } from '../lib/recursos';
+import type { Locale } from '../lib/i18n';
+
+export interface Props {
+  lang?: Locale;
+}
+
+const { lang = 'es' } = Astro.props;
+
+const copy = {
+  es: {
+    catalogTitle: 'Qué vas a encontrar',
+    catalogDesc: (fecha: string) =>
+      `Enlaces verificados el ${fecha}. Si encuentras uno roto o quieres proponer un recurso, escríbenos.`,
+    stats: [
+      'recursos verificados',
+      'cursos y currículos',
+      'programas y fellowships',
+      'relevantes para América Latina',
+    ],
+    dirTitle: 'Explora los recursos',
+    dirDesc:
+      'Filtra por tipo, área o idioma, o busca por nombre. Los filtros se aplican en tu navegador; nada sale de tu equipo.',
+    quickFilters: 'Filtros rápidos',
+    chips: {
+      todos: 'Todos',
+      es: 'En español',
+      latam: 'América Latina',
+      curso: 'Cursos',
+      tecnica: 'Investigación técnica',
+      gobernanza: 'Gobernanza',
+      financiamiento: 'Financiamiento',
+      comunidad: 'Comunidad',
+      empezar: 'Para empezar',
+    },
+    search: 'Buscar por nombre, tema o palabra clave',
+    searchPlaceholder: 'Por ejemplo: interpretabilidad, gobernanza, beca, remoto',
+    type: 'Tipo',
+    allTypes: 'Todos',
+    area: 'Área',
+    allAreas: 'Todas',
+    /** Plantilla del contador; {n} se muestra en negritas. */
+    showing: 'Mostrando {n} de {t} recursos',
+    clear: 'Limpiar filtros',
+    download: 'Descargar JSON',
+    // Su .resource-empty (fcacfc4 js/recursos.js L133–135).
+    emptyTitle: 'Sin resultados',
+    empty:
+      'Prueba con otra palabra clave o limpia los filtros. Si crees que falta un recurso, escríbenos a contact@aismx.org.',
+    badgeEs: 'Español',
+    format: 'Formato:',
+    duration: 'Duración:',
+    tags: 'Etiquetas',
+    note: null as string | null,
+  },
+  en: {
+    catalogTitle: 'What you will find',
+    catalogDesc: (fecha: string) =>
+      `Links verified on ${fecha}. If you find a broken one or want to suggest a resource, get in touch.`,
+    stats: [
+      'verified resources',
+      'courses and curricula',
+      'programs and fellowships',
+      'relevant to Latin America',
+    ],
+    dirTitle: 'Browse the resources',
+    dirDesc:
+      'Filter by type, area or language, or search by name. Filtering happens in your browser; nothing leaves your device.',
+    quickFilters: 'Quick filters',
+    chips: {
+      todos: 'All',
+      es: 'In Spanish',
+      latam: 'Latin America',
+      curso: 'Courses',
+      tecnica: 'Technical research',
+      gobernanza: 'Governance',
+      financiamiento: 'Funding',
+      comunidad: 'Community',
+      empezar: 'Getting started',
+    },
+    search: 'Search by name, topic or keyword',
+    // Términos en español a propósito: el texto del catálogo está en español.
+    searchPlaceholder: 'e.g. interpretabilidad, gobernanza, beca, remoto',
+    type: 'Type',
+    allTypes: 'All',
+    area: 'Area',
+    allAreas: 'All',
+    showing: 'Showing {n} of {t} resources',
+    clear: 'Clear filters',
+    download: 'Download JSON',
+    emptyTitle: 'No results',
+    empty:
+      'Try another keyword or clear the filters. If you think a resource is missing, write to us at contact@aismx.org.',
+    badgeEs: 'Spanish',
+    format: 'Format:',
+    duration: 'Duration:',
+    tags: 'Tags',
+    note: 'The catalog was curated in Spanish: resource summaries and category labels remain in Spanish.',
+  },
+}[lang];
+
+const tipos = valoresUnicos('tipo');
+const areas = valoresUnicos('area');
+
+// En /en el texto del catálogo sigue en español: se marca con lang="es".
+// En /resources queda undefined y Astro no emite el atributo.
+const catLang = lang === 'en' ? 'es' : undefined;
+
+// Minúsculas sin diacríticos («Política» → «politica», «ñ» → «n»). El script
+// del cliente aplica el mismo helper a la consulta.
+const normalizar = (s: string) =>
+  s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+const chipIds = [
+  'todos',
+  'es',
+  'latam',
+  'curso',
+  'tecnica',
+  'gobernanza',
+  'financiamiento',
+  'comunidad',
+  'empezar',
+] as const;
+
+const fechaLegible = new Date(actualizado + 'T00:00:00Z').toLocaleDateString(
+  lang === 'es' ? 'es-MX' : 'en-US',
+  { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' },
+);
+
+// Títulos: «AI Safety» y «Buenos Aires» no se parten entre líneas (el h3
+// balanceado dejaba «Introduction to AI / Safety (Stanford CS120)»). Solo
+// para mostrar: data-texto y /resources.json siguen usando r.titulo.
+const tituloVisible = (t: string) =>
+  t.replace(/\bAI (?=[Ss]afety)/g, 'AI\u00A0').replace(/Buenos Aires/g, 'Buenos\u00A0Aires');
+
+const cifras = [totales.recursos, totales.cursos, totales.programas, totales.latam];
+
+// Contador inicial (todo visible). El cliente lo reescribe con la misma
+// plantilla, que viaja en data-tpl para no duplicar i18n en el script.
+const [conteoAntes, conteoDespues = ''] = copy.showing.split('{n}');
+const conteoFin = conteoDespues.replace('{t}', String(totales.recursos));
+---
+
+<!-- Cifras del catálogo -->
+<section class="page-section" aria-labelledby="recursos-resumen">
+  <div class="page-section__inner">
+    <SectionHeading
+      title={copy.catalogTitle}
+      description={copy.catalogDesc(fechaLegible)}
+      id="recursos-resumen"
+    />
+    <ul class="resumen">
+      {cifras.map((n, i) => (
+        <li><strong>{n}</strong><span>{copy.stats[i]}</span></li>
+      ))}
+    </ul>
+    {copy.note && <p class="nota">{copy.note}</p>}
+  </div>
+</section>
+
+<!-- Directorio -->
+<section class="page-section" aria-labelledby="recursos-directorio">
+  <div class="page-section__inner">
+    <SectionHeading
+      title={copy.dirTitle}
+      description={copy.dirDesc}
+      id="recursos-directorio"
+    />
+
+    <div class="filtros">
+      <div class="campos">
+        <div class="campo campo--busqueda">
+          <label for="r-buscar">{copy.search}</label>
+          <input type="search" id="r-buscar" placeholder={copy.searchPlaceholder} autocomplete="off" />
+        </div>
+        <div class="campo">
+          <label for="r-tipo">{copy.type}</label>
+          <select id="r-tipo">
+            <option value="">{copy.allTypes}</option>
+            {tipos.map((t) => <option value={t} lang={catLang}>{t}</option>)}
+          </select>
+        </div>
+        <div class="campo">
+          <label for="r-area">{copy.area}</label>
+          <select id="r-area">
+            <option value="">{copy.allAreas}</option>
+            {areas.map((a) => <option value={a} lang={catLang}>{a}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div class="chips" role="group" aria-label={copy.quickFilters}>
+        {chipIds.map((id) => (
+          <button
+            type="button"
+            class="chip"
+            data-chip={id}
+            aria-pressed={id === 'todos' ? 'true' : 'false'}
+          >{copy.chips[id]}</button>
+        ))}
+      </div>
+    </div>
+
+    <div class="barra">
+      <p
+        class="conteo"
+        id="r-conteo"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        data-tpl={copy.showing}
+      >{conteoAntes}<strong>{totales.recursos}</strong>{conteoFin}</p>
+      <div class="barra-acciones">
+        <button type="button" class="btn btn-ghost" id="r-limpiar">{copy.clear}</button>
+        <a class="btn btn-ghost" href="/resources.json" download="ai-safety-mexico-resources.json">
+          {copy.download}
+        </a>
+      </div>
+    </div>
+
+    <ul class="rejilla" id="r-rejilla">
+      {recursos.map((r) => (
+        <li
+          class="recurso"
+          data-tipo={r.tipo}
+          data-area={r.area}
+          data-idioma={r.idioma}
+          data-latam={r.latam ? 'si' : 'no'}
+          data-texto={normalizar(`${r.titulo} ${r.resumen} ${r.etiquetas.join(' ')} ${r.tipo} ${r.area} ${r.formato} ${r.duracion}`)}
+        >
+          <article>
+            <p class="recurso__meta">
+              <span class="recurso__tipo" lang={catLang}>{r.tipo}</span>
+              <span class="recurso__area" lang={catLang}><span class="recurso__sep" aria-hidden="true">·</span>{r.area}</span>
+              {r.idioma === 'es' && <span class="recurso__badge recurso__badge--es">{copy.badgeEs}</span>}
+              {r.latam && <span class="recurso__badge recurso__badge--latam">LatAm</span>}
+            </p>
+            <h3 class="recurso__titulo">
+              <a href={r.enlace} target="_blank" rel="noopener noreferrer">{tituloVisible(r.titulo)}</a>
+            </h3>
+            <p class="recurso__resumen" lang={catLang}>{r.resumen}</p>
+            <p class="recurso__pie">
+              <span>{copy.format} <strong lang={catLang}>{r.formato}</strong></span>
+              <span>{copy.duration} <strong lang={catLang}>{r.duracion}</strong></span>
+            </p>
+            <ul class="recurso__etiquetas" role="list" aria-label={copy.tags}>
+              {r.etiquetas.slice(0, 3).map((etiqueta) => <li lang={catLang}>{etiqueta}</li>)}
+            </ul>
+          </article>
+        </li>
+      ))}
+    </ul>
+
+    <div class="vacio" id="r-vacio" hidden>
+      <h3 class="vacio__titulo">{copy.emptyTitle}</h3>
+      <p class="vacio__texto">{copy.empty}</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const rejilla = document.getElementById('r-rejilla');
+  if (rejilla) {
+    const tarjetas = Array.from(rejilla.querySelectorAll<HTMLLIElement>('.recurso'));
+    const buscar = document.getElementById('r-buscar') as HTMLInputElement | null;
+    const selTipo = document.getElementById('r-tipo') as HTMLSelectElement | null;
+    const selArea = document.getElementById('r-area') as HTMLSelectElement | null;
+    const conteo = document.getElementById('r-conteo');
+    const vacio = document.getElementById('r-vacio');
+    const limpiar = document.getElementById('r-limpiar');
+    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-chip]'));
+
+    // La plantilla del contador viene del servidor para no duplicar i18n aquí.
+    const tpl = conteo?.dataset.tpl ?? 'Showing {n} of {t} resources';
+    let chipActivo = 'todos';
+
+    // Mismo helper que en el build (data-texto ya viene normalizado):
+    // minúsculas y sin diacríticos, así que «politica» encuentra «política».
+    const normalizar = (s: string) =>
+      s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    const predicados: Record<string, (el: HTMLLIElement) => boolean> = {
+      todos: () => true,
+      es: (el) => el.dataset.idioma === 'es',
+      latam: (el) => el.dataset.latam === 'si',
+      curso: (el) => el.dataset.tipo === 'Curso',
+      tecnica: (el) =>
+        el.dataset.tipo === 'Programa de investigación' || el.dataset.area === 'Técnica',
+      gobernanza: (el) => (el.dataset.area ?? '').startsWith('Gobernanza'),
+      financiamiento: (el) => el.dataset.tipo === 'Financiamiento',
+      comunidad: (el) => el.dataset.tipo === 'Comunidad' || el.dataset.tipo === 'Organización',
+      empezar: (el) =>
+        el.dataset.area === 'General' &&
+        (el.dataset.tipo === 'Curso' || el.dataset.tipo === 'Directorio'),
+    };
+
+    // "Mostrando <strong>n</strong> de t recursos": el número va en negritas.
+    function pintarConteo(visibles: number) {
+      if (!conteo) return;
+      const [antes, despues = ''] = tpl.split('{n}');
+      const cifra = document.createElement('strong');
+      cifra.textContent = String(visibles);
+      conteo.replaceChildren(antes, cifra, despues.replace('{t}', String(tarjetas.length)));
+    }
+
+    function aplicar() {
+      // Consulta normalizada: minúsculas, sin diacríticos, espacios colapsados.
+      const consulta = normalizar((buscar?.value ?? '').trim()).replace(/\s+/g, ' ');
+      const terminos = consulta.split(/[\s,]+/).filter(Boolean);
+      const tipo = selTipo?.value ?? '';
+      const area = selArea?.value ?? '';
+      const pasaChip = predicados[chipActivo] ?? predicados.todos;
+      const pasaFiltros = (el: HTMLLIElement) =>
+        pasaChip(el) && (!tipo || el.dataset.tipo === tipo) && (!area || el.dataset.area === area);
+      // Varias palabras sin comas: si la frase aparece tal cual en alguna tarjeta,
+      // se busca la frase («en línea» no debe encontrar «alineación»). La frase
+      // también vale escrita junta al inicio de una palabra, para que «ai safety»
+      // siga encontrando «AISafety.com». Si no aparece, o si se separaron con
+      // comas, deben aparecer todos los términos.
+      const junta = consulta.replace(/ /g, '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const reJunta = new RegExp('(?:^|[^a-z0-9])' + junta);
+      const tieneFrase = (texto: string) => texto.includes(consulta) || reJunta.test(texto);
+      const comoFrase =
+        terminos.length > 1 &&
+        !consulta.includes(',') &&
+        tarjetas.some((el) => pasaFiltros(el) && tieneFrase(el.dataset.texto ?? ''));
+
+      let visibles = 0;
+      for (const el of tarjetas) {
+        const texto = el.dataset.texto ?? '';
+        const ok =
+          pasaFiltros(el) &&
+          (terminos.length === 0 ||
+            (comoFrase ? tieneFrase(texto) : terminos.every((t) => texto.includes(t))));
+        el.hidden = !ok;
+        if (ok) visibles++;
+      }
+
+      pintarConteo(visibles);
+      if (vacio) vacio.hidden = visibles !== 0;
+    }
+
+    for (const chip of chips) {
+      chip.addEventListener('click', () => {
+        chipActivo = chip.dataset.chip ?? 'todos';
+        for (const c of chips) c.setAttribute('aria-pressed', String(c === chip));
+        aplicar();
+      });
+    }
+
+    buscar?.addEventListener('input', aplicar);
+    selTipo?.addEventListener('change', aplicar);
+    selArea?.addEventListener('change', aplicar);
+
+    limpiar?.addEventListener('click', () => {
+      if (buscar) buscar.value = '';
+      if (selTipo) selTipo.value = '';
+      if (selArea) selArea.value = '';
+      chipActivo = 'todos';
+      for (const c of chips) c.setAttribute('aria-pressed', String(c.dataset.chip === 'todos'));
+      aplicar();
+    });
+
+    // Al volver con Atrás o al recargar, el navegador puede restaurar Tipo y
+    // Área (y la búsqueda) después de que corre este script: se vuelve a
+    // filtrar para que la lista y el contador coincidan con los controles.
+    // Sin valores restaurados no se llama, para no anunciar de nuevo el mismo
+    // contador por la región viva en una carga normal.
+    window.addEventListener('pageshow', () => {
+      if (buscar?.value || selTipo?.value || selArea?.value) aplicar();
+    });
+  }
+</script>
+
+<style>
+  /* Section shells: her 72px rhythm (48px on phones), white. The global
+     `main > section` rule adds the line-soft hairline. */
+  .page-section {
+    padding-block: var(--section-pad);
+    background: var(--color-bg-section-base);
+  }
+
+  .page-section__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 481px) {
+    .page-section__inner { padding-inline: var(--container-padding-md); }
+  }
+
+  /* ---------- Cifras (her .resource-preview-grid) ---------- */
+  .resumen {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .resumen li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 20px 22px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  @media (min-width: 481px) {
+    .resumen { grid-template-columns: repeat(2, 1fr); }
+    .resumen li { border-right: 1px solid var(--color-border); }
+    .resumen li:nth-child(2n) { border-right: 0; }
+  }
+
+  @media (min-width: 1025px) {
+    .resumen { grid-template-columns: repeat(4, 1fr); }
+    .resumen li:nth-child(2n) { border-right: 1px solid var(--color-border); }
+    .resumen li:nth-child(4n) { border-right: 0; }
+  }
+
+  .resumen strong {
+    font-size: 1.5rem;
+    font-weight: var(--fw-display);
+    line-height: 1.1;
+    letter-spacing: var(--ls-display);
+    color: var(--color-text-primary);
+  }
+
+  .resumen span {
+    font-size: 0.82rem;
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+  }
+
+  .nota {
+    margin: 18px 0 0;
+    max-width: var(--measure-desc);
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+  }
+
+  /* ---------- Panel de filtros (her .resource-filters) ---------- */
+  .filtros {
+    margin-bottom: 24px;
+    padding: 18px;
+    background: var(--color-bg-warm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  @media (min-width: 769px) {
+    .filtros { padding: 24px; }
+  }
+
+  .campos {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    align-items: end;
+  }
+
+  @media (min-width: 769px) {
+    .campos { grid-template-columns: 1fr 1fr; }
+    .campo--busqueda { grid-column: 1 / -1; }
+  }
+
+  @media (min-width: 1025px) {
+    .campos { grid-template-columns: 1.7fr 1fr 1fr; }
+    .campo--busqueda { grid-column: auto; }
+  }
+
+  /* Field labels: her eyebrow family (.7rem / 600 / .14em / uppercase). */
+  .campo label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-label);
+    line-height: var(--lh-normal);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .campo input,
+  .campo select {
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.92rem;
+    line-height: 1.25;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-base);
+    /* ink-3 at rest, not her hairline: a field boundary needs 3:1
+       (WCAG 1.4.11), and the hairline is 1.28:1 on white. */
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius);
+    padding: 11px 13px;
+    transition: border-color var(--transition);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* Placeholder is text, so it takes the AA muted grey. */
+  .campo input::placeholder {
+    color: var(--color-text-muted);
+    opacity: 1;
+  }
+
+  /* A placeholder longer than the field ends in «…» instead of being cut
+     mid-glyph. */
+  .campo input,
+  .campo input::placeholder {
+    text-overflow: ellipsis;
+  }
+
+  /* 16px fields on phones and tablets: iOS Safari zooms the page when a
+     field under 16px takes focus. */
+  @media (max-width: 768px) {
+    .campo input,
+    .campo select { font-size: 1rem; }
+  }
+
+  /* Her chevron (stroke = ink-3, a non-text glyph). */
+  .campo select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238E8E98' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 11px center;
+    background-size: 15px;
+    padding-right: 34px;
+    cursor: pointer;
+  }
+
+  /* Her focus turns the border ink; the global :focus-visible ring stays. */
+  .campo input:focus,
+  .campo select:focus {
+    border-color: var(--color-text-primary);
+  }
+
+  /* ---------- Filtros rápidos (her .filter-chips / .chip) ---------- */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .chip {
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: var(--fw-book);
+    line-height: 1.2;
+    padding: 7px 15px;
+    color: var(--color-text-secondary);
+    background: var(--color-bg-base);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition:
+      color var(--transition),
+      background var(--transition),
+      border-color var(--transition);
+  }
+
+  .chip:hover {
+    border-color: var(--color-border-strong);
+    color: var(--color-text-primary);
+  }
+
+  .chip[aria-pressed='true'] {
+    background: var(--color-cta-bg);
+    border-color: var(--color-cta-bg);
+    color: var(--color-cta-text);
+  }
+
+  /* ---------- Barra de resultados (her .resource-toolbar) ---------- */
+  .barra {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  @media (min-width: 769px) {
+    .barra {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .conteo {
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+  }
+
+  /* :global because the script re-creates this <strong> on every filter, and
+     elements built in the browser carry no Astro scope attribute. */
+  .conteo :global(strong) {
+    color: var(--color-text-primary);
+    font-weight: var(--fw-semibold);
+  }
+
+  /* On phones the two ghost pills share the full row (her ≤768 toolbar);
+     from 769px they sit at their own width, right of the count. */
+  .barra-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .barra-acciones .btn-ghost { flex: 1; }
+
+  @media (min-width: 769px) {
+    .barra-acciones { width: auto; }
+    .barra-acciones .btn-ghost { flex: none; }
+  }
+
+  /* ---------- Rejilla (her .resource-grid) ---------- */
+  /* minmax(0, 1fr): a long unbreakable word (a URL in a summary, at 200%
+     text) must not widen the track past the container. */
+  .rejilla {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  @media (min-width: 769px) {
+    .rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (min-width: 1025px) {
+    .rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  .recurso[hidden] { display: none; }
+
+  /* ---------- Tarjeta (her .resource-card) ---------- */
+  .recurso > article {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 20px;
+    background: var(--color-bg-base);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    transition: border-color var(--transition), background var(--transition);
+  }
+
+  .recurso > article:hover {
+    border-color: var(--color-border-strong);
+    background: var(--color-bg-warm);
+  }
+
+  .recurso__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 12px;
+    font-size: 0.74rem;
+    font-weight: var(--fw-book);
+    color: var(--color-text-muted);
+  }
+
+  /* Her .resource-area::before: the «·» lives inside the area span, so it
+     wraps together with the area name. */
+  .recurso__sep {
+    margin-right: 6px;
+  }
+
+  /* Category label: her .resource-type (eyebrow family, clay-dark). */
+  .recurso__tipo {
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-label);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  /* Flags: her .resource-flag--es (blue) and --latam (clay). */
+  .recurso__badge {
+    padding: 3px 7px;
+    border-radius: var(--radius-xs);
+    font-size: 0.66rem;
+    font-weight: var(--fw-label);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .recurso__badge--es {
+    color: var(--color-flag-es);
+    background: var(--color-flag-es-bg);
+  }
+
+  .recurso__badge--latam {
+    color: var(--color-flag-latam);
+    background: var(--color-flag-latam-bg);
+  }
+
+  .recurso__titulo {
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  .recurso__titulo a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .recurso__titulo a:hover {
+    color: var(--color-link-hover);
+  }
+
+  /* Stretched link: the title link covers the whole card. */
+  .recurso__titulo a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  /* flex-grow pins the meta and tags to the bottom of equal-height cards. */
+  .recurso__resumen {
+    flex-grow: 1;
+    margin: 0 0 16px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  /* Long names and URLs break instead of overflowing the card at 200% text. */
+  .recurso__titulo,
+  .recurso__resumen {
+    overflow-wrap: anywhere;
+  }
+
+  /* Her .resource-meta: two rows over a soft hairline. */
+  .recurso__pie {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--color-border-soft);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+  }
+
+  .recurso__pie strong {
+    color: var(--color-text-secondary);
+    font-weight: var(--fw-medium);
+  }
+
+  /* Her .resource-tags / .resource-tag. */
+  .recurso__etiquetas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .recurso__etiquetas li {
+    padding: 3px 10px;
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    background: var(--color-bg-warm);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-pill);
+  }
+
+  /* ---------- Sin resultados (her .resource-empty panel) ---------- */
+  /* No `display` here, so the `hidden` attribute keeps working. */
+  .vacio {
+    padding: 56px 24px;
+    text-align: center;
+    background: var(--color-bg-warm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .vacio__titulo {
+    margin: 0 0 6px;
+    font-size: 1.1rem;
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  .vacio__texto {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--color-text-secondary);
+  }
+</style>

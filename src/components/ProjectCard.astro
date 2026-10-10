@@ -1,0 +1,212 @@
+---
+/**
+ * ProjectCard — portfolio card for /projects (VIGÍA, AI Safety Connect, etc.).
+ *
+ * Spec: docs/DESIGN-SYSTEM.md §6.3 (ProjectCard).
+ * Design: her image card `.event-hub-card` (fcacfc4 css/style.css L925–946).
+ *
+ * Visual recipe:
+ *   ┌──────────────────┐
+ *   │      image       │   16:9 cover, bg-2 placeholder while it loads
+ *   ├──────────────────┤
+ *   │ BADGE            │   in-card label (muted, uppercase)
+ *   │ Title            │   Inter 550; clay-dark on hover (colour only)
+ *   │ Description …    │   ink-2
+ *   │ Cta →            │   quiet link (her .section-link)
+ *   └──────────────────┘
+ *   White, 1px hairline, 8px radius, no shadow. The card itself is not a
+ *   link (its image, title and CTA are), so it has no hover state.
+ *
+ * Props:
+ *  - title:        Project name (h3).
+ *  - badge?:       Short status / category tag (e.g. "ACTIVO", "PUBLICADO").
+ *  - description:  1–3 sentence summary.
+ *  - image?:       ImgRef for the hero photo.
+ *  - href:         Destination URL. The card title links here.
+ *  - ctaLabel?:    CTA copy. Defaults to the localized `cta.learnMore` for
+ *                  the page's `lang` (ES: "Conocer más", EN: "Learn more").
+ *  - external?:    Open the links in a new tab (rel="noopener noreferrer").
+ *  - lang?:        Locale for the default CTA label (defaults to 'es').
+ */
+import type { ImgRef } from '../lib/types';
+import { t, type Locale } from '../lib/i18n';
+
+export interface Props {
+  title: string;
+  badge?: string;
+  description: string;
+  image?: ImgRef;
+  href: string;
+  ctaLabel?: string;
+  external?: boolean;
+  lang?: Locale;
+}
+
+const {
+  title,
+  badge,
+  description,
+  image,
+  href,
+  ctaLabel,
+  external = false,
+  lang = 'es',
+} = Astro.props;
+
+const resolvedCtaLabel = ctaLabel ?? t(lang, 'cta.learnMore');
+
+const imageSrc = image && (typeof image.src === 'string' ? image.src : image.src.src);
+const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+
+<article class={`project-card${imageSrc ? '' : ' project-card--no-media'}`}>
+  {imageSrc && (
+    <a class="project-card__media-link" href={href} aria-label={title} {...linkAttrs}>
+      <div class="project-card__media">
+        <img
+          class="project-card__img"
+          src={imageSrc}
+          alt={image!.alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </a>
+  )}
+
+  <div class="project-card__body">
+    {badge && <span class="project-card__badge">{badge}</span>}
+    <h3 class="project-card__title">
+      <a class="project-card__title-link" href={href} {...linkAttrs}>
+        {title}
+      </a>
+    </h3>
+    <p class="project-card__description">{description}</p>
+    <a class="project-card__cta" href={href} {...linkAttrs}>
+      {resolvedCtaLabel}
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>
+
+<style>
+  /* Her .event-hub-card: white, 1px hairline, 8px radius, no shadow, no
+     lift. No `overflow: hidden` on the card, so the image link's focus ring
+     is not clipped; the media rounds its own top corners instead. */
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  /* Media (inner radius = card radius − 1px border) */
+  .project-card__media-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+  }
+  .project-card__media-link:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .project-card__media {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    background: var(--color-bg-warm);
+    border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+    overflow: hidden;
+  }
+
+  .project-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Body — her hub-card content padding (24px) */
+  .project-card__body {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    flex: 1;
+  }
+
+  /* In-card label (her .theory-label). Long labels wrap into balanced lines
+     instead of leaving one word alone on the last line. */
+  .project-card__badge {
+    display: block;
+    align-self: flex-start;
+    margin-bottom: 8px;
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    text-wrap: balance;
+    color: var(--color-text-muted);
+  }
+
+  /* Her .event-hub-card-content h3 */
+  .project-card__title {
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+    font-size: var(--fs-h4);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  /* Hover changes the colour only (no animated underline). */
+  .project-card__title-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+  .project-card__title-link:hover {
+    color: var(--color-link-hover);
+  }
+  .project-card__title-link:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  /* The 16px under the copy is the minimum gap to the CTA (kept off the
+     CTA itself so its focus ring hugs the text). */
+  .project-card__description {
+    margin: 0 0 16px;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+  }
+
+  /* Quiet link (her .section-link), pinned to the bottom of the card. */
+  .project-card__cta {
+    margin-top: auto;
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body);
+    font-size: 0.86rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+  .project-card__cta:hover {
+    color: var(--color-link-hover);
+  }
+  .project-card__cta:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+</style>

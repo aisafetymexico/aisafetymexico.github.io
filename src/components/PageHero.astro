@@ -1,0 +1,116 @@
+---
+/**
+ * PageHero — Interior page variant: her centered inner-page hero
+ * (fcacfc4 css/style.css L427–450).
+ *
+ * Spec: docs/DESIGN-SYSTEM.md §6.2.
+ *
+ * White surface, CENTERED: the breadcrumb (centered, quiet .8rem trail),
+ * then the H1 (Inter 500, -0.03em, balanced, max 760px) and an optional
+ * lead paragraph (ink-2, max 600px). No eyebrow, no band colour. The
+ * section ends in the global line-soft hairline (base.css `main > section`).
+ *
+ * Props:
+ *  - eyebrow?:     LEGACY — accepted for backwards compatibility but no longer
+ *                  rendered. Pages should drop the prop.
+ *  - title:        page H1 (--fs-h1)
+ *  - description?: lead paragraph
+ *  - breadcrumb?:  ordered list of breadcrumb items; rendered via Breadcrumb
+ *
+ * Tokens only — no literal hex values, no new hues introduced.
+ */
+import Breadcrumb from './Breadcrumb.astro';
+import type { Breadcrumb as BreadcrumbProp } from '../lib/types';
+import type { Locale } from '../lib/i18n';
+
+export interface Props {
+  /** @deprecated No longer rendered (RAND-DIFF §2.2). Kept for prop compatibility. */
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  breadcrumb?: BreadcrumbProp;
+  lang?: Locale;
+}
+
+const { title, description, breadcrumb, lang = 'es' } = Astro.props;
+
+if (!title) throw new Error('PageHero: `title` is required.');
+
+const hasBreadcrumb = breadcrumb && breadcrumb.items && breadcrumb.items.length > 0;
+---
+
+<section class="page-hero" aria-labelledby="page-hero-title">
+  <div class="page-hero__inner">
+    {hasBreadcrumb && (
+      <div class="page-hero__breadcrumb">
+        <Breadcrumb items={breadcrumb!.items} lang={lang} align="center" />
+      </div>
+    )}
+
+    <h1 id="page-hero-title" class="page-hero__title">{title}</h1>
+
+    {description && (
+      <p class="page-hero__description">{description}</p>
+    )}
+  </div>
+</section>
+
+<style>
+  /* Padding tiers, mobile-first: her 38/28 (≤480), 48/34 (≤768), 72/46. */
+  .page-hero {
+    background-color: var(--color-bg-base);
+    color: var(--color-text-primary);
+    padding: 38px 0 28px;
+    text-align: center;
+  }
+
+  @media (min-width: 481px) {
+    .page-hero { padding: 48px 0 34px; }
+  }
+
+  @media (min-width: 769px) {
+    .page-hero { padding: 72px 0 46px; }
+  }
+
+  .page-hero__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 481px) {
+    .page-hero__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  .page-hero__breadcrumb {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+
+  .page-hero__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h1);
+    font-weight: var(--fw-display);
+    line-height: 1.18;
+    letter-spacing: var(--ls-display);
+    color: var(--color-text-heading);
+    max-width: var(--measure-title);
+    margin: 0 auto 14px;
+    text-wrap: balance;
+  }
+
+  .page-hero__description {
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-regular);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+    max-width: var(--measure-page-sub);
+    margin: 0 auto;
+    text-wrap: pretty;
+  }
+</style>

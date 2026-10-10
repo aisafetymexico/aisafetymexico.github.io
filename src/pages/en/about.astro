@@ -1,0 +1,402 @@
+---
+/*
+ * /en/about — Who we are (English mirror of /about).
+ *
+ * Strategy B sibling. Structure, imports, and component contracts are
+ * preserved from the Spanish source; only user-facing strings and in-locale
+ * links change. Same sections, order, ids (`#teoria-del-cambio`,
+ * `teoria-heading`) and design notes as src/pages/about.astro.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import Callout from '../../components/Callout.astro';
+import PullQuote from '../../components/PullQuote.astro';
+import Card from '../../components/Card.astro';
+import PillarCard from '../../components/PillarCard.astro';
+import KeyFacts from '../../components/KeyFacts.astro';
+import CtaSection from '../../components/CtaSection.astro';
+
+const breadcrumb = {
+  items: [
+    { label: 'Home', href: '/en' },
+    { label: 'About us' },
+  ],
+};
+
+// Theory of change — "How we measure growth" (fcacfc4 index.html L101–107).
+// `label` is her bold lead-in; the period is added in the markup.
+const metrics = [
+  {
+    label: 'Counterfactual applications',
+    value:
+      'Mexicans who hit “submit” on SPAR, Apart, MATS, or on job openings in the United States and China. Most will be rejected, by design; what counts is that they apply.',
+  },
+  {
+    label: 'Self-propulsion and retention',
+    value: 'How many keep going beyond the first twenty supported hours.',
+  },
+  {
+    label: 'Research output',
+    value: 'Experiments and papers published, and teams accepted into SPAR.',
+  },
+  {
+    label: 'Funding and runway',
+    value: 'Resources raised along the funding ladder.',
+  },
+  {
+    label: 'Credibility and visibility',
+    value:
+      'Academia and decision-makers in the loop, and consultation requests from the government.',
+  },
+];
+
+const pillars = [
+  {
+    number: '01',
+    title: 'Research',
+    description:
+      'We produce original and collaborative work in alignment, mechanistic interpretability, and technical governance, in partnership with national and international institutions.',
+  },
+  {
+    number: '02',
+    title: 'Education',
+    description:
+      'We design and deliver open and bespoke courses — for communities, universities, and research centers — that adapt contemporary AI safety frameworks to the Mexican context.',
+  },
+  {
+    number: '03',
+    title: 'Governance',
+    description:
+      'We produce technical analyses, take part in working groups, and publish specialist documents that feed into public consultations and AI policy design in Mexico.',
+  },
+  {
+    number: '04',
+    title: 'Community',
+    description:
+      'We sustain ongoing spaces for dialogue — working groups, workshops, conferences — that connect those who research, develop, and regulate AI in Mexico.',
+  },
+];
+
+const keyFacts = [
+  { text: 'Founded in 2025' },
+  { text: 'Nonprofit' },
+  { text: 'Multidisciplinary team' },
+  { text: 'Based in Mexico' },
+];
+---
+
+<BaseLayout
+  title="About us · AI Safety Mexico"
+  description="AI Safety Mexico is a nonprofit founded in 2025 that advances research, education, and responsible governance of artificial intelligence in Mexico."
+  pathname="/en/about"
+  lang="en"
+>
+  <Header slot="header" currentPath="/en/about" lang="en" />
+
+  <PageHero
+    title="Who we are"
+    description="A nonprofit organization that brings together AI research, education, and governance from Mexico."
+    breadcrumb={breadcrumb}
+    lang="en"
+  />
+
+  <!-- 2. Mission -->
+  <section class="section section--base">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Mission"
+        title="Why we exist"
+      />
+
+      <div class="prose">
+        <p>
+          AI Safety Mexico is a nonprofit organization founded in 2025 that
+          advances research, education, and responsible governance of
+          artificial intelligence in Mexico. We work at the intersection of
+          three communities — researchers, educators, and policymakers — to
+          ensure that AI systems are developed and deployed safely, aligned
+          with human values, and attentive to the Mexican context.
+        </p>
+        <p>
+          Our work combines open research, context-aware training, and
+          collaboration with partner institutions. We operate as a
+          multidisciplinary team and partner with national and international
+          organizations that share our commitment to giving the Global South a
+          voice of its own in the conversation about AI safety.
+        </p>
+
+        <Callout tone="highlight">
+          <p>
+            <strong>Mission.</strong> To advance research, education, and
+            responsible governance of artificial intelligence in Mexico, ensuring
+            that AI systems are developed and deployed safely, aligned with human
+            values, and attentive to the Mexican context.
+          </p>
+        </Callout>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Vision -->
+  <section class="section section--base">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Vision"
+        title="Where we are headed"
+      />
+
+      <div class="prose">
+        <p>
+          We envision a Mexico where the Global South speaks with a voice of
+          its own in the technical and normative definition of AI safety: a
+          consolidated community of researchers, educators, and policymakers
+          producing locally grounded knowledge, training new generations, and
+          taking an active role in shaping regulatory frameworks attentive to
+          Mexican realities.
+        </p>
+
+        <PullQuote
+          quote="A Mexico where the Global South speaks with a voice of its own in the technical and normative definition of AI safety."
+          attribution="Vision · AI Safety Mexico"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Theory of change -->
+  <section
+    id="teoria-del-cambio"
+    class="section section--warm theory"
+    aria-labelledby="teoria-heading"
+  >
+    <div class="container">
+      <SectionHeading
+        id="teoria-heading"
+        eyebrow="Strategy"
+        title="Our theory of change"
+      />
+
+      <p class="theory-lead">
+        We are not building a community to “join.” We are building a launchpad
+        toward the frontier of AI safety and Mexico's credible research voice:
+        a handful of high-agency Mexicans pursuing the frontier, a citable body
+        of research, and a Spanish-language bridge to the people who will
+        decide how Mexico faces advanced AI.
+      </p>
+
+      <div class="theory-grid">
+        <Card
+          bordered
+          interactive={false}
+          elevated={false}
+          padding="md"
+          badge="North Star"
+          title="Ambition"
+        >
+          <p>
+            Seed in Mexico a body of work that produces original research in key
+            areas of AI safety. Our reference point is the AI Safety Institutes.
+          </p>
+          <p>
+            Two effects follow from that: acting as a Spanish-language
+            translation layer for frontier AI, and as a credible, nonpartisan
+            voice that a Mexican decision-maker can call.
+          </p>
+          <p>
+            That is our long-term direction; everything we do today builds
+            toward it.
+          </p>
+        </Card>
+
+        <Card
+          bordered
+          interactive={false}
+          elevated={false}
+          padding="md"
+          badge="How we get there"
+          title="Guiding policy"
+        >
+          <p>
+            Help a small number of high-agency people propel themselves toward
+            the frontier, produce a citable body of research, and translate it
+            for Mexican decision-makers and for the Spanish-speaking world.
+          </p>
+          <p>
+            All of it building on infrastructure that already exists (Apart,
+            SPAR, BlueDot, Atlas, academic institutions in Mexico) rather than
+            building our own from scratch.
+          </p>
+        </Card>
+      </div>
+
+      <h3 class="theory-subheading">How we measure growth</h3>
+      <ul class="metric-list" role="list">
+        {metrics.map((metric) => (
+          <li><strong>{metric.label}.</strong> {metric.value}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5. Pillars in depth -->
+  <section class="section section--base">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Four axes"
+        title="Our pillars of work"
+        description="The areas where we concentrate our efforts. They are not watertight compartments: most projects cut across several of them."
+      />
+
+      <div class="pillar-grid">
+        {pillars.map((pillar) => (
+          <PillarCard
+            number={pillar.number}
+            title={pillar.title}
+            description={pillar.description}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. History / Origin -->
+  <section class="section section--base">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Origin"
+        title="How AI Safety Mexico came to be"
+      />
+
+      <div class="prose">
+        <p>
+          AI Safety Mexico was born in 2025 in response to an observation
+          shared by a group of researchers, engineers, and practitioners in
+          Mexico: the conversation about AI safety is moving at a fast pace in
+          the Global North, while the concerns, values, and contexts of the
+          Global South are rarely brought into that conversation.
+        </p>
+        <p>
+          We decided to organize ourselves to close that gap from a specific
+          country — Mexico — and through a specific practice: rigorous
+          research, open training, and the production of technical inputs that
+          support informed decision-making about AI. The organization was
+          formally established in 2025 with a multidisciplinary founding team
+          combining experience in machine learning, social sciences, public
+          policy, and applied mathematics.
+        </p>
+        <p>
+          Since then, we've run open and institutional courses, published in
+          national venues, taken part in international events (EAGxCDMX,
+          ML4Good, SPAR), and partnered with allies such as Centro Geo, UADY,
+          ENAIS, and Apart Research. Every activity follows the same principle:
+          producing locally grounded knowledge that is useful to those who
+          research, regulate, or deploy AI in Mexico.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. KeyFacts -->
+  <section class="section section--base">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Identity"
+        title="Essential facts"
+        description="The minimum worth knowing about us before exploring the rest of the site."
+      />
+
+      <KeyFacts facts={keyFacts} />
+    </div>
+  </section>
+
+  <!-- 8. CTA -->
+  <CtaSection
+    title="Want to meet the team?"
+    description="Behind AI Safety Mexico is a multidisciplinary group of researchers, engineers, and educators committed to AI safety in Mexico."
+    ctaLabel="Meet the team"
+    ctaHref="/en/team"
+  />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  /* Narrative blocks (Mission, Vision, Origin). Left-aligned under the
+     section heading and capped at her running-text measure (680px, her
+     .section-description); the Callout / PullQuote inside share it and
+     carry their own outer spacing. Copy is ink-2 at 1.7 with 11px between
+     paragraphs, as in her content cards. */
+  .prose {
+    max-width: var(--measure-desc);
+  }
+
+  .prose > p {
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .prose > p + p {
+    margin-top: 11px;
+  }
+
+  /* Theory of change — her .section-theory internals (fcacfc4 L523–562):
+     h2 → lead (ink, 1.1rem, max 780px) → two white cards on bg-2 (grid
+     margin 44px) → subheading (mb 4px) → hairline .metric-list. The card
+     copy is the Card's own default-slot paragraph style (her
+     .program-card p: ink-2, 1.7). */
+  .theory {
+    scroll-margin-top: var(--scroll-offset);
+  }
+
+  .theory-lead {
+    font-size: 1.02rem;
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-primary);
+    max-width: var(--measure-lead);
+    margin: 0 0 32px;
+    text-wrap: pretty;
+  }
+
+  .theory-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+    margin-bottom: 44px;
+  }
+
+  /* Her .theory-subheading: 1rem / 550 / -.01em; the line-height is the
+     body's 1.65 (VF-3). */
+  .theory-subheading {
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-relaxed);
+    letter-spacing: -0.01em;
+    color: var(--color-text-heading);
+    margin: 0 0 4px;
+  }
+
+  /* Pillar grid: her 2-up card grid (theory, paths, collaborations): one
+     column up to 768px, two from 769px, 18px gaps. Two-up keeps the pillar
+     copy at a readable measure (a 4-up row left ~25 characters a line). */
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  @media (min-width: 769px) {
+    .theory-lead {
+      font-size: 1.1rem;
+    }
+
+    .theory-grid,
+    .pillar-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,180 @@
+---
+/**
+ * FeatureGrid — responsive grid of feature/pillar cards.
+ *
+ * Spec:
+ *  - Task #10 props: `{ items: Array<{icon?, title, description, href?}> }`
+ *    — `icon` is now ignored; numbering carries the visual anchor.
+ *  - docs/DESIGN-SYSTEM.md §6.4 — feature/pillar tile pattern.
+ *  - docs/RAND-AESTHETIC.md §8 — typographic numeral + chevron affordance,
+ *    no decorative emoji disc.
+ *  - Design: her card language (`.program-card`, fcacfc4 css/style.css
+ *    L1006–1050): white, 1px hairline, 8px radius, her card padding, 18px
+ *    grid gap, no shadow, nothing moves.
+ *  - Columns: 1 → 2 from 48.0625em → 4 from 64.0625em, i.e. 1 (≤768px) →
+ *    2 (769–1024px) → 4 (≥1025px) at the default 16px: her card-grid tiers
+ *    (`.theory-grid`, `.path-grid`, `.collab-grid`, `.research-grid` stay
+ *    one column up to 768px). The tiers are in em so they move out when the
+ *    reader enlarges the default font, and 200% text never runs into the
+ *    next tile (WCAG 1.4.4).
+ *  - Tile copy wraps with `text-wrap: pretty`, her paragraph rule. A lone
+ *    last word in the narrow 4-up tiles is accepted.
+ *  - When `href` is provided the whole tile becomes a link: hover darkens
+ *    the border and a small chevron (›) at the bottom right
+ *    turns clay-dark. No slide.
+ *
+ * Visual anchor: each card carries a quiet 2-digit numeral (`01` … `04`,
+ * Inter 500 in the decorative ink-3 grey), generated from the item's
+ * 1-based index, so callers no longer need to provide an icon.
+ */
+
+export interface FeatureItem {
+  /** @deprecated kept for backwards compatibility; not rendered. */
+  icon?: string;
+  title: string;
+  description: string;
+  href?: string;
+}
+
+export interface Props {
+  items: FeatureItem[];
+}
+
+const { items } = Astro.props;
+
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<ul class="feature-grid" role="list">
+  {items.map((item, idx) => (
+    <li class="feature-grid__item">
+      {item.href ? (
+        <a class="feature-grid__card feature-grid__card--linked" href={item.href}>
+          <span class="feature-grid__number" aria-hidden="true">{pad(idx + 1)}</span>
+          <h3 class="feature-grid__title">{item.title}</h3>
+          <p class="feature-grid__description">{item.description}</p>
+          <span class="feature-grid__chevron" aria-hidden="true">›</span>
+        </a>
+      ) : (
+        <div class="feature-grid__card">
+          <span class="feature-grid__number" aria-hidden="true">{pad(idx + 1)}</span>
+          <h3 class="feature-grid__title">{item.title}</h3>
+          <p class="feature-grid__description">{item.description}</p>
+        </div>
+      )}
+    </li>
+  ))}
+</ul>
+
+<style>
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .feature-grid__item {
+    display: flex;
+  }
+
+  /* Her card: white, 1px hairline, 8px radius, no shadow, no lift. */
+  .feature-grid__card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: var(--pad-card);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: border-color var(--transition);
+  }
+
+  /* Linked tiles: only the border darkens; text keeps its colours. */
+  .feature-grid__card--linked:hover,
+  .feature-grid__card--linked:focus-visible {
+    border-color: var(--color-border-strong);
+    color: var(--color-text-primary);
+  }
+
+  .feature-grid__card--linked:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  /* Decorative numeral: Inter 500 in ink-3 (#8E8E98). Large (24px) and
+     aria-hidden, so the non-text grey is fine. */
+  .feature-grid__number {
+    margin-bottom: 14px;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: var(--fw-display);
+    line-height: 1;
+    letter-spacing: var(--ls-display);
+    color: var(--ink-3);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  /* Her .program-card-title. `break-word` (here and on the copy) is the last
+     resort for a long word («multidisciplinarios») in a narrow tile. */
+  .feature-grid__title {
+    margin: 0 0 10px;
+    font-family: var(--font-display);
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+    overflow-wrap: break-word;
+  }
+
+  /* `pretty`, like all her paragraph copy. Her CSS keeps `balance` for
+     headings. Balanced tile copy ran in narrow, ragged columns that left
+     up to a third of each desktop tile empty. */
+  .feature-grid__description {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+  }
+
+  /* Chevron affordance for linked cards, in flow at the bottom right of
+     equal-height tiles. Decorative ink-3 glyph; clay-dark on hover. */
+  .feature-grid__chevron {
+    margin-top: auto;
+    padding-top: 14px;
+    align-self: flex-end;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    line-height: 1;
+    color: var(--ink-3);
+    transition: color var(--transition);
+  }
+
+  .feature-grid__card--linked:hover .feature-grid__chevron,
+  .feature-grid__card--linked:focus-visible .feature-grid__chevron {
+    color: var(--color-link-hover);
+  }
+
+  /* em, not px: in media queries 1em is the reader's default font size, so
+     the tiers move out when text is enlarged; 769/1025px at the default
+     16px. */
+  @media (min-width: 48.0625em) {
+    .feature-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64.0625em) {
+    .feature-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -1,0 +1,505 @@
+---
+/*
+ * /activities — Track record + current activity + gallery.
+ *
+ * Spec: docs/ARCHITECTURE.md §2 (`/activities`) + docs/CONTENT-MAP.md §1.5/§1.9.
+ * Sections:
+ *   1. PageHero (breadcrumb).
+ *   2. #proximo-evento — Próximo evento: Mexico Tech Week 2026 panel
+ *      (subvención de BlueDot Impact). Card with date/venue, organizers, a
+ *      direct «Regístrate en Luma» pill, the Luma calendar + YouTube pills
+ *      and the Luma registration embed.
+ *      EXPIRES 2026-10-27 (see `upcomingEvent`).
+ *   3. Mesas de trabajo (recurrente · primer viernes del mes) → Luma.
+ *   4. #gsh-2026 — Actividad pasada: Global South AIS Hackathon (sedes
+ *      de Mérida y Guadalajara) with the EA Forum retrospective.
+ *   5. Conferencias y talleres grid: Greywall workshop, EAGxCDMX, ML4Good.
+ *   6. Galería: one photo, /images/sesion-trabajo.webp (the working session
+ *      in a circle, also on the home page).
+ *   7. CtaSection → /get-involved#events.
+ *
+ * Design: her light "Editorial mínimo". SectionHeadings are left-aligned, and
+ * the cards, the grid and the gallery photo all run the full container like
+ * her cards, so the page keeps the headings' edges; the copy inside the cards
+ * stays at her reading measure. Linked ActivityCards show her
+ * `.event-preview-link` pill (`linkLabel`).
+ * The panel card is her `.program-card` (Card) with `.event-meta` lines and
+ * the global `.program-actions` + `.event-embed` utilities (base.css).
+ * Sections are white with two bg-2 tints that are never adjacent (the
+ * CtaSection below is white and the footer is bg-2).
+ *
+ * Content authored inline (no content collection used) — keeps this page
+ * self-contained for parallel build with #19/#20/#21 and avoids touching
+ * the shared content/ schema. Migration to `src/content/activities/` is a
+ * straightforward future refactor.
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Card from '../components/Card.astro';
+import ActivityCard from '../components/ActivityCard.astro';
+import CtaSection from '../components/CtaSection.astro';
+import type { Breadcrumb, CtaRef, ImgRef } from '../lib/types';
+
+// -------- Breadcrumb --------
+const breadcrumb: Breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Actividades' },
+  ],
+};
+
+// -------- Shared external links --------
+const LUMA_CALENDAR = 'https://luma.com/calendar/cal-WjnM2llUGXz17t5';
+const YOUTUBE_CHANNEL = 'https://www.youtube.com/@AISafetyMéxico';
+
+/** target/rel for links that leave the site. */
+const externalAttrs = (external?: boolean) =>
+  external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+
+// -------- Próximo evento: Mexico Tech Week 2026 (#proximo-evento) --------
+// Her "Actividades en curso" panel card (fcacfc4 index.html L144–164). The
+// SectionHeading above already names the event and the BlueDot grant, so the
+// card starts with the panel title (no in-card label). The first pill links
+// straight to the Luma event page, so registering does not depend on the
+// third-party embed loading (same label and accent as the home spotlight).
+// EXPIRES 2026-10-27: after the panel, move it to a past activity here, on
+// /en/activities and on both home pages (the register pill goes with it).
+// Two-word names that must not split across lines («AI Safety», «AI House»,
+// «Oscar Mata», «EA Forum») are bound with a no-break space (\u00A0) in the
+// strings below; the working-sessions title and the #gsh-2026 badge also
+// bind their «·» to the word before it, so no line starts with «·». Each
+// bind stays at two words, so it still fits a card at 200% text.
+type UpcomingEvent = {
+  title: string;
+  description: string;
+  date: { iso: string; label: string };
+  venue: string;
+  organizers: string;
+  actions: CtaRef[];
+  embed: { src: string; title: string };
+};
+
+const upcomingEvent: UpcomingEvent = {
+  title: 'Impulsando la comunidad de AI\u00A0Safety en México: Tech Policy Panel',
+  description:
+    'Un panel sobre cómo la regulación de la inteligencia artificial impactará al ecosistema tecnológico de México y América Latina.',
+  date: { iso: '2026-10-27', label: 'Martes 27 de octubre de 2026' },
+  venue: 'MXTW AI\u00A0House, Juárez, Ciudad de México',
+  organizers: 'Organizan: Marta Kosmyna, Isabel Montalvo, Janeth Valdivia y Oscar\u00A0Mata',
+  actions: [
+    { label: 'Regístrate en Luma', href: 'https://luma.com/event/evt-0jdNWFu6jYVQ148', variant: 'register', external: true },
+    { label: 'Calendario de eventos', href: LUMA_CALENDAR, variant: 'outline', external: true },
+    { label: 'Talks en YouTube', href: YOUTUBE_CHANNEL, variant: 'outline', external: true },
+  ],
+  embed: {
+    src: 'https://luma.com/embed/event/evt-0jdNWFu6jYVQ148/simple',
+    title: 'Registro al panel Impulsando la comunidad de AI Safety en México',
+  },
+};
+
+// -------- Mesas de trabajo (recurrente) --------
+// Whole-card link to the Luma calendar; `linkLabel` is its visible pill, with
+// the label the #proximo-evento pill uses for the same URL.
+const recurring = {
+  title: 'Mesas de trabajo\u00A0· Primer viernes del mes',
+  date: 'Recurrente',
+  description:
+    'Fecha, lugar y registro de cada mesa —y del resto de la agenda— están en el calendario de AI Safety Mexico en Luma.',
+  link: LUMA_CALENDAR,
+  linkLabel: 'Calendario de eventos',
+  external: true,
+};
+
+// -------- Actividad pasada: Global South AIS Hackathon (#gsh-2026) --------
+// Her "Actividades Pasadas" block (fcacfc4 index.html L220–237), with the
+// EA Forum retrospective as the main link.
+type PastActivity = {
+  image: ImgRef;
+  badge: string;
+  title: string;
+  paragraphs: string[];
+  links: CtaRef[];
+};
+
+const gshRecap: PastActivity = {
+  image: {
+    src: '/images/gsh-event-card.png',
+    alt: 'Imagen promocional del Global South AIS Hackathon.',
+  },
+  badge: 'Apart Research × AI\u00A0Safety Mexico\u00A0· EA\u00A0Forum',
+  title: 'The Global South AI\u00A0Safety Hackathon: sedes de Mérida y Guadalajara',
+  paragraphs: [
+    'Organizamos las sedes mexicanas del hackatón junto con Apart Research: dos hubs simultáneos en Mérida y Guadalajara más participación remota, con 65 asistentes que formaron 19 equipos y entregaron 19 proyectos de investigación.',
+    'Un proyecto quedó en el 20% superior global y cuatro en el 50% superior, aunque ningún participante llegó con publicaciones o experiencia previa en seguridad de IA. Uno de ellos, sobre soberanía y vulnerabilidad de la IA en una potencia media, continuó en el programa de fellowship de Apart Research.',
+  ],
+  links: [
+    {
+      label: 'Leer la retrospectiva',
+      href: 'https://forum.effectivealtruism.org/posts/ttePFhSrxpRQu8CR5/running-two-ai-safety-hackathon-hubs-in-mexico-results-costs',
+      variant: 'secondary',
+      external: true,
+    },
+    { label: 'Página del evento', href: '/global-south-challenge', variant: 'outline' },
+    { label: 'Pre-talks y talks', href: YOUTUBE_CHANNEL, variant: 'outline', external: true },
+  ],
+};
+
+// -------- Conferencias y talleres --------
+// Each title puts its label and «·» on line 1 and the name on line 2 (the
+// "\n", kept by `white-space: pre-line` in the <style> below). The name wraps
+// inside the card at any text size: binding it whole with no-break spaces
+// would push it past the card's overflow:hidden edge at 200% text (WCAG
+// 1.4.4), so only the two-word «AI Safety» stays bound. `linkLabel` is the
+// visible pill of a linked card (her `.event-preview-link`).
+type ConfTalk = {
+  title: string;
+  date?: string;
+  description: string;
+  link?: string;
+  linkLabel?: string;
+  external?: boolean;
+  image?: { src: string; alt: string };
+};
+
+const conferencesAndTalks: ConfTalk[] = [
+  {
+    title: 'Workshop ·\nYour AI Agent Is Not You',
+    date: '2026',
+    description:
+      'Taller práctico en colaboración con Greywall sobre límites, identidad y seguridad de agentes de IA. Sesión guiada con Claude Code en vivo y discusión sobre patrones de despliegue responsables.',
+    link: 'https://luma.com/l0fumrub',
+    linkLabel: 'Link al evento',
+    external: true,
+  },
+  {
+    title: 'EAGxCDMX ·\nNot so speedy AI\u00A0Safety',
+    date: '2025',
+    description:
+      'Taller impartido por Silvia Fernández, Angel y Max en EAGxCDMX. Una introducción crítica a las decisiones técnicas y políticas que pausan, aceleran o redirigen agendas de AI safety.',
+  },
+  {
+    title: 'Formación avanzada ·\nML4Good',
+    date: '2025',
+    description:
+      'Campamento internacional intensivo de seguridad técnica en IA. Asistieron Angel, Max, Isabel y Janeth como parte de la cohorte regional.',
+  },
+];
+
+---
+
+<BaseLayout
+  title="Actividades — AI Safety Mexico"
+  description="Actividades en curso y pasadas de AI Safety Mexico: hackatones, mesas de trabajo, conferencias, talleres y formación avanzada."
+  pathname="/activities"
+>
+  <Header slot="header" currentPath="/activities" />
+
+  <PageHero
+    title="Actividades en curso y pasadas"
+    description="Trayectoria pública de AI Safety Mexico: eventos vigentes, mesas recurrentes, conferencias, talleres y programas de formación que han marcado nuestro recorrido."
+    breadcrumb={breadcrumb}
+  />
+
+  <!-- Próximo evento: Mexico Tech Week 2026 -->
+  <section
+    id="proximo-evento"
+    class="page-section page-section--alt"
+    aria-labelledby="actividades-destacado"
+  >
+    <div class="container">
+      <SectionHeading
+        eyebrow="Próximo evento"
+        title="Mexico Tech Week 2026"
+        description="Un panel de política tecnológica con subvención de BlueDot Impact."
+        id="actividades-destacado"
+      />
+      <div class="card-column">
+        <Card
+          title={upcomingEvent.title}
+          description={upcomingEvent.description}
+          bordered
+          interactive={false}
+          elevated={false}
+          padding="md"
+        >
+          <p class="event-meta">
+            <time datetime={upcomingEvent.date.iso}>{upcomingEvent.date.label}</time> · {upcomingEvent.venue}
+          </p>
+          <p class="event-meta">{upcomingEvent.organizers}</p>
+          <div class="program-actions">
+            {upcomingEvent.actions.map((cta) => (
+              <a
+                class={`btn btn-${cta.variant ?? 'outline'}`}
+                href={cta.href}
+                {...externalAttrs(cta.external)}
+              >
+                {cta.label}
+              </a>
+            ))}
+          </div>
+          <div class="event-embed">
+            <iframe
+              src={upcomingEvent.embed.src}
+              title={upcomingEvent.embed.title}
+              allow="fullscreen; payment"
+              loading="lazy"
+            ></iframe>
+          </div>
+        </Card>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mesas de trabajo (recurrente) -->
+  <section class="page-section" aria-labelledby="actividades-recurrentes">
+    <div class="container">
+      <SectionHeading
+        eyebrow="En curso"
+        title="Mesas de trabajo recurrentes"
+        description="Espacios fijos donde el equipo y personas invitadas discuten avances de proyectos, lecturas y preguntas abiertas."
+        id="actividades-recurrentes"
+      />
+      <div class="card-column">
+        <ActivityCard
+          title={recurring.title}
+          date={recurring.date}
+          description={recurring.description}
+          link={recurring.link}
+          linkLabel={recurring.linkLabel}
+          external={recurring.external}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Actividad pasada: Global South AIS Hackathon -->
+  <section id="gsh-2026" class="page-section" aria-labelledby="actividades-gsh">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Actividad pasada"
+        title="Global South AIS Hackathon"
+        description="19–21 de junio de 2026 · con Apart Research."
+        id="actividades-gsh"
+      />
+      <div class="card-column card-column--poster">
+        <Card
+          image={gshRecap.image}
+          badge={gshRecap.badge}
+          title={gshRecap.title}
+          bordered
+          interactive={false}
+          elevated={false}
+          padding="md"
+        >
+          {gshRecap.paragraphs.map((text) => <p>{text}</p>)}
+          <Fragment slot="footer">
+            {gshRecap.links.map((cta) => (
+              <a
+                class={`btn btn-${cta.variant ?? 'outline'}`}
+                href={cta.href}
+                {...externalAttrs(cta.external)}
+              >
+                {cta.label}
+              </a>
+            ))}
+          </Fragment>
+        </Card>
+      </div>
+    </div>
+  </section>
+
+  <!-- Conferencias y talleres -->
+  <section class="page-section page-section--alt" aria-labelledby="actividades-conferencias">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Trayectoria"
+        title="Conferencias, talleres y formación"
+        description="Una selección representativa de eventos en los que el equipo ha impartido, asistido o coorganizado actividades."
+        id="actividades-conferencias"
+      />
+      <div class="conf-grid">
+        {conferencesAndTalks.map(item => (
+          <ActivityCard
+            title={item.title}
+            date={item.date}
+            description={item.description}
+            image={item.image}
+            link={item.link}
+            linkLabel={item.linkLabel}
+            external={item.external}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Galería -->
+  <section class="page-section" aria-labelledby="actividades-galeria">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Galería"
+        title="Imágenes de nuestras actividades"
+        description="Una muestra visual del trabajo del equipo y de los espacios donde hemos estado presentes."
+        id="actividades-galeria"
+      />
+      <img
+        class="activities-photo"
+        src="/images/sesion-trabajo.webp"
+        width="2048"
+        height="1432"
+        loading="lazy"
+        decoding="async"
+        alt="Participantes de AI Safety Mexico en una sesión de trabajo en círculo"
+      />
+    </div>
+  </section>
+
+  <CtaSection
+    title="¿Quieres organizar un evento con nosotros?"
+    description="Colaboramos con instituciones, comunidades y aliados internacionales para producir talleres, mesas de trabajo y eventos públicos de seguridad en IA."
+    ctaLabel="Propón un evento"
+    ctaHref="/get-involved#events"
+  />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* Section shells — her .section-* : 72px top and bottom (48px on phones),
+     white or bg-2, closed by the global line-soft hairline (base.css
+     `main > section`). Tinted: #proximo-evento (her .section-current) and
+     the conferences grid, so two tints are never adjacent. */
+  .page-section {
+    padding-block: var(--section-pad);
+    background: var(--color-bg-section-base);
+  }
+
+  .page-section--alt {
+    background: var(--color-bg-section-warm);
+  }
+
+  /* Deep-link targets (#proximo-evento, #gsh-2026) clear the sticky header. */
+  .page-section[id] {
+    scroll-margin-top: var(--scroll-offset);
+  }
+
+  /* Single-card sections: the card runs the full container like her
+     .program-card / .event-preview (fcacfc4 index), so it shares both edges
+     of the SectionHeading above. The copy inside keeps her
+     reading measure. */
+  .card-column :global(.card__description),
+  .card-column :global(.card__body > p) {
+    max-width: var(--measure-desc);
+  }
+
+  .card-column :global(.activity-card__description) {
+    max-width: var(--measure-sub);
+  }
+
+  /* #gsh-2026 poster: show the 3:2 promotional image whole; Card's default
+     16:9 media box would crop the text printed near its edges. From 769px
+     the card is a row, with the framed poster on the left and the text on
+     the right, so the poster is not a full-width block (up to 1024px the
+     poster takes 42% to leave the text room); below that it stacks. */
+  .card-column--poster :global(.card .card__media) {
+    aspect-ratio: 3 / 2;
+  }
+
+  @media (min-width: 769px) {
+    .card-column--poster :global(.card) {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .card-column--poster :global(.card .card__media) {
+      flex: 0 0 46%;
+      margin-left: 28px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+    }
+
+    .card-column--poster :global(.card .card__body) {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .card-column--poster :global(.card .card__media) {
+      flex-basis: 42%;
+    }
+  }
+
+  /* Luma embed: while the third-party frame is blocked or still loading it
+     reads as a bg-2 panel, not a white void. The «Regístrate en Luma» pill
+     above works without it. */
+  #proximo-evento :global(.event-embed iframe) {
+    background: var(--color-bg-warm);
+  }
+
+  /* Panel meta lines — her .event-meta as it renders inside .program-card
+     (.88rem, ink-2, lh 1.7). Card's 10px body gap
+     spaces them; the other slotted <p>s, the action row, the Luma embed and
+     the footer pills take Card's own card-copy and 18px rhythm. `pretty`
+     avoids a short last line, such as a lone surname. */
+  .event-meta {
+    font-size: var(--fs-small);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: pretty;
+  }
+
+  /* Conferencias y talleres — 1 / 2 / 3 columns at her tiers, 18px gaps.
+     In the 2-up tier an odd last card spans the whole row instead of
+     sitting alone in half of it; the blurbs keep her sub measure there.
+     Titles honour the "\n" after their «·» (label on line 1, name on
+     line 2), and the name still wraps inside the card. The forced break
+     turns off the h3's `balance` in Chromium, so `pretty` keeps a wrapped
+     name from leaving one word alone («You» at 150–200% text). */
+  .conf-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  .conf-grid :global(.activity-card__title) {
+    white-space: pre-line;
+    text-wrap: pretty;
+  }
+
+  .conf-grid :global(.activity-card__description) {
+    max-width: var(--measure-sub);
+  }
+
+  @media (min-width: 769px) {
+    .conf-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .conf-grid > :global(:last-child:nth-child(odd)) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .conf-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Galería — one photo, framed like the home page's feature photo: full
+     container width, large radius, hairline frame. */
+  .activities-photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+</style>

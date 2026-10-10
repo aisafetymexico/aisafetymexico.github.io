@@ -1,0 +1,143 @@
+{
+  "baseUrl": "http://127.0.0.1:4322",
+  "elapsed": "8.7",
+  "pass": 27,
+  "fail": 0,
+  "results": [
+    {
+      "name": "nav → Sobre nosotros (/about)",
+      "status": "PASS",
+      "detail": "200 → /about"
+    },
+    {
+      "name": "nav → Investigación (/research)",
+      "status": "PASS",
+      "detail": "200 → /research"
+    },
+    {
+      "name": "nav → Programas (/programs)",
+      "status": "PASS",
+      "detail": "200 → /programs"
+    },
+    {
+      "name": "nav → Proyectos (/projects)",
+      "status": "PASS",
+      "detail": "200 → /projects"
+    },
+    {
+      "name": "nav → Actividades (/activities)",
+      "status": "PASS",
+      "detail": "200 → /activities"
+    },
+    {
+      "name": "nav → Colabora (/get-involved)",
+      "status": "PASS",
+      "detail": "200 → /get-involved"
+    },
+    {
+      "name": "open hamburger drawer",
+      "status": "PASS",
+      "detail": "drawer open + aria-expanded=true"
+    },
+    {
+      "name": "navigate to /about via mobile drawer link",
+      "status": "PASS",
+      "detail": "/about"
+    },
+    {
+      "name": "mobile drawer link to /research",
+      "status": "PASS",
+      "detail": "/research"
+    },
+    {
+      "name": "close drawer with backdrop click + ESC keyboard",
+      "status": "PASS",
+      "detail": "closed via ESC"
+    },
+    {
+      "name": "carousel mounts (slides + buttons present)",
+      "status": "PASS",
+      "detail": "12 slides, 12 indicators"
+    },
+    {
+      "name": "click next → active slide advances",
+      "status": "PASS",
+      "detail": "0 → 1"
+    },
+    {
+      "name": "click prev → active slide goes back",
+      "status": "PASS",
+      "detail": "1 → 0"
+    },
+    {
+      "name": "click indicator [3] → active slide = 3",
+      "status": "PASS",
+      "detail": "indicator [3] activated slide 3"
+    },
+    {
+      "name": "certificate triggers exist",
+      "status": "PASS",
+      "detail": "6 certificate triggers"
+    },
+    {
+      "name": "click first certificate → lightbox opens",
+      "status": "PASS",
+      "detail": "image src=/images/Certificados/AI%20Safety%20Atlas%20Angel.j..."
+    },
+    {
+      "name": "click next → lightbox shows next image",
+      "status": "PASS",
+      "detail": "next advanced image"
+    },
+    {
+      "name": "press ESC → lightbox closes",
+      "status": "PASS",
+      "detail": "lightbox hidden after ESC"
+    },
+    {
+      "name": "click close button → lightbox closes",
+      "status": "PASS",
+      "detail": "closed via close button"
+    },
+    {
+      "name": "form mounts with required fields",
+      "status": "PASS",
+      "detail": "4 required fields present"
+    },
+    {
+      "name": "HTML5 validation blocks empty submit",
+      "status": "PASS",
+      "detail": "checkValidity()=false on empty form"
+    },
+    {
+      "name": "invalid email is rejected by HTML5",
+      "status": "PASS",
+      "detail": "invalid email rejected"
+    },
+    {
+      "name": "valid form triggers mailto: action",
+      "status": "PASS",
+      "detail": "endpoint=mailto:contact@aismx.org"
+    },
+    {
+      "name": "vigia breadcrumb: Inicio link → /",
+      "status": "PASS",
+      "detail": "navigated to /"
+    },
+    {
+      "name": "vigia breadcrumb: Proyectos link → /projects",
+      "status": "PASS",
+      "detail": "navigated to /projects"
+    },
+    {
+      "name": "vigia breadcrumb: current item is non-clickable",
+      "status": "PASS",
+      "detail": "aria-current=page, tag=<span>"
+    },
+    {
+      "name": "breadcrumb back-link on /about (mobile) → /",
+      "status": "PASS",
+      "detail": "back-link → /"
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+---
+/**
+ * SectionHeading — H2 with optional eyebrow + supporting description.
+ * Single canonical title block used across all sections in pages.
+ *
+ * Spec:
+ *  - Task #10 props: `{ eyebrow?, title, description? }`.
+ *  - docs/DESIGN-SYSTEM.md §6.4 — SectionHeading.
+ *  - Design: her `.section-heading` / `.section-description` / `.eyebrow`
+ *    (fcacfc4 css/style.css L86–96, L455–493): small, calm Inter 550 heading
+ *    (1.32rem; 1.18rem on ≤768px), no underline; description ink-2, max
+ *    680px. LEFT-aligned by default, as in her design; `align="center"` is
+ *    for centered bands only (closing CTA / contact).
+ *  - Rhythm (VF-8): 34px to the content after a description; 14px (her h2
+ *    margin) when there is none; 26px under a heading row with a link, and
+ *    26px between that row and a description (her `.section-head` margin).
+ *  - Tonal variants `light` (default) and `dark` (on the ink band).
+ *
+ * Props:
+ *  - eyebrow?, title, description?
+ *  - tone?: 'light' | 'dark'
+ *  - align?: 'left' (default) | 'center'
+ *  - as?: 'h1' | 'h2' (default) | 'h3'
+ *  - id?: id on the heading element itself, so a region that points
+ *    aria-labelledby at it is named by the title alone (not eyebrow +
+ *    title + description + link)
+ *  - linkLabel? + linkHref? (+ linkExternal?): optional quiet link at the
+ *    right of the title row (her `.section-head` + `.section-link`,
+ *    e.g. "Ver el directorio completo →"). Left-aligned headings only.
+ */
+
+export type SectionHeadingTone = 'light' | 'dark';
+export type SectionHeadingAlign = 'left' | 'center';
+
+export interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  tone?: SectionHeadingTone;
+  align?: SectionHeadingAlign;
+  /** Heading level — defaults to h2. Use 'h1' on hero pages where appropriate. */
+  as?: 'h1' | 'h2' | 'h3';
+  id?: string;
+  linkLabel?: string;
+  linkHref?: string;
+  linkExternal?: boolean;
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  tone = 'light',
+  align = 'left',
+  as = 'h2',
+  id,
+  linkLabel,
+  linkHref,
+  linkExternal = false,
+} = Astro.props;
+
+const Heading = as;
+const hasLink = Boolean(linkLabel && linkHref);
+const linkAttrs = linkExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+
+<header
+  class:list={[
+    'section-heading',
+    `section-heading--${tone}`,
+    `section-heading--${align}`,
+    { 'section-heading--no-desc': !description },
+    { 'section-heading--has-link': hasLink },
+  ]}
+>
+  {eyebrow && <p class="section-heading__eyebrow">{eyebrow}</p>}
+  {hasLink ? (
+    <div class="section-heading__row">
+      <Heading class="section-heading__title" id={id}>{title}</Heading>
+      <a class="section-heading__link" href={linkHref} {...linkAttrs}>{linkLabel}</a>
+    </div>
+  ) : (
+    <Heading class="section-heading__title" id={id}>{title}</Heading>
+  )}
+  {description && <p class="section-heading__description">{description}</p>}
+</header>
+
+<style>
+  .section-heading {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 34px;
+  }
+
+  .section-heading--no-desc {
+    margin-bottom: 14px;
+  }
+
+  .section-heading--has-link.section-heading--no-desc {
+    margin-bottom: 26px;
+  }
+
+  .section-heading--center {
+    text-align: center;
+    align-items: center;
+  }
+
+  /* Her .eyebrow: .7rem / 600 / .14em / uppercase / muted. */
+  .section-heading__eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-label);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0 0 8px;
+  }
+
+  .section-heading__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .section-heading__description {
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    max-width: var(--measure-desc);
+    margin: 14px 0 0;
+    text-wrap: pretty;
+  }
+
+  .section-heading--center .section-heading__description {
+    margin-inline: auto;
+  }
+
+  /* Her .section-head row keeps 26px below it, also before a description. */
+  .section-heading--has-link .section-heading__description {
+    margin-top: 26px;
+  }
+
+  /* Heading row with a quiet link on the right (her .section-head). */
+  .section-heading__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .section-heading__link {
+    font-size: 0.86rem;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+  .section-heading__link:hover {
+    color: var(--color-link-hover);
+  }
+
+  /* Stacked row: the link has its own line, so it may wrap (enlarged text
+     would otherwise push it past the gutter, WCAG 1.4.4). */
+  @media (max-width: 768px) {
+    .section-heading__row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .section-heading__link {
+      white-space: normal;
+    }
+  }
+
+  /* Dark tone (on the ink band) */
+  .section-heading--dark .section-heading__title {
+    color: var(--color-text-on-dark);
+  }
+  .section-heading--dark .section-heading__description {
+    color: var(--color-text-on-dark-muted);
+  }
+  .section-heading--dark .section-heading__eyebrow {
+    color: var(--blue-soft);
+  }
+  .section-heading--dark .section-heading__link {
+    color: var(--color-text-on-dark-muted);
+  }
+</style>

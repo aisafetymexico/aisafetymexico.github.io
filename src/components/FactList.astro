@@ -1,0 +1,83 @@
+---
+/**
+ * FactList — vertical list of key facts. Each row is rendered as a pure
+ * typographic pair: an uppercase eyebrow label on top and a value below.
+ *
+ * Spec:
+ *  - Task #10 props: `{ items: Array<{icon?, label, value}> }` (icon ignored).
+ *  - docs/DESIGN-SYSTEM.md §6.4 — FactList.
+ *  - docs/RAND-AESTHETIC.md §8 — type-only label/value rows, no leading
+ *    glyph.
+ *  - Design: hairline rows after her `.metric-list` (fcacfc4 css/style.css
+ *    L563–578): 15px rows divided by 1px lines, no fills, no hover. The top
+ *    rule is an adaptation (hers has bottom rules only), so the list reads
+ *    as a block wherever it is placed.
+ *  - Mobile-first; long values wrap.
+ *
+ * Backwards-compat: callers may still pass `icon` per item; the value is
+ * ignored so the rendered output stays type-only (Task #26 / RAND-ify).
+ */
+
+export interface FactItem {
+  /** @deprecated kept for backwards compatibility; not rendered. */
+  icon?: string;
+  label: string;
+  value: string;
+}
+
+export interface Props {
+  items: FactItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<dl class="fact-list">
+  {items.map((item) => (
+    <div class="fact-list__row">
+      <dt class="fact-list__label">{item.label}</dt>
+      <dd class="fact-list__value">{item.value}</dd>
+    </div>
+  ))}
+</dl>
+
+<style>
+  .fact-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  /* Her .metric-list li: 15px rows over a 1px hairline. */
+  .fact-list__row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--color-border);
+    min-width: 0;
+  }
+
+  /* Eyebrow (her .eyebrow: .7rem / 600 / .14em / uppercase / muted). */
+  .fact-list__label {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-label);
+    line-height: var(--lh-normal);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .fact-list__value {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    font-weight: var(--fw-book);
+    line-height: var(--lh-normal);
+    color: var(--color-text-primary);
+  }
+</style>

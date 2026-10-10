@@ -1,0 +1,255 @@
+---
+/**
+ * ProgramCard — course / program card for /programs.
+ *
+ * Spec: docs/DESIGN-SYSTEM.md §6.3 (ProgramCard).
+ * Design: her `.program-card` (fcacfc4 css/style.css L1006–1050): white,
+ * 1px hairline, 8px radius, her card padding, no shadow, no hover (the card
+ * is not a link). Chips are her `.tag` pills; the certificate thumbnail is
+ * her `.certificate-img` (hairline, 8px radius, zoom-in cursor, clay border
+ * on hover or focus), 150px tall and at most her 168px wide so thumbnails
+ * line up across a row.
+ *
+ * The thumbnail is a lightbox trigger (`data-lightbox`, no group, so it
+ * opens alone). The page must render <Lightbox /> once, as /programs and
+ * /en/programs do: at init it gives the image tabindex=0, role=button and
+ * its localized «Ampliar imagen: …» / «Enlarge image: …» name.
+ *
+ * Layout:
+ *   ┌────────────────────────────────────────┐
+ *   │ INSTITUCIÓN (in-card label)            │
+ *   │ Title                                  │
+ *   │ Description                            │
+ *   │ FACILITADORES · chips                  │
+ *   │ MATERIALES · chips                     │
+ *   │                                        │
+ *   │ certificate thumbnail + caption        │  pinned to the card bottom
+ *   └────────────────────────────────────────┘
+ *
+ * The group labels and the certificate caption follow the page locale
+ * (`Astro.currentLocale`), so /en/programs reads in English.
+ *
+ * Props:
+ *  - title:              Program / course name (h3).
+ *  - description:        Summary copy (1–3 sentences).
+ *  - facilitators?:      Array of facilitator names.
+ *  - materials?:         Array of material/topic tags.
+ *  - institution?:       Institutional partner (e.g. "UADY", "Centro GEO").
+ *  - certificateImage?:  Optional ImgRef of the certificate (e.g. logo, badge).
+ */
+import type { ImgRef } from '../lib/types';
+import type { Locale } from '../lib/i18n';
+
+export interface Props {
+  title: string;
+  description: string;
+  facilitators?: string[];
+  materials?: string[];
+  institution?: string;
+  certificateImage?: ImgRef;
+}
+
+const {
+  title,
+  description,
+  facilitators = [],
+  materials = [],
+  institution,
+  certificateImage,
+} = Astro.props;
+
+const lang = (Astro.currentLocale as Locale | undefined) ?? 'es';
+
+const COPY = {
+  es: { facilitators: 'Facilitadores', materials: 'Materiales', certificate: 'Certificado' },
+  en: { facilitators: 'Facilitators', materials: 'Materials', certificate: 'Certificate' },
+} as const;
+const copy = COPY[lang] ?? COPY.es;
+
+const certSrc = certificateImage
+  && (typeof certificateImage.src === 'string' ? certificateImage.src : certificateImage.src.src);
+---
+
+<article class="program-card">
+  <div class="program-card__body">
+    {institution && <span class="program-card__institution">{institution}</span>}
+
+    <h3 class="program-card__title">{title}</h3>
+    <p class="program-card__description">{description}</p>
+
+    {facilitators.length > 0 && (
+      <div class="program-card__group">
+        <span class="program-card__group-label">{copy.facilitators}</span>
+        <ul class="program-card__chips" role="list">
+          {facilitators.map(name => (
+            <li class="program-card__chip">{name}</li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {materials.length > 0 && (
+      <div class="program-card__group">
+        <span class="program-card__group-label">{copy.materials}</span>
+        <ul class="program-card__chips program-card__chips--soft" role="list">
+          {materials.map(item => (
+            <li class="program-card__chip program-card__chip--soft">{item}</li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {certSrc && (
+      <figure class="program-card__certificate">
+        <img
+          class="program-card__certificate-img"
+          src={certSrc}
+          alt={certificateImage!.alt}
+          loading="lazy"
+          decoding="async"
+          data-lightbox
+        />
+        <figcaption class="program-card__certificate-caption">{copy.certificate}</figcaption>
+      </figure>
+    )}
+  </div>
+</article>
+
+<style>
+  /* Her .program-card: white, 1px hairline, 8px radius, no shadow. */
+  .program-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .program-card__body {
+    display: flex;
+    flex-direction: column;
+    padding: var(--pad-card);
+    flex: 1;
+  }
+
+  /* In-card label (her .theory-label) */
+  .program-card__institution {
+    display: block;
+    align-self: flex-start;
+    margin-bottom: 8px;
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* Her .program-card-title */
+  .program-card__title {
+    margin: 0 0 10px;
+    font-family: var(--font-display);
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  .program-card__description {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+  }
+
+  /* Chip groups: eyebrow label over a row of tags, 18px under the copy
+     (her .program-certificates / .program-actions rhythm). */
+  .program-card__group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .program-card__group-label {
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-label);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-uppercase);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .program-card__chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* Her .tag. The `--soft` modifier (materials) now reads the same as the
+     facilitator chips. */
+  .program-card__chip {
+    max-width: 100%;
+    padding: 6px 14px;
+    background: var(--color-bg-warm);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-book);
+    line-height: var(--lh-relaxed);
+  }
+
+  /* Certificate — her .certificate-img, a lightbox trigger. The figure sits
+     at least 18px under the copy and is pinned to the bottom of the card
+     (the body is a flex column), so thumbnails line up across a stretched
+     row. Hover and keyboard focus warm the hairline to clay (a non-text
+     mark); the focus ring comes from base.css ([role='button']). */
+  .program-card__certificate {
+    margin: auto 0 0;
+    padding-top: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* Her thumbnail is 168px wide, which on her ~1.1:1 scans is about 150px
+     tall. Sized by that height instead, so thumbnails in one row share
+     their top and bottom even when the scans' proportions differ (Centro
+     GEO 733×656 and UADY 800×735 sit 4px apart at a fixed width). The
+     width follows each scan up to her 168px cap; a wider scan is
+     letterboxed (contain), never cropped or stretched. */
+  .program-card__certificate-img {
+    width: auto;
+    height: 150px;
+    max-width: min(168px, 100%);
+    object-fit: contain;
+    border-radius: var(--radius);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-warm);
+    cursor: zoom-in;
+    transition: border-color var(--transition);
+  }
+
+  .program-card__certificate-img:hover,
+  .program-card__certificate-img:focus-visible {
+    border-color: var(--color-accent-decor);
+  }
+
+  .program-card__certificate-caption {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+  }
+</style>

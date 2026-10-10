@@ -1,0 +1,340 @@
+---
+/**
+ * /research — Publications and ongoing research index.
+ *
+ * Spec:
+ *  - Task #14 (P4 · Page Research).
+ *  - docs/ARCHITECTURE.md §2 `/research`, §6 IndexPage template.
+ *  - docs/CONTENT-MAP.md §1.7.
+ *
+ * Sections:
+ *  1. PageHero (centered: breadcrumb · h1 · description)
+ *  2. Áreas de investigación (FeatureGrid 4 ejes temáticos)
+ *  3. Publicaciones (#publicaciones): PublicationCard grid, sourced from the
+ *     publications collection
+ *  4. Investigación en curso (ProjectCard for ongoing projects, including
+ *     cross-link to /projects/ai-safety-connect)
+ *  5. Colaboraciones (chips for partner orgs in research)
+ *  6. CtaSection — colaboración → /get-involved#research
+ *
+ * Design: the collaborator's light "Editorial mínimo" (fcacfc4
+ * css/style.css). Publications get the page's one bg-2 band, as her
+ * research section does; card grids use the 18px gap, and a lone card
+ * spans the row with its copy kept to the 680px measure; partner chips are
+ * her .partner pills (bg-2, hairline, no lift), and linked partners add her
+ * name-plus-↗ mark.
+ *
+ * Tokens / surfaces / typography only via design-system tokens.
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import FeatureGrid from '../components/FeatureGrid.astro';
+import PublicationCard from '../components/PublicationCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import CtaSection from '../components/CtaSection.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+const pathname = '/research';
+
+// --- Publications collection ---------------------------------------------
+// Pulls all non-draft entries; sorts featured first, then by year desc.
+const allPublications = await getCollection('publications', ({ data }) => !data.draft);
+const publications = allPublications.sort(
+  (a: CollectionEntry<'publications'>, b: CollectionEntry<'publications'>) => {
+    if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+    return b.data.year - a.data.year;
+  },
+);
+
+// --- Áreas de investigación (taxonomy) ------------------------------------
+// Source: ARCHITECTURE.md §2 /research §4 + CONTENT-MAP §4 (line ed. agenda).
+const researchAreas = [
+  {
+    title: 'AI Safety técnica',
+    description:
+      'Alineación, interpretabilidad mecánica y red-teaming aplicados al estudio de modelos desplegados.',
+  },
+  {
+    title: 'Gobernanza',
+    description:
+      'Análisis técnico e instrumentos de política pública para el desarrollo y despliegue responsable de IA.',
+  },
+  {
+    title: 'Política pública',
+    description:
+      'Estudios situados en México: percepciones, riesgos y prioridades del sur global.',
+  },
+  {
+    title: 'Educación e investigación abierta',
+    description:
+      'Materiales, currículos y publicaciones abiertas que conectan la investigación con la formación en México.',
+  },
+];
+
+// --- Investigación en curso -----------------------------------------------
+// AI Safety Connect cross-link to /projects/ai-safety-connect.
+const ongoingProjects = [
+  {
+    title: 'AI Safety Connect',
+    badge: 'COLABORACIÓN SPAR',
+    description:
+      'Plataforma y paper que mapean a la comunidad internacional de AI safety mediante taxonomía y búsqueda semántica. Output del programa SPAR con equipo internacional.',
+    href: '/projects/ai-safety-connect',
+    ctaLabel: 'Ver el proyecto',
+  },
+];
+
+// --- Colaboraciones (chips) -----------------------------------------------
+const researchPartners = [
+  { name: 'SPAR Research', href: 'https://supervisedprogramforalignment.org/' },
+  { name: 'ENAIS', href: undefined },
+  { name: 'AI Safety Collab', href: undefined },
+  { name: 'Centro Geo', href: undefined },
+  { name: 'Apart Research', href: 'https://apartresearch.com/' },
+];
+
+// --- Breadcrumb -----------------------------------------------------------
+const breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Investigación' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Investigación · AI Safety Mexico"
+  description="Publicaciones, proyectos en curso y agenda de investigación de AI Safety Mexico en seguridad, gobernanza y política pública de IA."
+  pathname={pathname}
+>
+  <Header slot="header" currentPath={pathname} />
+
+  <PageHero
+    title="Investigación rigurosa, situada en México"
+    description="Producimos investigación abierta en seguridad técnica de IA, gobernanza y estudios nacionales, en colaboración con instituciones nacionales e internacionales."
+    breadcrumb={breadcrumb}
+  />
+
+  <!-- 1 · Áreas de investigación -->
+  <section class="research-section research-section--areas">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Líneas de trabajo"
+        title="Áreas de investigación"
+        description="Cuatro frentes en los que concentramos preguntas, métodos y publicaciones."
+      />
+      <FeatureGrid items={researchAreas} />
+    </div>
+  </section>
+
+  <!-- 2 · Publicaciones -->
+  <section id="publicaciones" class="research-section research-section--publications">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Publicaciones"
+        title="Papers y trabajos publicados"
+        description="Resultados que el equipo y sus colaboradores hacen públicos en venues abiertos."
+      />
+
+      {publications.length > 0 ? (
+        <div class="publication-grid">
+          {publications.map((pub: CollectionEntry<'publications'>) => (
+            <PublicationCard
+              title={pub.data.title}
+              authors={pub.data.authors}
+              year={pub.data.year}
+              journal={pub.data.venue}
+              paperUrl={pub.data.paperUrl}
+              podcastUrl={pub.data.podcastUrl}
+              abstract={pub.data.abstract}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="research-empty">
+          Estamos preparando próximas publicaciones. Mientras tanto, escríbenos
+          si te interesa colaborar en investigación.
+        </p>
+      )}
+    </div>
+  </section>
+
+  <!-- 3 · Investigación en curso -->
+  <section class="research-section research-section--ongoing">
+    <div class="container">
+      <SectionHeading
+        eyebrow="En curso"
+        title="Investigación en desarrollo"
+        description="Proyectos activos del equipo y colaboraciones internacionales en marcha."
+      />
+      <div class="ongoing-grid">
+        {ongoingProjects.map((p) => (
+          <ProjectCard
+            title={p.title}
+            badge={p.badge}
+            description={p.description}
+            href={p.href}
+            ctaLabel={p.ctaLabel}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Colaboraciones (chips) -->
+  <section class="research-section research-section--collabs">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Colaboraciones"
+        title="Trabajamos con"
+        description="Organizaciones aliadas que sostienen y enriquecen nuestra agenda de investigación."
+      />
+      <ul class="partner-chips" role="list">
+        {researchPartners.map((partner) => (
+          <li class="partner-chips__item">
+            {partner.href ? (
+              <a
+                class="partner-chips__chip partner-chips__chip--link"
+                href={partner.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {partner.name}
+                <span aria-hidden="true">↗</span>
+              </a>
+            ) : (
+              <span class="partner-chips__chip">{partner.name}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5 · CTA final -->
+  <CtaSection
+    title="Trabajemos juntos en investigación"
+    description="¿Tienes una pregunta de investigación, un dataset o una colaboración en mente? Conectemos para explorar cómo trabajar juntos."
+    ctaLabel="Propón una colaboración"
+    ctaHref="/get-involved#research"
+  />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* Section shell: her 72px rhythm (48px on phones, via --section-pad);
+     the hairline between sections comes from base.css (`main > section`). */
+  .research-section {
+    padding-block: var(--section-pad);
+    background: var(--color-bg-section-base);
+  }
+
+  /* The page's one tinted band, as her research section (bg-2 with white
+     cards). The partner row stays on white so its bg-2 pills read. */
+  .research-section--publications {
+    background: var(--color-bg-section-warm);
+  }
+
+  /* Deep-link target (#publicaciones, from the home «Trabajo reciente»
+     publication pill) clears the sticky header, like /activities#gsh-2026. */
+  .research-section[id] {
+    scroll-margin-top: var(--scroll-offset);
+  }
+
+  /* Publication grid: her 2-up card grid, 18px gap, one column up to 768px. */
+  .publication-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  @media (min-width: 769px) {
+    .publication-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Ongoing-projects grid: matches the publication grid. */
+  .ongoing-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  @media (min-width: 769px) {
+    .ongoing-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* A lone card spans the whole row instead of leaving an empty half next
+     to it; its copy keeps the 680px reading measure. With two or more
+     cards, the 2-up grid applies and the measure is a no-op. */
+  @media (min-width: 769px) {
+    .publication-grid > :global(:only-child),
+    .ongoing-grid > :global(:only-child) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .publication-grid :global(.publication-card__abstract),
+  .ongoing-grid :global(.project-card__description) {
+    max-width: var(--measure-desc);
+  }
+
+  .research-empty {
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    max-width: var(--measure-desc);
+  }
+
+  /* Partner chips — her .partners-row / .partner: left-aligned row of bg-2
+     pills with a 1px hairline, .84rem at 450 in ink-2. */
+  .partner-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .partner-chips__item {
+    display: inline-flex;
+  }
+
+  .partner-chips__chip {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-bg-warm);
+    color: var(--color-text-secondary);
+    font-size: 0.84rem;
+    font-weight: var(--fw-book);
+    line-height: var(--lh-relaxed);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    transition:
+      border-color var(--transition),
+      color var(--transition);
+  }
+
+  /* Linked partners (external sites) carry her name-plus-↗ mark
+     («AISafety.com ↗»; the arrow is aria-hidden), so they read as links at
+     rest. Hover darkens the hairline and the label, as her .chip:hover
+     does. Nothing lifts; the focus ring comes from base.css. */
+  .partner-chips__chip--link {
+    gap: 6px;
+  }
+
+  .partner-chips__chip--link:hover {
+    border-color: var(--color-border-strong);
+    color: var(--color-text-primary);
+  }
+</style>

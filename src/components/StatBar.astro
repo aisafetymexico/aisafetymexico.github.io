@@ -1,0 +1,152 @@
+---
+/**
+ * StatBar — full-width row of impact stats. Each stat = a large ink figure
+ * + a small muted label underneath.
+ *
+ * Spec:
+ *  - Task #10 props: `{ stats: Array<{number, label}> }`.
+ *  - docs/DESIGN-SYSTEM.md §6.4 / §2.4 — `--fs-stat` for numbers.
+ *  - Design: her `.section-stats` (fcacfc4 css/style.css L583–613): a white
+ *    band; figures left-aligned in four columns divided by vertical
+ *    hairlines (Inter 500, -.035em, ink); labels .8rem / 450, muted, not
+ *    uppercase. 2 × 2 on ≤768px, with a hairline between the rows.
+ *  - The region's accessible name follows the page locale
+ *    (`Astro.currentLocale`).
+ */
+import type { Locale } from '../lib/i18n';
+
+export interface Stat {
+  number: string;
+  label: string;
+}
+
+export interface Props {
+  stats: Stat[];
+  /** Accessible name of the region; defaults to «Indicadores de impacto». */
+  label?: string;
+}
+
+const { stats, label } = Astro.props;
+
+const lang = (Astro.currentLocale as Locale | undefined) ?? 'es';
+const REGION_LABEL: Record<Locale, string> = {
+  es: 'Indicadores de impacto',
+  en: 'Impact indicators',
+};
+const regionLabel = label ?? REGION_LABEL[lang] ?? REGION_LABEL.es;
+---
+
+<section class="stat-bar" role="region" aria-label={regionLabel}>
+  <div class="stat-bar__inner">
+    <ul class="stat-bar__grid" role="list">
+      {stats.map((stat) => (
+        <li class="stat-bar__item">
+          <span class="stat-bar__number">{stat.number}</span>
+          <span class="stat-bar__label">{stat.label}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* Her .section-stats: white band, 52px padding (48px on phones), the
+     line-soft section hairline below and no rule above. */
+  .stat-bar {
+    position: relative;
+    background: var(--color-bg-base);
+    color: var(--color-text-primary);
+    padding-block: var(--section-pad-stats);
+    border-top: 0;
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  .stat-bar__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 481px) {
+    .stat-bar__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  /* Four columns divided by vertical hairlines (her .stats-grid / .stat). */
+  .stat-bar__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .stat-bar__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    text-align: left;
+    padding: 4px 22px;
+    border-left: 1px solid var(--color-border);
+  }
+
+  .stat-bar__item:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .stat-bar__number {
+    font-family: var(--font-display);
+    font-size: var(--fs-stat);
+    font-weight: var(--fw-display);
+    line-height: 1.1;
+    letter-spacing: var(--ls-stat);
+    color: var(--color-text-primary);
+  }
+
+  .stat-bar__label {
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-book);
+    line-height: var(--lh-relaxed);
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-text-muted);
+    /* Balanced, so a two-line label never leaves a lone word under the
+       figure («Publicación / revisada por pares», not «… por / pares»). */
+    text-wrap: balance;
+    /* At 200% text a single long word («Participantes») would push the 2-up
+       phone grid past the viewport; let it break instead (WCAG 1.4.4). */
+    overflow-wrap: anywhere;
+  }
+
+  /* Her tiers (desktop-first, as she writes them). */
+  @media (max-width: 1024px) {
+    .stat-bar__item {
+      padding: 4px 14px;
+    }
+  }
+
+  /* ≤768px: 2 × 2. Hairlines between the columns and between the rows. */
+  @media (max-width: 768px) {
+    .stat-bar__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .stat-bar__item {
+      padding: 16px 0 16px 16px;
+      border-top: 1px solid var(--color-border);
+    }
+    .stat-bar__item:nth-child(odd) {
+      border-left: 0;
+      padding-left: 0;
+    }
+    .stat-bar__item:nth-child(-n + 2) {
+      border-top: 0;
+      padding-top: 0;
+    }
+  }
+</style>

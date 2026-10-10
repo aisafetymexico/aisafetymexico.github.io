@@ -1,0 +1,72 @@
+---
+/**
+ * KeyFacts — horizontal row of factual chips.
+ * Used at the top of pages or sections to anchor a few quick numbers/dates.
+ *
+ * Spec:
+ *  - Task #10 props: `{ facts: Array<{icon?, text}> }` (icon now ignored).
+ *  - docs/DESIGN-SYSTEM.md §6.4 — KeyFacts.
+ *  - docs/RAND-AESTHETIC.md §8 — type-only chips, no leading glyph.
+ *  - Design: her `.tag-list` / `.tag` (fcacfc4 css/style.css L503–518):
+ *    bg-2 pills with a 1px hairline, .8rem / 450 in ink-2, 8px apart. Not
+ *    interactive, so no hover. The row wraps, and a long chip wraps its own
+ *    text instead of overflowing narrow phones.
+ *  - No top margin: the SectionHeading above already carries the spacing.
+ *
+ * Backwards-compat: callers may still pass `icon` on each fact; the value is
+ * ignored to keep the visual language type-only (Task #26 / RAND-ify).
+ */
+
+export interface KeyFact {
+  /** @deprecated kept for backwards compatibility; not rendered. */
+  icon?: string;
+  text: string;
+}
+
+export interface Props {
+  facts: KeyFact[];
+}
+
+const { facts } = Astro.props;
+---
+
+<ul class="key-facts" role="list">
+  {facts.map((fact) => (
+    <li class="key-facts__chip">
+      <span class="key-facts__text">{fact.text}</span>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .key-facts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Her .tag */
+  .key-facts__chip {
+    display: inline-block;
+    max-width: 100%;
+    padding: 6px 14px;
+    background: var(--color-bg-warm);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-body);
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-book);
+    line-height: var(--lh-relaxed);
+  }
+
+  /* Wraps inside the pill when the row is narrower than the chip. */
+  .key-facts__text {
+    color: inherit;
+    white-space: normal;
+  }
+</style>

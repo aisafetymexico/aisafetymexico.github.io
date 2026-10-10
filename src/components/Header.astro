@@ -1,0 +1,366 @@
+---
+/**
+ * Header — sticky site header: 2026 logo + «AI SAFETY MX» wordmark, the
+ * one-row bracketed nav with the ink CTA pill, and the ES | EN switcher.
+ *
+ * Spec:
+ *  - docs/ARCHITECTURE.md §3 (sticky + scrolled state).
+ *  - docs/DESIGN-SYSTEM.md §6.1 (`SiteHeader` props: `currentPath:string`).
+ *  - Design: her "Editorial mínimo" header (fcacfc4 css/style.css L178–223):
+ *    translucent white glass `rgba(255,255,255,.88)` + backdrop blur(14px)
+ *    saturate(180%), a 1px #E6E3DD bottom line, padding
+ *    14px → 9px once scrolled, logo 42px → 36px (≤480px: 34px → 32px).
+ *
+ * Behaviours:
+ *  - Sticks to top with --z-sticky.
+ *  - Adds `.site-header--scrolled` after the user has scrolled past 80px and
+ *    removes it below 40px (hysteresis wider than the 13px shrink, so scroll
+ *    anchoring can't bounce the page across the threshold and back).
+ *  - The glass is painted on `.site-header::before`, NOT on the header box:
+ *    `backdrop-filter` on an ancestor becomes the containing block of its
+ *    `position: fixed` descendants, and the MobileMenu backdrop + drawer
+ *    render inside this header (VF-23). This way they still cover the
+ *    whole viewport.
+ *  - Its controls opt out of base.css's focus scroll-margin: they never
+ *    scroll out of view, and the margin would only make the page jump when
+ *    one of them (or the drawer's close button) takes focus.
+ *  - Logo + wordmark → home. The link's accessible name stays
+ *    "AI Safety Mexico — Inicio" (`header.aria.brandHome`).
+ *  - The nav row (≥1080px) and the drawer (<1080px) live in <Nav />. The
+ *    language switcher is passed into Nav's slot, so it renders between the
+ *    nav row and the hamburger toggle (DOM order = visual order).
+ *  - One-row guarantee: the script measures the row from 1080px up. Where
+ *    it does not fit (Spanish below a 1196px window, English below 1104px,
+ *    a wider fallback font, text-only zoom), it adds `.site-header--compact`
+ *    and the drawer takes over instead of the row wrapping or overflowing.
+ *  - The wordmark shows from 315px at the default text size; at 320px it
+ *    still clears ES | EN by 23px. When the bar is
+ *    too narrow to show it in full, it hides instead of truncating. That
+ *    covers folded phones, and phones with enlarged text, because the
+ *    breakpoint grows with the reader's font size. In drawer mode (<1080px,
+ *    or compact) the ellipsis remains as a safety net, so ES | EN and the
+ *    hamburger always stay on screen (WCAG 1.4.4). The desktop row, which
+ *    `fit()` measures, is unaffected.
+ *
+ * Props:
+ *  - currentPath: string — optional. Defaults to `Astro.url.pathname`. This is
+ *    the *real* current pathname (including deep paths like `/projects/vigia`)
+ *    and is the value forwarded to <LanguageSwitcher> so it can compute the
+ *    cross-locale equivalent (`/en/projects/vigia`) and preserve deep links.
+ *  - navActivePath: string — optional. When passed, <Nav> uses this path to
+ *    compute its active-link highlight instead of `currentPath`. Use this on
+ *    sub-pages whose parent section should glow in the nav (e.g. on
+ *    `/projects/vigia` pass `navActivePath="/projects"` so the "Projects" nav
+ *    item highlights). When omitted, Nav falls back to `currentPath` (which
+ *    already handles parent-child matches via startsWith).
+ *  - logoSrc / logoAlt: optional overrides (default: the 160px-tall
+ *    derivative of the 2026 logo).
+ *  - wordmark: optional override for the text next to the logo
+ *    (default "AI SAFETY MX", her header text).
+ *  - siteName: legacy alias of `wordmark`, still honoured when passed.
+ */
+import Nav from './Nav.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import type { NavItem } from '../lib/types';
+import { t, localizedPath, type Locale } from '../lib/i18n';
+
+export interface Props {
+  currentPath?: string;
+  navActivePath?: string;
+  navItems?: NavItem[];
+  logoSrc?: string;
+  logoAlt?: string;
+  wordmark?: string;
+  /** @deprecated Use `wordmark`. */
+  siteName?: string;
+  lang?: Locale;
+}
+
+const {
+  currentPath = Astro.url.pathname,
+  navActivePath,
+  navItems,
+  logoSrc = '/images/aismx-logo-2026-160.png',
+  logoAlt = 'AI Safety Mexico',
+  wordmark,
+  siteName,
+  lang = 'es',
+} = Astro.props;
+
+const navPath = navActivePath ?? currentPath;
+const wordmarkText = wordmark ?? siteName ?? 'AI SAFETY MX';
+
+const brandHref = localizedPath(lang, '/');
+const brandAria = t(lang, 'header.aria.brandHome');
+---
+
+<header class="site-header" data-site-header>
+  <div class="site-header__inner">
+    <a class="site-header__logo" href={brandHref} aria-label={brandAria}>
+      <img
+        class="site-header__logo-img"
+        src={logoSrc}
+        alt={logoAlt}
+        width="44"
+        height="42"
+        loading="eager"
+        decoding="async"
+      />
+      <span class="site-header__wordmark">{wordmarkText}</span>
+    </a>
+
+    <div class="site-header__cluster">
+      <Nav currentPath={navPath} items={navItems} lang={lang}>
+        <LanguageSwitcher currentPath={currentPath} />
+      </Nav>
+    </div>
+  </div>
+</header>
+
+<script>
+  /**
+   * 1. Toggles `.site-header--scrolled`: on past 80px of scroll, off again
+   *    below 40px. The scrolled header is ~13px shorter, and Chrome's scroll
+   *    anchoring shifts scrollY by that much; a single threshold would make
+   *    the class flip on and off forever when the page rests at 81–93px.
+   *    Uses a throttled rAF loop to avoid layout thrashing.
+   * 2. One-row guarantee: adds `.site-header--compact` (drawer at any width)
+   *    when the visible nav row would overflow the header's content box.
+   *    The class is removed before measuring, and re-added in the same task,
+   *    so nothing flickers.
+   * Idempotent.
+   */
+  (() => {
+    if ((window as any).__aismxHeaderScrollBound) return;
+    (window as any).__aismxHeaderScrollBound = true;
+
+    const init = () => {
+      const header = document.querySelector<HTMLElement>('[data-site-header]');
+      if (!header) return;
+
+      const SCROLLED_THRESHOLD = 80;
+      const UNSCROLLED_THRESHOLD = 40; // hysteresis: wider than the ~13px shrink
+      let ticking = false;
+      let scrolled = false;
+
+      const sync = () => {
+        const next = scrolled
+          ? window.scrollY > UNSCROLLED_THRESHOLD
+          : window.scrollY > SCROLLED_THRESHOLD;
+        if (next !== scrolled) {
+          scrolled = next;
+          header.classList.toggle('site-header--scrolled', scrolled);
+        }
+        ticking = false;
+      };
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(sync);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      // Initial sync (handles deep-link / refreshed-mid-page cases).
+      sync();
+
+      const inner = header.querySelector<HTMLElement>('.site-header__inner');
+      const nav = header.querySelector<HTMLElement>('.main-nav');
+      const switcher = header.querySelector<HTMLElement>('.lang-switcher');
+
+      const fit = () => {
+        if (!inner || !nav) return;
+        header.classList.remove('site-header--compact');
+        if (getComputedStyle(nav).display === 'none') return; // drawer by breakpoint
+        const contentRight =
+          inner.getBoundingClientRect().right - parseFloat(getComputedStyle(inner).paddingRight);
+        const rowRight = Math.max(
+          nav.getBoundingClientRect().right,
+          switcher ? switcher.getBoundingClientRect().right : 0,
+        );
+        header.classList.toggle('site-header--compact', rowRight > contentRight + 0.5);
+      };
+
+      let fitTicking = false;
+      window.addEventListener('resize', () => {
+        if (!fitTicking) {
+          requestAnimationFrame(() => { fit(); fitTicking = false; });
+          fitTicking = true;
+        }
+      }, { passive: true });
+      fit();
+      document.fonts?.ready.then(fit);
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+<style>
+  /* 1px #E6E3DD bottom line at rest and scrolled (her CSS
+     started from line-soft and darkened to line on scroll). */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    color: var(--color-text-primary);
+    padding: 14px 0;
+    border-bottom: 1px solid var(--color-border);
+    transition: padding var(--transition);
+  }
+
+  /* Her glass, on a pseudo-element so the header itself never becomes the
+     containing block of the fixed drawer and backdrop (see docblock). */
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-header-bg);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+    pointer-events: none;
+  }
+
+  .site-header--scrolled {
+    padding: 9px 0;
+  }
+
+  /* base.css gives focusable controls a scroll margin so keyboard focus
+     stops below this header. Its own controls (and the drawer inside it) are
+     always on screen, and that margin would make Chrome scroll the page
+     ~80px each time one of them takes focus (e.g. opening or closing the
+     drawer mid-page), so they opt out. */
+  .site-header :global(:where(a[href], button, [tabindex])) {
+    scroll-margin: 0;
+  }
+
+  .site-header__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding-inline: var(--container-padding);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  @media (min-width: 481px) {
+    .site-header__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  /* Right-hand cluster: nav row + ES | EN on desktop; ES | EN + hamburger
+     below 1080px (or when compact). Spec: docs/I18N-ARCHITECTURE.md §4.1 —
+     the switcher stays in the bar at every width, left of the hamburger. */
+  .site-header__cluster {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  @media (max-width: 1079.98px) {
+    .site-header__cluster {
+      gap: 6px;
+    }
+  }
+
+  .site-header--compact .site-header__cluster {
+    gap: 6px;
+  }
+
+  /* Logo + wordmark. No visible hover (as in her header). */
+  .site-header__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    border-radius: var(--radius-xs);
+  }
+  .site-header__logo:hover {
+    color: var(--color-text-primary);
+  }
+
+  .site-header__logo-img {
+    height: 42px;
+    width: auto;
+    transition: height var(--transition);
+  }
+
+  .site-header--scrolled .site-header__logo-img {
+    height: 36px;
+  }
+
+  .site-header__wordmark {
+    font-family: var(--font-body);
+    font-weight: var(--fw-label);
+    font-size: 0.95rem;
+    letter-spacing: var(--ls-wide);
+    line-height: 1;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+  }
+
+  /* Phones. Scrolled logo is 32px, not 36px: her CSS let the phone logo grow
+     on scroll through a specificity slip. The wordmark is 0.8rem (14.4px
+     with the 112.5% root) so it still fits whole at 320px. */
+  @media (max-width: 480px) {
+    .site-header__logo-img { height: 34px; }
+    .site-header--scrolled .site-header__logo-img { height: 32px; }
+    .site-header__wordmark { font-size: 0.8rem; }
+  }
+
+  /* Under 315px (folded phones, ~280px) the whole wordmark no longer fits
+     beside ES | EN and the hamburger at the default text size: hide it
+     rather than show a clipped «AI SAFE…». From 315px it shows in full. */
+  @media (max-width: 314.98px) {
+    .site-header__wordmark { display: none; }
+  }
+
+  /* With enlarged text the bar needs more room: ~165px of px-sized chrome
+     (gutters, logo, gaps, hamburger) plus 9.375em of text that grows with
+     the reader's default font size (wordmark + ES | EN, both sized off the
+     112.5% root). Below that, hide the wordmark instead of truncating it
+     to «AI SAF…». At the default 16px this is the same 314.98px as the
+     rule above. A browser without calc() in media queries ignores this
+     rule and keeps the ellipsis safety net below. */
+  @media (max-width: calc(164.98px + 9.375em)) {
+    .site-header__wordmark { display: none; }
+  }
+
+  /* Drawer mode safety net: should logo + wordmark + ES | EN + hamburger
+     still not fit (no calc() in media queries, a wider fallback font, or
+     text beyond the estimate above), only the wordmark gives way (ellipsis),
+     so the controls stay on screen instead of being clipped by body's
+     overflow-x (WCAG 1.4.4). The link keeps its aria-label.
+     Not applied to the desktop row, so the `fit()` measurement that sets
+     `--compact` is unchanged. */
+  @media (max-width: 1079.98px) {
+    .site-header__logo { flex-shrink: 1; min-width: 0; }
+    .site-header__logo-img { flex-shrink: 0; }
+    .site-header__wordmark { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+    .site-header__cluster { flex-shrink: 0; }
+  }
+
+  /* Same for the compact fallback (drawer at any width). */
+  .site-header--compact .site-header__logo { flex-shrink: 1; min-width: 0; }
+  .site-header--compact .site-header__logo-img { flex-shrink: 0; }
+  .site-header--compact .site-header__wordmark { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .site-header--compact .site-header__cluster { flex-shrink: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header,
+    .site-header__logo-img {
+      transition: none;
+    }
+  }
+</style>

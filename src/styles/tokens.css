@@ -1,0 +1,335 @@
+/*
+ * AI Safety Mexico — Design Tokens ("Editorial mínimo", light)
+ *
+ * Single source of truth for colour, typography, spacing, radii, shadows,
+ * transitions, z-index, breakpoints and container widths.
+ *
+ * Design source: the collaborator's 2026 light redesign (legacy
+ * `css/style.css` at fcacfc4): white page, warm-neutral surfaces, 1px
+ * hairlines instead of shadows, Inter only, palette taken from the 2026
+ * logo (clay #C87551 · blue #3A5F87). Light only: there is no dark theme.
+ *
+ * Layers:
+ *   §0    Her primitives, under her own names (port her rules almost verbatim).
+ *   §1.1  Her compatibility aliases (navy/copper/…), kept as she shipped them.
+ *         (The old dark-theme primitives of §1.1b are gone: every consumer
+ *         now reads a §1.3 token.)
+ *   §1.3  Semantic tokens. Components and pages consume THESE.
+ *   §2–5  Type, spacing, radii, shadows, motion, z-index, breakpoints,
+ *         containers. Mobile-first: the :root block holds the ≤480px values;
+ *         the media queries at the end hold her 481 / 769 / 1025px tiers.
+ *
+ * Contrast (WCAG 2.x, on white): ink 18.0 · ink-2 6.82 · muted text #6E6E78
+ * 5.04 · clay-dark 5.64 · blue 6.63. Her ink-3 #8E8E98 (3.24) and clay
+ * #C87551 (3.43 with white) fail AA for small text, so they are reserved
+ * for non-text marks (hover borders, brackets, dots, featured borders).
+ */
+
+:root {
+  color-scheme: light;
+
+  /* ============================================================
+   * 0 · Primitives — her :root (fcacfc4 css/style.css L13–31)
+   * ============================================================ */
+  /* Ink */
+  --ink: #16161A;
+  --ink-2: #5A5A63;
+  --ink-3: #8E8E98;        /* NON-TEXT only (3.24:1): hover borders, brackets, glyphs */
+  --ink-3-aa: #6E6E78;     /* text-safe muted (5.04:1 on white, 4.79 on bg-2) */
+  /* Surfaces */
+  --bg: #FFFFFF;
+  --bg-2: #FAF9F6;
+  --bg-3: #F4F2ED;
+  /* Hairlines */
+  --line: #E6E3DD;
+  --line-soft: #F0EEE9;
+  /* Logo accents */
+  --clay: #C87551;         /* NON-TEXT only: underline hover, active dot, featured border */
+  --clay-dark: #9C5430;    /* text-safe accent (5.64:1) and filled accent buttons */
+  --clay-wash: #FBF1EA;
+  --blue: #3A5F87;
+  --blue-soft: #84A8CC;
+  --blue-wash: #EEF3F9;
+  /* Her one-off literals, promoted to tokens */
+  --clay-line: #F0DCCD;                      /* .prize-badge border */
+  --band-caracol: #070707;                   /* .hero-banner band = the PNG's side bars */
+  --scrim: rgba(22, 22, 26, 0.94);           /* .lightbox */
+  --header-glass: rgba(255, 255, 255, 0.88); /* .site-header */
+
+  /* ============================================================
+   * 1.1 · Her compatibility aliases (fcacfc4 L38–51), kept verbatim
+   * so her event-page rules port unchanged. Prefer §1.3 tokens.
+   * ============================================================ */
+  --navy: #16161A;
+  --navy-light: #2C2C34;
+  --copper: #C87551;
+  --copper-dark: #9C5430;
+  --gold: #C87551;
+  --cream: #FAF9F6;
+  --white: #FFFFFF;
+  --text: #16161A;
+  --text-light: #5A5A63;
+  --text-muted: #8E8E98;
+  --border: #E6E3DD;
+
+  /* ============================================================
+   * 1.3 · Semantic colour — components consume THESE
+   * ============================================================ */
+
+  /* Text */
+  --color-text-primary: var(--ink);
+  --color-text-heading: var(--ink);
+  --color-text-secondary: var(--ink-2);
+  --color-text-muted: var(--ink-3-aa);           /* her ink-3 role, AA-safe */
+  --color-text-on-dark: #FFFFFF;                 /* ONLY on genuinely dark surfaces (scrim, ink band) */
+  --color-text-on-dark-muted: rgba(255, 255, 255, 0.72);
+  --color-text-inverse: #FFFFFF;
+
+  /* Surfaces */
+  --color-bg-base: var(--bg);                    /* page, white sections */
+  --color-bg-elevated: var(--bg);                /* cards: white + 1px hairline */
+  --color-bg-warm: var(--bg-2);                  /* tinted sections, panels, footer */
+  --color-bg-muted: var(--bg-3);                 /* quiet fills: secondary button, placeholders */
+  --color-bg-subtle: var(--bg-3);                /* alias of --color-bg-muted */
+  --color-bg-section-base: var(--bg);
+  --color-bg-section-warm: var(--bg-2);
+  --color-bg-impact: var(--ink);                 /* the only dark surface (ink band); rare */
+  --color-bg-overlay-dark: var(--scrim);
+  --color-header-bg: var(--header-glass);
+  --color-banner-band: var(--band-caracol);
+
+  /* Accents */
+  --color-accent: var(--clay-dark);              /* text-safe accent: category labels, inline links */
+  --color-accent-hover: var(--clay-dark);
+  --color-accent-soft: var(--clay-wash);         /* selection, badges, :target washes */
+  --color-accent-secondary: var(--ink-3-aa);     /* was sky; her eyebrows are neutral grey */
+  --color-accent-decor: var(--clay);             /* NON-TEXT: underline hover, active dot, featured border */
+
+  /* Primary CTA (her ink pill) */
+  --color-cta-bg: var(--ink);
+  --color-cta-bg-hover: var(--clay-dark);
+  --color-cta-text: #FFFFFF;
+
+  /* Borders */
+  --color-border: var(--line);                   /* cards, controls, dividers */
+  --color-border-soft: var(--line-soft);         /* between sections, header at rest */
+  --color-border-strong: var(--ink-3);           /* hover / emphasis border (clickable cards) */
+  --color-border-accent: var(--ink-3);           /* legacy name of the hover border */
+  --color-border-on-dark: rgba(255, 255, 255, 0.2);
+
+  /* Links + focus (VF-10: unclassed links are ink, clay-dark on hover) */
+  --color-link: var(--ink);
+  --color-link-hover: var(--clay-dark);
+  --color-link-inline: var(--clay-dark);         /* in-text links (her .inline-link) */
+  --color-link-underline: var(--line);
+  --color-link-underline-hover: var(--clay);
+  --color-focus-ring: var(--blue);               /* 6.63:1 on white */
+  --color-focus-ring-on-dark: #FFFFFF;           /* rings on the scrim / ink band */
+
+  /* Information (blue flag pairing) */
+  --color-info: var(--blue);
+  --color-info-soft: var(--blue-wash);
+
+  /* Overlays */
+  --color-scrim: var(--scrim);                   /* lightbox */
+  --color-on-scrim: #FFFFFF;
+  --color-backdrop: rgba(22, 22, 26, 0.2);       /* mobile-drawer backdrop */
+
+  /* Special purpose */
+  --color-cta-register: var(--clay-dark);        /* filled accent button; her clay fails AA with white */
+  --color-cta-register-hover: var(--ink);
+  --color-cta-register-text: #FFFFFF;
+  --color-prize-badge-bg: var(--clay-wash);
+  --color-prize-badge-text: var(--clay-dark);
+  --color-prize-badge-border: var(--clay-line);
+  --color-flag-es: var(--blue);
+  --color-flag-es-bg: var(--blue-wash);
+  --color-flag-latam: var(--clay-dark);
+  --color-flag-latam-bg: var(--clay-wash);
+  --color-verified: var(--blue);                 /* certificate "verified" badge text */
+  --color-verified-bg: var(--blue-wash);
+
+  /* ============================================================
+   * 2.1 · Families — Inter only (Playfair removed)
+   * ============================================================ */
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-features: 'cv02', 'cv03', 'cv04';      /* Inter open 4 / 6 / 9 */
+
+  /* ============================================================
+   * 2.2 · Weights — Google Fonts loads 400;450;500;550;600 only
+   * ============================================================ */
+  --fw-regular: 400;
+  --fw-book: 450;         /* nav links, tags, chips, stat labels */
+  --fw-medium: 500;       /* buttons, in-text links */
+  --fw-display: 500;      /* hero / page titles, stat numbers, numerals */
+  --fw-heading: 550;      /* h2–h6, card titles, active nav */
+  --fw-semibold: 600;
+  --fw-label: 600;        /* eyebrows, wordmark */
+  --fw-bold: 600;         /* capped to the loaded range (was 700) */
+
+  /* ============================================================
+   * 2.3 · Sizes — ≤480px values here; 481 / 769 / 1025 tiers below
+   * ============================================================ */
+  --fs-display: 1.52rem;  /* home hero title */
+  --fs-h1: 1.42rem;       /* page titles */
+  --fs-h2: 1.18rem;       /* section headings */
+  --fs-h3: 1.15rem;
+  --fs-h4: 1.1rem;
+  --fs-h5: 1.08rem;       /* card titles (her .program-card-title) */
+  --fs-h6: 1rem;
+  --fs-lead: 1rem;        /* section description, page subtitle */
+  --fs-body: 0.9375rem;   /* 16.9px on phones, 18px from 481px (112.5% root) */
+  --fs-small: 0.88rem;
+  --fs-caption: 0.8rem;
+  --fs-eyebrow: 0.7rem;
+  --fs-nav: 0.855rem;
+  --fs-btn: 0.9rem;
+  --fs-stat: 1.65rem;
+
+  --lh-tight: 1.16;       /* display */
+  --lh-snug: 1.25;        /* h2 */
+  --lh-heading: 1.35;     /* card titles, h3–h6 */
+  --lh-normal: 1.55;
+  --lh-relaxed: 1.65;     /* body */
+  --lh-loose: 1.7;        /* descriptions, card copy */
+
+  --ls-tight: -0.03em;
+  --ls-display: -0.03em;  /* hero / page titles */
+  --ls-snug: -0.02em;
+  --ls-heading: -0.02em;  /* h2–h6, card titles */
+  --ls-normal: 0;
+  --ls-wide: 0.01em;      /* wordmark */
+  --ls-btn: -0.01em;
+  --ls-stat: -0.035em;
+  --ls-label: 0.09em;     /* in-card label */
+  --ls-uppercase: 0.14em; /* eyebrow */
+  --ls-uppercase-xl: 0.14em;
+
+  /* ============================================================
+   * 3 · Spacing — 8-base scale + her rhythm as semantic tokens
+   * ============================================================ */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 40px;
+  --space-10: 48px;
+  --space-12: 64px;
+  --space-14: 80px;
+  --space-16: 96px;
+  --space-20: 112px;
+
+  --gap-grid: 18px;             /* card grids */
+  --gap-actions: 10px;          /* button rows */
+  --pad-card: 22px 20px;        /* 28px from 769px */
+  --section-pad: 48px;          /* 72px from 481px */
+  --section-pad-stats: 48px;    /* 52px from 481px */
+  --section-pad-contact: 48px;  /* 80px from 481px */
+  --scroll-offset: 88px;        /* scroll-margin-top for #anchors (sticky header + 16px) */
+
+  /* ============================================================
+   * 4.1 · Radii
+   * ============================================================ */
+  --radius-xs: 4px;       /* flags */
+  --radius-sm: 8px;
+  --radius: 8px;          /* cards, inputs, embeds */
+  --radius-lg: 14px;      /* large media, panels */
+  --radius-xl: 14px;
+  --radius-pill: 999px;   /* buttons, chips, tags */
+  --radius-full: 50%;     /* avatars, icon circles */
+
+  /* ============================================================
+   * 4.2 · Shadows — none. Elevation = white on bg-2 + a 1px hairline.
+   * ============================================================ */
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow: none;
+  --shadow-lg: none;
+  --shadow-hero: none;
+  --shadow-cta: none;
+  --shadow-spotlight: none;
+  --shadow-event-note: none;
+  --shadow-header: none;
+  --shadow-mobile-nav: none;
+  --shadow-modal: none;
+
+  /* ============================================================
+   * 4.3 · Motion — colour / border / background only; nothing lifts
+   * ============================================================ */
+  --transition-fast: 0.15s ease;
+  --transition: 0.2s ease;
+  --transition-slow: 0.35s ease;
+  --transition-carousel: 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ============================================================
+   * 4.4 · Z-index
+   * ============================================================ */
+  --z-base: 1;
+  --z-decoration: 2;
+  --z-mobile-nav: 999;
+  --z-sticky: 1000;
+  --z-mobile-toggle: 1001;
+  --z-lightbox: 9999;
+
+  /* ============================================================
+   * 5 · Breakpoints (reference only: custom properties cannot be used
+   * inside @media). Her tiers are max-width 1024 / 768 / 480, i.e.
+   * mobile-first min-width 1025 / 769 / 481. The header switches from
+   * the drawer to the one-row nav at 1080px (see Nav.astro).
+   * ============================================================ */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-nav: 1080px;
+  --bp-xl: 1280px;
+  --bp-2xl: 1440px;
+
+  /* ============================================================
+   * Containers and measures
+   * ============================================================ */
+  --container-max: 67.5rem; /* 1215px with the 112.5% root at the default 16px; grows with the reader's base font */
+  --container-narrow: 800px;
+  --container-hero: 1080px;
+  --container-carousel: 880px;
+  --container-padding: 18px;      /* ≤480 */
+  --container-padding-md: 24px;   /* 481–1024; 32px from 1025 */
+  --measure-hero: 720px;
+  --measure-title: 760px;
+  --measure-lead: 780px;
+  --measure-desc: 680px;
+  --measure-sub: 580px;
+  --measure-page-sub: 600px;
+}
+
+@media (min-width: 481px) {
+  :root {
+    --fs-display: 1.72rem;
+    --fs-h1: clamp(1.7rem, 3.6vw, 2.35rem);
+    --fs-body: 1rem;
+    --section-pad: 72px;
+    --section-pad-stats: 52px;
+    --section-pad-contact: 80px;
+  }
+}
+
+@media (min-width: 769px) {
+  :root {
+    --fs-display: clamp(1.9rem, 4.2vw, 2.85rem);
+    --fs-h2: 1.32rem;
+    --fs-stat: 1.8rem;
+    --pad-card: 28px;
+  }
+}
+
+@media (min-width: 1025px) {
+  :root {
+    --fs-stat: 2.1rem;
+    --container-padding-md: 32px;
+  }
+}

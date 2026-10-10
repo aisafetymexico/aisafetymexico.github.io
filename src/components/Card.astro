@@ -1,0 +1,283 @@
+---
+/**
+ * Card — base card primitive (DESIGN-SYSTEM §6.3).
+ *
+ * Design: her universal `.program-card` (fcacfc4 css/style.css L1006–1050)
+ * and, with an image, her `.event-hub-card` (L925–946): white, 1px hairline,
+ * 8px radius, no shadow, nothing moves. Only link cards (`href`) react to
+ * hover, by darkening the border; with `linkLabel` they also
+ * end in her `.event-preview-link` pill (bg-3), which fills ink while the
+ * card is hovered or focused. Other *Card components ship their own scoped
+ * styles so they can deviate freely.
+ *
+ * Rhythm: a 10px flex gap separates the body's children (her title → copy
+ * margin; her 11px between paragraphs rounds to it), and the footer sits
+ * 18px under the copy (her `.program-actions`). <p> elements in the default
+ * slot default to her card copy (ink-2, line-height 1.7) at low specificity,
+ * so any page class rule still overrides them.
+ *
+ * Props:
+ *  - title?:       optional H3 displayed at the top of the card
+ *  - titleLang?:   language of the title when it differs from the page, e.g.
+ *                  'es' for an official Spanish name (BCP 47; sets `lang`)
+ *  - description?: optional supporting paragraph
+ *  - href?:        if present, the entire card becomes a link (anchor wrap)
+ *  - external?:    with `href`, open in a new tab (rel="noopener noreferrer")
+ *  - linkLabel?:   with `href`, a visible action shown as her pill at the
+ *                  bottom of the card (her .event-preview-link), after any
+ *                  footer content; ignored without `href`
+ *  - image?:       optional ImgRef shown above the title (16:9)
+ *  - badge?:       optional in-card label shown above the title
+ *  - footer?:      slot for CTAs / metadata at the bottom
+ *  - default slot: arbitrary body content placed between description and footer
+ *  - interactive?: darker border on hover for link cards (defaults true);
+ *                  cards without `href` never react to hover
+ *  - elevated?:    kept for compatibility; no-op (the design has no shadows)
+ *  - bordered?:    kept for compatibility; no-op (every card has the hairline)
+ *  - padding?:     'sm' | 'md' | 'lg' (defaults 'md'): 22px 20px · her card
+ *                  padding (22px 20px, 28px from 769px) · 22px 20px, 32px
+ *                  from 769px (her `.content-card`)
+ *  - as?:          element override when not a link (defaults 'article')
+ */
+import type { ImgRef } from '../lib/types';
+
+export interface Props {
+  title?: string;
+  titleLang?: string;
+  description?: string;
+  href?: string;
+  image?: ImgRef;
+  badge?: string;
+  elevated?: boolean;
+  interactive?: boolean;
+  bordered?: boolean;
+  padding?: 'sm' | 'md' | 'lg';
+  as?: string;
+  external?: boolean;
+  linkLabel?: string;
+}
+
+const {
+  title,
+  titleLang,
+  description,
+  href,
+  image,
+  badge,
+  elevated = true,
+  interactive = true,
+  bordered = false,
+  padding = 'md',
+  as = 'article',
+  external = false,
+  linkLabel,
+} = Astro.props;
+
+const Tag = (href ? 'a' : as) as any;
+
+const classes = [
+  'card',
+  `card--pad-${padding}`,
+  elevated && 'card--elevated',
+  interactive && 'card--interactive',
+  bordered && 'card--bordered',
+  href && 'card--link',
+].filter(Boolean).join(' ');
+
+const linkAttrs = href
+  ? {
+      href,
+      ...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
+    }
+  : {};
+
+const imageSrc = image && (typeof image.src === 'string' ? image.src : image.src.src);
+---
+
+<Tag class={classes} {...linkAttrs}>
+  {image && imageSrc && (
+    <div class="card__media">
+      <img
+        class="card__img"
+        src={imageSrc}
+        alt={image.alt}
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  )}
+
+  <div class="card__body">
+    {badge && <span class="card__badge">{badge}</span>}
+    {title && <h3 class="card__title" lang={titleLang}>{title}</h3>}
+    {description && <p class="card__description">{description}</p>}
+
+    <slot />
+
+    {(Astro.slots.has('footer') || (href && linkLabel)) && (
+      <div class="card__footer"><slot name="footer" />{href && linkLabel && <span class="card__cta">{linkLabel}</span>}</div>
+    )}
+  </div>
+</Tag>
+
+<style>
+  /* Her .program-card: white, 1px hairline, 8px radius, no shadow, no lift.
+     `bordered` and `elevated` add nothing: the hairline is always on and
+     the design has no shadows. */
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    overflow: hidden; /* clips the media to the rounded corners */
+    transition: border-color var(--transition);
+  }
+
+  /* Whole-card links keep their text colours on hover (her `.event-preview a
+     { color: inherit }`); the only feedback is the darker border (B.7). */
+  .card--link,
+  .card--link:hover {
+    color: var(--color-text-primary);
+  }
+
+  .card--link.card--interactive:hover {
+    border-color: var(--color-border-strong);
+  }
+
+  .card--link:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  /* Media area — fixed 16:9 to keep grids aligned */
+  .card__media {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    overflow: hidden;
+    background: var(--color-bg-warm);
+  }
+
+  .card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Body */
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .card--pad-sm .card__body { padding: 22px 20px; }
+  .card--pad-md .card__body { padding: var(--pad-card); }
+  .card--pad-lg .card__body { padding: 22px 20px; }
+
+  @media (min-width: 769px) {
+    .card--pad-lg .card__body { padding: 32px; }
+  }
+
+  /* In-card label (her .theory-label); the body gap stands in for its
+     8px bottom margin. */
+  .card__badge {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  .card__description {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+  }
+
+  /* Default-slot content (it carries the page's scope, not this one's).
+     Unscoped on purpose, to keep the specificity low:
+     - Paragraphs read as her card copy (`.program-card p`) at (0,1,1), so
+       any page class rule on a slotted <p> wins.
+     - The shared .program-actions / .event-embed utilities carry an 18px
+       top margin; inside the body the 10px gap already counts toward it.
+       (0,2,0): just above their base.css rule.
+     - A bare link or button keeps its own width instead of stretching. */
+  :global(.card__body > p) {
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+  }
+
+  :global(.card__body > .program-actions),
+  :global(.card__body > .event-embed) {
+    margin-top: 8px;
+  }
+
+  :global(.card__body > a) {
+    align-self: flex-start;
+  }
+
+  /* Footer: her .program-actions row, 18px under the copy (10px gap + 8px),
+     pinned to the bottom of equal-height cards. */
+  .card__footer {
+    margin-top: auto;
+    padding-top: 8px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--gap-actions);
+  }
+
+  /* ≤480px: pill buttons in the footer take the full width (her
+     `.program-actions .btn`). The `linkLabel` pill is not a .btn, so it
+     keeps its own width (her `max-width: fit-content`). */
+  @media (max-width: 480px) {
+    .card__footer > :global(.btn) {
+      width: 100%;
+    }
+  }
+
+  /* Her .event-preview-link: the visible action of a link card
+     (`linkLabel`), a bg-3 pill in the footer row. It is a <span>, never a
+     nested link: the whole card stays the one <a>. Hers inherits the body's
+     1.65 line-height, which makes it 40px tall; set here so it holds
+     wherever the card sits. Hovering or focusing the card fills it ink. */
+  .card__cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 18px;
+    border-radius: var(--radius-pill);
+    background: var(--color-bg-muted);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-relaxed);
+    transition: background var(--transition), color var(--transition);
+  }
+
+  .card--link:hover .card__cta,
+  .card--link:focus-visible .card__cta {
+    background: var(--color-cta-bg);
+    color: var(--color-cta-text);
+  }
+</style>

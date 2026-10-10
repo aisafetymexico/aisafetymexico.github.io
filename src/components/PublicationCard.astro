@@ -1,0 +1,197 @@
+---
+/**
+ * PublicationCard — research publication card for /research.
+ *
+ * Spec: docs/DESIGN-SYSTEM.md §6.3 (PublicationCard).
+ *
+ * Design: her boxed research card (`.program-card` in `.research-grid`,
+ * fcacfc4 css/style.css L1006–1065): white, 1px hairline, 8px radius, no
+ * shadow. The year is a clay-dark category label with the venue beside it,
+ * then the title, the byline (authors), an optional abstract and a row of
+ * pill actions: the first is the ink `.btn-primary` ("Paper"), the rest the
+ * quiet `.btn-secondary` ("Podcast"), as in her card. Research is one of the
+ * few areas where dates *are* legitimate signal (INSPIRATION X5).
+ *
+ * Props:
+ *  - title:        Publication title (h3).
+ *  - authors:      Author byline: a comma-joined string, or a string[] whose
+ *                  names each stay whole on one line when they fit.
+ *  - year:         Publication year (number or string).
+ *  - journal?:     Venue / journal / workshop name.
+ *  - paperUrl?:    Link to paper PDF / DOI.
+ *  - podcastUrl?:  Optional companion podcast / talk link.
+ *  - abstract?:    Short blurb (1–3 sentences).
+ *  - lang?:        Locale for action labels (defaults to 'es').
+ */
+import { t, type Locale } from '../lib/i18n';
+
+export interface Props {
+  title: string;
+  authors: string | string[];
+  year: number | string;
+  journal?: string;
+  paperUrl?: string;
+  podcastUrl?: string;
+  abstract?: string;
+  lang?: Locale;
+}
+
+const {
+  title,
+  authors,
+  year,
+  journal,
+  paperUrl,
+  podcastUrl,
+  abstract,
+  lang = 'es',
+} = Astro.props;
+
+// An array renders one inline-block per name, so a name («Silvia Fernández»,
+// «Alejandro Molina-Villegas») moves to the next line whole instead of
+// splitting at a space or its hyphen; a name wider than the line still wraps.
+const authorList = Array.isArray(authors) ? authors : null;
+---
+
+<article class="publication-card">
+  <div class="publication-card__head">
+    <span class="publication-card__year">{year}</span>
+    {journal && <span class="publication-card__journal">{journal}</span>}
+  </div>
+
+  <h3 class="publication-card__title">
+    {paperUrl ? (
+      <a class="publication-card__title-link" href={paperUrl} target="_blank" rel="noopener noreferrer">
+        {title}
+      </a>
+    ) : (
+      title
+    )}
+  </h3>
+
+  <p class="publication-card__authors">
+    {authorList
+      ? authorList.map((name, i) => (
+          <Fragment>{i > 0 && ' '}<span class="publication-card__author">{name}{i < authorList.length - 1 && ','}</span></Fragment>
+        ))
+      : authors}
+  </p>
+
+  {abstract && <p class="publication-card__abstract">{abstract}</p>}
+
+  {(paperUrl || podcastUrl) && (
+    <div class="publication-card__actions program-actions">
+      {paperUrl && (
+        <a class="publication-card__link btn btn-primary" href={paperUrl} target="_blank" rel="noopener noreferrer">
+          {t(lang, 'pub.readPaper')}
+        </a>
+      )}
+      {podcastUrl && (
+        <a
+          class:list={['publication-card__link', 'btn', paperUrl ? 'btn-secondary' : 'btn-primary']}
+          href={podcastUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t(lang, 'pub.listenPodcast')}
+        </a>
+      )}
+    </div>
+  )}
+</article>
+
+<style>
+  /* Her boxed .program-card: white, 1px hairline, 8px radius, her card
+     padding; no top-rule list style, no shadow. The card itself is not a
+     link, so it has no hover state. */
+  .publication-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--pad-card);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  /* Year = category label (clay-dark, like her .resource-type); the venue
+     sits beside it in small muted type. */
+  .publication-card__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 8px;
+    margin: 0 0 8px;
+    font-family: var(--font-body);
+    line-height: var(--lh-relaxed);
+  }
+
+  .publication-card__year {
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .publication-card__journal {
+    font-size: var(--fs-caption);
+    color: var(--color-text-muted);
+  }
+  .publication-card__journal::before {
+    content: '·';
+    content: '·' / '';
+    margin-right: 8px;
+  }
+
+  /* Her .program-card-title */
+  .publication-card__title {
+    margin: 0 0 10px;
+    font-family: var(--font-display);
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  /* Same link hover as ProjectCard: colour only. */
+  .publication-card__title-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+  .publication-card__title-link:hover {
+    color: var(--color-link-hover);
+  }
+  .publication-card__title-link:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  .publication-card__authors {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-secondary);
+  }
+  /* One unit per name (see the frontmatter); it still wraps inside when it
+     is wider than the line, so enlarged text never overflows the card. */
+  .publication-card__author {
+    display: inline-block;
+  }
+
+  /* Card copy (her `.program-card p`: ink-2, line-height 1.7, 11px apart) */
+  .publication-card__abstract {
+    margin: 11px 0 0;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+  }
+
+  /* The action row and the pills are the shared .program-actions / .btn
+     utilities (base.css): 18px under the copy, gap 10px, full-width pills
+     stacked on ≤480px. */
+</style>

@@ -1,0 +1,140 @@
+---
+/**
+ * TeamCard — member card for /team and home Equipo strip.
+ *
+ * Spec: docs/DESIGN-SYSTEM.md §6.3 (TeamCard).
+ *
+ * Design: her `.team-card` (fcacfc4 css/style.css L1075–1126): a left-aligned
+ * hairline card (white, 1px line, 8px radius, no
+ * shadow) with a small 54px round avatar at the top left, then the name,
+ * the role in muted type and a quiet text link «LinkedIn». The card is not
+ * a link, so it has no hover state. The grid columns (3 / 2 / 1) are set by
+ * the page.
+ *
+ * Photos are served from /images/Equipo/<file>.{jpeg,png} (already in /public).
+ *
+ * Props:
+ *  - name:      Full name (h3).
+ *  - role:      Role / title (small, muted).
+ *  - photo:     ImgRef pointing to /images/Equipo/<file>.
+ *  - linkedin?: Optional LinkedIn profile URL. The visible text is
+ *               «LinkedIn»; the person's name is added for screen readers
+ *               (language-neutral, so it works on ES and EN pages).
+ */
+import type { ImgRef } from '../lib/types';
+
+export interface Props {
+  name: string;
+  role: string;
+  photo: ImgRef;
+  linkedin?: string;
+}
+
+const { name, role, photo, linkedin } = Astro.props;
+
+const photoSrc = typeof photo.src === 'string' ? photo.src : photo.src.src;
+---
+
+<article class="team-card">
+  <div class="team-card__photo-wrap">
+    <img
+      class="team-card__photo"
+      src={photoSrc}
+      alt={photo.alt || name}
+      loading="lazy"
+      decoding="async"
+      width="54"
+      height="54"
+    />
+  </div>
+
+  <h3 class="team-card__name">{name}</h3>
+  <p class="team-card__role">{role}</p>
+
+  {linkedin && (
+    <a
+      class="team-card__social"
+      href={linkedin}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      LinkedIn<span class="visually-hidden">, {name}</span>
+    </a>
+  )}
+</article>
+
+<style>
+  /* Her .team-card: white, 1px hairline, 8px radius, 26px 22px, left-aligned. */
+  .team-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    padding: 26px 22px;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  /* Her .team-photo-wrapper: 54px circle, hairline, bg-3 while loading. */
+  .team-card__photo-wrap {
+    flex-shrink: 0;
+    width: 54px;
+    height: 54px;
+    margin: 0 0 14px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-muted);
+    overflow: hidden;
+  }
+
+  .team-card__photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Her .team-name (no own line-height: it inherits the body's 1.65). */
+  .team-card__name {
+    margin: 0 0 3px;
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-relaxed);
+    letter-spacing: -0.015em;
+    color: var(--color-text-heading);
+  }
+
+  /* Her .team-role, in the AA-safe muted grey. */
+  .team-card__role {
+    margin: 0 0 10px;
+    font-family: var(--font-body);
+    font-size: 0.84rem;
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+  }
+
+  .team-card__role:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Her .team-linkedin: a quiet text link. */
+  .team-card__social {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: var(--fw-medium);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+  .team-card__social:hover {
+    color: var(--color-link-hover);
+  }
+  .team-card__social:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+</style>

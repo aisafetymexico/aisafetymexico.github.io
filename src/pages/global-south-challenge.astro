@@ -1,0 +1,631 @@
+---
+/**
+ * /global-south-challenge — Página dedicada al Global South AI Safety Hackathon.
+ *
+ * Reemplaza el destino /global-south-challenge que estaba enlazado desde Home,
+ * Footer y /activities pero devolvía 404. El contenido está portado del legacy
+ * `global-south-hackathon.html` (raíz del repo) y adaptado al design system
+ * del rebuild Astro: `BaseLayout`, `Header`, `Footer`, `PageHero`,
+ * `SectionHeading`, `Card`, `GshPersonCard`, `CtaSection` — sin introducir
+ * nuevas hues.
+ *
+ * Diseño ("Editorial mínimo", su página de evento):
+ * secciones de 72px (48px en móvil) cerradas por el filete global, títulos de
+ * sección alineados a la izquierda, tarjetas blancas con filete de 1px sobre
+ * la rejilla de 18px. Las secciones `--alt` llevan el tinte bg-2 y nunca van
+ * dos seguidas. Solo el cierre (CtaSection) va centrado.
+ * El header marca «Actividades», como el breadcrumb y los certificados.
+ *
+ * Sections (B = blanco, T = tinte bg-2):
+ *   1. PageHero (breadcrumb + title + description)
+ *   2. Franja de talks y retrospectiva (B): el hackathon ya ocurrió, así que
+ *      la franja enlaza las talks en YouTube y la retrospectiva del EA Forum
+ *   3. Misión + cita destacada (B)
+ *   4. Por qué importa — grid 2×2 de razones (T)
+ *   5. Speakers (B) y jueces (T) (GshPersonCard)
+ *   6. Roles de colaboración — 5 tarjetas (jueces, mentores, speakers,
+ *      voluntarios, sponsors) (B)
+ *   7. El evento en breve — formato + fechas + premios (T)
+ *   8. Patrocinadores — muro de logos (B)
+ *   9. Apart Fellowship (B) + certificados verificables (T)
+ *  10. CtaSection — "Quiero colaborar" → formulario externo, en otra
+ *      pestaña (B)
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Card from '../components/Card.astro';
+import GshPersonCard from '../components/GshPersonCard.astro';
+import CtaSection from '../components/CtaSection.astro';
+import type { Breadcrumb } from '../lib/types';
+
+const pathname = '/global-south-challenge';
+
+const breadcrumb: Breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Actividades', href: '/activities' },
+    { label: 'Global South AIS Hackathon' },
+  ],
+};
+
+const collabFormUrl = 'https://forms.gle/SzTHokBh1yaVdM7i7';
+const apartUrl =
+  'https://apartresearch.com/sprints/global-south-ais-hackathon-2026-06-19-to-2026-06-21';
+
+// Franja de talks y retrospectiva (el evento ya ocurrió).
+const youtubeUrl = 'https://www.youtube.com/@AISafetyMéxico';
+const retrospectiveUrl =
+  'https://forum.effectivealtruism.org/posts/ttePFhSrxpRQu8CR5/running-two-ai-safety-hackathon-hubs-in-mexico-results-costs';
+
+const reasons = [
+  {
+    title: 'Impulsar talento',
+    description:
+      'Mentorea y evalúa a la próxima generación de investigadoras, ingenieros y profesionales de policy en seguridad de IA, desde regiones subrepresentadas.',
+  },
+  {
+    title: 'Resolver problemas reales',
+    description:
+      'Apoya soluciones aterrizadas en desafíos regionales: seguridad, gobernanza y responsabilidad de la IA en el sur global.',
+  },
+  {
+    title: 'Descentralizar la conversación',
+    description:
+      'Ayuda a mover la agenda global de AI safety más allá de unas pocas instituciones, hacia un ecosistema verdaderamente internacional.',
+  },
+  {
+    title: 'Construir visibilidad',
+    description:
+      'Conecta con investigadoras, founders y policymakers de tres continentes y gana presencia en una iniciativa internacional en crecimiento.',
+  },
+];
+
+const roles = [
+  {
+    title: 'Jueces',
+    description:
+      'Evalúan proyectos y entregan retroalimentación experta. Ideal para investigadoras, engineers y profesionales de policy con experiencia en AI safety.',
+  },
+  {
+    title: 'Mentores',
+    description:
+      'Comparten conocimiento sobre responsabilidad, seguridad y gobernanza de IA en el sur global a lo largo del fin de semana.',
+  },
+  {
+    title: 'Speakers',
+    description:
+      'Imparten charlas cortas o talleres sobre temas de AI safety. Amplían las herramientas conceptuales y prácticas de los participantes.',
+  },
+  {
+    title: 'Voluntariado',
+    description:
+      'Apoyan coordinación, logística y experiencia de participantes en los hubs presenciales (Mérida y Guadalajara) y en el formato remoto.',
+  },
+  {
+    title: 'Sponsors',
+    description:
+      'Financian premios, sedes o desarrollo de ecosistema. Obtienen visibilidad destacada en una iniciativa internacional de AI safety.',
+  },
+];
+
+// `talkLang` marca los títulos de charla que van en inglés (lang="en" en la
+// tarjeta, para que los lectores de pantalla cambien de pronunciación).
+const speakers = [{"name":"Damiano Fornasiere","affiliation":"LawZero","photo":"/images/gsh/people/damiano.png","initials":"DF","linkedin":null,"talkUrl":"https://www.youtube.com/watch?v=E0r3JYMjHnI","talkTitle":"De las matemáticas a la seguridad técnica en IA","talkDesc":"Comparte su trayectoria hacia la seguridad en IA y describe su trabajo actual en LawZero."},{"name":"Luis Cosio","affiliation":"SL5 Task Force","photo":"/images/gsh/people/luis.jpeg","initials":"LC","linkedin":"https://www.linkedin.com/in/luiscosio/","talkUrl":"https://www.youtube.com/watch?v=CrOqU_i_pT4","talkTitle":"Cómo construir IA que no se salga de control","talkDesc":"Una introducción al alineamiento de IA y a la importancia de América Latina en este campo."},{"name":"Nikita Lokhmachev","affiliation":"Greyhaven","photo":"/images/gsh/people/nikita.jpeg","initials":"NL","linkedin":"https://www.linkedin.com/in/nikitalokhmachev-ai/","talkTitle":"Your AI Agent Is Not You: AI safety, data sovereignty, and taking back control","talkLang":"en","talkDesc":"Tu agente de IA corre con tus permisos, credenciales y acceso a archivos, guiado por un modelo que no entrenaste. Una charla sobre seguridad y soberanía de datos, con una demo práctica de Greywall envolviendo a Claude Code."},{"name":"Camilla Balbis","affiliation":"AIGS Canada · SPAR Research Fellow","photo":"/images/gsh/people/camilla.jpeg","initials":"CB","linkedin":"https://www.linkedin.com/in/camilla-b-a70b69150/","talkTitle":"The Governance Copy-Paste Trap","talkLang":"en","talkDesc":"Cómo el sur global puede aprender de los tropiezos del norte en seguridad y gobernanza de IA, y por qué una resiliencia doméstica decidida desde abajo (no impuesta) es un mejor camino."},{"name":"Marcos Galván López","affiliation":"Instituto Politécnico Nacional","photo":"/images/gsh/people/marcos.jpeg","initials":"MG","linkedin":"https://www.linkedin.com/in/marcos-galvan-lopez-4aa20514a","talkTitle":"El conocimiento previo como filosofía para el diseño de sistemas inteligentes seguros","talkDesc":"Cómo incorporar conocimiento previo sobre los problemas que buscamos resolver ayuda a diseñar sistemas de IA más seguros, confiables y auditables."},{"name":"Fernando Castillo","affiliation":"Threat Trackers","photo":"/images/gsh/people/fernando.jpeg","initials":"FC","linkedin":null,"talkTitle":"La IA como arma cognitiva: manipulación, propaganda y seguridad nacional en la era de la sociedad sintética","talkDesc":"Cómo la IA convierte la desinformación en un sistema automatizado, escalable y personalizado (de bots a deepfakes) y por qué la defensa cognitiva (alfabetización crítica, transparencia algorítmica y regulación responsable) es clave para la resiliencia democrática."}];
+// Jueces: el \u00A0 antes de «·» en la etiqueta de Luis Cosio deja el separador
+// con «Force», para que la etiqueta balanceada no empiece una línea con «·» (320px).
+const judges = [{"name":"Cibeles García Burt","affiliation":"USAID","photo":"/images/gsh/people/cibeles.jpeg","initials":"CG","linkedin":"http://www.linkedin.com/in/cibeles-garcia-burt","location":"Mérida, México","bio":"Diplomática estadounidense con 17 años de experiencia en América Latina, África y Asia. Hoy enfocada en gobernanza de IA; ha cursado varios programas de BlueDot."},{"name":"Camilla Balbis","affiliation":"AIGS Canada · SPAR Research Fellow","photo":"/images/gsh/people/camilla.jpeg","initials":"CB","linkedin":"https://www.linkedin.com/in/camilla-b-a70b69150/","location":"Toronto, Canadá","bio":"Analista multilingüe de políticas de gobernanza de IA. Investiga con AIGS combinando análisis de riesgo, ética de la tecnología y colaboración internacional para fortalecer el desarrollo responsable de la IA."},{"name":"Luis Cosio","affiliation":"SL5 Task Force\u00A0· Member of Technical Staff","photo":"/images/gsh/people/luis.jpeg","initials":"LC","linkedin":"https://www.linkedin.com/in/luiscosio/","location":"Guadalajara, México","bio":"Trabaja en la intersección de la IA de frontera y los sistemas de alta seguridad, traduciendo requisitos abstractos de seguridad en soluciones desplegables y resistentes a adversarios reales, incluidos ataques de Estado y escenarios de pérdida de control. Ha ganado múltiples hackatones de Apart."},{"name":"Nikita Lokhmachev","affiliation":"Greyhaven · Technical Product Lead","photo":"/images/gsh/people/nikita.jpeg","initials":"NL","linkedin":"https://www.linkedin.com/in/nikitalokhmachev-ai/","location":"México","bio":"Senior ML Engineer y cofundador con maestría en IA. Tras participar en hackatones de Apart, reorientó su carrera hacia la seguridad en IA."},{"name":"Vincent Mai","affiliation":"LawZero · Senior Research Scientist","photo":"/images/gsh/people/vincent.jpeg","initials":"VM","linkedin":"https://www.linkedin.com/in/mai-vincent","location":"Montreal, Canadá","bio":"Doctor en Machine Learning por Mila."},{"name":"Jesús M. Siqueiros","affiliation":"IIMAS, UNAM","photo":"/images/gsh/people/siqueiros.jpeg","initials":"JS","linkedin":"https://www.linkedin.com/in/jes%C3%BAs-m-siqueiros-garcia-2b79bb14/","location":"Mérida, México","bio":"Doctor en Filosofía de la Ciencia. Investiga en modelado participativo, sostenibilidad e IA. En 2024 recibió el Google Academic Research Award por el proyecto Community Weavers of AI and Nature-based Solutions y lidera el proyecto Lab-DEMOSS."},{"name":"Fernando Castillo","affiliation":"Threat Trackers","photo":"/images/gsh/people/fernando.jpeg","initials":"FC","linkedin":null,"location":null,"bio":"Investigador socio-técnico en ciberseguridad que trabaja en la intersección de seguridad digital, derechos humanos, democracia y seguridad en IA. Fundador de Threat Trackers, organización civil que democratiza la ciberseguridad para comunidades desatendidas por la transición digital."},{"name":"Marcos Galván López","affiliation":"Instituto Politécnico Nacional","photo":"/images/gsh/people/marcos.jpeg","initials":"MG","linkedin":"https://www.linkedin.com/in/marcos-galvan-lopez-4aa20514a","location":null,"bio":"Investigador en IA neurosimbólica, aprendizaje automático explicable y razonamiento formal y probabilístico. Integra redes neuronales con métodos simbólicos para construir modelos más interpretables, auditables y confiables. Ha investigado en la Universidad de Edimburgo."},{"name":"Amanda Isbosseth Guzmán Aceves","affiliation":"Gobierno de Jalisco","photo":"/images/gsh/people/amanda.jpeg","initials":"AG","linkedin":"https://www.linkedin.com/in/amanda-isbosseth-guzm%C3%A1n-aceves-54009a202/","location":null,"bio":"Ingeniera en nanotecnología por la UdeG. Exvicepresidenta de IEEE CU Tonalá y expresidenta de Women in Engineering Guadalajara. Becaria Fulbright en UT Dallas y ex investigadora en ExxonMobil Houston. Ganadora del ANUIES4MX 2025 con estancia en ATR Kyoto. Coordina iniciativas de ciencia de datos en la Secretaría de Administración de Jalisco."},{"name":"Amaia Amézaga","affiliation":"Sattva Labs · Fundadora e Investigadora Independiente","photo":"/images/gsh/people/amaia.jpeg","initials":"AA","linkedin":"https://www.linkedin.com/in/amaia-amezaga/","location":null,"bio":"Investigadora independiente y fundadora de Sattva Labs, dedicada a la seguridad en IA, la evaluación de modelos y la interacción humano-IA. Combina diseño de interacción (HCI), comunicación multicultural y análisis cualitativo para estudiar cómo las personas se relacionan con los sistemas de IA."}];
+const sponsors = [{"name":"IMET","logo":"/images/gsh/sponsors/imet.png","alt":"IMET"},{"name":"Techmaleon","logo":"/images/gsh/sponsors/techmaleon.png","alt":"Techmaleon"},{"name":"Tec de Software","logo":"/images/gsh/sponsors/tec-de-software.png","alt":"Tec de Software","square":true},{"name":"Universidad Politécnica de Yucatán","logo":"/images/gsh/sponsors/upy.png","alt":"Universidad Politécnica de Yucatán"}];
+---
+
+<BaseLayout
+  title="Global South AIS Hackathon · AI Safety Mexico × Apart Research"
+  description="Hackathon regional de seguridad de IA convocado por Apart Research y AI Safety Mexico. Mérida, Guadalajara y formato remoto, 19-21 de junio de 2026. Talks, retrospectiva y certificados verificables."
+  pathname={pathname}
+>
+  <Header slot="header" currentPath={pathname} navActivePath="/activities" />
+
+  <PageHero
+    title="The Global South AIS Hackathon"
+    description="Hackathon internacional convocado por Apart Research y AI Safety Mexico. Reúne a investigadoras, builders y profesionales de policy de América Latina, África y Asia para producir trabajo concreto en seguridad de IA, anclado en el contexto regional."
+    breadcrumb={breadcrumb}
+  />
+
+  <!-- 0 · Talks y retrospectiva (YouTube + EA Forum) -->
+  <section class="gsh-register" aria-labelledby="gsh-register-heading">
+    <div class="gsh-register__inner">
+      <p id="gsh-register-heading" class="gsh-register__lead">
+        <span>El hackathon se realizó del 19 al 21 de junio de 2026.</span>
+        <span>Las pre-talks y talks están en YouTube.</span>
+      </p>
+      <div class="gsh-register__actions">
+        <a
+          class="gsh-register__cta btn btn-primary btn-hero"
+          href={youtubeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Talks en YouTube
+        </a>
+        <a
+          class="gsh-register__cta btn btn-outline btn-hero"
+          href={retrospectiveUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Leer la retrospectiva
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 · Misión -->
+  <section class="gsh-section gsh-section--base" aria-labelledby="gsh-mission-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-mission-heading"
+        eyebrow="La misión"
+        title="¿Qué es este hackathon?"
+        description="Un fin de semana intensivo para desarrollar prototipos, evaluaciones y propuestas de gobernanza en seguridad de IA, conectando a la comunidad del sur global con investigadoras y mentores internacionales."
+      />
+
+      <div class="gsh-mission">
+        <p class="gsh-mission__lead">
+          Organizado por <strong>Apart Research</strong> y <strong>AI Safety
+          Mexico</strong> como aliado regional, esta iniciativa descentraliza
+          la gobernanza y la investigación técnica en IA, elevando la experiencia
+          local al escenario global.
+        </p>
+
+        <blockquote class="gsh-mission__quote">
+          <p>
+            La seguridad en IA no puede resolverse desde una sola región. El
+            sur global aporta contexto, experiencia y perspectivas
+            irremplazables a esta conversación.
+          </p>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · Por qué importa -->
+  <section class="gsh-section gsh-section--alt" aria-labelledby="gsh-why-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-why-heading"
+        eyebrow="¿Por qué importa?"
+        title="¿Por qué colaborar?"
+        description="Cuatro razones por las que este hackathon es relevante para quienes trabajan en seguridad y gobernanza de IA."
+      />
+
+      <div class="gsh-grid gsh-grid--2">
+        {reasons.map((r) => (
+          <Card
+            padding="md"
+            bordered={true}
+            interactive={false}
+            elevated={false}
+            title={r.title}
+            description={r.description}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Speakers -->
+  <section class="gsh-section gsh-section--base" aria-labelledby="gsh-speakers-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-speakers-heading"
+        eyebrow="Charlas y talleres"
+        title="Speakers"
+        description="Voces que acompañaron al hackathon con charlas y talleres sobre seguridad, gobernanza y soberanía de la IA."
+      />
+
+      <div class="gsh-grid gsh-grid--2">
+        {speakers.map((s) => (
+          <GshPersonCard
+            name={s.name}
+            affiliation={s.affiliation}
+            photo={s.photo}
+            initials={s.initials}
+            linkedin={s.linkedin}
+            highlight={s.talkTitle}
+            body={s.talkDesc}
+            highlightLang={s.talkLang}
+            talkUrl={s.talkUrl}
+            talkLabel="Ver charla"
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Jueces -->
+  <section class="gsh-section gsh-section--alt" aria-labelledby="gsh-judges-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-judges-heading"
+        eyebrow="Panel"
+        title="Jueces"
+        description="Quienes evaluaron los proyectos y dieron retroalimentación experta a los equipos participantes."
+      />
+
+      <div class="gsh-grid gsh-grid--2">
+        {judges.map((j) => (
+          <GshPersonCard
+            name={j.name}
+            affiliation={j.affiliation}
+            photo={j.photo}
+            initials={j.initials}
+            linkedin={j.linkedin}
+            location={j.location}
+            body={j.bio}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Roles -->
+  <section class="gsh-section gsh-section--base" aria-labelledby="gsh-roles-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-roles-heading"
+        eyebrow="Roles de colaboración"
+        title="Cómo se sumó la comunidad"
+        description="Hubo múltiples maneras de sumarse al evento, desde la mentoría puntual hasta el patrocinio institucional."
+      />
+
+      <div class="gsh-grid gsh-grid--3">
+        {roles.map((role) => (
+          <Card
+            padding="md"
+            bordered={true}
+            interactive={false}
+            elevated={false}
+            title={role.title}
+            description={role.description}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · El evento en breve -->
+  <section class="gsh-section gsh-section--alt" aria-labelledby="gsh-snapshot-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-snapshot-heading"
+        eyebrow="Resumen del evento"
+        title="El evento en breve"
+        description="Formato, fechas y premios de la edición 2026."
+      />
+
+      <dl class="gsh-snapshot">
+        <div class="gsh-snapshot__item">
+          <dt class="gsh-snapshot__label role-label">Formato</dt>
+          <dd class="gsh-snapshot__value">
+            Principalmente remoto, con hubs presenciales en
+            <strong>Mérida</strong> y <strong>Guadalajara</strong>, México.
+          </dd>
+        </div>
+        <div class="gsh-snapshot__item">
+          <dt class="gsh-snapshot__label role-label">Fechas</dt>
+          <dd class="gsh-snapshot__value">
+            <strong>19 – 21 de junio de 2026.</strong> Tres días intensivos en
+            paralelo en América Latina, África y Asia.
+          </dd>
+        </div>
+        <div class="gsh-snapshot__item">
+          <dt class="gsh-snapshot__label role-label">Premios</dt>
+          <dd class="gsh-snapshot__value">
+            Bolsa de <strong>3,000 USD</strong>: 1,000 USD para cada uno de los
+            tres equipos ganadores en América Latina.
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Patrocinadores -->
+  <section class="gsh-section gsh-section--base" aria-labelledby="gsh-sponsors-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-sponsors-heading"
+        eyebrow="Patrocinadores"
+        title="Con el apoyo de"
+        description="Instituciones y aliados que hicieron posible el hackathon."
+      />
+
+      <ul class="gsh-sponsors">
+        {sponsors.map((sp) => (
+          <li class="gsh-sponsors__item">
+            <img
+              class:list={['gsh-sponsors__logo', { 'gsh-sponsors__logo--square': sp.square }]}
+              src={sp.logo}
+              alt={sp.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5 · Apart Fellowship -->
+  <section class="gsh-section gsh-section--base" aria-labelledby="gsh-fellowship-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-fellowship-heading"
+        eyebrow="Apart Fellowship"
+        title="Más allá del hackathon"
+        description="El Apart Fellowship invita a los mejores equipos de todos los hubs globales: un pipeline de talento emergente en AI safety con mentoría continua, oportunidades de investigación y apoyo profesional."
+      />
+
+      <div class="gsh-fellowship-actions">
+        <a class="gsh-link inline-link" href={apartUrl} target="_blank" rel="noopener noreferrer">
+          Conoce Apart Research
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Certificados -->
+  <section class="gsh-section gsh-section--alt" aria-labelledby="gsh-certs-heading">
+    <div class="gsh-section__inner">
+      <SectionHeading
+        id="gsh-certs-heading"
+        eyebrow="Reconocimientos"
+        title="Certificados verificables"
+        description="Si participaste como speaker, juez, mentor(a), voluntario(a), organizador(a) o participante, tu certificado está en el directorio público con código QR de verificación."
+      />
+
+      <div class="gsh-fellowship-actions">
+        <a class="gsh-link inline-link" href="/certificados">
+          Ver certificados
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · CTA final -->
+  <CtaSection
+    title="Apoya el futuro de la seguridad en IA en el sur global"
+    description="Únete a construir sistemas de IA más seguros y contextualizados apoyando a la próxima generación de investigadoras, builders y policymakers en tres continentes."
+    ctaLabel="Quiero colaborar"
+    ctaHref={collabFormUrl}
+    ctaExternal
+  />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* Her event-page rhythm on the longer Astro page:
+     72px sections (48px on phones) closed by the global line-soft hairline
+     (base.css `main > section`), left-aligned headings and white hairline
+     cards on her 18px grid gap. `--alt` sections take the bg-2 tint; the
+     markup never puts two of them in a row. */
+  .gsh-section {
+    padding-block: var(--section-pad);
+  }
+
+  .gsh-section--base {
+    background: var(--color-bg-section-base);
+  }
+
+  .gsh-section--alt {
+    background: var(--color-bg-section-warm);
+  }
+
+  .gsh-section__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 481px) {
+    .gsh-section__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  /* ── Talks + retrospective band ──────────────────────────────────── */
+  /* Her `.event-hero-footer`: a centered pill row right under the hero,
+     here after a short lead that says the event already happened. */
+  .gsh-register {
+    background: var(--color-bg-base);
+    padding-block: var(--section-pad-stats);
+  }
+
+  .gsh-register__inner {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  @media (min-width: 481px) {
+    .gsh-register__inner {
+      padding-inline: var(--container-padding-md);
+    }
+  }
+
+  .gsh-register__lead {
+    max-width: var(--measure-sub);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: balance;
+  }
+
+  /* One sentence per unit, so the lead breaks between sentences rather
+     than inside the date. */
+  .gsh-register__lead span {
+    display: inline-block;
+  }
+
+  .gsh-register__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--gap-actions);
+    margin-top: 22px;
+  }
+
+  /* As on her event page, the pills keep their width on phones (220px
+     minimum instead of the ≤768px full-width `.btn-hero`), so the pair
+     wraps centered. */
+  .gsh-register__cta {
+    width: auto;
+    min-width: 220px;
+  }
+
+  /* ── Mission block ───────────────────────────────────────────────── */
+  /* On the 680px description measure (about 87 characters per line), so
+     the lead and its quote box end on the same edge as the heading's
+     description above. */
+  .gsh-mission {
+    max-width: var(--measure-desc);
+  }
+
+  .gsh-mission__lead {
+    font-size: var(--fs-lead);
+    line-height: var(--lh-loose);
+    color: var(--color-text-primary);
+    text-wrap: pretty;
+  }
+
+  /* The pull statement as her note on a white section: a bg-2 panel with a
+     hairline and 8px corners, Inter 500, no side bar and no italic. */
+  .gsh-mission__quote {
+    margin: var(--space-7) 0 0;
+    padding: 22px 24px;
+    background: var(--color-bg-warm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .gsh-mission__quote p {
+    font-size: 1.05rem;
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-normal);
+    color: var(--color-text-primary);
+    text-wrap: pretty;
+  }
+
+  /* ── Card grids: 1 column, 2 from 769px, 3 from 1025px ───────────── */
+  .gsh-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  @media (min-width: 769px) {
+    .gsh-grid--2,
+    .gsh-grid--3 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .gsh-grid--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  /* ── Snapshot: three white hairline cards on the bg-2 band ───────── */
+  .gsh-snapshot {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  @media (min-width: 769px) {
+    .gsh-snapshot {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .gsh-snapshot__item {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--pad-card);
+  }
+
+  /* The label itself is the global in-card `.role-label`. */
+  .gsh-snapshot__value {
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+  }
+
+  .gsh-snapshot__value strong {
+    color: var(--color-text-primary);
+  }
+
+  /* ── Fellowship and certificates: one in-text link (`.inline-link`) ─ */
+  .gsh-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── Sponsor logo wall ───────────────────────────────────────────── */
+  /* A grid, so the four tiles never leave an orphan: 2×2 with equal
+     columns up to 768px, then one left-aligned row of 168px tiles (they
+     shrink a little at 769px instead of wrapping). */
+  .gsh-sponsors {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-grid);
+  }
+  /* White tiles with a hairline, like her partners row. The logos keep
+     their colours; the max box (width and height) evens out their optical
+     sizes across uneven aspect ratios. */
+  .gsh-sponsors__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: 92px;
+    padding: var(--space-4) var(--space-5);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+  .gsh-sponsors__logo {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: min(120px, 100%);
+    max-height: 40px;
+    object-fit: contain;
+  }
+  /* The near-square Tec de Software mark: at the wordmarks' height its
+     lettering would be about 5px tall, so it gets a taller box. Same
+     specificity as the rule above, so it must come after it. */
+  .gsh-sponsors__logo--square { max-height: 56px; }
+  @media (min-width: 769px) {
+    .gsh-sponsors { grid-template-columns: repeat(4, minmax(0, 168px)); }
+    .gsh-sponsors__item { height: 100px; }
+    .gsh-sponsors__logo { max-width: min(128px, 100%); max-height: 44px; }
+    .gsh-sponsors__logo--square { max-height: 60px; }
+  }
+</style>

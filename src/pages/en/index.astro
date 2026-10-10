@@ -1,0 +1,377 @@
+---
+/**
+ * `/en/` — Home (curated gateway · English).
+ *
+ * English mirror of `/` (src/pages/index.astro). Structure, section order,
+ * ids, imports, assets and styles are deliberately identical; only
+ * user-facing strings and in-locale links change. See the ES file for the
+ * section map and design notes, and docs/I18N-ARCHITECTURE.md (Strategy B —
+ * sibling page files).
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Hero from '../../components/Hero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+import StatBar from '../../components/StatBar.astro';
+import Card from '../../components/Card.astro';
+import ResourcesTeaser from '../../components/ResourcesTeaser.astro';
+import CtaSection from '../../components/CtaSection.astro';
+import { coreTeam } from '../../lib/team';
+
+// «AI\u00A0safety» is bound with a no-break space so the balanced tile copy
+// never ends a line on «AI» (FeatureGrid balances its descriptions).
+const pillars = [
+  {
+    title: 'Research',
+    description:
+      'Original and collaborative work in alignment, interpretability, and technical governance.',
+    href: '/en/research',
+  },
+  {
+    title: 'Programs',
+    description:
+      'Open and bespoke courses that adapt contemporary AI\u00A0safety frameworks to the Mexican context.',
+    href: '/en/programs',
+  },
+  {
+    title: 'Projects',
+    description:
+      'Applied initiatives like VIGÍA and AI\u00A0Safety Connect: open, auditable, and oriented toward producing usable knowledge.',
+    href: '/en/projects',
+  },
+  {
+    title: 'Team',
+    description:
+      'Researchers, engineers, and multidisciplinary professionals working together from Mexico.',
+    href: '/en/team',
+  },
+];
+
+const stats = [
+  { number: '6+', label: 'Courses delivered' },
+  { number: '30+', label: 'Participants trained' },
+  { number: '1', label: 'Peer-reviewed publication' },
+  { number: '8', label: 'People on the team' },
+];
+
+// -------- Upcoming event (section 2) --------
+// Teaser of the full block on /en/activities#proximo-evento (venue,
+// organizers and the Luma registration embed). Like her Mexico Tech Week
+// card, it is not a link: two visible pills register on Luma (new tab) or
+// open the full block. The card title stays in Spanish, marked lang="es"
+// through Card's `titleLang`: it is the event's official name. The date is
+// the card's in-card label, so it stays human-readable. The title binds
+// «AI\u00A0Safety» with a no-break space so the balanced heading never splits
+// the field's name across lines (same string as on /en/activities).
+// EXPIRES 2026-10-27: after the panel, swap this spotlight for the next event
+// and move the panel to past activities (here and on /en/activities).
+const upcomingSpotlight = {
+  title: 'Impulsando la comunidad de AI\u00A0Safety en México: Tech Policy Panel',
+  date: 'Tuesday, October 27, 2026',
+  description:
+    'Growing the AI safety community in Mexico: a panel on how AI regulation will affect the tech ecosystem in Mexico and Latin America. At MXTW AI House (Juárez, Mexico City). Organized by Marta Kosmyna, Isabel Montalvo, Janeth Valdivia, and Oscar Mata.',
+  link: 'https://luma.com/event/evt-0jdNWFu6jYVQ148',
+};
+---
+
+<BaseLayout
+  title="AI Safety Mexico — AI research, education, and governance"
+  description="A Mexican nonprofit dedicated to research, education, and responsible governance of AI in Mexico."
+  pathname="/en"
+  lang="en"
+  ogImage="/images/observatorio.png"
+>
+  <Header slot="header" currentPath="/en" lang="en" />
+
+  {/* The subtitle binds «AI\u00A0safety» so the balanced lines never split it. */}
+  <Hero
+    title="AI safety and governance, from Mexico."
+    titleAccent="from Mexico"
+    subtitle={'We research, train, and build community around AI\u00A0safety. We lay the technical and governance foundations Mexico needs to make informed decisions about AI.'}
+    ctas={[
+      { label: 'How to get involved', href: '/en/get-involved#participa' },
+      { label: 'Browse resources', href: '/en/resources', variant: 'outline' },
+      { label: 'Our programs', href: '/en/programs', variant: 'outline' },
+    ]}
+    scrollHint="Scroll to explore ↓"
+    lang="en"
+  />
+
+  <!-- 2 · Upcoming event (spotlight; bg-2 like her .section-current) -->
+  <section class="section section--warm" aria-labelledby="home-spotlight">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Upcoming event"
+        title="Mexico Tech Week 2026"
+        description="A tech policy panel funded by a BlueDot Impact grant. Our full agenda is on Luma."
+        id="home-spotlight"
+      />
+      <div class="home-spotlight">
+        <Card
+          badge={upcomingSpotlight.date}
+          title={upcomingSpotlight.title}
+          titleLang="es"
+          description={upcomingSpotlight.description}
+          padding="md"
+        >
+          <div class="program-actions">
+            <a
+              class="btn btn-register"
+              href={upcomingSpotlight.link}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Register on Luma
+            </a>
+            <a class="btn btn-outline" href="/en/activities#proximo-evento">
+              Event details
+            </a>
+          </div>
+        </Card>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Featured pillars (gateway of 4) -->
+  <section class="section section--base">
+    <div class="container">
+      <SectionHeading
+        eyebrow="What we do"
+        title="Four fronts, a single mission"
+        description="Each pillar links to a dedicated page with details, materials, and ways to collaborate."
+      />
+      <FeatureGrid items={pillars} />
+    </div>
+  </section>
+
+  <!-- 4 · Stat bar -->
+  <StatBar stats={stats} />
+
+  <!-- 4b · Photo of a working session (her .section-photo) -->
+  <section class="section section--base">
+    <div class="container">
+      <img
+        class="home-photo"
+        src="/images/sesion-trabajo.webp"
+        width="2048"
+        height="1432"
+        loading="lazy"
+        decoding="async"
+        alt="AI Safety Mexico participants in a working session, seated in a circle"
+      />
+    </div>
+  </section>
+
+  <!-- 4c · Team: the core team, with photo, name and role -->
+  <section class="section section--base" aria-labelledby="home-team-heading">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Team"
+        title="The people behind AI Safety Mexico"
+        id="home-team-heading"
+      />
+      <ul class="home-team" role="list">
+        {coreTeam.map((member) => (
+          <li class="home-team__person">
+            <img
+              class="home-team__photo"
+              src={typeof member.photo.src === 'string' ? member.photo.src : member.photo.src.src}
+              alt=""
+              width="88"
+              height="88"
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="home-team__name">{member.name}</span>
+            <span class="home-team__role">{member.role}</span>
+          </li>
+        ))}
+      </ul>
+      <div class="program-actions home-team__actions">
+        <a class="btn btn-outline" href="/en/team">Meet the team</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · Recent work: a project, a publication and an event (bg-2) -->
+  <section class="section section--warm">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Highlights"
+        title="Recent work"
+        description="A project, a publication, and an event that capture where the organization is right now."
+      />
+
+      {/* The \u00A0 no-break spaces keep each « · » unit, the paper title's
+          «A Pilot» and «Apart fellowship.» on one line. Each card links
+          straight to its item; the paper's goes to the papers section of
+          /en/research (#publicaciones). */}
+      <div class="home-highlights">
+        <Card
+          href="/en/projects/vigia"
+          badge="Flagship project"
+          title="VIGÍA"
+          description="A pipeline that makes AI risks visible in Mexico's official discourse, starting with the country's official gazette."
+          linkLabel="See the project"
+          padding="md"
+          bordered
+        />
+        <Card
+          href="/en/research#publicaciones"
+          badge="Publication"
+          title={'AI Safety in Mexico: A\u00A0Pilot Survey in Yucatan'}
+          description={'A pilot study on local perceptions, risks, and practices around AI, published in RCS\u00A0·\u00A0IPN.'}
+          linkLabel="See the publication"
+          padding="md"
+          bordered
+        />
+        <Card
+          href="/en/activities#gsh-2026"
+          badge="Hackathon · June 2026"
+          title="Global South AIS Hackathon"
+          description={'Mérida and Guadalajara hubs with Apart Research: 65 attendees, 19 projects, and one that continued into the Apart\u00A0fellowship.'}
+          linkLabel="See the hackathon"
+          padding="md"
+          bordered
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- 5b · Open resources (directory teaser) -->
+  <ResourcesTeaser lang="en" />
+
+  <!-- 6 · CTA closing band -->
+  <CtaSection
+    title="Looking to collaborate?"
+    description="Researchers, institutions, and partners: there are several ways to join the work of AI Safety Mexico."
+    ctaLabel="See how to collaborate"
+    ctaHref="/en/get-involved"
+  />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  /* Upcoming-event spotlight: one Card at full container width, like her
+     `.section-current` card under a left-aligned heading. Card already puts
+     the pill row 18px under the copy, and base.css stacks the pills full
+     width at ≤480px. The copy keeps her 680px description measure instead
+     of running the full card width, and `pretty` keeps a lone word (the
+     last organizer's surname on phones) off its last line. */
+  .home-spotlight :global(.card__description) {
+    max-width: var(--measure-desc);
+    text-wrap: pretty;
+  }
+
+  /* «Recent work» copy: `pretty`, with the no-break spaces in the strings,
+     keeps a lone word («IPN.», «2025.», «fellowship.») off the last line,
+     right above each card's action pill. */
+  .home-highlights :global(.card__description) {
+    text-wrap: pretty;
+    /* Last resort: if a bound unit is still wider than its column, break it
+       there instead of letting the card's overflow:hidden clip it (WCAG
+       1.4.4). */
+    overflow-wrap: break-word;
+  }
+
+  /* Feature photo — her .feature-photo: full container width, large radius,
+     hairline frame. */
+  .home-photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  /* Team — the core team at a glance, left-aligned like her team cards:
+     an 88px round photo (hairline, bg-3 while loading), the name, the role
+     in muted type. Two per row on phones, four from 481px and all seven in
+     one row from 64.0625em (1025px at the default size). The photo is
+     decorative: the name sits right under it. */
+  .home-team {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px var(--gap-grid);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .home-team__person {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  .home-team__photo {
+    display: block;
+    width: 88px;
+    height: 88px;
+    margin-bottom: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    background: var(--color-bg-muted);
+    object-fit: cover;
+  }
+
+  .home-team__name {
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    color: var(--color-text-heading);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  .home-team__role {
+    margin-top: 4px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  .home-team__actions {
+    margin-top: var(--space-9);
+  }
+
+  @media (min-width: 481px) {
+    .home-team {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64.0625em) {
+    .home-team {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+  }
+
+  /* Highlights grid — 3 curated cards (project, publication, GSH): one
+     column up to 768px, three from 48.0625em (769px at the default 16px,
+     her tier), 18px gaps. Grid stretch keeps the three cards the same
+     height, so the action pills Card pins to the bottom share one
+     baseline. */
+  .home-highlights {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gap-grid);
+  }
+
+  /* em, not px: like FeatureGrid, the 3-up row waits for room when the
+     reader enlarges the default font, so the bound « · » units never break
+     mid-word; 769px at the default 16px. */
+  @media (min-width: 48.0625em) {
+    .home-highlights {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

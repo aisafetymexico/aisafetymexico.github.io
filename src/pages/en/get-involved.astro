@@ -1,0 +1,584 @@
+---
+/**
+ * /en/get-involved — English mirror of /get-involved.
+ *
+ * Spec: docs/I18N-ARCHITECTURE.md §2 (Strategy B) + §7 row 10.
+ * Sibling: src/pages/get-involved.astro (structure and design source of
+ * truth; the <style> block below is a copy of the Spanish one).
+ *
+ * Notes for the translator (per Task #8):
+ *  - Page-title verb: "Colabora con nosotros" → "Get involved".
+ *  - Anchor ids are PRESERVED and identical to the Spanish page — other
+ *    pages deep-link to them and i18n only changes prose, not the URL
+ *    fragment surface: the sections #participa, #colaboraciones and
+ *    #contacto; the four paths #training, #vigia, #students and #agenda;
+ *    the two other ways #research and #events.
+ *  - The canonical contact email `contact@aismx.org` is preserved unchanged.
+ *  - Proper names stay untranslated: AI Safety Collab, ENAIS, Centro Geo,
+ *    UADY, Universidad Politécnica de Yucatán, SPAR Research, Apart
+ *    Research, Cursor, BlueDot Impact, Mexico Tech Week. The Diario Oficial
+ *    de la Federación is glossed once; the BlueDot panel keeps its official
+ *    Spanish title, marked lang="es" (`descriptionParts`), with an English
+ *    gloss in parentheses.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import KeyFacts from '../../components/KeyFacts.astro';
+import CtaSection from '../../components/CtaSection.astro';
+import { t } from '../../lib/i18n';
+
+const pathname = '/en/get-involved';
+
+const breadcrumb = {
+  items: [
+    { label: t('en', 'breadcrumb.home'), href: '/en' },
+    { label: 'Get involved' },
+  ],
+};
+
+interface ViaCta {
+  label: string;
+  href: string;
+  /** Pill variant; defaults to the ink primary pill. */
+  variant?: 'primary' | 'outline';
+  external?: boolean;
+}
+
+interface Via {
+  /** Deep-link anchor, identical in ES and EN. */
+  id: string;
+  label?: string;
+  title: string;
+  paragraphs: string[];
+  ctas: ViaCta[];
+}
+
+// Four paths (#participa).
+// EXPIRES 2026-10-27: after the Mexico Tech Week panel, rewrite the first
+// sentence of #agenda (the panel becomes a past activity), here and in ES.
+const vias: Via[] = [
+  {
+    id: 'training',
+    label: 'Institutions',
+    title: 'Request an in-house course',
+    paragraphs: [
+      "We bring our fundamentals, governance, and technical AI safety courses to universities and research centers. We have already done this at Centro Geo and at UADY's School of Mathematics.",
+      'If your institution wants a tailored edition, tell us about the audience, tentative dates, and whether you need the introductory or the technical version.',
+    ],
+    ctas: [
+      {
+        label: 'Request a course',
+        href: 'mailto:contact@aismx.org?subject=In-house%20AI%20safety%20course',
+      },
+    ],
+  },
+  {
+    id: 'vigia',
+    label: 'Researchers',
+    title: 'VIGÍA',
+    paragraphs: [
+      "VIGÍA is the open resource for anyone researching AI governance and digital sovereignty in Mexico: an observatory of the Diario Oficial de la Federación (Mexico's federal Official Gazette) that flags AI mentions, regulatory gaps, and risks.",
+      'It works as a database, a methodology, and a starting point for papers, policy briefs, or investigative journalism.',
+    ],
+    ctas: [{ label: 'Open VIGÍA', href: '/en/projects/vigia' }],
+  },
+  {
+    id: 'students',
+    label: 'Students',
+    title: 'AISMx × UPY residencies',
+    paragraphs: [
+      "AI Safety Mexico's residency program with Universidad Politécnica de Yucatán, designed for students who want to move from courses to working with the team on a concrete project.",
+      'If you study at UPY or another university and want to apply, write to us with your background and what you would like to work on.',
+    ],
+    ctas: [
+      {
+        label: 'Ask about residencies',
+        href: 'mailto:contact@aismx.org?subject=AISMx%20%C3%97%20UPY%20residencies',
+      },
+    ],
+  },
+  {
+    id: 'agenda',
+    label: 'Calendar and archive',
+    title: 'Events and talks',
+    paragraphs: [
+      'The next event is the Mexico Tech Week panel. The rest of the agenda — working sessions on the first Friday of each month, workshops, and pre-talks — lives on Luma. Pre-talks and talks from the Global South AIS Hackathon are on our YouTube channel.',
+    ],
+    ctas: [
+      {
+        label: 'Luma calendar',
+        href: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5',
+        external: true,
+      },
+      {
+        label: 'YouTube',
+        href: 'https://www.youtube.com/@AISafetyMéxico',
+        variant: 'outline',
+        external: true,
+      },
+    ],
+  },
+];
+
+// Other ways to collaborate: the two base offerings (852dfbb), restored with
+// their original ids so the /en/research (#research) and /en/activities
+// (#events) CTAs land on the matching card.
+const otherVias: Via[] = [
+  {
+    id: 'research',
+    title: 'Joint research',
+    paragraphs: [
+      'We join forces with academic groups and labs to co-develop research projects on AI safety and alignment, with an emphasis on questions relevant to Mexico.',
+    ],
+    ctas: [
+      {
+        label: 'Propose a collaboration',
+        href: 'mailto:contact@aismx.org?subject=Joint%20research',
+      },
+    ],
+  },
+  {
+    id: 'events',
+    title: 'Events and advisory',
+    paragraphs: [
+      'We participate as speakers, panelists, and advisors at events, working sessions, and conversations on AI governance in Mexico.',
+    ],
+    ctas: [
+      {
+        label: 'Propose an event',
+        href: 'mailto:contact@aismx.org?subject=Events%20and%20advisory',
+      },
+    ],
+  },
+];
+
+interface Collaboration {
+  eyebrow: string;
+  title: string;
+  description?: string;
+  /**
+   * Use instead of `description` when the sentence quotes a Spanish title:
+   * `es` renders inside <span lang="es"> between `before` and `after`, so
+   * screen readers switch pronunciation for it. The visible text is the
+   * three parts joined.
+   */
+  descriptionParts?: { before: string; es: string; after: string };
+}
+
+const collaborations: Collaboration[] = [
+  {
+    eyebrow: 'Training',
+    title: 'ENAIS',
+    description:
+      'With ENAIS we ran two courses: one on AI governance and one technical AI-safety course. VIGÍA also came out of that collaboration and received a Special Recognition at AI Safety Collab 2025.',
+  },
+  {
+    eyebrow: 'Regional hackathon',
+    title: 'Apart Research',
+    description:
+      'Mexico partner for the Global South AIS Hackathon: hubs in Mérida and Guadalajara, remote participation, and a path into the Apart fellowship. 65 attendees, 19 projects, one of which continued into the fellowship.',
+  },
+  {
+    eyebrow: 'Tools and workshops',
+    title: 'Cursor',
+    description:
+      'Two collaborations in Mérida: the Cursor Mérida Challenge — AI Safety Edition — during the Global South, and the AI Strategy workshop (AGI Strategy Build Day) with Universidad Politécnica de Yucatán.',
+  },
+  {
+    eyebrow: 'Grant',
+    title: 'BlueDot Impact',
+    descriptionParts: {
+      before: 'We received a BlueDot Impact grant to run the panel “',
+      es: 'Impulsando la comunidad de AI Safety en México: Tech Policy Panel',
+      after: '” (growing the AI safety community in Mexico) as part of Mexico Tech Week.',
+    },
+  },
+];
+
+const allies = [
+  { text: 'AI Safety Collab' },
+  { text: 'Centro Geo' },
+  { text: 'UADY' },
+  { text: 'Universidad Politécnica de Yucatán' },
+  { text: 'SPAR Research' },
+];
+
+const externalAttrs = { target: '_blank', rel: 'noopener noreferrer' };
+---
+
+<BaseLayout
+  title="Get involved — AI Safety Mexico"
+  description="Joint research, educational programs for institutions, and advisory. Write to contact@aismx.org to explore ways of working together on AI safety."
+  pathname={pathname}
+  lang="en"
+>
+  <Header slot="header" currentPath={pathname} lang="en" />
+
+  <PageHero
+    title="Get involved"
+    description="We're looking for strategic allies to advance AI safety research, education, and governance in Mexico. If your organization shares these goals, we'd love to explore ways to work together."
+    breadcrumb={breadcrumb}
+    lang="en"
+  />
+
+  <section class="page-section page-section--intro" aria-labelledby="intro-heading">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Who collaborates with us"
+        title="We work with academic organizations, labs, government, and communities"
+        description="Our collaborations typically take shape as joint research projects, custom courses, working sessions, and the production of technical documents. If you have a concrete proposal, write to us."
+        id="intro-heading"
+      />
+    </div>
+  </section>
+
+  <section
+    id="participa"
+    class="page-section page-section--vias"
+    aria-labelledby="vias-heading"
+  >
+    <div class="container">
+      <SectionHeading
+        eyebrow="Ways to collaborate"
+        title="Four paths, depending on where you're coming from"
+        description="If none of these fit, write to us anyway at contact@aismx.org."
+        id="vias-heading"
+      />
+
+      <ul class="collab-vias" role="list">
+        {vias.map((via) => (
+          <li id={via.id} class="collab-vias__item">
+            <article class="collab-vias__card">
+              {via.label && <span class="collab-vias__label role-label">{via.label}</span>}
+              <h3 class="collab-vias__title">{via.title}</h3>
+              {via.paragraphs.map((text) => (
+                <p class="collab-vias__text">{text}</p>
+              ))}
+              <div class="program-actions">
+                {via.ctas.map((cta) => (
+                  <a
+                    class:list={['btn', cta.variant === 'outline' ? 'btn-outline' : 'btn-primary']}
+                    href={cta.href}
+                    {...(cta.external ? externalAttrs : {})}
+                  >
+                    {cta.label}
+                  </a>
+                ))}
+              </div>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="page-section page-section--more" aria-labelledby="more-vias-heading">
+    <div class="container">
+      <SectionHeading title="Other ways to collaborate" id="more-vias-heading" />
+
+      <ul class="collab-vias collab-vias--more" role="list">
+        {otherVias.map((via) => (
+          <li id={via.id} class="collab-vias__item">
+            <article class="collab-vias__card">
+              <h3 class="collab-vias__title">{via.title}</h3>
+              {via.paragraphs.map((text) => (
+                <p class="collab-vias__text">{text}</p>
+              ))}
+              <div class="program-actions">
+                {via.ctas.map((cta) => (
+                  <a
+                    class:list={['btn', cta.variant === 'outline' ? 'btn-outline' : 'btn-primary']}
+                    href={cta.href}
+                    {...(cta.external ? externalAttrs : {})}
+                  >
+                    {cta.label}
+                  </a>
+                ))}
+              </div>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section
+    id="colaboraciones"
+    class="page-section page-section--allies"
+    aria-labelledby="allies-heading"
+  >
+    <div class="container">
+      <SectionHeading
+        eyebrow="Collaborations"
+        title="Who we have built with"
+        description="Courses, events, and research we could not have done alone. These are the partnerships we have built over the past year."
+        id="allies-heading"
+      />
+      <ul class="collab-named" role="list">
+        {collaborations.map((item) => (
+          <li class="collab-named__item">
+            <article class="collab-named__card">
+              <span class="collab-named__eyebrow role-label">{item.eyebrow}</span>
+              <h3 class="collab-named__title">{item.title}</h3>
+              <p class="collab-named__description">{item.descriptionParts ? (
+                <>{item.descriptionParts.before}<span lang="es">{item.descriptionParts.es}</span>{item.descriptionParts.after}</>
+              ) : item.description}</p>
+            </article>
+          </li>
+        ))}
+      </ul>
+      <KeyFacts facts={allies} />
+    </div>
+  </section>
+
+  <section
+    id="contacto"
+    class="page-section page-section--direct"
+    aria-labelledby="contacto-heading"
+  >
+    <div class="container">
+      <SectionHeading
+        eyebrow="Get in touch"
+        title="Tell us about your organization and your proposal"
+        description="Reach us directly through any of the channels below with a brief description of your organization and the line of work you'd like to explore. We'll respond as soon as we can."
+        id="contacto-heading"
+      />
+
+      <ul class="direct__list" role="list">
+        <li class="direct__item">
+          <span class="direct__label role-label">Email</span>
+          <a class="direct__value inline-link" href="mailto:contact@aismx.org">
+            contact@aismx.org
+          </a>
+        </li>
+        <li class="direct__item">
+          <span class="direct__label role-label">LinkedIn</span>
+          <a
+            class="direct__value inline-link"
+            href="https://www.linkedin.com/company/ai-safety-mexico/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            linkedin.com/company/ai-safety-mexico
+          </a>
+        </li>
+        <li class="direct__item">
+          <span class="direct__label role-label">Instagram</span>
+          <a
+            class="direct__value inline-link"
+            href="https://www.instagram.com/aisafetymx/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @aisafetymx
+          </a>
+        </li>
+        <li class="direct__item">
+          <span class="direct__label role-label">Calendar</span>
+          <a
+            class="direct__value inline-link"
+            href="https://luma.com/calendar/cal-WjnM2llUGXz17t5"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Events on Luma
+          </a>
+        </li>
+        <li class="direct__item">
+          <span class="direct__label role-label">YouTube</span>
+          <a
+            class="direct__value inline-link"
+            href="https://www.youtube.com/@AISafetyMéxico"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @AISafetyMéxico
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <CtaSection
+    title="Have a concrete proposal?"
+    description="Write to contact@aismx.org with a brief description of your organization and the line of work you would like to explore."
+    ctaLabel="Email contact@aismx.org"
+    ctaHref="mailto:contact@aismx.org"
+  />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  /* Section shells ---------------------------------------------------------
+     Her 72px rhythm (48px on phones) through --section-pad; the line-soft
+     hairline under each section comes from base.css (`main > section`).
+     White and bg-2 alternate: intro, #participa and #colaboraciones are
+     white; «Other ways» and #contacto are bg-2, so no two tinted bands
+     touch (the CtaSection below is white, the footer bg-2). Containers are
+     the global `.container`, so every left-aligned heading shares one edge. */
+  .page-section {
+    padding-block: var(--section-pad);
+    background: var(--color-bg-section-base);
+    /* Deep-link targets (#participa, #colaboraciones, #contacto) clear the
+       sticky header. */
+    scroll-margin-top: var(--scroll-offset);
+  }
+
+  .page-section--more,
+  .page-section--direct {
+    background: var(--color-bg-section-warm);
+  }
+
+  /* The intro is a heading-only band: drop the heading's 34px bottom margin
+     so the band keeps an even top and bottom. */
+  .page-section--intro :global(.section-heading) {
+    margin-bottom: 0;
+  }
+
+  /* Path cards — her .program-card (C.9) ----------------------------------
+     White, 1px hairline, 8px radius, no shadow, block flow: label → title
+     → paragraphs → .program-actions. The cards hold actions but are not
+     links themselves, so they have no hover border. Grid: 1 column up to
+     768px, 2 from 769px (her .path-grid), 18px gap. */
+  .collab-vias {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  /* Cards are deep-link targets (/en/programs → #training, /en/research →
+     #research, /en/activities → #events). The extra 56px over the header
+     offset lands a card with the card above, or its section description,
+     still in view instead of sliced by the sticky header. */
+  .collab-vias__item {
+    display: flex;
+    scroll-margin-top: calc(var(--scroll-offset) + 56px);
+  }
+
+  /* The first row of #participa (#training, and #vigia at two columns)
+     sits right under the section heading: land it with the whole heading
+     block (eyebrow, title, description) in view instead of slicing the
+     title under the sticky header. In rem, so the room grows with the
+     text size. */
+  @media (max-width: 768px) {
+    #participa .collab-vias__item:first-child {
+      scroll-margin-top: calc(var(--scroll-offset) + 11rem);
+    }
+  }
+  @media (min-width: 769px) {
+    #participa .collab-vias__item:nth-child(-n + 2) {
+      scroll-margin-top: calc(var(--scroll-offset) + 8rem);
+    }
+  }
+
+  .collab-vias__card {
+    width: 100%;
+    padding: var(--pad-card);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    transition: border-color var(--transition);
+  }
+
+  /* The card a deep link points at (/en/get-involved#research, …) gets her
+     featured border: clay, a non-text mark. Nothing moves. */
+  .collab-vias__item:target .collab-vias__card {
+    border-color: var(--color-accent-decor);
+  }
+
+  /* Card titles — her .program-card-title. */
+  .collab-vias__title,
+  .collab-named__title {
+    margin-bottom: 10px;
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  /* Card copy — her .program-card p (ink-2, 1.7, 11px between paragraphs). */
+  .collab-vias__text,
+  .collab-named__description {
+    margin-bottom: 11px;
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+  }
+
+  .collab-vias__text:last-of-type,
+  .collab-named__description:last-of-type {
+    margin-bottom: 0;
+  }
+
+  /* Named collaborations — same card; the chips (KeyFacts) follow 28px
+     below, like her .partners-row. */
+  .collab-named {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+    margin-bottom: var(--space-7);
+  }
+
+  .collab-named__card {
+    height: 100%;
+    padding: var(--pad-card);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  /* Allies chips at her .partner size (40px pills, like the /research
+     partner chips) instead of the smaller KeyFacts .tag; KeyFacts itself
+     keeps the tag size for /about. */
+  .page-section--allies :global(.key-facts__chip) {
+    padding: 8px 16px;
+    font-size: 0.84rem;
+  }
+
+  @media (min-width: 769px) {
+    .collab-vias,
+    .collab-named {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Direct-contact list — the same channel cards as /contact, on the bg-2
+     band. One column; two from 769px with the email (the first, canonical
+     channel) spanning the row, so the five channels leave no empty cell.
+     Label: the global in-card .role-label. Value: the global .inline-link
+     (clay-dark, hairline underline) at her .contact-email size; long
+     handles may wrap anywhere. */
+  .direct__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-grid);
+  }
+
+  .direct__item {
+    padding: 22px 24px;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .direct__value {
+    font-size: 1.05rem;
+    overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 769px) {
+    .direct__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .direct__item:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
