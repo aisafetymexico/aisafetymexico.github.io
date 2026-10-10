@@ -14,16 +14,15 @@
  *   4. #gsh-2026 — Actividad pasada: Global South AIS Hackathon (sedes
  *      de Mérida y Guadalajara) with the EA Forum retrospective.
  *   5. Conferencias y talleres grid: Greywall workshop, EAGxCDMX, ML4Good.
- *   6. Galería: Carousel con las imágenes de /public/images/carousel/ (and
- *      /images/sesion-trabajo.webp).
+ *   6. Galería: one photo, /images/sesion-trabajo.webp (the working session
+ *      in a circle, also on the home page).
  *   7. CtaSection → /get-involved#events.
  *
  * Design: her light "Editorial mínimo". SectionHeadings are left-aligned, and
- * the cards, the grid
- * and the gallery all run the full container like her cards, so the page
- * keeps the headings' edges; the copy inside the cards stays at her reading
- * measure. Linked ActivityCards show her `.event-preview-link` pill
- * (`linkLabel`).
+ * the cards, the grid and the gallery photo all run the full container like
+ * her cards, so the page keeps the headings' edges; the copy inside the cards
+ * stays at her reading measure. Linked ActivityCards show her
+ * `.event-preview-link` pill (`linkLabel`).
  * The panel card is her `.program-card` (Card) with `.event-meta` lines and
  * the global `.program-actions` + `.event-embed` utilities (base.css).
  * Sections are white with two bg-2 tints that are never adjacent (the
@@ -42,7 +41,6 @@ import PageHero from '../components/PageHero.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import Card from '../components/Card.astro';
 import ActivityCard from '../components/ActivityCard.astro';
-import Carousel, { type CarouselSlide } from '../components/Carousel.astro';
 import CtaSection from '../components/CtaSection.astro';
 import type { Breadcrumb, CtaRef, ImgRef } from '../lib/types';
 
@@ -189,25 +187,6 @@ const conferencesAndTalks: ConfTalk[] = [
     description:
       'Campamento internacional intensivo de seguridad técnica en IA. Asistieron Angel, Max, Isabel y Janeth como parte de la cohorte regional.',
   },
-];
-
-// -------- Galería: carousel images --------
-// Files in /public/images/carousel/ (URL-encoded where filenames contain spaces).
-// Slide 11 uses /images/sesion-trabajo.webp (330 KB), the same photo as the
-// 6.97 MB 'Screenshot 2026-03-05 at 1.34.26 p.m..png'.
-const carouselSlides: CarouselSlide[] = [
-  { src: '/images/carousel/carousel-image-1.jpeg',  alt: 'Sesión de trabajo del equipo de AI Safety Mexico.' },
-  { src: '/images/carousel/carousel-image-2.jpeg',  alt: 'Participantes en un curso de AI Safety Mexico.' },
-  { src: '/images/carousel/carousel-image-3.jpeg',  alt: 'Foto de actividad del equipo de AI Safety Mexico.' },
-  { src: '/images/carousel/carousel-image-5.jpeg',  alt: 'Taller de seguridad en IA en una institución académica.' },
-  { src: '/images/carousel/carousel-image-6.jpeg',  alt: 'Encuentro con la comunidad de AI Safety Mexico.' },
-  { src: '/images/carousel/carousel-image-7.jpeg',  alt: 'Foto panorámica de 360° del grupo de pie en círculo sobre el pasto' },
-  { src: '/images/carousel/carousel-image-9.jpeg',  alt: 'Conferencia con asistentes de la comunidad.' },
-  { src: '/images/carousel/carousel-image-10.jpeg', alt: 'Foto grupal del equipo y colaboradores.' },
-  { src: '/images/carousel/Dexter.png',             alt: 'Dexter Gomez junto a la proyección de su charla “Large Language Models & Fine-tuning”' },
-  { src: '/images/carousel/IMG_7302%20Copy.JPG',    alt: 'Foto de archivo de un evento de AI Safety Mexico.' },
-  { src: '/images/sesion-trabajo.webp',             alt: 'Participantes de AI Safety Mexico en una sesión de trabajo en círculo' },
-  { src: '/images/carousel/Screenshot%202026-03-05%20at%2012.16.56%E2%80%AFp.m..png', alt: 'Entrega de constancia tras la charla “AI Safety & RLHF” de Angel Tenorio' },
 ];
 
 ---
@@ -367,12 +346,14 @@ const carouselSlides: CarouselSlide[] = [
         description="Una muestra visual del trabajo del equipo y de los espacios donde hemos estado presentes."
         id="actividades-galeria"
       />
-      <Carousel
-        slides={carouselSlides}
-        autoAdvance={true}
-        interval={6000}
-        label="Galería de actividades de AI Safety Mexico"
-        id="activities-carousel"
+      <img
+        class="activities-photo"
+        src="/images/sesion-trabajo.webp"
+        width="2048"
+        height="1432"
+        loading="lazy"
+        decoding="async"
+        alt="Participantes de AI Safety Mexico en una sesión de trabajo en círculo"
       />
     </div>
   </section>
@@ -512,9 +493,13 @@ const carouselSlides: CarouselSlide[] = [
     }
   }
 
-  /* Galería — on the same edges as the headings and cards: lifts
-     Carousel's own 880px centred cap (--container-carousel) on this page. */
-  .page-section :global(.carousel) {
-    max-width: none;
+  /* Galería — one photo, framed like the home page's feature photo: full
+     container width, large radius, hairline frame. */
+  .activities-photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
   }
 </style>

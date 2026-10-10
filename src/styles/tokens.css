@@ -179,7 +179,7 @@
   --fs-h5: 1.08rem;       /* card titles (her .program-card-title) */
   --fs-h6: 1rem;
   --fs-lead: 1rem;        /* section description, page subtitle */
-  --fs-body: 0.9375rem;   /* 15px on phones, 16px from 481px */
+  --fs-body: 0.9375rem;   /* 16.9px on phones, 18px from 481px (112.5% root) */
   --fs-small: 0.88rem;
   --fs-caption: 0.8rem;
   --fs-eyebrow: 0.7rem;
@@ -293,7 +293,7 @@
   /* ============================================================
    * Containers and measures
    * ============================================================ */
-  --container-max: 67.5rem; /* 1080px at the default 16px; grows with the reader's base font */
+  --container-max: 67.5rem; /* 1215px with the 112.5% root at the default 16px; grows with the reader's base font */
   --container-narrow: 800px;
   --container-hero: 1080px;
   --container-carousel: 880px;

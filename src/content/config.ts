@@ -121,7 +121,7 @@ const projects = defineCollection({
     cover: imageRefSchema.optional(),
     poster: imageRefSchema.optional(),             // social/share asset
     team: z.array(personRefSchema).default([]),
-    externalUrl: z.string().url().optional(),      // e.g. vigia-observatorio.github.io
+    externalUrl: z.string().url().optional(),      // e.g. the VIGÍA web app
     // Relative paths allowed (e.g. "/Papers/AI_Safety_Connect_Final_Report.pdf")
     // because some papers are hosted in /public/. External papers may use full URLs.
     paperUrl: z.string().min(1).optional(),         // for AI Safety Connect

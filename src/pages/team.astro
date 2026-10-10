@@ -39,60 +39,9 @@ import SectionHeading from '../components/SectionHeading.astro';
 import TeamCard from '../components/TeamCard.astro';
 import CtaSection from '../components/CtaSection.astro';
 
-import type { ImgRef } from '../lib/types';
+import { coreTeam } from '../lib/team';
 
 // ---------- Data ----------
-
-interface Member {
-  name: string;
-  role: string;
-  photo: ImgRef;
-  linkedin?: string;
-}
-
-const coreTeam: Member[] = [
-  {
-    name: 'Janeth Valdivia',
-    role: 'Head of Operations',
-    photo: { src: '/images/Equipo/Janeth.jpeg', alt: 'Janeth Valdivia' },
-    linkedin: 'https://www.linkedin.com/in/janeth-valdivia-b90087111/',
-  },
-  {
-    name: 'Angel Tenorio',
-    role: 'Education & Divulgation',
-    photo: { src: '/images/Equipo/Angel.jpeg', alt: 'Angel Tenorio' },
-    linkedin: 'https://www.linkedin.com/in/angel-tenorio-vazquez/',
-  },
-  {
-    name: 'Max Pinelo',
-    role: 'Generalist & Head of Strategy',
-    photo: { src: '/images/Equipo/Jason.jpeg', alt: 'Max Pinelo' },
-    linkedin: 'https://www.linkedin.com/in/jason-pinelo-14a6a81a5/',
-  },
-  {
-    name: 'Isabel Montalvo',
-    role: 'Marketing',
-    photo: { src: '/images/Equipo/Isabel.jpeg', alt: 'Isabel Montalvo' },
-    linkedin: 'https://www.linkedin.com/in/isabel-montalvo/',
-  },
-  {
-    name: 'Dexter Gómez',
-    role: 'Adversarial Strategy',
-    photo: { src: '/images/Equipo/Dexter.png', alt: 'Dexter Gómez' },
-    linkedin: 'https://www.linkedin.com/in/dextergmez/',
-  },
-  {
-    name: 'Karime Pacheco',
-    role: 'Head of AIS UPY',
-    photo: { src: '/images/Equipo/Karime.jpeg', alt: 'Karime Pacheco' },
-    linkedin: 'https://www.linkedin.com/in/karime-pacheco-217368230/',
-  },
-  {
-    name: 'Marco Guzmán',
-    role: 'Head of AISMX Guadalajara',
-    photo: { src: '/images/Equipo/Marco.png', alt: 'Marco Guzmán' },
-  },
-];
 
 // Advisors — GAP-22: la Dra. Silvia Fernández aún no tiene foto oficial.
 // Mientras no haya material visual, presentamos a las advisors en un bloque
@@ -132,10 +81,6 @@ const collaboratorGroups: CollaboratorGroup[] = [
       {
         name: 'Pilar Carolina Moncada',
         role: 'VIGÍA · Cocreadora de la plataforma',
-      },
-      {
-        name: 'Axel Pinelo',
-        role: 'VIGÍA · Desarrollo y datos',
       },
       {
         name: 'Valeria Ramírez',

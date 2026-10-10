@@ -1,25 +1,20 @@
 ---
 /**
- * /en/projects/vigia — VIGÍA project deep-dive (English locale).
- *
- * English sibling of src/pages/projects/vigia.astro. Mirrors structure 1:1
- * per docs/I18N-ARCHITECTURE.md §2, design included (reading column; bg-2
- * bands on recognition, team and related projects, alternating with white;
- * ink-pill platform link). The platform links keep the collection's
- * `externalUrl`, the platform's English edition. The "Special
- * Recognition · AI Safety Collab 2025" badge stays as-is (award name), and
- * the related card's cover alt comes from `enCoverAlts`.
+ * /en/projects/vigia — English sibling of src/pages/projects/vigia.astro.
+ * Mirrors it 1:1 (sections, design and styles): a summary of the article
+ * "VIGIA: A Pipeline to Accelerate AI Governance in Mexico"
+ * (/en/blog/vigia-gobernanza-ia-mexico), with the team up front. Every
+ * figure comes from the article. The app links use the collection's
+ * `externalUrl`, the web app's English edition; team roles are translated
+ * through `roleEn`.
  */
-import { getEntry, getCollection } from 'astro:content';
+import { getEntry } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
 import PageHero from '../../../components/PageHero.astro';
 import SectionHeading from '../../../components/SectionHeading.astro';
-import Callout from '../../../components/Callout.astro';
-import FactList from '../../../components/FactList.astro';
-import KeyFacts from '../../../components/KeyFacts.astro';
-import ProjectCard from '../../../components/ProjectCard.astro';
+import StatBar from '../../../components/StatBar.astro';
 import CtaSection from '../../../components/CtaSection.astro';
 import { t } from '../../../lib/i18n';
 
@@ -29,17 +24,12 @@ if (!project) {
 }
 const data = project.data;
 
-// Meta bar chips (KeyFacts component) — type-only, no leading glyph.
-const metaChips = [
-  { text: 'Special Recognition · AI Safety Collab 2025' },
-  { text: 'Governance · Digital sovereignty' },
-  { text: 'Mexico' },
-  { text: `Team of ${data.team.length} collaborators` },
-  { text: 'In active development' },
-];
+// The VIGÍA web app (the observatory linked from the article) in English.
+const platformUrl = data.externalUrl ?? 'https://vigia-3-0-21536470668.us-central1.run.app/en/';
+const articleUrl = '/en/blog/vigia-gobernanza-ia-mexico';
 
 // Role translations for the VIGÍA team. Spanish roles in the content collection
-// are mapped to their English equivalents per task brief.
+// are mapped to their English equivalents.
 const roleEn: Record<string, string> = {
   'Cofundadora · Concepción de la plataforma': 'Co-founder · Platform conception',
   'Cofundador · Concepción de la plataforma': 'Co-founder · Platform conception',
@@ -47,52 +37,19 @@ const roleEn: Record<string, string> = {
   'Advisory · Curso de Governance': 'Advisory · AI Governance course',
 };
 
-const teamItems = data.team.map((person) => ({
-  label: (person.role && roleEn[person.role]) || person.role || 'Collaborator',
-  value: person.name,
+// Co-founders take the wider first row of the team grid.
+const team = data.team.map((person) => ({
+  name: person.name,
+  role: roleEn[person.role ?? ''] ?? person.role ?? 'Collaborator',
+  lead: (person.role ?? '').startsWith('Cofundador'),
 }));
 
-// External resources — same label/value treatment as the team list.
-const resourceItems = [
-  data.externalUrl
-    ? { label: 'Platform', value: 'vigia-observatorio.github.io' }
-    : null,
-  { label: 'Founding partner', value: 'ENAIS — AI Governance course' },
-  { label: 'Recognition', value: 'AI Safety Collab 2025' },
-].filter(Boolean) as { label: string; value: string }[];
-
-// Related project — AI Safety Connect
-const enRelatedSummaries: Record<string, string> = {
-  'ai-safety-connect':
-    'A platform to systematically map AI safety research and reduce the gap between academia and communities of practice.',
-};
-
-// English cover alts: the collection's alts are Spanish.
-const enCoverAlts: Record<string, string> = {
-  vigia: 'El Caracol, the Maya observatory at Chichén Itzá, at dusk',
-  'ai-safety-connect': 'AI Safety Connect project poster',
-};
-
-// AI Safety Connect's entry has no `badge`, so the card takes the same
-// in-card label as on /en/projects (label → title).
-const fallbackBadges: Record<string, string> = {
-  'ai-safety-connect': 'SPAR collaboration',
-};
-
-const allProjects = await getCollection('projects', ({ data: d }: { data: { draft?: boolean } }) => d.draft !== true);
-const related = allProjects
-  .filter((p) => (p.data.slug ?? p.slug) !== 'vigia')
-  .slice(0, 1)
-  .map((p) => {
-    const slug = p.data.slug ?? p.slug;
-    return {
-      title: p.data.title,
-      badge: p.data.badge ?? fallbackBadges[slug],
-      description: enRelatedSummaries[slug] ?? p.data.summary,
-      image: p.data.cover && { ...p.data.cover, alt: enCoverAlts[slug] ?? p.data.cover.alt },
-      href: `/en/projects/${slug}`,
-    };
-  });
+const stats = [
+  { number: '153', label: 'DOF issues analyzed' },
+  { number: '249', label: 'literal mentions of “artificial intelligence”' },
+  { number: '545', label: 'implicit mentions of AI use' },
+  { number: '0', label: 'AI risks named as such' },
+];
 
 const breadcrumb = {
   items: [
@@ -105,7 +62,7 @@ const breadcrumb = {
 
 <BaseLayout
   title="VIGÍA · Project · AI Safety Mexico"
-  description="VIGÍA is AI Safety Mexico's platform for analyzing AI governance and digital sovereignty in Mexico. Special Recognition · AI Safety Collab 2025."
+  description="VIGÍA is a pipeline to make AI risks visible in Mexico's official discourse. Its first implementation analyzed 153 issues of the Diario Oficial de la Federación, Mexico's official gazette."
   lang="en"
   pathname="/en/projects/vigia"
   ogImage={data.cover?.src as string | undefined}
@@ -114,162 +71,197 @@ const breadcrumb = {
 
   <PageHero
     title="VIGÍA"
-    description="A platform for analyzing AI governance and digital sovereignty in Mexico."
+    description="A pipeline to make AI risks visible in official discourse and accelerate AI Governance in Mexico."
     breadcrumb={breadcrumb}
     lang="en"
   />
 
-  {/* Meta bar */}
-  <section class="section section--compact section--base" aria-label="Project information">
-    <div class="container">
-      <KeyFacts facts={metaChips} />
-    </div>
-  </section>
-
-  {/* Overview */}
-  <section class="section section--base" aria-labelledby="vigia-overview-heading">
-    <div class="container project-column">
-      <SectionHeading
-        eyebrow="Summary"
-        title="What is VIGÍA?"
-        id="vigia-overview-heading"
-      />
-      <div class="prose">
-        <p>
-          <strong>VIGÍA</strong> — <em lang="es">Valoración de Impactos Gubernamentales de
-          Inteligencia Artificial</em> (Assessment of Governmental Impacts of
-          Artificial Intelligence) — is a platform under development that maps,
-          analyzes, and communicates public decisions about artificial intelligence
-          in Mexico. It emerged as part of the projects of the AI Governance course
-          taught by <strong>ENAIS</strong> and AI Safety Mexico, and has since
-          grown into a standalone initiative.
-        </p>
-        <p>
-          The observatory aims to close a concrete gap: there is no public,
-          systematic, and auditable source documenting how the Mexican government
-          makes decisions about AI — what it procures, what it regulates, what it
-          deploys, and under what oversight. VIGÍA articulates that information
-          for researchers, journalists, civil society, and decision-makers.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  {/* Recognition */}
-  <section class="section section--warm" aria-labelledby="vigia-recognition-heading">
-    <div class="container project-column">
-      <SectionHeading
-        eyebrow="Recognition"
-        title="Special Recognition · AI Safety Collab 2025"
-        id="vigia-recognition-heading"
-      />
-      <Callout tone="highlight">
-        <p>
-          VIGÍA received <strong>Special Recognition</strong> at
-          <strong>AI Safety Collab 2025</strong>, a global program for AI safety
-          research projects. The recognition validates the project's situated
-          approach and opens doors for future international collaborations.
-        </p>
-      </Callout>
-    </div>
-  </section>
-
-  {/* Methodology */}
-  <section class="section section--base" aria-labelledby="vigia-methodology-heading">
-    <div class="container project-column">
-      <SectionHeading
-        eyebrow="Methodology"
-        title="How we work"
-        id="vigia-methodology-heading"
-      />
-      <div class="prose">
-        <p>
-          VIGÍA combines documentary tracking, qualitative analysis, and
-          structured communication.
-        </p>
-        <p>
-          The platform articulates three layers of work: (1) <strong>documentary
-          tracking</strong> of procurements, regulations, public consultations, and
-          government deployments involving AI systems; (2) <strong>qualitative
-          analysis</strong> of each case under categories of governance, risk, and
-          accountability; and (3) <strong>structured communication</strong> in
-          formats accessible to both technical and non-technical audiences —
-          briefs, timelines, and interpretive summaries.
-        </p>
-        <p>
-          The approach prioritizes <strong>verifiability</strong>: every case
-          documented in VIGÍA links to its primary source (official gazettes,
-          minutes, communiqués) and is accompanied by a methodological note on
-          how the information was obtained and classified.
-        </p>
-      </div>
-    </div>
-  </section>
-
   {/* Team */}
   <section class="section section--warm" aria-labelledby="vigia-team-heading">
-    <div class="container project-column">
+    <div class="container">
       <SectionHeading
         eyebrow="Team"
-        title="Who builds it"
-        description="VIGÍA is a collaborative effort between its co-founders, a design collaboration, and the guidance of instructors from the AI Governance course where the idea first took shape."
+        title="The people behind VIGÍA"
         id="vigia-team-heading"
       />
-      <FactList items={teamItems} />
+      <ul class="vigia-team" role="list">
+        {team.map((person) => (
+          <li class:list={['vigia-team__card', { 'vigia-team__card--lead': person.lead }]}>
+            <h3 class="vigia-team__name">{person.name}</h3>
+            <p class="vigia-team__role">{person.role}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
-  {/* Resources */}
-  <section class="section section--base" aria-labelledby="vigia-resources-heading">
+  {/* The problem */}
+  <section class="section section--base" aria-labelledby="vigia-problem-heading">
+    <div class="container project-column">
+      <p class="vigia-source">
+        A summary of the article
+        <a href={articleUrl}>“VIGIA: A Pipeline to Accelerate AI Governance in Mexico”</a>,
+        by Pilar Moncada and Max Pinelo.
+      </p>
+      <SectionHeading
+        eyebrow="The problem"
+        title="What is not mentioned does not exist"
+        id="vigia-problem-heading"
+      />
+      <div class="prose">
+        <p>
+          Mexico uses frontier AI but does not produce it, and an AI safety
+          vocabulary barely exists in the country. As a result, AI risks are not
+          named in official discourse and remain invisible to those who could
+          drive their regulation.
+        </p>
+        <p>
+          The article calls this invisibilization a <strong>higher-order
+          risk</strong>: it causes no harm by itself, but it keeps first-order
+          harms, such as failures, discrimination or surveillance, from being
+          noticed and corrected. It also hides itself: a document with no
+          mention of bias or human oversight does not look incomplete, it looks
+          normal.
+        </p>
+        <p>
+          It is not the only bottleneck for AI Governance in Mexico, but it is an
+          important one, upstream of several of the others.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* The proposal */}
+  <section class="section section--warm" aria-labelledby="vigia-pipeline-heading">
     <div class="container project-column">
       <SectionHeading
-        eyebrow="Resources"
-        title="Links and references"
-        id="vigia-resources-heading"
+        eyebrow="The proposal"
+        title="A six-step pipeline"
+        description="To clear that bottleneck, the pipeline analyzes official and public discourse and makes AI risks visible."
+        id="vigia-pipeline-heading"
       />
-      <FactList items={resourceItems} />
-
-      {data.externalUrl && (
-        <div class="program-actions">
-          <a class="btn btn-primary" href={data.externalUrl} target="_blank" rel="noopener noreferrer">
-            Visit the VIGÍA platform
-            <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-      )}
+      <ol class="vigia-steps">
+        <li>Identify the documents where the State publishes its AI initiatives and uses.</li>
+        <li>Find the mentions of AI use in them, explicit and implicit.</li>
+        <li>Classify the risk associated with each mention into 15 categories.</li>
+        <li>Report each finding: why it is a risk, how urgent it is, and initial recommendations.</li>
+        <li>Prepare reports for researchers, legislators and the general public.</li>
+        <li>Measure how far the AI risk lexicon is adopted in public discourse, for example in digital newspapers.</li>
+      </ol>
     </div>
   </section>
 
-  {/* Related projects */}
-  {related.length > 0 && (
-    <section class="section section--warm" aria-labelledby="vigia-related-heading">
-      <div class="container">
-        <SectionHeading
-          eyebrow="Keep exploring"
-          title="Other projects"
-          id="vigia-related-heading"
-        />
-        <div class="vigia-related-grid">
-          {related.map((card) => (
-            <ProjectCard
-              title={card.title}
-              badge={card.badge}
-              description={card.description}
-              image={card.image}
-              href={card.href}
-              lang="en"
-            />
-          ))}
-        </div>
+  {/* The implementation */}
+  <section class="section section--base" aria-labelledby="vigia-implementation-heading">
+    <div class="container project-column">
+      <SectionHeading
+        eyebrow="The implementation"
+        title="VIGÍA analyzes Mexico's official gazette"
+        id="vigia-implementation-heading"
+      />
+      <div class="prose">
+        <p>
+          <strong>VIGÍA</strong> (<em lang="es">Valoración de Impactos
+          Gubernamentales de IA</em>, Assessment of Governmental Impacts of AI)
+          is the first implementation of the pipeline, built for Mexico. It uses
+          the <span lang="es">Diario Oficial de la Federación</span> (DOF),
+          Mexico's official gazette, because that is where the acts of the
+          Mexican State acquire legal validity: a use of AI published in the DOF
+          is no longer a plan but a fact of government with a date and a
+          signature. It is also public and downloadable, so the exercise can be
+          reproduced.
+        </p>
+        <p>
+          A language model (Claude Opus 4.8) read 153 complete issues of the
+          morning edition, from 3 November 2025 to 12 June 2026. For each
+          mention of AI use it records the original fragment, its location, the
+          risk categories with their severity and one or more recommendations.
+          Steps 5 and 6 are outside the scope of this first iteration.
+        </p>
       </div>
-    </section>
-  )}
+      <div class="program-actions">
+        <a class="btn btn-primary" href={platformUrl} target="_blank" rel="noopener noreferrer">
+          Open the VIGÍA app
+          <span aria-hidden="true">↗</span>
+        </a>
+        <a class="btn btn-outline" href={articleUrl}>Read the full article</a>
+      </div>
+    </div>
+  </section>
+
+  <StatBar stats={stats} label="VIGÍA in numbers" />
+
+  {/* Results */}
+  <section class="section section--warm" aria-labelledby="vigia-results-heading">
+    <div class="container project-column">
+      <SectionHeading
+        eyebrow="Results"
+        title="The risk lexicon is absent"
+        id="vigia-results-heading"
+      />
+      <div class="prose">
+        <p>
+          Of 18 terms from the AI risk vocabulary, 16 do not appear even once in
+          the 153 issues. The three cases that do appear come from two public
+          research centers and a bibliographic citation, none of them a
+          regulator.
+        </p>
+        <p>
+          When AI appears, it is almost always as a capability or benefit (72.7%
+          of mentions) or as a purchase line item (11.7%). Only 18 mentions treat
+          it as a source of harm, and all of them borrow the framing of an
+          earlier legal regime, such as copyright or academic integrity.
+        </p>
+        <p>
+          Of the model's 665 findings, 636 (95.6%) flag a regulatory gap. The
+          most frequent risks are privacy invasion, discrimination and bias,
+          failures and errors, and authoritarian surveillance, and 50 of the 153
+          issues were marked as requiring urgent attention.
+        </p>
+        <p>
+          One example: on 29 May 2026 the Technical Committee of the Coatlicue
+          supercomputer was created, the most explicitly AI-oriented instrument
+          in the corpus. It contains no provision on permitted uses, model
+          evaluation or access.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* Next steps */}
+  <section class="section section--base" aria-labelledby="vigia-next-heading">
+    <div class="container project-column">
+      <SectionHeading
+        eyebrow="What comes next"
+        title="Limitations and next steps"
+        id="vigia-next-heading"
+      />
+      <div class="prose">
+        <p>
+          This is a first version. A single language model did all the analysis,
+          with no second model to compare against, and the documents are
+          enormous: the median DOF issue is around 389 pages. The risk
+          categories also come from frameworks of countries that produce
+          frontier AI and may not capture everything that matters in a country
+          like Mexico.
+        </p>
+        <p>
+          The next steps are to validate the classification with a second model
+          and human reviewers, prepare reports for those who drive AI
+          Governance, and measure how far the risk lexicon circulates in public
+          discourse. The pipeline can be replicated in other countries that use
+          frontier AI without producing it, and in the future it can support a
+          defense strategy for Mexico through regulation.
+        </p>
+      </div>
+    </div>
+  </section>
 
   <CtaSection
-    title="See VIGÍA live"
-    description="The platform updates with every new case documented. Visit it to explore the observatory."
-    ctaLabel="Go to vigia-observatorio.github.io"
-    ctaHref={data.externalUrl ?? 'https://vigia-observatorio.github.io/index-en.html'}
+    title="Explore the observatory"
+    description="The results of this first implementation are published in the VIGÍA app."
+    ctaLabel="Open the VIGÍA app"
+    ctaHref={platformUrl}
     ctaExternal={true}
   />
 
@@ -277,25 +269,77 @@ const breadcrumb = {
 </BaseLayout>
 
 <style>
-  /* Reading column: the body of each prose section keeps her editorial
-     measure (680px, the section-description width), left-aligned in the
-     full container so every heading shares the header's left edge. As in
-     her CSS, the measure sits on the elements, not on the container.
-     `:global` reaches the root of child components (SectionHeading,
-     Callout, FactList). */
+  /* Identical to the Spanish sibling's <style>. */
   .project-column > :global(*) {
     max-width: var(--measure-desc);
   }
 
-  /* The column's last block must not add to the section's bottom padding
-     (e.g. the Callout's own block margin), so every band stays even. */
   .project-column > :global(:last-child) {
     margin-bottom: 0;
   }
 
-  /* Long-form copy: her .content-card paragraphs (ink-2, lh 1.7), with
-     bold lead-ins in ink. `pretty` keeps a lone word off the last line, as
-     in SectionHeading descriptions. */
+  .vigia-team {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gap-grid);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .vigia-team__card {
+    padding: var(--pad-card);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .vigia-team__name {
+    margin: 0 0 6px;
+    font-family: var(--font-display);
+    font-size: var(--fs-h4);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  .vigia-team__card--lead .vigia-team__name {
+    font-size: var(--fs-h2);
+  }
+
+  .vigia-team__role {
+    margin: 0;
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  @media (min-width: 48.0625em) {
+    .vigia-team {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .vigia-team__card {
+      grid-column: span 2;
+    }
+
+    .vigia-team__card--lead {
+      grid-column: span 3;
+    }
+  }
+
+  .vigia-source {
+    margin: 0 0 var(--space-8);
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
   .prose p {
     font-size: var(--fs-body);
     line-height: var(--lh-loose);
@@ -313,16 +357,29 @@ const breadcrumb = {
     font-weight: var(--fw-semibold);
   }
 
-  /* Related projects: her 2-up card grid, 18px gap, one column up to 768px. */
-  .vigia-related-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--gap-grid);
+  .vigia-steps {
+    margin: 0;
+    padding-left: 1.4em;
+    color: var(--color-text-secondary);
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
   }
 
-  @media (min-width: 769px) {
-    .vigia-related-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  .vigia-steps li {
+    padding-left: 0.3em;
+    text-wrap: pretty;
+  }
+
+  .vigia-steps li + li {
+    margin-top: var(--space-2);
+  }
+
+  .vigia-steps li::marker {
+    color: var(--color-text-heading);
+    font-weight: var(--fw-semibold);
+  }
+
+  .project-column .program-actions {
+    margin-top: var(--space-6);
   }
 </style>

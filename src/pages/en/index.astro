@@ -19,6 +19,7 @@ import StatBar from '../../components/StatBar.astro';
 import Card from '../../components/Card.astro';
 import ResourcesTeaser from '../../components/ResourcesTeaser.astro';
 import CtaSection from '../../components/CtaSection.astro';
+import { coreTeam } from '../../lib/team';
 
 // «AI\u00A0safety» is bound with a no-break space so the balanced tile copy
 // never ends a line on «AI» (FeatureGrid balances its descriptions).
@@ -164,6 +165,37 @@ const upcomingSpotlight = {
     </div>
   </section>
 
+  <!-- 4c · Team: the core team, with photo, name and role -->
+  <section class="section section--base" aria-labelledby="home-team-heading">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Team"
+        title="The people behind AI Safety Mexico"
+        id="home-team-heading"
+      />
+      <ul class="home-team" role="list">
+        {coreTeam.map((member) => (
+          <li class="home-team__person">
+            <img
+              class="home-team__photo"
+              src={typeof member.photo.src === 'string' ? member.photo.src : member.photo.src.src}
+              alt=""
+              width="88"
+              height="88"
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="home-team__name">{member.name}</span>
+            <span class="home-team__role">{member.role}</span>
+          </li>
+        ))}
+      </ul>
+      <div class="program-actions home-team__actions">
+        <a class="btn btn-outline" href="/en/team">Meet the team</a>
+      </div>
+    </div>
+  </section>
+
   <!-- 5 · Recent work: a project, a publication and an event (bg-2) -->
   <section class="section section--warm">
     <div class="container">
@@ -182,7 +214,7 @@ const upcomingSpotlight = {
           href="/en/projects/vigia"
           badge="Flagship project"
           title="VIGÍA"
-          description={"A platform for observing Mexico's AI regulatory ecosystem. Special Recognition\u00A0·\u00A0AI Safety Collab 2025."}
+          description="A pipeline that makes AI risks visible in Mexico's official discourse, starting with the country's official gazette."
           linkLabel="See the project"
           padding="md"
           bordered
@@ -254,6 +286,73 @@ const upcomingSpotlight = {
     height: auto;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
+  }
+
+  /* Team — the core team at a glance, left-aligned like her team cards:
+     an 88px round photo (hairline, bg-3 while loading), the name, the role
+     in muted type. Two per row on phones, four from 481px and all seven in
+     one row from 64.0625em (1025px at the default size). The photo is
+     decorative: the name sits right under it. */
+  .home-team {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px var(--gap-grid);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .home-team__person {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  .home-team__photo {
+    display: block;
+    width: 88px;
+    height: 88px;
+    margin-bottom: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    background: var(--color-bg-muted);
+    object-fit: cover;
+  }
+
+  .home-team__name {
+    font-family: var(--font-display);
+    font-size: var(--fs-h6);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    color: var(--color-text-heading);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  .home-team__role {
+    margin-top: 4px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  .home-team__actions {
+    margin-top: var(--space-9);
+  }
+
+  @media (min-width: 481px) {
+    .home-team {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64.0625em) {
+    .home-team {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
   }
 
   /* Highlights grid — 3 curated cards (project, publication, GSH): one

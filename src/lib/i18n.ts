@@ -27,6 +27,7 @@ export const DEFAULT_LOCALE: Locale = 'es';
 export type StringKey =
   // Header / Nav -------------------------------------------------------------
   | 'header.nav.about'
+  | 'header.nav.team'
   | 'header.nav.research'
   | 'header.nav.programs'
   | 'header.nav.projects'
@@ -100,6 +101,7 @@ const strings: Record<Locale, Record<StringKey, string>> = {
   es: {
     // Header / Nav
     'header.nav.about': 'Sobre nosotros',
+    'header.nav.team': 'Equipo',
     'header.nav.research': 'Investigación',
     'header.nav.programs': 'Programas',
     'header.nav.projects': 'Proyectos',
@@ -175,6 +177,7 @@ const strings: Record<Locale, Record<StringKey, string>> = {
   en: {
     // Header / Nav
     'header.nav.about': 'About us',
+    'header.nav.team': 'Team',
     'header.nav.research': 'Research',
     'header.nav.programs': 'Programs',
     'header.nav.projects': 'Projects',

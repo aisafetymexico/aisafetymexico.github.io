@@ -29,12 +29,12 @@
  *  - The nav row (≥1080px) and the drawer (<1080px) live in <Nav />. The
  *    language switcher is passed into Nav's slot, so it renders between the
  *    nav row and the hamburger toggle (DOM order = visual order).
- *  - One-row guarantee: the row is measured to fit from 1080px up with
- *    Inter. If it still does not fit (wider fallback font, text-only zoom),
- *    the script adds `.site-header--compact` and the drawer takes over
- *    instead of the row wrapping or overflowing.
- *  - The wordmark shows from 305px at the default text size; at 320px it
- *    still clears ES | EN by 32px. When the bar is
+ *  - One-row guarantee: the script measures the row from 1080px up. Where
+ *    it does not fit (Spanish below a 1196px window, English below 1104px,
+ *    a wider fallback font, text-only zoom), it adds `.site-header--compact`
+ *    and the drawer takes over instead of the row wrapping or overflowing.
+ *  - The wordmark shows from 315px at the default text size; at 320px it
+ *    still clears ES | EN by 23px. When the bar is
  *    too narrow to show it in full, it hides instead of truncating. That
  *    covers folded phones, and phones with enlarged text, because the
  *    breakpoint grows with the reader's font size. In drawer mode (<1080px,
@@ -311,28 +311,29 @@ const brandAria = t(lang, 'header.aria.brandHome');
   }
 
   /* Phones. Scrolled logo is 32px, not 36px: her CSS let the phone logo grow
-     on scroll through a specificity slip (spec C.2). */
+     on scroll through a specificity slip. The wordmark is 0.8rem (14.4px
+     with the 112.5% root) so it still fits whole at 320px. */
   @media (max-width: 480px) {
     .site-header__logo-img { height: 34px; }
     .site-header--scrolled .site-header__logo-img { height: 32px; }
-    .site-header__wordmark { font-size: 0.86rem; }
+    .site-header__wordmark { font-size: 0.8rem; }
   }
 
-  /* Under 305px (folded phones, ~280px) the whole wordmark no longer fits
+  /* Under 315px (folded phones, ~280px) the whole wordmark no longer fits
      beside ES | EN and the hamburger at the default text size: hide it
-     rather than show a clipped «AI SAFE…». From 305px it shows in full. */
-  @media (max-width: 304.98px) {
+     rather than show a clipped «AI SAFE…». From 315px it shows in full. */
+  @media (max-width: 314.98px) {
     .site-header__wordmark { display: none; }
   }
 
   /* With enlarged text the bar needs more room: ~165px of px-sized chrome
-     (gutters, logo, gaps, hamburger) plus 8.75em of text that grows with
-     the reader's default font size (wordmark + ES | EN). Below that, hide
-     the wordmark instead of truncating it to «AI SAF…». At the default
-     16px this is the same 304.98px as the rule above. A
-     browser without calc() in media queries ignores this rule and keeps
-     the ellipsis safety net below. */
-  @media (max-width: calc(164.98px + 8.75em)) {
+     (gutters, logo, gaps, hamburger) plus 9.375em of text that grows with
+     the reader's default font size (wordmark + ES | EN, both sized off the
+     112.5% root). Below that, hide the wordmark instead of truncating it
+     to «AI SAF…». At the default 16px this is the same 314.98px as the
+     rule above. A browser without calc() in media queries ignores this
+     rule and keeps the ellipsis safety net below. */
+  @media (max-width: calc(164.98px + 9.375em)) {
     .site-header__wordmark { display: none; }
   }
 

@@ -22,16 +22,18 @@ export interface Stat {
 
 export interface Props {
   stats: Stat[];
+  /** Accessible name of the region; defaults to «Indicadores de impacto». */
+  label?: string;
 }
 
-const { stats } = Astro.props;
+const { stats, label } = Astro.props;
 
 const lang = (Astro.currentLocale as Locale | undefined) ?? 'es';
 const REGION_LABEL: Record<Locale, string> = {
   es: 'Indicadores de impacto',
   en: 'Impact indicators',
 };
-const regionLabel = REGION_LABEL[lang] ?? REGION_LABEL.es;
+const regionLabel = label ?? REGION_LABEL[lang] ?? REGION_LABEL.es;
 ---
 
 <section class="stat-bar" role="region" aria-label={regionLabel}>

@@ -4,18 +4,21 @@
  *
  * Spec: docs/ARCHITECTURE.md §3 + docs/I18N-ARCHITECTURE.md §3. Design: her
  * bracketed nav (fcacfc4 css/style.css L226–268), kept on ONE row.
- *  - Flat horizontal nav, 7 items (no mega menu — pattern A7 in
- *    docs/INSPIRATION.md). Order: About, Research, Programs, Projects,
- *    Activities, Resources, then "Get involved" as the ink CTA pill.
+ *  - Flat horizontal nav, 8 items (no mega menu — pattern A7 in
+ *    docs/INSPIRATION.md). Order: About, Team, Research, Programs,
+ *    Projects, Activities, Resources, then "Get involved" as the ink CTA
+ *    pill.
  *  - Links are plain grey text. On hover, focus and active, faint square
  *    brackets frame the label, `[ Programas ]`. The brackets are always
  *    rendered at opacity 0 so they reserve their width and nothing shifts;
  *    active also raises the weight from 450 to 550.
- *  - ALWAYS one row: the list never wraps. It shows from 1080px up, where
- *    the header reaches its full 1016px content width: measured with Inter
- *    and "Sobre nosotros" active, the Spanish row (logo + wordmark, 7 items,
- *    ES | EN) needs 994px and the English one 921px. Below 1080px the row
- *    hides and the MobileMenu drawer takes over. Keep 1080px in sync with
+ *  - ALWAYS one row: the list never wraps. Below 1080px the row hides and
+ *    the MobileMenu drawer takes over. From 1080px up it shows where it
+ *    fits: measured with Inter at the 112.5% root and "Sobre nosotros"
+ *    active, the Spanish row (logo + wordmark, 8 items, ES | EN) needs
+ *    1132px of content width, so it fits from a 1196px window, and the
+ *    English one from 1104px. Narrower than that, Header adds
+ *    `.site-header--compact` and the drawer stays. Keep 1080px in sync with
  *    MobileMenu.astro and Header.astro (custom properties cannot be used in
  *    media queries).
  *  - Safety net: if the row still does not fit (a wider fallback font when
@@ -48,6 +51,7 @@ const { currentPath, items, lang = 'es' } = Astro.props;
 
 const defaultItems: NavItem[] = [
   { label: t(lang, 'header.nav.about'),       href: localizedPath(lang, '/about') },
+  { label: t(lang, 'header.nav.team'),        href: localizedPath(lang, '/team') },
   { label: t(lang, 'header.nav.research'),    href: localizedPath(lang, '/research') },
   { label: t(lang, 'header.nav.programs'),    href: localizedPath(lang, '/programs') },
   { label: t(lang, 'header.nav.projects'),    href: localizedPath(lang, '/projects') },
@@ -107,16 +111,17 @@ const ariaCurrent = (href: string): 'page' | 'true' | undefined =>
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 2px;
+    gap: 1px;
   }
 
-  /* Her links use 7px 11px. The horizontal padding is 8px here so that the
-     7-item Spanish row, plus the ES | EN switcher she did not have, fits the
-     1016px content box on one row (her 9-item nav wrapped to two rows). */
+  /* Her links use 7px 11px. The horizontal padding is 6px here (and the
+     list gap 1px) so that the 8-item Spanish row, at the 112.5% root and
+     with the ES | EN switcher she did not have, fits the 1151px content box
+     on one row (her 9-item nav wrapped to two rows). */
   .main-nav__link {
     position: relative;
     display: inline-block;
-    padding: 7px 8px;
+    padding: 7px 6px;
     border-radius: var(--radius);
     color: var(--color-text-secondary);
     font-family: var(--font-body);

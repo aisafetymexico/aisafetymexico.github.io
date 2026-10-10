@@ -1,7 +1,7 @@
 ---
 title: "VIGÍA"
 slug: "vigia"
-summary: "Plataforma para el análisis de gobernanza de IA y soberanía digital en México, surgida del curso de AI Governance en colaboración con ENAIS."
+summary: "Un pipeline para hacer visibles los riesgos de la IA en el discurso oficial de México. Su primera versión analizó con un modelo de lenguaje 153 ejemplares del Diario Oficial de la Federación."
 badge: "Special Recognition · AI Safety Collab 2025"
 status: active
 focusArea: governance
@@ -13,17 +13,11 @@ team:
     role: "Cofundadora · Concepción de la plataforma"
   - name: "Jason Maximiliano Pinelo Hau"
     role: "Cofundador · Concepción de la plataforma"
-  - name: "Axel Alexander Pinelo Hau"
-    role: "Diseño"
-  - name: "Janeth Valdivia"
-    role: "Advisory · Curso de Governance"
-  - name: "Angel Tenorio"
-    role: "Advisory · Curso de Governance"
-externalUrl: "https://vigia-observatorio.github.io/index-en.html"
+externalUrl: "https://vigia-3-0-21536470668.us-central1.run.app/en/"
 miniStats:
   - text: "Special Recognition · AI Safety Collab 2025"
   - text: "Enfoque: México"
-  - text: "Equipo de 5 colaboradores"
+  - text: "Equipo de 2 personas"
 order: 10
 featured: true
 ---
