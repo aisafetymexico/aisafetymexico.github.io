@@ -12,9 +12,11 @@
  * Activities are one of the few card types where dates ARE legitimate signal
  * (chronological gallery, see INSPIRATION X5).
  *
- * Keep `.activity-card`, `__media`, `__body`, `__title` and `__description`
- * stable: pages may restyle them through `:global()` (/activities caps
- * `__description` at her reading measure; the home spotlight is now a Card).
+ * Keep `.activity-card`, `__media`, `__body`, `__title`, `__description`
+ * and `__cta` stable: pages may restyle them through `:global()`
+ * (/activities caps `__description` at her reading measure and pins
+ * `__cta`, which must follow `__description` inside `__body`, to the card
+ * bottom; the home spotlight is now a Card).
  *
  * Props:
  *  - title:        Activity name.

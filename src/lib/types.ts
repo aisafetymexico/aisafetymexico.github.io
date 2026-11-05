@@ -29,6 +29,9 @@ export type SocialLink = {
 export type ImgRef = {
   src: ImageMetadata | string;
   alt: string;
+  /** Intrinsic size of a string `src`; Card emits it as width/height. */
+  width?: number;
+  height?: number;
 };
 
 export type BreadcrumbItem = {
