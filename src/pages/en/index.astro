@@ -58,22 +58,32 @@ const stats = [
 ];
 
 // -------- Upcoming event (section 2) --------
-// Teaser of the full block on /en/activities#proximo-evento (venue,
-// organizers and the Luma registration embed). Like her Mexico Tech Week
-// card, it is not a link: two visible pills register on Luma (new tab) or
-// open the full block. The card title stays in Spanish, marked lang="es"
-// through Card's `titleLang`: it is the event's official name. The date is
-// the card's in-card label, so it stays human-readable. The title binds
-// «AI\u00A0Safety» with a no-break space so the balanced heading never splits
-// the field's name across lines (same string as on /en/activities).
-// EXPIRES 2026-10-27: after the panel, swap this spotlight for the next event
-// and move the panel to past activities (here and on /en/activities).
+// Teaser of the dedicated page /en/ai-x-epistemics (tracks, prizes, schedule
+// and the two-step application: Apart's sign-up and the Cursor Hackathon's
+// Luma form). Like the Mexico Tech Week card before it, it is not a link:
+// two visible pills open the application (#registro) or the sprint page; no
+// pill leads to a form elsewhere, so there is one way to apply. The
+// SectionHeading names the sprint; the card is
+// about AI Safety Mexico's in-person Mérida site, with the dates as its
+// in-card label. «AI\u00A0Safety» and the clock times are bound with
+// no-break spaces, as elsewhere, and «in-person» with a non-breaking hyphen
+// (\u2011, as /contact does for «in-house»), so it never breaks as «in- /
+// person». The dates take a word joiner (\u2060) after the en dash, so the
+// range never breaks as «13– / 15».
+// EXPIRES 2026-11-12: AISMx's internal deadline for in-person requests.
+// From the 13th, drop the "Apply in two steps" pill (let "Sprint details"
+// lead as `btn-register`, so the card keeps one filled action) and rewrite
+// the last sentence (in-person requests have closed), here and on the
+// Spanish home.
+// EXPIRES 2026-11-15: after the sprint, swap this spotlight for the next
+// event (or remove the section if there is none yet) and move the sprint to
+// past activities on /en/activities (here and on the Spanish home).
 const upcomingSpotlight = {
-  title: 'Impulsando la comunidad de AI\u00A0Safety en México: Tech Policy Panel',
-  date: 'Tuesday, October 27, 2026',
+  title: 'In\u2011person site in Mérida',
+  date: 'November 13–\u206015, 2026',
   description:
-    'Growing the AI safety community in Mexico: a panel on how AI regulation will affect the tech ecosystem in Mexico and Latin America. At MXTW AI House (Juárez, Mexico City). Organized by Marta Kosmyna, Isabel Montalvo, Janeth Valdivia, and Oscar Mata.',
-  link: 'https://luma.com/event/evt-0jdNWFu6jYVQ148',
+    'AI\u00A0Safety Mexico runs the Mérida site, from Friday, November\u00A013 to Sunday, November\u00A015. It is free, and you need no prior experience or team. Spots are limited: apply by November\u00A012.',
+  link: '/en/ai-x-epistemics#registro',
 };
 ---
 
@@ -105,29 +115,23 @@ const upcomingSpotlight = {
     <div class="container">
       <SectionHeading
         eyebrow="Upcoming event"
-        title="Mexico Tech Week 2026"
-        description="A tech policy panel funded by a BlueDot Impact grant. Our full agenda is on Luma."
+        title="AI x Epistemics Research Sprint"
+        description={'A research sprint by Apart Research on how AI is changing the way we decide what to believe. Join online or at an in\u2011person site.'}
         id="home-spotlight"
       />
       <div class="home-spotlight">
         <Card
           badge={upcomingSpotlight.date}
           title={upcomingSpotlight.title}
-          titleLang="es"
           description={upcomingSpotlight.description}
           padding="md"
         >
           <div class="program-actions">
-            <a
-              class="btn btn-register"
-              href={upcomingSpotlight.link}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Register on Luma
+            <a class="btn btn-register" href={upcomingSpotlight.link}>
+              Apply in two steps
             </a>
-            <a class="btn btn-outline" href="/en/activities#proximo-evento">
-              Event details
+            <a class="btn btn-outline" href="/en/ai-x-epistemics">
+              Sprint details
             </a>
           </div>
         </Card>
@@ -260,8 +264,8 @@ const upcomingSpotlight = {
      `.section-current` card under a left-aligned heading. Card already puts
      the pill row 18px under the copy, and base.css stacks the pills full
      width at ≤480px. The copy keeps her 680px description measure instead
-     of running the full card width, and `pretty` keeps a lone word (the
-     last organizer's surname on phones) off its last line. */
+     of running the full card width, and `pretty` keeps a lone word off its
+     last line on phones. */
   .home-spotlight :global(.card__description) {
     max-width: var(--measure-desc);
     text-wrap: pretty;

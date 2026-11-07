@@ -1,0 +1,1125 @@
+---
+/**
+ * /en/ai-x-epistemics — English mirror of /ai-x-epistemics.
+ *
+ * Spec: docs/I18N-ARCHITECTURE.md §2 (Strategy B, per-page contract).
+ * Sibling: src/pages/ai-x-epistemics.astro, whose docblock holds the
+ * section map, the design notes and the EXPIRES 2026-11-15 checklist.
+ * Same sections, order, anchor ids (#en-breve, #de-que-se-trata, #lineas,
+ * #premios, #agenda, #participa, #ponentes, #lecturas, #registro) and
+ * <style> rules; only prose and in-locale links change. Registration has
+ * one path, the two-step application in #registro (see the sibling's
+ * «Registro» note; `APART_EMBED` is set in both files or neither), and the
+ * text runs 2px above the rest of the site (see the first <style> block).
+ *
+ * Translation notes:
+ *  - The sprint, its tracks and the readings are Apart's English originals,
+ *    so this page uses them as they are: each track card shows the official
+ *    English name as its title (the Spanish page adds it as a second line
+ *    under a Spanish name, which would only repeat it here).
+ *  - Dates in en-US style ("November 13–15, 2026"). Clock times use the
+ *    12-hour style of Apart's own page ("11:59 PM AoE"), as the English
+ *    home spotlight does, and say "Mérida time (UTC−6)".
+ *  - Prize amounts keep the site's "2,000 USD" format.
+ *  - "Mérida", "Apart Research", "Apart Fellowship" and "AI Safety Mexico"
+ *    are proper names.
+ *  - Visible copy writes "in-person" with a non-breaking hyphen (\u2011, as
+ *    /contact does for "in-house"), so it never breaks as "in- / person",
+ *    and puts a word joiner (\u2060) after the en dash of each date range,
+ *    so "13–15" never breaks as "13– / 15"; the meta description keeps a
+ *    plain hyphen and a plain dash. Ranges with a unit ("150 to 250
+ *    words") and the month–day pairs in the lead, the facts and the
+ *    agenda notes ("November 13") are bound with no-break spaces (\u00A0).
+ *
+ * EXPIRES 2026-11-12: AISMx's internal deadline for the in-person site.
+ * From the 13th, apply the Spanish sibling's note here too: swap the
+ * "until November 12" phrases for a note that in-person spots have closed
+ * and drop step 2 (the Cursor Hackathon is on the 13th at 5:00 PM); Apart's
+ * sign-up stays open until the 15th for online participants.
+ *
+ * EXPIRES 2026-11-15: after the sprint, apply the Spanish sibling's
+ * checklist here too: turn the registration band into a "the sprint took
+ * place" note (as the GSH page did); remove #registro (the Apart pill and
+ * the Cursor Hackathon embed) or swap it for the results; move the PageHero
+ * lead and the meta description to the past tense; drop the Cursor
+ * Hackathon Mérida note
+ * from #agenda (it is on Friday the 13th, so from the 14th); and
+ * move the rest of the page to the past tense, as the GSH page did, in
+ * particular the #agenda description ("Apart will post the times…")
+ * and the CtaSection ("Questions about the Mérida site?").
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import FactList from '../../components/FactList.astro';
+import CtaSection from '../../components/CtaSection.astro';
+import type { Breadcrumb } from '../../lib/types';
+import { t } from '../../lib/i18n';
+
+const pathname = '/en/ai-x-epistemics';
+
+const breadcrumb: Breadcrumb = {
+  items: [
+    { label: t('en', 'breadcrumb.home'), href: '/en' },
+    { label: 'Activities', href: '/en/activities' },
+    { label: 'AI x Epistemics Research Sprint' },
+  ],
+};
+
+// -------- External links --------
+// Apart's canonical sprint page, as a reference (guidelines, template and
+// FAQ).
+const APART_URL =
+  'https://apartresearch.com/sprints/ai-x-epistemics-research-sprint-2026-11-13-to-2026-11-15';
+// Step 1 of the application (#registro): AISMx's referral link (the one in
+// its Luma event), which leads to the same page with a utm_source, so Apart
+// counts the sign-ups that come from here. The sign-up is a modal on that
+// page: it cannot be embedded or opened directly.
+const APART_SIGNUP =
+  'https://apartresearch.com/r/vmkyvz60/ai-x-epistemics-research-sprint-2026-11-13-to-2026-11-15';
+// Apart's form embedded in step 1: empty until Apart allows it. Today all
+// of apartresearch.com sends X-Frame-Options: DENY and its form only
+// accepts submissions from its own site, so there is no way to embed it
+// from here. If Apart authorizes aismx.org (CSP `frame-ancestors`), put the
+// URL they give here, with `?utm_source=vmkyvz60&utm_medium=referral` so
+// the referral counts: step 1 then swaps the button for the iframe.
+const APART_EMBED = '';
+// Step 2: Luma's "simple" embed for the Cursor Hackathon Mérida
+// (luma.com/spacexai-lxdo).
+const CURSOR_EMBED = 'https://luma.com/embed/event/evt-Uxl44Hdz3i8Goqd/simple';
+const SPRINT_DISCORD = 'https://discord.gg/XswWBvugYs';
+
+/** target/rel for links that leave the site. */
+const externalAttrs = { target: '_blank', rel: 'noopener noreferrer' };
+
+// Sprint cover (AISMx's own art, 800×800): the same file as the card on
+// /en/activities#proximo-evento.
+const cover = {
+  src: '/images/ai-x-epistemics/sprint-cover.webp',
+  width: 800,
+  height: 800,
+  alt: 'Sprint cover: the title AI x Epistemics Research Sprint over a halftone photo of El Caracol, the Maya observatory at Chichén Itzá, and the credit Apart Research x AI Safety México.',
+};
+
+// -------- 2 · The sprint at a glance --------
+// The Mérida time (UTC−6) is our conversion. The \u00A0 no-break spaces keep
+// figures with their units.
+const facts = [
+  { label: 'Dates', value: 'November\u00A013–\u206015, 2026, Friday to Sunday.' },
+  {
+    label: 'In\u2011person site',
+    value:
+      'Mérida, from Friday, November\u00A013 at 5:00\u00A0PM to Sunday, November\u00A015 at 4:00\u00A0PM (UTC−6). The address goes to confirmed\u00A0participants.',
+  },
+  {
+    label: 'Format',
+    value:
+      'Online, on Discord and Zoom, and at in\u2011person sites such as Mérida. Projects are submitted on Apart’s page.',
+  },
+  {
+    label: 'Submission deadline',
+    value:
+      'Sunday, November\u00A015 at 11:59\u00A0PM AoE (“Anywhere on Earth”, UTC−12): in Mérida, Monday, November\u00A016 at 5:59\u00A0AM.',
+  },
+  { label: 'Cost', value: 'Free, online and in Mérida.' },
+  {
+    label: 'Prizes',
+    value: '2,000\u00A0USD in cash for the five best projects.',
+  },
+  {
+    label: 'Teams',
+    value: 'Solo or as a team, ideally of up to 5\u00A0people.',
+  },
+];
+
+// -------- 3 · What it is about --------
+// A short version of Apart's overview, with both sides: what AI could
+// improve and its risks. The second paragraph's examples come from tracks 1
+// and 2.
+const about = [
+  'AI will change how people and institutions decide what to believe and what to do. It can help us understand complex problems and coordinate better, but it can also concentrate decision-making power, make us depend on systems nobody can evaluate, and enable\u00A0manipulation.',
+  'Over the weekend, each team picks an open problem, such as measuring whether a model knows what it knows or verifying where a claim comes from; builds a benchmark, tool, or study that moves it forward; and writes up what it found.',
+];
+
+// -------- 4 · Four research tracks --------
+// Apart's official track names, with two of Apart's example projects each.
+type Track = {
+  title: string;
+  description: string;
+  examples: [string, string];
+};
+
+const tracks: Track[] = [
+  {
+    title: 'Model Epistemics & Decision-Making Evals',
+    description:
+      'AI already recommends and even makes decisions, yet we know little about the quality of what it says. This track measures whether a model knows how solid its claims are and whether it oversells or caves under pushback.',
+    examples: ['MisleadBench', 'FlipRate'],
+  },
+  {
+    title: 'Trust Infrastructure',
+    description:
+      'Signals for checking claims and tracing their origins cheaply and in ways that are hard to manipulate, useful to people and to AI agents that need to know which sources to trust.',
+    examples: ['Track-Record Ledger', 'Citation Binder'],
+  },
+  {
+    title: 'Epistemic Products',
+    description:
+      'Products that bring everyone the kind of decision support that once took time, money, or specialists, and that actually lead to better\u00A0decisions.',
+    examples: ['Dispute Escalation Benchmark', 'Crux Mapper'],
+  },
+  {
+    title: 'Open Track (deployment, adoption and impact)',
+    description:
+      'For ideas that do not fit the other tracks, especially how to get these tools used and make an impact. Projects that look more like investigative reporting than software are\u00A0welcome.',
+    examples: ['QALY for epistemics', 'Procurement Gap Report'],
+  },
+];
+
+// -------- 5 · Prizes and what comes next --------
+const prizes = [
+  { label: 'First place', value: '1,000\u00A0USD' },
+  { label: 'Second place', value: '500\u00A0USD' },
+  { label: 'Third place', value: '300\u00A0USD' },
+  { label: 'Fourth place', value: '100\u00A0USD' },
+  { label: 'Fifth place', value: '100\u00A0USD' },
+];
+
+// The Apart Fellowship fast track is accelerated consideration, not a
+// guaranteed place (Apart's FAQ). Mentor introductions and the publication
+// path are for winners ("What winners receive beyond cash"); the results
+// timing is from the FAQ too.
+const afterSprint = [
+  {
+    label: 'Apart Fellowship',
+    value:
+      'Top teams can apply to the Apart Fellowship (mentorship, funding, and publication support) on a fast track. Review is faster, but a place is not guaranteed.',
+  },
+  {
+    label: 'Mentorship',
+    value: 'Introductions to mentors for the winners.',
+  },
+  {
+    label: 'Publication',
+    value:
+      'A path to a publishable write-up for the winners; some projects are shared on the Alignment Forum or\u00A0LessWrong.',
+  },
+  {
+    label: 'Results',
+    value:
+      'Usually announced one to two weeks after judging, and all participants get feedback by email.',
+  },
+];
+
+// -------- 6 · Schedule --------
+// The three days as Apart describes them; talk times are not posted yet.
+// The Cursor Hackathon Mérida is registered in step 2 of #registro; it
+// takes no stated length here (Luma says 5:00–9:00 PM, the site's
+// description three hours).
+const days = [
+  {
+    label: 'Day 1',
+    day: 'Friday, November 13',
+    iso: '2026-11-13',
+    text: 'Kickoff, keynote, track overviews, and team formation.',
+  },
+  {
+    label: 'Day 2',
+    day: 'Saturday, November 14',
+    iso: '2026-11-14',
+    text: 'Work on the projects, with office hours and check-ins.',
+  },
+  {
+    label: 'Day 3',
+    day: 'Sunday, November 15',
+    iso: '2026-11-15',
+    text: 'Write-ups, submissions, and demos.',
+  },
+];
+
+const agendaNotes = [
+  {
+    label: 'In Mérida',
+    value:
+      'From Friday, November\u00A013 at 5:00\u00A0PM to Sunday, November\u00A015 at 4:00\u00A0PM. After that you can keep working and submit until Monday, November\u00A016 at 5:59\u00A0AM.',
+  },
+  {
+    label: 'Cursor Hackathon Mérida',
+    value:
+      'Friday, November\u00A013 at 5:00\u00A0PM: a Cursor event to design a workflow for the sprint, with Janeth Valdivia and AI\u00A0Safety Mexico.',
+  },
+];
+
+// -------- 7 · Who can join and what to submit --------
+const whoCanJoin = [
+  'The sprint wants different profiles: ML, product design, journalism, forecasting, policy, security, experts in health, finance, or law, and students and\u00A0career\u2011changers.',
+  'No AI safety background is needed, and many projects need no ML skills: curiosity and a willingness to scope a tight question are enough.',
+  'You can enter solo or as a team (ideally of up to 5\u00A0people) and join at most two projects. You do not need a team in advance: teams form before or during the sprint.',
+];
+
+const deliverables = [
+  {
+    label: 'Required',
+    value:
+      'A PDF on the official template, at most 8\u00A0pages not counting references and appendices, with an abstract of 150\u00A0to\u00A0250\u00A0words and a limitations, ethics, and dual-use\u00A0appendix.',
+  },
+  {
+    label: 'Optional',
+    value: 'A public GitHub repo and a 3\u00A0to\u00A05\u00A0minute video demo.',
+  },
+  {
+    label: 'Judging',
+    value:
+      'From 1 to 5 on Impact Potential & Innovation, Execution Quality, and Presentation & Clarity.',
+  },
+];
+
+// -------- 8 · Speakers and judges --------
+// Name and a short affiliation; no photos, no LinkedIn links.
+const speakers = [
+  { name: 'Owen Cotton-Barratt', affiliation: 'Differential Labs · Forethought' },
+  { name: 'Jonathan Stray', affiliation: 'Center for Human\u2011Compatible AI, UC\u00A0Berkeley' },
+  { name: 'Joel Suro', affiliation: 'OMNA' },
+  { name: 'Keivan Navaie', affiliation: 'Lancaster University · MATS' },
+  { name: 'Dean Issacharoff', affiliation: 'Creative technologist and communications professional' },
+];
+
+const judges = [
+  { name: 'Nikos Bosse', affiliation: 'FutureSearch' },
+  { name: 'Darshan Shah', affiliation: 'Evaluation of generative AI systems' },
+  { name: 'Harshada Baswaraj Jivane', affiliation: 'Laurel' },
+  { name: 'Clemens Possnig', affiliation: 'University of Waterloo · LSE' },
+  { name: 'David Manheim', affiliation: 'ALTER' },
+  { name: 'Oliver Klingefjord', affiliation: 'Meaning Alignment Institute' },
+  { name: 'Nick Clark', affiliation: 'University of Washington · Gumshoe AI' },
+  { name: 'Duncan McClements', affiliation: 'Centre for British Progress' },
+  { name: 'Camilla Balbis', affiliation: 'Facilitator, BlueDot Impact' },
+];
+
+// -------- 9 · Reading --------
+// Five texts from Apart's sprint-wide list, titled exactly as that list
+// gives them (typographic quotes aside).
+const readings = [
+  {
+    title: 'State of the Field: AI for Epistemics and Coordination',
+    meta: 'Ben N and Alex Csaky · LessWrong, 2026',
+    url: 'https://www.lesswrong.com/posts/uw8RQ8yjKexnhTw6E/state-of-the-field-ai-for-epistemics-and-coordination',
+  },
+  {
+    title: 'What’s Important in “AI for Epistemics”?',
+    meta: 'Lukas Finnveden · Forethought, 2024',
+    url: 'https://www.forethought.org/research/whats-important-in-ai-for-epistemics',
+  },
+  {
+    title: 'AI Impacts on Epistemics: the Good, the Bad and the Ugly',
+    meta: 'Cotton-Barratt and Hadshar · Forethought, 2026',
+    url: 'https://www.forethought.org/research/ai-impacts-on-epistemics-the-good-the-bad-and-the-ugly',
+  },
+  {
+    title: 'The most interesting startup idea I’ve seen recently: AI for epistemics',
+    meta: 'Benjamin Todd · 80,000 Hours, 2024',
+    url: 'https://80000hours.org/2024/05/project-idea-ai-for-epistemics/',
+  },
+  {
+    title: 'Project Ideas: Epistemics',
+    meta: 'Lukas Finnveden · 2024, updated 2025',
+    url: 'https://lukasfinnveden.substack.com/p/project-ideas-epistemics',
+  },
+];
+---
+
+<BaseLayout
+  title="AI x Epistemics Research Sprint · AI Safety Mexico × Apart Research"
+  description="AI Safety Mexico runs the in-person Mérida site of Apart Research’s AI x Epistemics Research Sprint, November 13–15, 2026. Free, online or in person, and no prior experience needed."
+  pathname={pathname}
+  lang="en"
+  ogImage="/images/ai-x-epistemics/sprint-og.jpg"
+>
+  <Header slot="header" currentPath={pathname} navActivePath="/en/activities" lang="en" />
+
+  <PageHero
+    title="AI x Epistemics Research Sprint"
+    description={'A research weekend by Apart Research on AI and epistemics: how we decide what to believe and what to do. November\u00A013–\u206015, 2026, online and in Mérida, with AI Safety Mexico as the in\u2011person site. Free, and no prior experience needed.'}
+    breadcrumb={breadcrumb}
+    lang="en"
+  />
+
+  <!-- 1 · Registration band: sums up the two-step application and leads
+       to #registro, where both steps are. The region takes a short
+       aria-label: its lead is two sentences, too long for a name (the
+       GSH band points aria-labelledby at a short lead).
+       EXPIRES 2026-11-12: from the 13th there are no more in-person
+       requests (see the docblock).
+       EXPIRES 2026-11-15: after the sprint, turn it into a "the sprint took
+       place" note, like the GSH band. -->
+  <section class="sprint-register" aria-label="Registration">
+    <div class="container sprint-register__inner">
+      <p class="sprint-register__lead">
+        <span>To join in Mérida, apply in two steps: sign up on Apart and request your spot at the Cursor Hackathon Mérida.</span>
+        <span>{'Spots are limited: you can apply until November\u00A012.'}</span>
+      </p>
+      <div class="sprint-register__actions">
+        <a class="sprint-register__cta btn btn-register btn-hero" href="#registro">
+          Apply in two steps
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · The sprint at a glance (T) -->
+  <section id="en-breve" class="section section--warm" aria-labelledby="sprint-brief-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-brief-heading"
+        eyebrow="Overview"
+        title="The sprint at a glance"
+      />
+      <div class="sprint-facts">
+        <FactList items={facts} />
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · What it is about (W) -->
+  <section id="de-que-se-trata" class="section section--base" aria-labelledby="sprint-about-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-about-heading"
+        eyebrow="The topic"
+        title="What it is about"
+      />
+      <div class="sprint-about">
+        <div class="sprint-prose">
+          {about.map((text) => <p>{text}</p>)}
+        </div>
+        <figure class="sprint-about__art">
+          <img
+            src={cover.src}
+            width={cover.width}
+            height={cover.height}
+            alt={cover.alt}
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Four research tracks (T) -->
+  <section id="lineas" class="section section--warm" aria-labelledby="sprint-tracks-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-tracks-heading"
+        eyebrow="Research"
+        title="Four research tracks"
+        description="Each project picks a track, but all compete together on the same rubric."
+      />
+      <ol class="sprint-tracks" role="list">
+        {tracks.map((track, i) => (
+          <li class="sprint-tracks__item">
+            <span class="sprint-tracks__number" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="sprint-tracks__title">{track.title}</h3>
+            <p class="sprint-tracks__text">{track.description}</p>
+            <p class="sprint-tracks__examples">
+              Example projects: {track.examples[0]} and {track.examples[1]}.
+            </p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 5 · Prizes and what comes next (W). The description is an expression
+       so its \u00A0 binds "2,000 USD", as in the FactLists. -->
+  <section id="premios" class="section section--base" aria-labelledby="sprint-prizes-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-prizes-heading"
+        eyebrow="Prizes"
+        title="Prizes and what comes next"
+        description={'2,000\u00A0USD in cash for the five best projects across all sites, and a path to keep\u00A0researching.'}
+      />
+      <div class="sprint-split sprint-split--prizes">
+        <div>
+          <h3 class="sprint-subhead">Cash prizes</h3>
+          <FactList items={prizes} />
+        </div>
+        <div>
+          <h3 class="sprint-subhead">After the sprint</h3>
+          <FactList items={afterSprint} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · Schedule (T) -->
+  <section id="agenda" class="section section--warm" aria-labelledby="sprint-agenda-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-agenda-heading"
+        eyebrow={'November 13–\u206015, 2026'}
+        title="Schedule"
+        description="Talks are optional and recorded; Apart will post the times closer to the event."
+      />
+      <ol class="sprint-days" role="list">
+        {days.map((d) => (
+          <li class="sprint-days__item">
+            <span class="sprint-days__label role-label">{d.label}</span>
+            <h3 class="sprint-days__title"><time datetime={d.iso}>{d.day}</time></h3>
+            <p class="sprint-days__text">{d.text}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="sprint-agenda-notes">
+        <FactList items={agendaNotes} />
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Who can join and what to submit (W) -->
+  <section id="participa" class="section section--base" aria-labelledby="sprint-join-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-join-heading"
+        eyebrow="Taking part"
+        title="Who can join and what to submit"
+      />
+      <div class="sprint-split">
+        <div>
+          <h3 class="sprint-subhead">Who can join</h3>
+          <div class="sprint-prose">
+            {whoCanJoin.map((text) => <p>{text}</p>)}
+          </div>
+        </div>
+        <div>
+          <h3 class="sprint-subhead">What to submit</h3>
+          <p class="sprint-lead">
+            A short research paper, not a product demo.
+          </p>
+          <FactList items={deliverables} />
+          <p class="sprint-more">
+            Guidelines, the template, and the FAQ are on the
+            <a class="inline-link" href={APART_URL} {...externalAttrs}>sprint page at Apart</a>.
+            Questions during the sprint: <a class="inline-link" href={SPRINT_DISCORD} {...externalAttrs}>the sprint’s Discord</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · Speakers and judges (T) -->
+  <section id="ponentes" class="section section--warm" aria-labelledby="sprint-people-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-people-heading"
+        eyebrow="People"
+        title="Speakers and judges"
+        description="Organized by Apart Research, with Alex Csaky as co-designer of the tracks. AI Safety Mexico runs the Mérida site."
+      />
+      <div class="sprint-split sprint-split--people">
+        <div>
+          <h3 class="sprint-subhead">Speakers</h3>
+          <ul class="sprint-people" role="list">
+            {speakers.map((p) => (
+              <li class="sprint-people__item">
+                <span class="sprint-people__name">{p.name}</span>
+                <span class="sprint-people__affiliation">{p.affiliation}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3 class="sprint-subhead">Judges</h3>
+          <ul class="sprint-people sprint-people--two-col" role="list">
+            {judges.map((p) => (
+              <li class="sprint-people__item">
+                <span class="sprint-people__name">{p.name}</span>
+                <span class="sprint-people__affiliation">{p.affiliation}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · Background reading (W) -->
+  <section id="lecturas" class="section section--base" aria-labelledby="sprint-reading-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-reading-heading"
+        eyebrow="Reading"
+        title="Background reading"
+        description="Five texts to get into the topic; Apart’s page has more."
+      />
+      <ul class="metric-list sprint-readings" role="list">
+        {readings.map((r) => (
+          <li>
+            <a class="sprint-readings__title" href={r.url} {...externalAttrs}>{r.title}</a>
+            <span class="sprint-readings__meta">{r.meta}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 10 · Application in two steps (T): Apart's sign-up (a pill) and the
+       Luma form for the Cursor Hackathon Mérida (embedded), with no other
+       links to forms (see the Spanish sibling's «Registro» note).
+       EXPIRES 2026-11-12: from the 13th there are no more in-person
+       requests (see the docblock).
+       EXPIRES 2026-11-15: remove it or swap it for the results. -->
+  <section id="registro" class="section section--warm" aria-labelledby="sprint-apply-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-apply-heading"
+        eyebrow="Registration"
+        title="Apply in two steps"
+        description={'To join in Mérida, complete both steps. They are free; spots are limited and you can apply until November\u00A012.'}
+      />
+      <ol class="sprint-apply" role="list">
+        <li class="sprint-apply__step">
+          <span class="sprint-apply__label role-label">Step 1</span>
+          <h3 class="sprint-apply__title">Sign up on Apart</h3>
+          <p class="sprint-apply__text">
+            {APART_EMBED ? 'Below' : 'On the sprint page'}, click “Sign up” and enter “Mérida” as your Location.
+          </p>
+          {APART_EMBED ? (
+            <>
+              <div class="event-embed sprint-apply__embed">
+                <iframe
+                  src={APART_EMBED}
+                  title="Apart Research sign-up form for the sprint"
+                  loading="lazy"
+                ></iframe>
+              </div>
+              <p class="sprint-apply__text sprint-apply__fallback">
+                Not loading? <a class="inline-link" href={APART_SIGNUP} {...externalAttrs}>Open it on Apart</a>.
+              </p>
+            </>
+          ) : (
+            <div class="program-actions">
+              <a class="btn btn-register" href={APART_SIGNUP} {...externalAttrs}>
+                Sign up on Apart
+              </a>
+            </div>
+          )}
+        </li>
+        <li class="sprint-apply__step">
+          <span class="sprint-apply__label role-label">Step 2</span>
+          <h3 class="sprint-apply__title">Request your spot at the Cursor Hackathon Mérida</h3>
+          <p class="sprint-apply__text">{'Friday, November\u00A013 at 5:00\u00A0PM: a Cursor event to design a workflow for the sprint.'}</p>
+          <div class="event-embed sprint-apply__embed">
+            <iframe
+              src={CURSOR_EMBED}
+              title="Luma form to request a spot at the Cursor Hackathon Mérida"
+              allow="fullscreen; payment"
+              loading="lazy"
+            ></iframe>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 11 · Closing CTA (W) -->
+  <CtaSection
+    title="Questions about the Mérida site?"
+    description="Write to us. General questions about the sprint are answered on its Discord."
+    ctaLabel="Contact us"
+    ctaHref="/en/contact"
+  />
+
+  <Footer slot="footer" lang="en" />
+</BaseLayout>
+
+<style>
+  /* Text two points (2px) above the rest of the site, on this page only:
+     the type tokens are redefined on <main>, so the header, nav and footer
+     keep the site's size. Each value is its token from tokens.css (2.3,
+     with its 481px and 769px tiers) plus 2px, and the literal sizes on
+     this page (FactList's values, the band pill, the track numerals and
+     the card copy) add the same 2px. Page styles load only on this page
+     and its English twin. */
+  :global(#main) {
+    --fs-h1: calc(1.42rem + 2px);
+    --fs-h2: calc(1.18rem + 2px);
+    --fs-h3: calc(1.15rem + 2px);
+    --fs-h4: calc(1.1rem + 2px);
+    --fs-h5: calc(1.08rem + 2px);
+    --fs-h6: calc(1rem + 2px);
+    --fs-lead: calc(1rem + 2px);
+    --fs-body: calc(0.9375rem + 2px);
+    --fs-small: calc(0.88rem + 2px);
+    --fs-caption: calc(0.8rem + 2px);
+    --fs-eyebrow: calc(0.7rem + 2px);
+    --fs-btn: calc(0.9rem + 2px);
+    font-size: var(--fs-body);
+  }
+
+  @media (min-width: 481px) {
+    :global(#main) {
+      --fs-h1: calc(clamp(1.7rem, 3.6vw, 2.35rem) + 2px);
+      --fs-body: calc(1rem + 2px);
+    }
+  }
+
+  @media (min-width: 769px) {
+    :global(#main) {
+      --fs-h2: calc(1.32rem + 2px);
+    }
+  }
+
+  /* FactList sets its values at a literal 0.92rem, not a token. */
+  :global(#main .fact-list__value) {
+    font-size: calc(0.92rem + 2px);
+  }
+
+  /* Bands: the global .section shells (72px, 48px on phones) with the
+     line-soft hairline from base.css (`main > section`). Deep-link
+     targets (#agenda, #registro, …) clear the sticky header. */
+  section[id] {
+    scroll-margin-top: var(--scroll-offset);
+  }
+
+  /* ── 1 · Registration band ───────────────────────────────────────── */
+  /* The GSH page's `.gsh-register`: a centered lead and its pill right
+     under the hero, on white. */
+  .sprint-register {
+    background: var(--color-bg-base);
+    padding-block: var(--section-pad-stats);
+  }
+
+  .sprint-register__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .sprint-register__lead {
+    max-width: var(--measure-sub);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: balance;
+  }
+
+  /* One sentence per unit, so lines break between the two sentences
+     rather than leaving a fragment of one beside the other. */
+  .sprint-register__lead span {
+    display: inline-block;
+  }
+
+  .sprint-register__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--gap-actions);
+    margin-top: 22px;
+  }
+
+  /* As on the GSH band, the pill keeps its width on phones (220px minimum
+     instead of the ≤768px full-width `.btn-hero`) and stays centered; it
+     takes `.btn-hero`'s literal size plus the page's 2px. */
+  .sprint-register__cta {
+    width: auto;
+    min-width: 220px;
+    font-size: calc(0.92rem + 2px);
+  }
+
+  /* ── Shared type: prose, subheads, the label/value lists ─────────── */
+  .sprint-prose p,
+  .sprint-lead,
+  .sprint-apply__text {
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: pretty;
+  }
+
+  .sprint-prose {
+    max-width: var(--measure-desc);
+  }
+
+  .sprint-prose p + p {
+    margin-top: 14px;
+  }
+
+  .sprint-lead {
+    margin-bottom: 14px;
+  }
+
+  /* h3 inside a section: her card-title size, so the h2 above stays the
+     largest heading on the band. */
+  .sprint-subhead {
+    margin: 0 0 14px;
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  /* FactList at the reading measure (its rows otherwise run the full
+     container). On this page its values are whole sentences, so `pretty`
+     keeps a lone word («Mexico.») off their last line. */
+  .sprint-facts {
+    max-width: var(--measure-desc);
+  }
+
+  section :global(.fact-list__value) {
+    text-wrap: pretty;
+  }
+
+  /* Two columns from 769px (em, like FeatureGrid, so the tier moves out
+     when the reader enlarges text). Prizes: the short amount list takes a
+     third, what comes after the sprint two thirds. */
+  .sprint-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+
+  @media (min-width: 48.0625em) {
+    .sprint-split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 48px;
+    }
+
+    .sprint-split--prizes {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+  }
+
+  /* A split right under a heading without a description (#participa):
+     the heading keeps only 14px under it, so add the rest of the 34px
+     that a description would leave before the h3s. */
+  :global(.section-heading--no-desc) + .sprint-split {
+    margin-top: 20px;
+  }
+
+  /* ── 3 · De qué se trata: copy + framed square cover ─────────────── */
+  /* The cover sits beside the copy from 769px (240px wide up to 1024px,
+     340px from 1025px) and under it on phones, capped at 360px so it does
+     not fill a phone screen. Hairline frame, 8px corners, no shadow. */
+  .sprint-about {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+
+  .sprint-about__art {
+    margin: 0;
+    max-width: 360px;
+  }
+
+  .sprint-about__art img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-bg-muted);
+  }
+
+  @media (min-width: 769px) {
+    .sprint-about {
+      grid-template-columns: minmax(0, 1fr) 240px;
+      column-gap: 40px;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .sprint-about {
+      grid-template-columns: minmax(0, 1fr) 340px;
+    }
+  }
+
+  /* ── 4 · Tracks: four numbered white cards, 2×2 from 769px ────────── */
+  /* FeatureGrid's tile (numeral, title, copy) with room for the original
+     English name and two example projects pinned to the bottom, so the
+     two cards in a row end on one line. */
+  .sprint-tracks {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gap-grid);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 48.0625em) {
+    .sprint-tracks {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .sprint-tracks__item {
+    display: flex;
+    flex-direction: column;
+    padding: var(--pad-card);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  /* FeatureGrid's numeral: Inter 500 in the decorative ink-3 grey (large
+     and aria-hidden, so the non-text grey is fine). */
+  .sprint-tracks__number {
+    margin-bottom: 14px;
+    font-family: var(--font-display);
+    font-size: calc(1.5rem + 2px);
+    font-weight: var(--fw-display);
+    line-height: 1;
+    letter-spacing: var(--ls-display);
+    color: var(--ink-3);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  .sprint-tracks__title {
+    margin: 0;
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  /* `balance` (not `pretty`): Chromium's `pretty` still leaves «Evals» or
+     «impact)» alone on a phone; balancing splits the name in two halves. */
+  .sprint-tracks__original {
+    margin-top: 4px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    text-wrap: balance;
+  }
+
+  .sprint-tracks__text {
+    margin-top: 12px;
+    font-size: calc(0.92rem + 2px);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: pretty;
+  }
+
+  .sprint-tracks__examples {
+    margin-top: auto;
+    padding-top: 14px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  /* ── 6 · Agenda: three day cards, one row from 1025px ────────────── */
+  /* Stacked up to 1024px: three narrow columns at 769px would squeeze each
+     day into a few words per line. */
+  .sprint-days {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gap-grid);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 64.0625em) {
+    .sprint-days {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .sprint-days__item {
+    padding: var(--pad-card);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .sprint-days__title,
+  .sprint-apply__title {
+    margin: 0 0 8px;
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  /* Stacked (up to 1024px) the cards run the full container, so the copy
+     keeps her sub measure. `balance`, not `pretty`: Chromium's `pretty`
+     leaves a long last word alone («retroalimentación.»). */
+  .sprint-days__text {
+    max-width: var(--measure-sub);
+    font-size: calc(0.92rem + 2px);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: balance;
+  }
+
+  .sprint-agenda-notes {
+    max-width: var(--measure-desc);
+    margin-top: 34px;
+  }
+
+  /* ── 7 · «Qué se entrega»: the closing line with the Apart and Discord
+     links. They carry the global `.inline-link` explicitly: with the
+     `{...externalAttrs}` spread, Astro adds its scope class to the <a>,
+     so base.css's rule for unclassed in-text links would not match. */
+  .sprint-more {
+    margin-top: 18px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: pretty;
+  }
+
+  /* ── 8 · People: compact name + affiliation rows on hairlines ───── */
+  .sprint-people {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .sprint-people__item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .sprint-people__name {
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-normal);
+    color: var(--color-text-primary);
+  }
+
+  /* `balance` splits a two-line affiliation evenly instead of leaving
+     one word («comunicación», "professional") on the second line. */
+  .sprint-people__affiliation {
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    text-wrap: balance;
+  }
+
+  /* From 1025px: three even columns instead of five speakers beside a
+     column of nine judges. The judges take two thirds and flow down two
+     columns of five and four (column flow keeps the list order down each
+     column). Both lists share the split's row tracks (subgrid), so a
+     two-line affiliation in any column moves the whole row and the
+     hairlines stay level across the three columns; without subgrid the
+     rows line up only while every affiliation fits on one line. Five
+     rows: revisit if the panel grows past ten. The top hairline moves
+     from the list to the first item of each column (every fifth from
+     the first), so it breaks at the 48px gap like the row hairlines
+     instead of running across it. */
+  @media (min-width: 64.0625em) {
+    .sprint-split--people {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+
+    .sprint-people--two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(5, auto);
+      grid-auto-flow: column;
+      column-gap: 48px;
+      border-top: 0;
+    }
+
+    .sprint-people--two-col > .sprint-people__item:nth-child(5n + 1) {
+      border-top: 1px solid var(--color-border);
+    }
+
+    @supports (grid-template-rows: subgrid) {
+      .sprint-split--people {
+        grid-template-rows: auto repeat(5, auto);
+        row-gap: 0;
+      }
+
+      .sprint-split--people > div {
+        display: grid;
+        grid-row: 1 / -1;
+        grid-template-rows: subgrid;
+      }
+
+      .sprint-split--people .sprint-people {
+        display: grid;
+        grid-row: 2 / -1;
+        grid-template-rows: subgrid;
+      }
+    }
+  }
+
+  /* ── 9 · Readings: title link + source line, on hairlines ──────── */
+  /* The rows are the global `.metric-list` (her hairline list: 820px,
+     15px rows over 1px rules); this adds only FactList's top rule, so the
+     list reads as a block. Every row is a link, so the titles stay ink
+     with a hairline underline (clay-dark on hover) instead of five clay
+     in-text links in a row. The underline is a border on the inline <a>,
+     so it follows each line of a wrapped title. */
+  .sprint-readings {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .sprint-readings__title {
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-normal);
+    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--color-link-underline);
+    transition: color var(--transition), border-color var(--transition);
+  }
+
+  .sprint-readings__title:hover {
+    color: var(--color-link-hover);
+    border-bottom-color: var(--color-link-underline-hover);
+  }
+
+  .sprint-readings__meta {
+    display: block;
+    margin-top: 4px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+  }
+
+  /* ── 10 · Application in two steps ───────────────────────────────── */
+  /* Two numbered steps, one under the other so they read in order: each
+     has its label, a title (the day cards' title rule) and a line of
+     context (the prose rule), then step 1's pill to Apart (or Apart's
+     form, with `APART_EMBED`) or step 2's Luma form (the global
+     `.event-embed`: up to 600px wide, 830px tall;
+     the form runs 794px tall at 552–600px). */
+  .sprint-apply {
+    display: grid;
+    gap: 48px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sprint-apply__text {
+    max-width: var(--measure-sub);
+  }
+
+  /* While the frame is blocked or still loading it reads as a white panel
+     on the bg-2 band, not a void. */
+  .sprint-apply__embed iframe {
+    background: var(--color-bg-base);
+  }
+
+  /* Step 1's "not loading?" link under Apart's form (only with
+     `APART_EMBED`). */
+  .sprint-apply__fallback {
+    margin-top: 12px;
+  }
+</style>

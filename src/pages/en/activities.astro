@@ -15,11 +15,15 @@
  * identical in both files.
  *
  * Translation notes (per Task #8 guidelines):
- *  - The panel's official title "Impulsando la comunidad de AI Safety en
- *    México: Tech Policy Panel" is the event's name on Luma, so it stays in
- *    Spanish (card title and the Luma embed title). The card title is marked
- *    lang="es" (Card `titleLang`); the iframe title is an attribute and
- *    cannot carry a lang, so it stays as is.
+ *  - The upcoming event is Apart Research's "AI x Epistemics Research
+ *    Sprint" (an English proper name); the card covers AI Safety Mexico's
+ *    in-person Mérida site. The Luma registration embed lives on
+ *    /en/ai-x-epistemics, not here.
+ *  - The Mexico Tech Week panel is now a past activity in the conferences
+ *    grid. ActivityCard cannot mark a lang, so the card is titled by the
+ *    event and the English part of the official name ("Mexico Tech Week ·
+ *    Tech Policy Panel") and glosses the Spanish title in English ("Growing
+ *    the AI safety community in Mexico"), as the old upcoming-event card did.
  *  - "Workshop · Your AI Agent Is Not You" was authored in English upstream
  *    and is preserved verbatim (label and talk name on two lines, as in
  *    /activities).
@@ -54,51 +58,75 @@ const YOUTUBE_CHANNEL = 'https://www.youtube.com/@AISafetyMéxico';
 const externalAttrs = (external?: boolean) =>
   external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
 
-// -------- Upcoming event: Mexico Tech Week 2026 (#proximo-evento) --------
-// Her "Actividades en curso" panel card (fcacfc4 index.html L144–164). The
-// SectionHeading above already names the event and the BlueDot grant, so the
-// card starts with the panel title (no in-card label). The first pill links
-// straight to the Luma event page, so registering does not depend on the
-// third-party embed loading (same label and accent as the home spotlight).
-// EXPIRES 2026-10-27: after the panel, move it to a past activity here, on
-// /activities and on both home pages (the register pill goes with it).
+// -------- Upcoming event: AI x Epistemics Research Sprint (#proximo-evento) --------
+// The #gsh-2026 poster card (Card with a framed image beside the copy), with
+// the sprint's square cover. The SectionHeading names the sprint; the card is
+// about AI Safety Mexico's in-person Mérida site: the two `.event-meta` lines
+// (dates · place; organizers), the two-step note and two pills. The first
+// opens the two-step application on /en/ai-x-epistemics (#registro: Apart's
+// sign-up and the Cursor Hackathon's Luma form), with the home spotlight's
+// label and accent; no pill leads to a form elsewhere, so there is one way
+// to apply. The date line is two <time>s, one per end of the range, joined
+// by an en dash and a word joiner (&#8288;, U+2060), so it never breaks as
+// «13– / 15». The cover sits right under the PageHero, above the fold on
+// desktop (the page's LCP image), so the Card loads it eagerly.
+// EXPIRES 2026-11-12: AISMx's internal deadline for in-person requests.
+// From the 13th, drop the "Apply in two steps" pill (let "Sprint details"
+// lead as the `register` pill) and rewrite the note (in-person requests
+// have closed), here and on /activities.
+// EXPIRES 2026-11-15: after the sprint, move it to a past activity here (like
+// #gsh-2026), on /activities and on both home pages, and put the next event
+// in this slot (or drop the section until there is one).
 // Two-word names that must not split across lines («AI Safety», «AI House»,
 // «Oscar Mata», «EA Forum», «First Friday») are bound with a no-break space
 // (\u00A0) in the strings below; the working-sessions title and the
 // #gsh-2026 badge also bind their «·» to the word before it, so no line
 // starts with «·». Each bind stays at two words, so it still fits a card
-// at 200% text.
+// at 200% text. «in-person» takes a non-breaking hyphen (\u2011, as /contact
+// does for «in-house»), so it never breaks as «in- / person».
+type EventDate = { iso: string; label: string };
+
 type UpcomingEvent = {
+  image: ImgRef;
+  badge: string;
   title: string;
   description: string;
-  date: { iso: string; label: string };
-  venue: string;
+  paragraphs: string[];
+  /** The two ends of the range, each with its machine-readable date. */
+  dates: { start: EventDate; end: EventDate };
+  place: string;
   organizers: string;
   actions: CtaRef[];
-  embed: { src: string; title: string };
 };
 
 const upcomingEvent: UpcomingEvent = {
-  title: 'Impulsando la comunidad de AI\u00A0Safety en México: Tech Policy Panel',
-  description:
-    'Growing the AI safety community in Mexico: a panel on how AI regulation will affect the tech ecosystem in Mexico and Latin America.',
-  date: { iso: '2026-10-27', label: 'Tuesday, October 27, 2026' },
-  venue: 'MXTW AI\u00A0House, Juárez, Mexico City',
-  organizers: 'Organized by Marta Kosmyna, Isabel Montalvo, Janeth Valdivia, and Oscar\u00A0Mata',
-  actions: [
-    { label: 'Register on Luma', href: 'https://luma.com/event/evt-0jdNWFu6jYVQ148', variant: 'register', external: true },
-    { label: 'Events calendar', href: LUMA_CALENDAR, variant: 'outline', external: true },
-    { label: 'Talks on YouTube', href: YOUTUBE_CHANNEL, variant: 'outline', external: true },
-  ],
-  embed: {
-    src: 'https://luma.com/embed/event/evt-0jdNWFu6jYVQ148/simple',
-    title: 'Registration for the panel Impulsando la comunidad de AI Safety en México',
+  image: {
+    src: '/images/ai-x-epistemics/sprint-cover.webp',
+    width: 800,
+    height: 800,
+    alt: 'Sprint cover: the title AI x Epistemics Research Sprint over a halftone photo of El Caracol, the Maya observatory at Chichén Itzá, and the credit Apart Research x AI Safety México.',
   },
+  badge: 'Apart Research × AI\u00A0Safety Mexico',
+  title: 'In\u2011person site in Mérida',
+  description:
+    'Three days to build benchmarks, verification signals, and products that help us decide better what to believe. The Mérida site is free, and no prior experience is needed.',
+  paragraphs: [
+    'Spots are limited: apply in two steps by November\u00A012.',
+  ],
+  dates: {
+    start: { iso: '2026-11-13', label: 'November 13' },
+    end: { iso: '2026-11-15', label: '15, 2026' },
+  },
+  place: 'Mérida and online',
+  organizers: 'Organized by Apart Research and AI\u00A0Safety Mexico (Mérida site)',
+  actions: [
+    { label: 'Apply in two steps', href: '/en/ai-x-epistemics#registro', variant: 'register' },
+    { label: 'Sprint details', href: '/en/ai-x-epistemics', variant: 'outline' },
+  ],
 };
 
 // -------- Mesas de trabajo (recurrente) --------
-// Whole-card link to the Luma calendar; `linkLabel` is its visible pill, with
-// the label the #proximo-evento pill uses for the same URL.
+// Whole-card link to the Luma calendar; `linkLabel` is its visible pill.
 const recurring = {
   title: 'Working sessions\u00A0· First\u00A0Friday of the month',
   date: 'Recurring',
@@ -149,7 +177,9 @@ const gshRecap: PastActivity = {
 // inside the card at any text size: binding it whole with no-break spaces
 // would push it past the card's overflow:hidden edge at 200% text (WCAG
 // 1.4.4), so only the two-word «AI Safety» stays bound. `linkLabel` is the
-// visible pill of a linked card (her `.event-preview-link`).
+// visible pill of a linked card (her `.event-preview-link`). Newest first:
+// the Mexico Tech Week panel (October 2026, with a BlueDot Impact grant)
+// moved here from #proximo-evento once it took place.
 type ConfTalk = {
   title: string;
   date?: string;
@@ -161,6 +191,15 @@ type ConfTalk = {
 };
 
 const conferencesAndTalks: ConfTalk[] = [
+  {
+    title: 'Mexico Tech Week ·\nTech Policy Panel',
+    date: 'October 2026',
+    description:
+      'Growing the AI safety community in Mexico: a panel on how AI regulation will affect the tech ecosystem in Mexico and Latin America. At MXTW AI\u00A0House (Mexico City), funded by a BlueDot Impact grant; organized by Marta Kosmyna, Isabel Montalvo, Janeth Valdivia, and Oscar\u00A0Mata.',
+    link: 'https://luma.com/mxtw-aisafetymx',
+    linkLabel: 'Event page',
+    external: true,
+  },
   {
     title: 'Workshop ·\nYour AI Agent Is Not You',
     date: '2026',
@@ -201,7 +240,7 @@ const conferencesAndTalks: ConfTalk[] = [
     lang="en"
   />
 
-  <!-- Upcoming event: Mexico Tech Week 2026 -->
+  <!-- Upcoming event: AI x Epistemics Research Sprint (Mérida site) -->
   <section
     id="proximo-evento"
     class="page-section page-section--alt"
@@ -210,14 +249,16 @@ const conferencesAndTalks: ConfTalk[] = [
     <div class="container">
       <SectionHeading
         eyebrow="Upcoming event"
-        title="Mexico Tech Week 2026"
-        description="A tech policy panel funded by a BlueDot Impact grant."
+        title="AI x Epistemics Research Sprint"
+        description={'A research sprint by Apart Research, online and with an in\u2011person site in Mérida.'}
         id="activities-spotlight"
       />
-      <div class="card-column">
+      <div class="card-column card-column--poster card-column--poster-square">
         <Card
+          image={upcomingEvent.image}
+          loading="eager"
+          badge={upcomingEvent.badge}
           title={upcomingEvent.title}
-          titleLang="es"
           description={upcomingEvent.description}
           bordered
           interactive={false}
@@ -225,10 +266,11 @@ const conferencesAndTalks: ConfTalk[] = [
           padding="md"
         >
           <p class="event-meta">
-            <time datetime={upcomingEvent.date.iso}>{upcomingEvent.date.label}</time> · {upcomingEvent.venue}
+            <time datetime={upcomingEvent.dates.start.iso}>{upcomingEvent.dates.start.label}</time>–&#8288;<time datetime={upcomingEvent.dates.end.iso}>{upcomingEvent.dates.end.label}</time> · {upcomingEvent.place}
           </p>
           <p class="event-meta">{upcomingEvent.organizers}</p>
-          <div class="program-actions">
+          {upcomingEvent.paragraphs.map((text) => <p>{text}</p>)}
+          <Fragment slot="footer">
             {upcomingEvent.actions.map((cta) => (
               <a
                 class={`btn btn-${cta.variant ?? 'outline'}`}
@@ -238,15 +280,7 @@ const conferencesAndTalks: ConfTalk[] = [
                 {cta.label}
               </a>
             ))}
-          </div>
-          <div class="event-embed">
-            <iframe
-              src={upcomingEvent.embed.src}
-              title={upcomingEvent.embed.title}
-              allow="fullscreen; payment"
-              loading="lazy"
-            ></iframe>
-          </div>
+          </Fragment>
         </Card>
       </div>
     </div>
@@ -388,10 +422,12 @@ const conferencesAndTalks: ConfTalk[] = [
   /* Single-card sections: the card runs the full container like her
      .program-card / .event-preview (fcacfc4 index), so it shares both edges
      of the SectionHeading above. The copy inside keeps her
-     reading measure. */
+     reading measure, and `pretty` keeps one word from ending a
+     paragraph alone. */
   .card-column :global(.card__description),
   .card-column :global(.card__body > p) {
     max-width: var(--measure-desc);
+    text-wrap: pretty;
   }
 
   .card-column :global(.activity-card__description) {
@@ -432,18 +468,49 @@ const conferencesAndTalks: ConfTalk[] = [
     }
   }
 
-  /* Luma embed: while the third-party frame is blocked or still loading it
-     reads as a bg-2 panel, not a white void. The «Register on Luma» pill
-     above works without it. */
-  #proximo-evento :global(.event-embed iframe) {
-    background: var(--color-bg-warm);
+  /* #proximo-evento poster: the sprint cover is square (800×800), so its
+     box is 1:1 and narrower than the 3:2 GSH poster: 36% of the card from
+     1025px (about 410px at the widest container) and 40% from 769px, with
+     28px above and below so the framed square keeps clear of the card's
+     hairline when the copy beside it is shorter. Below 769px it stacks
+     above the copy, capped (see the next rule). Same specificity as the
+     poster rules above, so these must come after them. */
+  .card-column--poster-square :global(.card .card__media) {
+    aspect-ratio: 1 / 1;
   }
 
-  /* Panel meta lines — her .event-meta as it renders inside .program-card
-     (.88rem, ink-2, lh 1.7). Card's 10px body gap
-     spaces them; the other slotted <p>s, the action row, the Luma embed and
-     the footer pills take Card's own card-copy and 18px rhythm. `pretty`
-     avoids a short last line, such as a lone surname. */
+  @media (min-width: 769px) {
+    .card-column--poster-square :global(.card .card__media) {
+      flex-basis: 36%;
+      margin-block: 28px;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .card-column--poster-square :global(.card .card__media) {
+      flex-basis: 40%;
+    }
+  }
+
+  /* Stacked, the full-width square would grow to 718px at 768px and push
+     the card's title and pills below the fold on tablets. It takes the
+     sprint page's 360px cap instead (`.sprint-about__art`), framed like
+     the poster from 769px and inset 20px to line up with the card copy
+     (Card's 20px side padding up to 768px). */
+  @media (max-width: 768px) {
+    .card-column--poster-square :global(.card .card__media) {
+      width: min(360px, calc(100% - 40px));
+      margin: 20px 20px 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+    }
+  }
+
+  /* Next-event meta lines — her .event-meta as it renders inside
+     .program-card (.88rem, ink-2, lh 1.7). Card's 10px body gap spaces
+     them; the slotted <p> and the footer pills take Card's own card-copy
+     and 18px rhythm. `pretty` avoids a short last line, such as a lone
+     word. */
   .event-meta {
     font-size: var(--fs-small);
     line-height: var(--lh-loose);
@@ -451,9 +518,14 @@ const conferencesAndTalks: ConfTalk[] = [
     text-wrap: pretty;
   }
 
-  /* Conferences and talks — 1 / 2 / 3 columns at her tiers, 18px gaps.
-     In the 2-up tier an odd last card spans the whole row instead of
-     sitting alone in half of it; the blurbs keep her sub measure there.
+  /* Conferences and talks — 1 column, then 2 from 769px, 18px gaps.
+     With the Mexico Tech Week panel there are four cards: a 3-up row at
+     1025px would leave the fourth alone in a row of its own (an orphan),
+     so the grid stays 2-up (2×2) at every width from 769px. The odd-last
+     rule now holds at all of them: if the count turns odd, the last card
+     spans the whole row instead of sitting alone in half of it (the blurbs
+     keep her sub measure there). With six cards, bring back a 3-up tier
+     from 1025px.
      Titles honour the "\n" after their «·» (label on line 1, name on
      line 2), and the name still wraps inside the card. The forced break
      turns off the h3's `balance` in Chromium, so `pretty` keeps a wrapped
@@ -471,23 +543,29 @@ const conferencesAndTalks: ConfTalk[] = [
 
   .conf-grid :global(.activity-card__description) {
     max-width: var(--measure-sub);
+    text-wrap: pretty;
+  }
+
+  /* Two linked cards share the first row (the Mexico Tech Week panel and
+     the Greywall workshop): their pills sit at the bottom of the card
+     (`margin-top: auto`), so the pair ends on one line however long each
+     blurb runs. A blurb followed by a pill keeps the pill's 16px gap; the
+     cards without a pill keep their own bottom padding. */
+  .conf-grid :global(.activity-card__description:not(:last-child)) {
+    margin-bottom: 16px;
+  }
+
+  .conf-grid :global(.activity-card__cta) {
+    margin-top: auto;
   }
 
   @media (min-width: 769px) {
     .conf-grid {
       grid-template-columns: repeat(2, 1fr);
     }
-  }
 
-  @media (min-width: 769px) and (max-width: 1024px) {
     .conf-grid > :global(:last-child:nth-child(odd)) {
       grid-column: 1 / -1;
-    }
-  }
-
-  @media (min-width: 1025px) {
-    .conf-grid {
-      grid-template-columns: repeat(3, 1fr);
     }
   }
 

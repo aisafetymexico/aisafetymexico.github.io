@@ -26,7 +26,10 @@
  *  - linkLabel?:   with `href`, a visible action shown as her pill at the
  *                  bottom of the card (her .event-preview-link), after any
  *                  footer content; ignored without `href`
- *  - image?:       optional ImgRef shown above the title (16:9)
+ *  - image?:       optional ImgRef shown above the title (16:9); its
+ *                  optional width/height go on the <img> as given
+ *  - loading?:     'lazy' (default) | 'eager' for the image; 'eager' when
+ *                  the card's image sits above the fold (an LCP candidate)
  *  - badge?:       optional in-card label shown above the title
  *  - footer?:      slot for CTAs / metadata at the bottom
  *  - default slot: arbitrary body content placed between description and footer
@@ -47,6 +50,7 @@ export interface Props {
   description?: string;
   href?: string;
   image?: ImgRef;
+  loading?: 'lazy' | 'eager';
   badge?: string;
   elevated?: boolean;
   interactive?: boolean;
@@ -63,6 +67,7 @@ const {
   description,
   href,
   image,
+  loading = 'lazy',
   badge,
   elevated = true,
   interactive = true,
@@ -101,7 +106,9 @@ const imageSrc = image && (typeof image.src === 'string' ? image.src : image.src
         class="card__img"
         src={imageSrc}
         alt={image.alt}
-        loading="lazy"
+        width={image.width}
+        height={image.height}
+        loading={loading}
         decoding="async"
       />
     </div>

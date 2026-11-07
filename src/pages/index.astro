@@ -14,10 +14,12 @@
  * Sections:
  *   1. Hero — centered h1 with a muted trailing phrase, subtitle, 3 pill
  *      CTAs, scroll hint, then the full-bleed El Caracol halftone band.
- *   2. Próximo evento — upcoming-event spotlight (Mexico Tech Week panel):
- *      one full-width Card that is not a link, with two pill actions
- *      (register on Luma; event details on /activities#proximo-evento),
- *      on bg-2 (her `.section-current`).
+ *   2. Próximo evento — upcoming-event spotlight (AI x Epistemics Research
+ *      Sprint, AI Safety Mexico's in-person Mérida site): one full-width
+ *      Card that is not a link, with two pill actions (request a spot on
+ *      Luma; sprint details on /ai-x-epistemics), on bg-2 (her
+ *      `.section-current`). EXPIRES 2026-11-12 and 2026-11-15 (see
+ *      `upcomingSpotlight`).
  *   3. Featured pillars — FeatureGrid (4 entries: Investigación, Programas,
  *      Proyectos, Equipo).
  *   4. StatBar — 4 impact stats between hairlines.
@@ -81,21 +83,30 @@ const stats = [
 ];
 
 // -------- Próximo evento (sección 2) --------
-// Teaser of the full block on /activities#proximo-evento (venue, organizers
-// and the Luma registration embed). Like her Mexico Tech Week card, it is
-// not a link: two visible pills register on Luma (new tab) or open the full
-// block. The date is the card's in-card label, so it stays human-readable.
-// The title binds «AI\u00A0Safety» with a no-break space so the balanced
-// heading never splits the field's name across lines (same string as on
-// /activities).
-// EXPIRES 2026-10-27: after the panel, swap this spotlight for the next event
-// and move the panel to past activities (here and on /activities).
+// Teaser of the dedicated page /ai-x-epistemics (tracks, prizes, agenda and
+// the two-step application: Apart's sign-up and the Cursor Hackathon's Luma
+// form). Like the Mexico Tech Week card before it, it is not a link: two
+// visible pills open the application (#registro) or the sprint page; no
+// pill leads to a form elsewhere, so there is one way to apply. The
+// SectionHeading names the sprint; the card is about
+// AI Safety Mexico's in-person Mérida site, with the dates as its in-card
+// label. «AI\u00A0Safety» is bound with a no-break space, as elsewhere, and
+// the dates take a word joiner (\u2060) after the en dash, so the range never
+// breaks as «13– / 15».
+// EXPIRES 2026-11-12: AISMx's internal deadline for in-person requests.
+// From the 13th, drop the «Aplica en dos pasos» pill (let «Detalles del
+// sprint» lead as `btn-register`, so the card keeps one filled action) and
+// rewrite the last sentence (in-person requests have closed), here and on
+// /en.
+// EXPIRES 2026-11-15: after the sprint, swap this spotlight for the next
+// event (or remove the section if there is none yet) and move the sprint to
+// past activities on /activities (here and on /en).
 const upcomingSpotlight = {
-  title: 'Impulsando la comunidad de AI\u00A0Safety en México: Tech Policy Panel',
-  date: 'Martes 27 de octubre de 2026',
+  title: 'Sede presencial en Mérida',
+  date: '13–\u206015 de noviembre de 2026',
   description:
-    'Un panel sobre cómo la regulación de la inteligencia artificial impactará al ecosistema tecnológico de México y América Latina. En MXTW AI House (Juárez, Ciudad de México). Organizan Marta Kosmyna, Isabel Montalvo, Janeth Valdivia y Oscar Mata.',
-  link: 'https://luma.com/event/evt-0jdNWFu6jYVQ148',
+    'AI\u00A0Safety Mexico organiza la sede de Mérida, del viernes 13 al domingo 15. Es gratuita y no necesitas experiencia previa ni equipo. Cupo limitado: aplica hasta el 12 de noviembre.',
+  link: '/ai-x-epistemics#registro',
 };
 ---
 
@@ -124,8 +135,8 @@ const upcomingSpotlight = {
     <div class="container">
       <SectionHeading
         eyebrow="Próximo evento"
-        title="Mexico Tech Week 2026"
-        description="Un panel de política tecnológica con subvención de BlueDot Impact. La agenda completa está en Luma."
+        title="AI x Epistemics Research Sprint"
+        description="Un sprint de investigación de Apart Research sobre cómo la IA cambia la forma en que decidimos qué creer, en línea o en una sede presencial."
         id="home-spotlight"
       />
       <div class="home-spotlight">
@@ -136,16 +147,11 @@ const upcomingSpotlight = {
           padding="md"
         >
           <div class="program-actions">
-            <a
-              class="btn btn-register"
-              href={upcomingSpotlight.link}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Regístrate en Luma
+            <a class="btn btn-register" href={upcomingSpotlight.link}>
+              Aplica en dos pasos
             </a>
-            <a class="btn btn-outline" href="/activities#proximo-evento">
-              Detalles del evento
+            <a class="btn btn-outline" href="/ai-x-epistemics">
+              Detalles del sprint
             </a>
           </div>
         </Card>
@@ -280,8 +286,8 @@ const upcomingSpotlight = {
      `.section-current` card under a left-aligned heading. Card already puts
      the pill row 18px under the copy, and base.css stacks the pills full
      width at ≤480px. The copy keeps her 680px description measure instead
-     of running the full card width, and `pretty` keeps a lone word (the
-     last organizer's surname on phones) off its last line. */
+     of running the full card width, and `pretty` keeps a lone word off its
+     last line on phones. */
   .home-spotlight :global(.card__description) {
     max-width: var(--measure-desc);
     text-wrap: pretty;

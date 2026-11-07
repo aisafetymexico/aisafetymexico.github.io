@@ -1,0 +1,1167 @@
+---
+/**
+ * /ai-x-epistemics — AI x Epistemics Research Sprint de Apart Research
+ * (13–15 de noviembre de 2026), con AI Safety Mexico como sede presencial
+ * oficial en Mérida.
+ *
+ * Precedentes: /global-south-challenge (página dedicada de evento) y
+ * docs/CONTENT-MAP.md §1.5 (teaser en Home + tarjeta en /activities +
+ * página dedicada). Como el GSH, no está en el nav superior
+ * (docs/ARCHITECTURE.md §3): el header marca «Actividades», igual que el
+ * breadcrumb. Gemela en inglés: src/pages/en/ai-x-epistemics.astro (mismas
+ * secciones, mismo orden, mismos ids).
+ *
+ * Contenido: adaptado de la página del sprint en Apart Research (`APART_URL`)
+ * y de los eventos de Luma de la sede y del Cursor Hackathon Mérida. A
+ * propósito NO se publican la dirección de la sede (Luma la muestra solo a
+ * personas aprobadas), el cupo ni el número de registros.
+ *
+ * Registro: un solo camino, la aplicación en dos pasos de #registro: (1) el
+ * registro en Apart, con un botón, porque su sitio no se puede embeber
+ * (manda X-Frame-Options: DENY en todas sus rutas), y (2) el formulario de
+ * Luma del Cursor Hackathon Mérida, embebido. Si Apart autoriza a aismx.org,
+ * basta con poner la URL que dé en `APART_EMBED` (aquí y en EN): el paso 1
+ * cambia el botón por su formulario en un iframe. Fuera de ahí no hay ligas
+ * a formularios, para no confundir: la franja de registro, Home y
+ * /activities llevan a #registro, y la página de Apart solo se enlaza como
+ * referencia.
+ *
+ * Tipografía: el texto de esta página va dos puntos (2px) arriba del resto
+ * del sitio; ver el primer bloque del <style>.
+ *
+ * Diseño ("Editorial mínimo"): bandas globales `.section` de 72px (48px en
+ * móvil) cerradas por el filete global, títulos a la izquierda, tarjetas y
+ * filas con filete de 1px; la jerarquía la dan la tipografía y los filetes,
+ * sin sombras, degradados ni elevación al pasar el cursor. Las bandas
+ * alternan blanco (B) y bg-2 (T) y nunca van dos T seguidas (el CtaSection
+ * es blanco y el footer, bg-2).
+ *
+ * Cortes de línea: los rangos de fechas visibles llevan un word joiner
+ * (\u2060) tras la «–», para que «13–15» nunca se corte como «13– / 15»; la
+ * meta description no lo lleva. Los rangos con unidad («150 a 250
+ * palabras», «3 a 5 minutos») van unidos con espacios de no separación
+ * (\u00A0).
+ *
+ * Secciones:
+ *   0. PageHero (B): breadcrumb + H1 + lead.
+ *   1. Franja de registro (B): resume la aplicación en dos pasos y lleva a
+ *      #registro con una píldora (como `.gsh-register`). EXPIRES 2026-11-12
+ *      y 2026-11-15 (ver abajo).
+ *   2. #en-breve — El sprint en breve (T): FactList de siete datos.
+ *   3. #de-que-se-trata — De qué se trata (B): dos párrafos y la portada.
+ *   4. #lineas — Cuatro líneas de investigación (T): tarjetas numeradas.
+ *   5. #premios — Premios y continuidad (B): dos FactList.
+ *   6. #agenda — Agenda (T): los tres días + notas de la sede de Mérida.
+ *   7. #participa — Quién puede participar y qué se entrega (B).
+ *   8. #ponentes — Ponentes y jurado (T): listas tipográficas, sin fotos.
+ *   9. #lecturas — Lecturas para prepararte (B).
+ *  10. #registro — Aplica en dos pasos (T): registro en Apart (botón, o
+ *      iframe si `APART_EMBED` tiene URL) y formulario de Luma del Cursor
+ *      Hackathon Mérida (embebido).
+ *  11. CtaSection (B) → /contact.
+ *
+ * EXPIRES 2026-11-12: ese día vence el plazo interno de AISMx para la sede
+ * presencial. Desde el 13, aquí y en EN: cambiar las frases «hasta el 12 de
+ * noviembre» por una nota de que el cupo presencial cerró y quitar el paso 2
+ * (el Cursor Hackathon es el 13 a las 17:00); el registro de Apart sigue
+ * abierto hasta el 15 para participar en línea. Home y /activities tienen
+ * su propia nota EXPIRES 2026-11-12.
+ *
+ * EXPIRES 2026-11-15: cuando termine el sprint, aquí y en EN:
+ *   (a) convertir la franja de registro en una nota de que el sprint ya
+ *       ocurrió, como hizo el GSH (fechas en pasado; enlazar resultados o
+ *       grabaciones si los hay);
+ *   (b) quitar #registro (el botón de Apart y el embed del Cursor
+ *       Hackathon) o cambiarlo por los resultados;
+ *   (c) pasar a pasado el lead del PageHero y la meta description;
+ *   (d) quitar de #agenda la nota del Cursor Hackathon Mérida (es el
+ *       viernes 13, así que puede irse desde el 14);
+ *   (e) pasar a pasado el resto de la página, como el GSH («Quienes
+ *       evaluaron los proyectos»), en especial la descripción de #agenda
+ *       («Apart publicará los horarios…»), el título de #lecturas («Lecturas
+ *       para prepararte») y el CtaSection («¿Tienes dudas sobre la sede de
+ *       Mérida?»).
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import FactList from '../components/FactList.astro';
+import CtaSection from '../components/CtaSection.astro';
+import type { Breadcrumb } from '../lib/types';
+
+const pathname = '/ai-x-epistemics';
+
+const breadcrumb: Breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Actividades', href: '/activities' },
+    { label: 'AI x Epistemics Research Sprint' },
+  ],
+};
+
+// -------- Enlaces externos --------
+// La página canónica del sprint en Apart, como referencia (lineamientos,
+// plantilla y preguntas frecuentes).
+const APART_URL =
+  'https://apartresearch.com/sprints/ai-x-epistemics-research-sprint-2026-11-13-to-2026-11-15';
+// Paso 1 de la aplicación (#registro): el enlace de referido de AISMx (el de
+// su evento en Luma), que lleva a la misma página con utm_source, para que
+// Apart cuente los registros que llegan desde aquí. El registro es un modal
+// de esa página: no se puede embeber ni abrir directo.
+const APART_SIGNUP =
+  'https://apartresearch.com/r/vmkyvz60/ai-x-epistemics-research-sprint-2026-11-13-to-2026-11-15';
+// El formulario de Apart embebido en el paso 1: vacío mientras Apart no lo
+// permita. Hoy todo apartresearch.com manda X-Frame-Options: DENY y su
+// formulario solo acepta envíos desde su propio sitio, así que desde aquí no
+// hay forma de embeberlo. Si Apart autoriza a aismx.org (CSP
+// `frame-ancestors`), pon aquí la URL que dé, con
+// `?utm_source=vmkyvz60&utm_medium=referral` para que cuente el referido: el
+// paso 1 cambia entonces el botón por el iframe.
+const APART_EMBED = '';
+// Paso 2: el embed «simple» de Luma del Cursor Hackathon Mérida
+// (luma.com/spacexai-lxdo).
+const CURSOR_EMBED = 'https://luma.com/embed/event/evt-Uxl44Hdz3i8Goqd/simple';
+const SPRINT_DISCORD = 'https://discord.gg/XswWBvugYs';
+
+/** target/rel para los enlaces que salen del sitio. */
+const externalAttrs = { target: '_blank', rel: 'noopener noreferrer' };
+
+// Portada del sprint (arte propio de AISMx, 800×800): el mismo archivo que la
+// tarjeta de /activities#proximo-evento.
+const cover = {
+  src: '/images/ai-x-epistemics/sprint-cover.webp',
+  width: 800,
+  height: 800,
+  alt: 'Portada del sprint: el título AI x Epistemics Research Sprint sobre una fotografía en semitono de El Caracol, el observatorio maya de Chichén Itzá, y los créditos Apart Research x AI Safety México.',
+};
+
+// -------- 2 · El sprint en breve --------
+// AoE se explica en español: un valor de FactList es texto plano y no puede
+// marcar lang="en". La hora de Mérida (UTC−6) es conversión nuestra.
+// Los \u00A0 mantienen juntas las cifras con su unidad.
+const facts = [
+  { label: 'Fechas', value: '13–\u206015 de noviembre de 2026, de viernes a domingo.' },
+  {
+    label: 'Sede presencial',
+    value:
+      'Mérida, del viernes 13 a las 17:00 al domingo 15 a las 16:00 (UTC−6). La dirección se envía a quienes tengan lugar confirmado.',
+  },
+  {
+    label: 'Formato',
+    value:
+      'En línea, por Discord y Zoom, y en sedes presenciales como la de Mérida. Los proyectos se entregan en la página de Apart.',
+  },
+  {
+    label: 'Entrega',
+    value:
+      'Domingo 15 de noviembre a las 23:59\u00A0AoE («en cualquier lugar de la Tierra», UTC−12): en Mérida, el lunes 16 a las 05:59.',
+  },
+  { label: 'Costo', value: 'Gratuito, en línea y en Mérida.' },
+  {
+    label: 'Premios',
+    value: '2,000\u00A0USD en efectivo para los cinco mejores proyectos.',
+  },
+  {
+    label: 'Equipos',
+    value: 'Individual o en equipo, idealmente de hasta 5\u00A0personas.',
+  },
+];
+
+// -------- 3 · De qué se trata --------
+// Versión breve del resumen de Apart, con los dos lados: lo que la IA puede
+// mejorar y sus riesgos. Los ejemplos del segundo párrafo vienen de las
+// líneas 1 y 2.
+const about = [
+  'La IA va a cambiar cómo las personas y las instituciones deciden qué creer y qué hacer. Puede ayudarnos a entender problemas complejos y a coordinarnos mejor, pero también puede concentrar el poder de decisión, volvernos dependientes de sistemas que nadie puede evaluar y facilitar la manipulación.',
+  'Durante el fin de semana, cada equipo elige un problema abierto, como medir si un modelo sabe lo que sabe o verificar de dónde viene una afirmación; construye una prueba, una herramienta o un estudio que lo haga avanzar, y escribe lo que encontró.',
+];
+
+// -------- 4 · Cuatro líneas de investigación --------
+// Nombre en español + nombre original de Apart (lang="en"); dos proyectos de
+// ejemplo de Apart por línea, con su nombre en inglés.
+type Track = {
+  title: string;
+  original: string;
+  description: string;
+  examples: [string, string];
+};
+
+const tracks: Track[] = [
+  {
+    title: 'Evaluaciones epistémicas y de toma de decisiones de los modelos',
+    original: 'Model Epistemics & Decision-Making Evals',
+    description:
+      'La IA ya recomienda y hasta toma decisiones, pero sabemos poco de la calidad de lo que dice. Esta línea mide si un modelo sabe qué tan sólidas son sus afirmaciones y si exagera o cede cuando lo\u00A0presionan.',
+    examples: ['MisleadBench', 'FlipRate'],
+  },
+  {
+    title: 'Infraestructura de confianza',
+    original: 'Trust Infrastructure',
+    description:
+      'Señales para verificar afirmaciones y rastrear su origen de forma barata y difícil de manipular, que sirvan a las personas y a los agentes de IA que necesitan saber en qué fuentes confiar.',
+    examples: ['Track-Record Ledger', 'Citation Binder'],
+  },
+  {
+    title: 'Productos epistémicos',
+    original: 'Epistemic Products',
+    description:
+      'Productos que pongan al alcance de cualquiera un apoyo para decidir que antes requería tiempo, dinero o especialistas, y que de verdad lleven a mejores\u00A0decisiones.',
+    examples: ['Dispute Escalation Benchmark', 'Crux Mapper'],
+  },
+  {
+    title: 'Línea abierta: despliegue, adopción e impacto',
+    original: 'Open Track (deployment, adoption and impact)',
+    description:
+      'Para ideas que no encajan en las otras líneas, sobre todo cómo lograr que estas herramientas se usen y tengan impacto. Caben proyectos que se parecen más a un reportaje que a un\u00A0software.',
+    examples: ['QALY for epistemics', 'Procurement Gap Report'],
+  },
+];
+
+// -------- 5 · Premios y continuidad --------
+const prizes = [
+  { label: 'Primer lugar', value: '1,000\u00A0USD' },
+  { label: 'Segundo lugar', value: '500\u00A0USD' },
+  { label: 'Tercer lugar', value: '300\u00A0USD' },
+  { label: 'Cuarto lugar', value: '100\u00A0USD' },
+  { label: 'Quinto lugar', value: '100\u00A0USD' },
+];
+
+// La vía rápida al Apart Fellowship es una revisión acelerada, no un lugar
+// asegurado (FAQ de Apart). Mentoría y publicación son para los equipos
+// ganadores («What winners receive beyond cash»); la fecha de resultados
+// también viene del FAQ.
+const afterSprint = [
+  {
+    label: 'Apart Fellowship',
+    value:
+      'Los mejores equipos pueden postular por vía rápida al Apart Fellowship (mentoría, financiamiento y apoyo para publicar). La revisión es más rápida, pero el lugar no está\u00A0asegurado.',
+  },
+  {
+    label: 'Mentoría',
+    value: 'Contacto con mentores para los equipos ganadores.',
+  },
+  {
+    label: 'Publicación',
+    value:
+      'Un camino hacia un artículo publicable para los ganadores; algunos proyectos se comparten en el Alignment Forum o LessWrong.',
+  },
+  {
+    label: 'Resultados',
+    value:
+      'Suelen anunciarse una o dos semanas después de la evaluación, y todas las personas participantes reciben retroalimentación por correo.',
+  },
+];
+
+// -------- 6 · Agenda --------
+// Los tres días según Apart; los horarios de las charlas aún no se publican.
+// El Cursor Hackathon Mérida se registra en el paso 2 de #registro; aquí no
+// lleva duración (Luma dice 17:00–21:00 y la descripción de la sede, tres
+// horas).
+const days = [
+  {
+    label: 'Día 1',
+    day: 'Viernes 13 de noviembre',
+    iso: '2026-11-13',
+    text: 'Inauguración, conferencia magistral, presentación de las líneas y formación de equipos.',
+  },
+  {
+    label: 'Día 2',
+    day: 'Sábado 14 de noviembre',
+    iso: '2026-11-14',
+    text: 'Trabajo en los proyectos, con asesorías y revisiones.',
+  },
+  {
+    label: 'Día 3',
+    day: 'Domingo 15 de noviembre',
+    iso: '2026-11-15',
+    text: 'Redacción de reportes, entregas y demostraciones.',
+  },
+];
+
+const agendaNotes = [
+  {
+    label: 'En Mérida',
+    value:
+      'Del viernes 13 a las 17:00 al domingo 15 a las 16:00. Después puedes seguir trabajando y entregar hasta el lunes 16 a las 05:59.',
+  },
+  {
+    label: 'Cursor Hackathon Mérida',
+    value:
+      'Viernes 13 a las 17:00: un evento de Cursor para diseñar el flujo de trabajo del sprint, con Janeth Valdivia y AI\u00A0Safety Mexico.',
+  },
+];
+
+// -------- 7 · Quién puede participar y qué se entrega --------
+const whoCanJoin = [
+  'El sprint busca perfiles distintos: ML, diseño de producto, periodismo, pronósticos, políticas públicas, ciberseguridad, especialistas en salud, finanzas o derecho, y estudiantes o personas en transición profesional.',
+  'No necesitas experiencia en seguridad de IA, y muchos proyectos no requieren saber ML: basta con curiosidad y ganas de acotar bien una pregunta.',
+  'Puedes participar de forma individual o en equipo (idealmente de hasta 5\u00A0personas) y en dos proyectos como máximo. No hace falta llegar con equipo: se forman antes o durante el sprint.',
+];
+
+const deliverables = [
+  {
+    label: 'Obligatorio',
+    value:
+      'Un PDF con la plantilla oficial, de hasta 8\u00A0páginas sin contar referencias ni anexos, con un resumen de 150\u00A0a\u00A0250\u00A0palabras y un anexo sobre limitaciones, ética y doble uso.',
+  },
+  {
+    label: 'Opcional',
+    value: 'Un repositorio público en GitHub y un video de 3\u00A0a\u00A05\u00A0minutos.',
+  },
+  {
+    label: 'Evaluación',
+    value:
+      'Del 1 al 5 en tres criterios: impacto e innovación, ejecución, y presentación y claridad.',
+  },
+];
+
+// -------- 8 · Ponentes y jurado --------
+// Nombre y afiliación breve, sin fotos ni enlaces a LinkedIn.
+const speakers = [
+  { name: 'Owen Cotton-Barratt', affiliation: 'Differential Labs · Forethought' },
+  { name: 'Jonathan Stray', affiliation: 'Center for Human\u2011Compatible AI, UC\u00A0Berkeley' },
+  { name: 'Joel Suro', affiliation: 'OMNA' },
+  { name: 'Keivan Navaie', affiliation: 'Lancaster University · MATS' },
+  { name: 'Dean Issacharoff', affiliation: 'Tecnólogo creativo y especialista en comunicación' },
+];
+
+const judges = [
+  { name: 'Nikos Bosse', affiliation: 'FutureSearch' },
+  { name: 'Darshan Shah', affiliation: 'Evaluación de sistemas de IA generativa' },
+  { name: 'Harshada Baswaraj Jivane', affiliation: 'Laurel' },
+  { name: 'Clemens Possnig', affiliation: 'University of Waterloo · LSE' },
+  { name: 'David Manheim', affiliation: 'ALTER' },
+  { name: 'Oliver Klingefjord', affiliation: 'Meaning Alignment Institute' },
+  { name: 'Nick Clark', affiliation: 'University of Washington · Gumshoe AI' },
+  { name: 'Duncan McClements', affiliation: 'Centre for British Progress' },
+  { name: 'Camilla Balbis', affiliation: 'Facilitadora en BlueDot Impact' },
+];
+
+// -------- 9 · Lecturas --------
+// Cinco textos de la lista general del sprint en Apart, con los títulos tal
+// como los da esa lista (salvo las comillas tipográficas); van en inglés, con
+// lang="en".
+const readings = [
+  {
+    title: 'State of the Field: AI for Epistemics and Coordination',
+    meta: 'Ben N y Alex Csaky · LessWrong, 2026',
+    url: 'https://www.lesswrong.com/posts/uw8RQ8yjKexnhTw6E/state-of-the-field-ai-for-epistemics-and-coordination',
+  },
+  {
+    title: 'What’s Important in “AI for Epistemics”?',
+    meta: 'Lukas Finnveden · Forethought, 2024',
+    url: 'https://www.forethought.org/research/whats-important-in-ai-for-epistemics',
+  },
+  {
+    title: 'AI Impacts on Epistemics: the Good, the Bad and the Ugly',
+    meta: 'Cotton-Barratt y Hadshar · Forethought, 2026',
+    url: 'https://www.forethought.org/research/ai-impacts-on-epistemics-the-good-the-bad-and-the-ugly',
+  },
+  {
+    title: 'The most interesting startup idea I’ve seen recently: AI for epistemics',
+    meta: 'Benjamin Todd · 80,000 Hours, 2024',
+    url: 'https://80000hours.org/2024/05/project-idea-ai-for-epistemics/',
+  },
+  {
+    title: 'Project Ideas: Epistemics',
+    meta: 'Lukas Finnveden · 2024, actualizado en 2025',
+    url: 'https://lukasfinnveden.substack.com/p/project-ideas-epistemics',
+  },
+];
+---
+
+<BaseLayout
+  title="AI x Epistemics Research Sprint · AI Safety Mexico × Apart Research"
+  description="AI Safety Mexico es la sede presencial en Mérida del AI x Epistemics Research Sprint de Apart Research, 13–15 de noviembre de 2026. Gratuito, en línea o en persona y sin experiencia previa."
+  pathname={pathname}
+  ogImage="/images/ai-x-epistemics/sprint-og.jpg"
+>
+  <Header slot="header" currentPath={pathname} navActivePath="/activities" />
+
+  <PageHero
+    title="AI x Epistemics Research Sprint"
+    description="Un fin de semana de investigación de Apart Research sobre IA y epistémica: cómo decidimos qué creer y qué hacer. Del 13 al 15 de noviembre de 2026, en línea y en Mérida, con AI Safety Mexico como sede. Gratuito y sin experiencia previa."
+    breadcrumb={breadcrumb}
+  />
+
+  <!-- 1 · Franja de registro: resume la aplicación en dos pasos y lleva a
+       #registro, donde están los dos pasos. La región lleva un
+       aria-label corto: su lead son dos oraciones, demasiado largas como
+       nombre (la franja del GSH apunta aria-labelledby a un lead breve).
+       EXPIRES 2026-11-12: desde el 13 ya no se piden lugares presenciales
+       (ver el docblock).
+       EXPIRES 2026-11-15: después del sprint, cambiarla por una nota de que
+       el sprint ya ocurrió, como la franja del GSH. -->
+  <section class="sprint-register" aria-label="Registro">
+    <div class="container sprint-register__inner">
+      <p class="sprint-register__lead">
+        <span>Para participar en Mérida, aplica en dos pasos: regístrate en Apart y solicita tu lugar en el Cursor Hackathon Mérida.</span>
+        <span>Cupo limitado: puedes aplicar hasta el 12 de noviembre.</span>
+      </p>
+      <div class="sprint-register__actions">
+        <a class="sprint-register__cta btn btn-register btn-hero" href="#registro">
+          Aplica en dos pasos
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · El sprint en breve (T) -->
+  <section id="en-breve" class="section section--warm" aria-labelledby="sprint-brief-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-brief-heading"
+        eyebrow="Resumen"
+        title="El sprint en breve"
+      />
+      <div class="sprint-facts">
+        <FactList items={facts} />
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · De qué se trata (B) -->
+  <section id="de-que-se-trata" class="section section--base" aria-labelledby="sprint-about-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-about-heading"
+        eyebrow="El tema"
+        title="De qué se trata"
+      />
+      <div class="sprint-about">
+        <div class="sprint-prose">
+          {about.map((text) => <p>{text}</p>)}
+        </div>
+        <figure class="sprint-about__art">
+          <img
+            src={cover.src}
+            width={cover.width}
+            height={cover.height}
+            alt={cover.alt}
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Cuatro líneas de investigación (T) -->
+  <section id="lineas" class="section section--warm" aria-labelledby="sprint-tracks-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-tracks-heading"
+        eyebrow="Investigación"
+        title="Cuatro líneas de investigación"
+        description="Cada proyecto elige una línea, pero todos compiten juntos con la misma rúbrica."
+      />
+      <ol class="sprint-tracks" role="list">
+        {tracks.map((track, i) => (
+          <li class="sprint-tracks__item">
+            <span class="sprint-tracks__number" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="sprint-tracks__title">{track.title}</h3>
+            <p class="sprint-tracks__original" lang="en">{track.original}</p>
+            <p class="sprint-tracks__text">{track.description}</p>
+            <p class="sprint-tracks__examples">
+              Proyectos de ejemplo: <span lang="en">{track.examples[0]}</span> y <span lang="en">{track.examples[1]}</span>.
+            </p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 5 · Premios y continuidad (B). La descripción va como expresión para
+       que el \u00A0 una «2,000 USD», como en las FactList. -->
+  <section id="premios" class="section section--base" aria-labelledby="sprint-prizes-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-prizes-heading"
+        eyebrow="Premios"
+        title="Premios y continuidad"
+        description={'2,000\u00A0USD en efectivo para los cinco mejores proyectos de todas las sedes, y un camino para seguir\u00A0investigando.'}
+      />
+      <div class="sprint-split sprint-split--prizes">
+        <div>
+          <h3 class="sprint-subhead">Premios en efectivo</h3>
+          <FactList items={prizes} />
+        </div>
+        <div>
+          <h3 class="sprint-subhead">Después del sprint</h3>
+          <FactList items={afterSprint} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · Agenda (T) -->
+  <section id="agenda" class="section section--warm" aria-labelledby="sprint-agenda-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-agenda-heading"
+        eyebrow={'13–\u206015 de noviembre de 2026'}
+        title="Agenda"
+        description="Las charlas son opcionales y se graban; Apart publicará los horarios cerca del evento."
+      />
+      <ol class="sprint-days" role="list">
+        {days.map((d) => (
+          <li class="sprint-days__item">
+            <span class="sprint-days__label role-label">{d.label}</span>
+            <h3 class="sprint-days__title"><time datetime={d.iso}>{d.day}</time></h3>
+            <p class="sprint-days__text">{d.text}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="sprint-agenda-notes">
+        <FactList items={agendaNotes} />
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Quién puede participar y qué se entrega (B) -->
+  <section id="participa" class="section section--base" aria-labelledby="sprint-join-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-join-heading"
+        eyebrow="Participación"
+        title="Quién puede participar y qué se entrega"
+      />
+      <div class="sprint-split">
+        <div>
+          <h3 class="sprint-subhead">Quién puede participar</h3>
+          <div class="sprint-prose">
+            {whoCanJoin.map((text) => <p>{text}</p>)}
+          </div>
+        </div>
+        <div>
+          <h3 class="sprint-subhead">Qué se entrega</h3>
+          <p class="sprint-lead">
+            Un reporte de investigación breve, no la demostración de un producto.
+          </p>
+          <FactList items={deliverables} />
+          <p class="sprint-more">
+            Lineamientos, plantilla y preguntas frecuentes en la
+            <a class="inline-link" href={APART_URL} {...externalAttrs}>página del sprint en Apart</a>.
+            Dudas durante el sprint: <a class="inline-link" href={SPRINT_DISCORD} {...externalAttrs}>Discord del sprint</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · Ponentes y jurado (T) -->
+  <section id="ponentes" class="section section--warm" aria-labelledby="sprint-people-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-people-heading"
+        eyebrow="Personas"
+        title="Ponentes y jurado"
+        description="Organiza Apart Research, con Alex Csaky como codiseñador de las líneas. AI Safety Mexico organiza la sede de Mérida."
+      />
+      <div class="sprint-split sprint-split--people">
+        <div>
+          <h3 class="sprint-subhead">Ponentes</h3>
+          <ul class="sprint-people" role="list">
+            {speakers.map((p) => (
+              <li class="sprint-people__item">
+                <span class="sprint-people__name">{p.name}</span>
+                <span class="sprint-people__affiliation">{p.affiliation}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3 class="sprint-subhead">Jurado</h3>
+          <ul class="sprint-people sprint-people--two-col" role="list">
+            {judges.map((p) => (
+              <li class="sprint-people__item">
+                <span class="sprint-people__name">{p.name}</span>
+                <span class="sprint-people__affiliation">{p.affiliation}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · Lecturas para prepararte (B) -->
+  <section id="lecturas" class="section section--base" aria-labelledby="sprint-reading-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-reading-heading"
+        eyebrow="Lecturas"
+        title="Lecturas para prepararte"
+        description="Cinco textos en inglés para entrar al tema; en la página de Apart hay más."
+      />
+      <ul class="metric-list sprint-readings" role="list">
+        {readings.map((r) => (
+          <li>
+            <a class="sprint-readings__title" href={r.url} lang="en" {...externalAttrs}>{r.title}</a>
+            <span class="sprint-readings__meta">{r.meta}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 10 · Aplicación en dos pasos (T): el registro en Apart (botón, o
+       iframe con `APART_EMBED`) y el
+       formulario de Luma del Cursor Hackathon Mérida (embebido), sin otras
+       ligas a formularios (ver «Registro» en el docblock).
+       EXPIRES 2026-11-12: desde el 13 ya no se piden lugares presenciales
+       (ver el docblock).
+       EXPIRES 2026-11-15: quitar o cambiar por los resultados. -->
+  <section id="registro" class="section section--warm" aria-labelledby="sprint-apply-heading">
+    <div class="container">
+      <SectionHeading
+        id="sprint-apply-heading"
+        eyebrow="Registro"
+        title="Aplica en dos pasos"
+        description="Para participar en Mérida, completa los dos pasos. Son gratuitos; el cupo es limitado y puedes aplicar hasta el 12 de noviembre."
+      />
+      <ol class="sprint-apply" role="list">
+        <li class="sprint-apply__step">
+          <span class="sprint-apply__label role-label">Paso 1</span>
+          <h3 class="sprint-apply__title">Regístrate en Apart</h3>
+          <p class="sprint-apply__text">
+            {APART_EMBED ? 'Aquí abajo' : 'En la página del sprint'}, da clic en «<span lang="en">Sign up</span>» y escribe «Mérida» en «<span lang="en">Location</span>».
+          </p>
+          {APART_EMBED ? (
+            <>
+              <div class="event-embed sprint-apply__embed">
+                <iframe
+                  src={APART_EMBED}
+                  title="Formulario de registro del sprint en Apart Research"
+                  loading="lazy"
+                ></iframe>
+              </div>
+              <p class="sprint-apply__text sprint-apply__fallback">
+                ¿No carga? <a class="inline-link" href={APART_SIGNUP} {...externalAttrs}>Ábrelo en Apart</a>.
+              </p>
+            </>
+          ) : (
+            <div class="program-actions">
+              <a class="btn btn-register" href={APART_SIGNUP} {...externalAttrs}>
+                Regístrate en Apart
+              </a>
+            </div>
+          )}
+        </li>
+        <li class="sprint-apply__step">
+          <span class="sprint-apply__label role-label">Paso 2</span>
+          <h3 class="sprint-apply__title">Solicita tu lugar en el Cursor Hackathon Mérida</h3>
+          <p class="sprint-apply__text">Viernes 13 a las 17:00: un evento de Cursor para diseñar el flujo de trabajo del sprint.</p>
+          <div class="event-embed sprint-apply__embed">
+            <iframe
+              src={CURSOR_EMBED}
+              title="Formulario de Luma para solicitar lugar en el Cursor Hackathon Mérida"
+              allow="fullscreen; payment"
+              loading="lazy"
+            ></iframe>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 11 · Cierre (B) -->
+  <CtaSection
+    title="¿Tienes dudas sobre la sede de Mérida?"
+    description="Escríbenos. Las dudas generales del sprint se resuelven en su Discord."
+    ctaLabel="Escríbenos"
+    ctaHref="/contact"
+  />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* Text two points (2px) above the rest of the site, on this page only:
+     the type tokens are redefined on <main>, so the header, nav and footer
+     keep the site's size. Each value is its token from tokens.css (2.3,
+     with its 481px and 769px tiers) plus 2px, and the literal sizes on
+     this page (FactList's values, the band pill, the track numerals and
+     the card copy) add the same 2px. Page styles load only on this page
+     and its English twin. */
+  :global(#main) {
+    --fs-h1: calc(1.42rem + 2px);
+    --fs-h2: calc(1.18rem + 2px);
+    --fs-h3: calc(1.15rem + 2px);
+    --fs-h4: calc(1.1rem + 2px);
+    --fs-h5: calc(1.08rem + 2px);
+    --fs-h6: calc(1rem + 2px);
+    --fs-lead: calc(1rem + 2px);
+    --fs-body: calc(0.9375rem + 2px);
+    --fs-small: calc(0.88rem + 2px);
+    --fs-caption: calc(0.8rem + 2px);
+    --fs-eyebrow: calc(0.7rem + 2px);
+    --fs-btn: calc(0.9rem + 2px);
+    font-size: var(--fs-body);
+  }
+
+  @media (min-width: 481px) {
+    :global(#main) {
+      --fs-h1: calc(clamp(1.7rem, 3.6vw, 2.35rem) + 2px);
+      --fs-body: calc(1rem + 2px);
+    }
+  }
+
+  @media (min-width: 769px) {
+    :global(#main) {
+      --fs-h2: calc(1.32rem + 2px);
+    }
+  }
+
+  /* FactList sets its values at a literal 0.92rem, not a token. */
+  :global(#main .fact-list__value) {
+    font-size: calc(0.92rem + 2px);
+  }
+
+  /* Bands: the global .section shells (72px, 48px on phones) with the
+     line-soft hairline from base.css (`main > section`). Deep-link
+     targets (#agenda, #registro, …) clear the sticky header. */
+  section[id] {
+    scroll-margin-top: var(--scroll-offset);
+  }
+
+  /* ── 1 · Registration band ───────────────────────────────────────── */
+  /* The GSH page's `.gsh-register`: a centered lead and its pill right
+     under the hero, on white. */
+  .sprint-register {
+    background: var(--color-bg-base);
+    padding-block: var(--section-pad-stats);
+  }
+
+  .sprint-register__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .sprint-register__lead {
+    max-width: var(--measure-sub);
+    font-size: var(--fs-lead);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: balance;
+  }
+
+  /* One sentence per unit, so lines break between the two sentences
+     rather than leaving a fragment of one beside the other. */
+  .sprint-register__lead span {
+    display: inline-block;
+  }
+
+  .sprint-register__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--gap-actions);
+    margin-top: 22px;
+  }
+
+  /* As on the GSH band, the pill keeps its width on phones (220px minimum
+     instead of the ≤768px full-width `.btn-hero`) and stays centered; it
+     takes `.btn-hero`'s literal size plus the page's 2px. */
+  .sprint-register__cta {
+    width: auto;
+    min-width: 220px;
+    font-size: calc(0.92rem + 2px);
+  }
+
+  /* ── Shared type: prose, subheads, the label/value lists ─────────── */
+  .sprint-prose p,
+  .sprint-lead,
+  .sprint-apply__text {
+    font-size: var(--fs-body);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: pretty;
+  }
+
+  .sprint-prose {
+    max-width: var(--measure-desc);
+  }
+
+  .sprint-prose p + p {
+    margin-top: 14px;
+  }
+
+  .sprint-lead {
+    margin-bottom: 14px;
+  }
+
+  /* h3 inside a section: her card-title size, so the h2 above stays the
+     largest heading on the band. */
+  .sprint-subhead {
+    margin: 0 0 14px;
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  /* FactList at the reading measure (its rows otherwise run the full
+     container). On this page its values are whole sentences, so `pretty`
+     keeps a lone word («Mexico.») off their last line. */
+  .sprint-facts {
+    max-width: var(--measure-desc);
+  }
+
+  section :global(.fact-list__value) {
+    text-wrap: pretty;
+  }
+
+  /* Two columns from 769px (em, like FeatureGrid, so the tier moves out
+     when the reader enlarges text). Prizes: the short amount list takes a
+     third, what comes after the sprint two thirds. */
+  .sprint-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+
+  @media (min-width: 48.0625em) {
+    .sprint-split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 48px;
+    }
+
+    .sprint-split--prizes {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+  }
+
+  /* A split right under a heading without a description (#participa):
+     the heading keeps only 14px under it, so add the rest of the 34px
+     that a description would leave before the h3s. */
+  :global(.section-heading--no-desc) + .sprint-split {
+    margin-top: 20px;
+  }
+
+  /* ── 3 · De qué se trata: copy + framed square cover ─────────────── */
+  /* The cover sits beside the copy from 769px (240px wide up to 1024px,
+     340px from 1025px) and under it on phones, capped at 360px so it does
+     not fill a phone screen. Hairline frame, 8px corners, no shadow. */
+  .sprint-about {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+
+  .sprint-about__art {
+    margin: 0;
+    max-width: 360px;
+  }
+
+  .sprint-about__art img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-bg-muted);
+  }
+
+  @media (min-width: 769px) {
+    .sprint-about {
+      grid-template-columns: minmax(0, 1fr) 240px;
+      column-gap: 40px;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .sprint-about {
+      grid-template-columns: minmax(0, 1fr) 340px;
+    }
+  }
+
+  /* ── 4 · Tracks: four numbered white cards, 2×2 from 769px ────────── */
+  /* FeatureGrid's tile (numeral, title, copy) with room for the original
+     English name and two example projects pinned to the bottom, so the
+     two cards in a row end on one line. */
+  .sprint-tracks {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gap-grid);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 48.0625em) {
+    .sprint-tracks {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .sprint-tracks__item {
+    display: flex;
+    flex-direction: column;
+    padding: var(--pad-card);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  /* FeatureGrid's numeral: Inter 500 in the decorative ink-3 grey (large
+     and aria-hidden, so the non-text grey is fine). */
+  .sprint-tracks__number {
+    margin-bottom: 14px;
+    font-family: var(--font-display);
+    font-size: calc(1.5rem + 2px);
+    font-weight: var(--fw-display);
+    line-height: 1;
+    letter-spacing: var(--ls-display);
+    color: var(--ink-3);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  .sprint-tracks__title {
+    margin: 0;
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  /* `balance` (not `pretty`): Chromium's `pretty` still leaves «Evals» or
+     «impact)» alone on a phone; balancing splits the name in two halves. */
+  .sprint-tracks__original {
+    margin-top: 4px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    text-wrap: balance;
+  }
+
+  .sprint-tracks__text {
+    margin-top: 12px;
+    font-size: calc(0.92rem + 2px);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: pretty;
+  }
+
+  .sprint-tracks__examples {
+    margin-top: auto;
+    padding-top: 14px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    text-wrap: pretty;
+  }
+
+  /* ── 6 · Agenda: three day cards, one row from 1025px ────────────── */
+  /* Stacked up to 1024px: three narrow columns at 769px would squeeze each
+     day into a few words per line. */
+  .sprint-days {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gap-grid);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 64.0625em) {
+    .sprint-days {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .sprint-days__item {
+    padding: var(--pad-card);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .sprint-days__title,
+  .sprint-apply__title {
+    margin: 0 0 8px;
+    font-size: var(--fs-h5);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-heading);
+    letter-spacing: var(--ls-heading);
+    color: var(--color-text-heading);
+  }
+
+  /* Stacked (up to 1024px) the cards run the full container, so the copy
+     keeps her sub measure. `balance`, not `pretty`: Chromium's `pretty`
+     leaves a long last word alone («retroalimentación.»). */
+  .sprint-days__text {
+    max-width: var(--measure-sub);
+    font-size: calc(0.92rem + 2px);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: balance;
+  }
+
+  .sprint-agenda-notes {
+    max-width: var(--measure-desc);
+    margin-top: 34px;
+  }
+
+  /* ── 7 · «Qué se entrega»: the closing line with the Apart and Discord
+     links. They carry the global `.inline-link` explicitly: with the
+     `{...externalAttrs}` spread, Astro adds its scope class to the <a>,
+     so base.css's rule for unclassed in-text links would not match. */
+  .sprint-more {
+    margin-top: 18px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: pretty;
+  }
+
+  /* ── 8 · People: compact name + affiliation rows on hairlines ───── */
+  .sprint-people {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .sprint-people__item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .sprint-people__name {
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-normal);
+    color: var(--color-text-primary);
+  }
+
+  /* `balance` splits a two-line affiliation evenly instead of leaving
+     one word («comunicación», "professional") on the second line. */
+  .sprint-people__affiliation {
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    text-wrap: balance;
+  }
+
+  /* From 1025px: three even columns instead of five speakers beside a
+     column of nine judges. The judges take two thirds and flow down two
+     columns of five and four (column flow keeps the list order down each
+     column). Both lists share the split's row tracks (subgrid), so a
+     two-line affiliation in any column moves the whole row and the
+     hairlines stay level across the three columns; without subgrid the
+     rows line up only while every affiliation fits on one line. Five
+     rows: revisit if the panel grows past ten. The top hairline moves
+     from the list to the first item of each column (every fifth from
+     the first), so it breaks at the 48px gap like the row hairlines
+     instead of running across it. */
+  @media (min-width: 64.0625em) {
+    .sprint-split--people {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+
+    .sprint-people--two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(5, auto);
+      grid-auto-flow: column;
+      column-gap: 48px;
+      border-top: 0;
+    }
+
+    .sprint-people--two-col > .sprint-people__item:nth-child(5n + 1) {
+      border-top: 1px solid var(--color-border);
+    }
+
+    @supports (grid-template-rows: subgrid) {
+      .sprint-split--people {
+        grid-template-rows: auto repeat(5, auto);
+        row-gap: 0;
+      }
+
+      .sprint-split--people > div {
+        display: grid;
+        grid-row: 1 / -1;
+        grid-template-rows: subgrid;
+      }
+
+      .sprint-split--people .sprint-people {
+        display: grid;
+        grid-row: 2 / -1;
+        grid-template-rows: subgrid;
+      }
+    }
+  }
+
+  /* ── 9 · Readings: title link + source line, on hairlines ──────── */
+  /* The rows are the global `.metric-list` (her hairline list: 820px,
+     15px rows over 1px rules); this adds only FactList's top rule, so the
+     list reads as a block. Every row is a link, so the titles stay ink
+     with a hairline underline (clay-dark on hover) instead of five clay
+     in-text links in a row. The underline is a border on the inline <a>,
+     so it follows each line of a wrapped title. */
+  .sprint-readings {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .sprint-readings__title {
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-normal);
+    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--color-link-underline);
+    transition: color var(--transition), border-color var(--transition);
+  }
+
+  .sprint-readings__title:hover {
+    color: var(--color-link-hover);
+    border-bottom-color: var(--color-link-underline-hover);
+  }
+
+  .sprint-readings__meta {
+    display: block;
+    margin-top: 4px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+  }
+
+  /* ── 10 · Application in two steps ───────────────────────────────── */
+  /* Two numbered steps, one under the other so they read in order: each
+     has its label, a title (the day cards' title rule) and a line of
+     context (the prose rule), then step 1's pill to Apart (or Apart's
+     form, with `APART_EMBED`) or step 2's Luma form (the global
+     `.event-embed`: up to 600px wide, 830px tall;
+     the form runs 794px tall at 552–600px). */
+  .sprint-apply {
+    display: grid;
+    gap: 48px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sprint-apply__text {
+    max-width: var(--measure-sub);
+  }
+
+  /* While the frame is blocked or still loading it reads as a white panel
+     on the bg-2 band, not a void. */
+  .sprint-apply__embed iframe {
+    background: var(--color-bg-base);
+  }
+
+  /* Step 1's "not loading?" link under Apart's form (only with
+     `APART_EMBED`). */
+  .sprint-apply__fallback {
+    margin-top: 12px;
+  }
+</style>
