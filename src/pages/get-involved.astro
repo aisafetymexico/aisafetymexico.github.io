@@ -71,11 +71,6 @@ interface Via {
 }
 
 // Cuatro caminos (#participa).
-// EXPIRES 2026-11-15: after the AI x Epistemics Research Sprint, rewrite the
-// first sentence of #agenda (the sprint becomes a past activity) and swap or
-// drop its first pill («Detalles del sprint»), here and in EN. If you drop
-// it, remove variant: 'outline' from «Calendario en Luma» so the card keeps
-// one ink pill.
 const vias: Via[] = [
   {
     id: 'training',
@@ -121,17 +116,13 @@ const vias: Via[] = [
     id: 'agenda',
     label: 'Agenda y archivo',
     title: 'Eventos y talks',
-    // «AI\u00A0x\u00A0Epistemics» is bound so no line starts or ends with a lone
-    // «x»; at 15 characters it still fits the card at 200% text on a 320px
-    // screen. The date range takes a word joiner (\u2060) after its en dash,
-    // so it never breaks as «13– / 15».
     paragraphs: [
-      'El próximo evento es el AI\u00A0x\u00A0Epistemics Research Sprint de Apart Research (13–\u206015 de noviembre de 2026), con sede presencial en Mérida. El resto de la agenda —mesas de trabajo el primer viernes de cada mes, talleres y pre-talks— vive en Luma. Las pre-talks y talks del Global South AIS Hackathon están en nuestro canal de YouTube.',
+      'Participamos en los sprints y hackatones de Apart Research: el próximo con registro abierto y los papers de los equipos de México están en Sprints con Apart. El resto de la agenda —mesas de trabajo el primer viernes de cada mes, talleres y pre-talks— vive en Luma, y las talks del Global South AIS Hackathon están en nuestro canal de YouTube.',
     ],
-    // One ink pill per card: the sprint page leads, so the calendar becomes
-    // an outline pill next to YouTube.
+    // One ink pill per card: /sprints leads, so the calendar is an outline
+    // pill next to YouTube.
     ctas: [
-      { label: 'Detalles del sprint', href: '/ai-x-epistemics' },
+      { label: 'Sprints con Apart', href: '/sprints' },
       {
         label: 'Calendario en Luma',
         href: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5',

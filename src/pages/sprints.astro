@@ -1,0 +1,278 @@
+---
+/*
+ * /sprints — Sprints y hackatones con Apart Research (ES).
+ *
+ * Todo sale de src/lib/apart-sprints.ts; esta página no lleva fechas ni
+ * proyectos escritos a mano. Secciones:
+ *   1. PageHero.
+ *   2. #proximo — los sprints con registro abierto o en curso: una tarjeta
+ *      destacada (SprintFeature) por sprint con el registro de AISMx. Si
+ *      no hay ninguno, una nota que remite al calendario de Luma.
+ *   3. #anteriores — los sprints que ya terminaron, del más reciente al más
+ *      antiguo. Con proyectos publicados, la lista de papers de equipos en
+ *      México; si Apart aún no los publica, la nota de evaluación.
+ *   4. CtaSection → /get-involved#participa.
+ *
+ * Gemela con la misma estructura e ids: src/pages/en/sprints.astro.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import SprintFeature from '../components/SprintFeature.astro';
+import CtaSection from '../components/CtaSection.astro';
+import {
+  openSprints,
+  pastSprints,
+  sprintDates,
+  sprintStatus,
+  statusLabel,
+} from '../lib/apart-sprints';
+import type { Breadcrumb } from '../lib/types';
+
+const lang = 'es';
+
+const breadcrumb: Breadcrumb = {
+  items: [
+    { label: 'Inicio', href: '/' },
+    { label: 'Actividades', href: '/activities' },
+    { label: 'Sprints con Apart' },
+  ],
+};
+
+const LUMA_CAL = 'https://luma.com/calendar/cal-WjnM2llUGXz17t5';
+const external = { target: '_blank', rel: 'noopener noreferrer' };
+
+const open = openSprints();
+const past = pastSprints();
+---
+
+<BaseLayout
+  title="Sprints con Apart Research — AI Safety Mexico"
+  description="Los sprints y hackatones de Apart Research en los que participa AI Safety Mexico: el próximo con registro abierto y los papers de los equipos de México en los anteriores."
+  pathname="/sprints"
+>
+  <Header slot="header" currentPath="/sprints" />
+
+  <PageHero
+    title="Sprints y hackatones con Apart Research"
+    description="Participamos desde México en los sprints de investigación de Apart Research. Aquí encuentras el próximo con registro abierto y los papers que entregaron los equipos de México en los anteriores."
+    breadcrumb={breadcrumb}
+  />
+
+  <section id="proximo" class="section section--warm" aria-labelledby="sprints-proximo">
+    <div class="container">
+      <SectionHeading
+        title={open.length > 1 ? 'Próximos sprints' : 'Próximo sprint'}
+        id="sprints-proximo"
+      />
+      {open.length > 0 ? (
+        <div class="sprint-open">
+          {open.map((s) => (
+            <SprintFeature
+              sprint={s}
+              lang="es"
+              titleId={`${s.id}-title`}
+              secondary={{ href: s.apartUrl, label: 'Convocatoria', external: true }}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="sprint-note">
+          No hay un sprint abierto por ahora. Anunciamos el siguiente en nuestro
+          <a class="inline-link" href={LUMA_CAL} {...external}>calendario de Luma</a>.
+        </p>
+      )}
+    </div>
+  </section>
+
+  <section id="anteriores" class="section section--base" aria-labelledby="sprints-anteriores">
+    <div class="container">
+      <SectionHeading
+        title="Sprints anteriores"
+        description="Los papers que entregaron los equipos de México. Los títulos con enlace llevan a su página en Apart Research, que publica cada proyecto después de evaluarlo."
+        id="sprints-anteriores"
+      />
+      {past.map((s) => {
+        const status = sprintStatus(s);
+        const projects = s.projects ?? [];
+        return (
+          <article class="sprint" id={s.id} aria-labelledby={`${s.id}-title`}>
+            <h3 class="sprint__title" id={`${s.id}-title`} lang="en">{s.name}</h3>
+            <p class="sprint-meta">
+              {sprintDates(s, lang)} · {s.role[lang]}
+            </p>
+
+            {status === 'review' && (
+              <p class="sprint-note">
+                <span class="sprint-status">{statusLabel.review[lang]}</span>
+                Apart Research publica los proyectos una o dos semanas después del
+                sprint, al terminar la evaluación. Aquí aparecerán los de los
+                equipos de México.
+              </p>
+            )}
+
+            {status === 'results' && projects.length === 0 && (
+              <p class="sprint-note">Ningún equipo de México publicó proyecto en este sprint.</p>
+            )}
+
+            {projects.length > 0 && (
+              <>
+                <p class="sprint-count">{projects.length} papers de equipos en México</p>
+                <ul class="sprint-projects">
+                  {projects.map((p) => (
+                    <li class="sprint-project">
+                      <h4 class="sprint-project__title">
+                        {p.url ? <a href={p.url} {...external}>{p.title}</a> : p.title}
+                      </h4>
+                      <p class="sprint-project__meta">Equipo {p.team} · {p.city}</p>
+                      {p.authors && (
+                        <p class="sprint-project__authors">{p.authors.join(', ')}</p>
+                      )}
+                      {p.pdf && (
+                        <a class="sprint-project__pdf inline-link" href={p.pdf} {...external}>
+                          Leer el paper (PDF)
+                        </a>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            <p class="sprint-links">
+              <a class="inline-link" href={s.apartUrl} {...external}>Ver el sprint en Apart</a>
+              {s.recap && (
+                <>
+                  {' · '}
+                  <a class="inline-link" href={s.recap.href}>{s.recap.label[lang]}</a>
+                </>
+              )}
+            </p>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+
+  <CtaSection
+    title="¿Quieres participar en el próximo sprint?"
+    description="No necesitas experiencia previa en seguridad de IA. Conoce las otras formas de colaborar con AI Safety Mexico."
+    ctaLabel="Cómo participar"
+    ctaHref="/get-involved#participa"
+  />
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .sprint-open {
+    display: grid;
+    gap: var(--gap-grid);
+  }
+
+  .sprint-meta {
+    font-size: var(--fs-small);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+  }
+
+  .sprint-note {
+    max-width: var(--measure-desc);
+    color: var(--color-text-secondary);
+    line-height: var(--lh-loose);
+  }
+
+  .sprint-status {
+    display: inline-block;
+    margin-right: 8px;
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-label);
+    color: var(--color-accent);
+  }
+
+  /* One block per past sprint, separated by a hairline. */
+  .sprint {
+    padding-block: 28px;
+    border-top: 1px solid var(--color-border);
+    scroll-margin-top: var(--scroll-offset);
+  }
+
+  .sprint:last-child {
+    padding-bottom: 0;
+  }
+
+  .sprint__title {
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-heading);
+    color: var(--color-text-heading);
+    margin-bottom: 4px;
+  }
+
+  .sprint .sprint-note {
+    margin-top: 16px;
+  }
+
+  .sprint-count {
+    margin-top: 20px;
+    font-size: var(--fs-small);
+    font-weight: var(--fw-medium);
+    color: var(--color-text-primary);
+  }
+
+  .sprint-projects {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 40px;
+  }
+
+  @media (min-width: 769px) {
+    .sprint-projects {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .sprint-project {
+    padding-block: 16px;
+    border-top: 1px solid var(--color-border-soft);
+  }
+
+  .sprint-project__title {
+    font-size: var(--fs-body);
+    font-weight: var(--fw-heading);
+    line-height: var(--lh-snug);
+    text-wrap: pretty;
+  }
+
+  .sprint-project__title a {
+    color: var(--color-link);
+    text-decoration: none;
+  }
+
+  .sprint-project__title a:hover {
+    color: var(--color-link-hover);
+  }
+
+  .sprint-project__meta,
+  .sprint-project__authors {
+    margin-top: 4px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+  }
+
+  .sprint-project__pdf {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: var(--fs-small);
+  }
+
+  .sprint-links {
+    margin-top: 16px;
+    font-size: var(--fs-small);
+  }
+</style>

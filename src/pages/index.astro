@@ -14,12 +14,11 @@
  * Sections:
  *   1. Hero — centered h1 with a muted trailing phrase, subtitle, 3 pill
  *      CTAs, scroll hint, then the full-bleed El Caracol halftone band.
- *   2. Próximo evento — upcoming-event spotlight (AI x Epistemics Research
- *      Sprint, AI Safety Mexico's in-person Mérida site): one full-width
- *      Card that is not a link, with two pill actions (request a spot on
- *      Luma; sprint details on /ai-x-epistemics), on bg-2 (her
- *      `.section-current`). EXPIRES 2026-11-12 and 2026-11-15 (see
- *      `upcomingSpotlight`).
+ *   2. Próximo evento — the next Apart Research sprint open for sign-ups
+ *      (from src/lib/apart-sprints.ts): one full-width Card that is not a
+ *      link, with two pill actions (sign up on Apart; all sprints on
+ *      /sprints), on bg-2 (her `.section-current`). Hidden while no sprint
+ *      is open.
  *   3. Featured pillars — FeatureGrid (4 entries: Investigación, Programas,
  *      Proyectos, Equipo).
  *   4. StatBar — 4 impact stats between hairlines.
@@ -42,9 +41,11 @@ import SectionHeading from '../components/SectionHeading.astro';
 import FeatureGrid from '../components/FeatureGrid.astro';
 import StatBar from '../components/StatBar.astro';
 import Card from '../components/Card.astro';
+import SprintFeature from '../components/SprintFeature.astro';
 import ResourcesTeaser from '../components/ResourcesTeaser.astro';
 import CtaSection from '../components/CtaSection.astro';
 import { coreTeam } from '../lib/team';
+import { openSprints } from '../lib/apart-sprints';
 
 // «AI\u00A0safety» is bound with a no-break space so the balanced tile copy
 // never ends a line on «AI» (FeatureGrid balances its descriptions).
@@ -83,31 +84,7 @@ const stats = [
 ];
 
 // -------- Próximo evento (sección 2) --------
-// Teaser of the dedicated page /ai-x-epistemics (tracks, prizes, agenda and
-// the two-step application: Apart's sign-up and the Cursor Hackathon's Luma
-// form). Like the Mexico Tech Week card before it, it is not a link: two
-// visible pills open the application (#registro) or the sprint page; no
-// pill leads to a form elsewhere, so there is one way to apply. The
-// SectionHeading names the sprint; the card is about
-// AI Safety Mexico's in-person Mérida site, with the dates as its in-card
-// label. «AI\u00A0Safety» is bound with a no-break space, as elsewhere, and
-// the dates take a word joiner (\u2060) after the en dash, so the range never
-// breaks as «13– / 15».
-// EXPIRES 2026-11-12: AISMx's internal deadline for in-person requests.
-// From the 13th, drop the «Aplica en dos pasos» pill (let «Detalles del
-// sprint» lead as `btn-register`, so the card keeps one filled action) and
-// rewrite the last sentence (in-person requests have closed), here and on
-// /en.
-// EXPIRES 2026-11-15: after the sprint, swap this spotlight for the next
-// event (or remove the section if there is none yet) and move the sprint to
-// past activities on /activities (here and on /en).
-const upcomingSpotlight = {
-  title: 'Sede presencial en Mérida',
-  date: '13–\u206015 de noviembre de 2026',
-  description:
-    'AI\u00A0Safety Mexico organiza la sede de Mérida, del viernes 13 al domingo 15. Es gratuita y no necesitas experiencia previa ni equipo. Cupo limitado: aplica hasta el 12 de noviembre.',
-  link: '/ai-x-epistemics#registro',
-};
+const nextSprint = openSprints()[0];
 ---
 
 <BaseLayout
@@ -131,33 +108,18 @@ const upcomingSpotlight = {
   />
 
   <!-- 2 · Próximo evento (spotlight; bg-2 like her .section-current) -->
-  <section class="section section--warm" aria-labelledby="home-spotlight">
-    <div class="container">
-      <SectionHeading
-        eyebrow="Próximo evento"
-        title="AI x Epistemics Research Sprint"
-        description="Un sprint de investigación de Apart Research sobre cómo la IA cambia la forma en que decidimos qué creer, en línea o en una sede presencial."
-        id="home-spotlight"
-      />
-      <div class="home-spotlight">
-        <Card
-          badge={upcomingSpotlight.date}
-          title={upcomingSpotlight.title}
-          description={upcomingSpotlight.description}
-          padding="md"
-        >
-          <div class="program-actions">
-            <a class="btn btn-register" href={upcomingSpotlight.link}>
-              Aplica en dos pasos
-            </a>
-            <a class="btn btn-outline" href="/ai-x-epistemics">
-              Detalles del sprint
-            </a>
-          </div>
-        </Card>
+  {nextSprint && (
+    <section class="section section--warm" aria-labelledby="home-spotlight">
+      <div class="container">
+        <SectionHeading title="Próximo evento" id="home-spotlight" />
+        <SprintFeature
+          sprint={nextSprint}
+          lang="es"
+          secondary={{ href: '/sprints', label: 'Sprints con Apart' }}
+        />
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <!-- 3 · Featured pillars (gateway de 4) -->
   <section class="section section--base">
@@ -282,16 +244,6 @@ const upcomingSpotlight = {
 </BaseLayout>
 
 <style>
-  /* Upcoming-event spotlight: one Card at full container width, like her
-     `.section-current` card under a left-aligned heading. Card already puts
-     the pill row 18px under the copy, and base.css stacks the pills full
-     width at ≤480px. The copy keeps her 680px description measure instead
-     of running the full card width, and `pretty` keeps a lone word off its
-     last line on phones. */
-  .home-spotlight :global(.card__description) {
-    max-width: var(--measure-desc);
-    text-wrap: pretty;
-  }
 
   /* «Trabajo reciente» copy: `pretty`, with the no-break spaces in the
      strings, keeps a lone word («IPN.», «2025.», «Apart.») off the last

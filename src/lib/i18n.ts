@@ -55,7 +55,7 @@ export type StringKey =
   | 'footer.item.research'
   | 'footer.item.programs'
   | 'footer.item.projects'
-  | 'footer.item.gsh'
+  | 'footer.item.sprints'
   | 'footer.item.resources'
   | 'footer.item.blog'
   | 'footer.item.getInvolved'
@@ -129,7 +129,7 @@ const strings: Record<Locale, Record<StringKey, string>> = {
     'footer.item.research': 'Investigación',
     'footer.item.programs': 'Programas',
     'footer.item.projects': 'Proyectos',
-    'footer.item.gsh': 'Global South AIS Hackathon',
+    'footer.item.sprints': 'Sprints con Apart',
     'footer.item.resources': 'Recursos',
     'footer.item.blog': 'Blog',
     'footer.item.getInvolved': 'Colabora',
@@ -205,7 +205,7 @@ const strings: Record<Locale, Record<StringKey, string>> = {
     'footer.item.research': 'Research',
     'footer.item.programs': 'Programs',
     'footer.item.projects': 'Projects',
-    'footer.item.gsh': 'Global South AIS Hackathon',
+    'footer.item.sprints': 'Sprints with Apart',
     'footer.item.resources': 'Resources',
     'footer.item.blog': 'Blog',
     'footer.item.getInvolved': 'Get involved',

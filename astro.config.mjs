@@ -24,6 +24,12 @@ export default defineConfig({
     format: 'directory',
   },
 
+  // The AI x Epistemics sprint is a section of /sprints.
+  redirects: {
+    '/ai-x-epistemics': '/sprints#ai-x-epistemics',
+    '/en/ai-x-epistemics': '/en/sprints#ai-x-epistemics',
+  },
+
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],

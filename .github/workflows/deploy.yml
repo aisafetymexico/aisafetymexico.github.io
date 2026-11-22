@@ -3,6 +3,10 @@ name: Deploy site to GitHub Pages
 on:
   push:
     branches: [main]
+  # Daily rebuild: /sprints and the "next event" spotlights take each
+  # sprint's state from the build date (src/lib/apart-sprints.ts).
+  schedule:
+    - cron: '0 12 * * *'
   workflow_dispatch:
 
 permissions:
