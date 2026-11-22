@@ -58,11 +58,6 @@ interface Via {
 }
 
 // Four paths (#participa).
-// EXPIRES 2026-11-15: after the AI x Epistemics Research Sprint, rewrite the
-// first sentence of #agenda (the sprint becomes a past activity) and swap or
-// drop its first pill ("Sprint details"), here and in ES. If you drop it,
-// remove variant: 'outline' from "Luma calendar" so the card keeps one ink
-// pill.
 const vias: Via[] = [
   {
     id: 'training',
@@ -108,20 +103,15 @@ const vias: Via[] = [
     id: 'agenda',
     label: 'Calendar and archive',
     title: 'Events and talks',
-    // «AI\u00A0x\u00A0Epistemics» is bound so no line starts or ends with a lone
-    // «x»; at 15 characters it still fits the card at 200% text on a 320px
-    // screen. «in-person» takes a non-breaking hyphen (\u2011, as /contact
-    // does for «in-house»), so it never breaks as «in- / person». The date
-    // range takes a word joiner (\u2060) after its en dash, so it never
-    // breaks as «13– / 15». The spaced em dashes are bound to the word
-    // before them (\u00A0), so no line starts with «—».
+    // The spaced em dashes are bound to the word before them (\u00A0), so no
+    // line starts with «—».
     paragraphs: [
-      "The next event is Apart Research's AI\u00A0x\u00A0Epistemics Research Sprint (November 13–\u206015, 2026), with an in\u2011person site in Mérida. The rest of the agenda\u00A0— working sessions on the first Friday of each month, workshops, and pre-talks\u00A0— lives on Luma. Pre-talks and talks from the Global South AIS Hackathon are on our YouTube channel.",
+      "We take part in Apart Research's sprints and hackathons: the next one open for registration and the papers from teams in Mexico are on Sprints with Apart. The rest of the agenda\u00A0— working sessions on the first Friday of each month, workshops, and pre-talks\u00A0— lives on Luma, and talks from the Global South AIS Hackathon are on our YouTube channel.",
     ],
-    // One ink pill per card: the sprint page leads, so the calendar becomes
-    // an outline pill next to YouTube.
+    // One ink pill per card: /sprints leads, so the calendar is an outline
+    // pill next to YouTube.
     ctas: [
-      { label: 'Sprint details', href: '/en/ai-x-epistemics' },
+      { label: 'Sprints with Apart', href: '/en/sprints' },
       {
         label: 'Luma calendar',
         href: 'https://luma.com/calendar/cal-WjnM2llUGXz17t5',

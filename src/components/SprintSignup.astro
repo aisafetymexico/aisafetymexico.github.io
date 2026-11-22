@@ -1,0 +1,87 @@
+---
+/**
+ * SprintSignup — the filled «Regístrate» pill for an Apart Research sprint.
+ *
+ * With a form for the page's language (`sprint.form`), the pill opens AISMx's
+ * Typeform in a popup over the page; the form's last screen sends people on
+ * to Apart's sign-up. Without one, it links straight to Apart's sign-up with
+ * the sprint's utm_source.
+ *
+ * The href is always a working URL in a new tab, so the pill still works if
+ * Typeform's script is blocked or has not loaded yet.
+ */
+import type { ApartSprint } from '../lib/apart-sprints';
+import type { Locale } from '../lib/i18n';
+
+export interface Props {
+  sprint: ApartSprint;
+  lang: Locale;
+}
+
+const { sprint, lang } = Astro.props;
+
+const form = sprint.form?.[lang];
+const typeformId = form?.match(/\/to\/([A-Za-z0-9]+)/)?.[1];
+
+const label = form
+  ? { es: 'Regístrate', en: 'Sign up' }[lang]
+  : { es: 'Regístrate en Apart', en: 'Sign up on Apart' }[lang];
+const popupTitle = {
+  es: `Registro de AI Safety Mexico para ${sprint.name}`,
+  en: `AI Safety Mexico sign-up for ${sprint.name}`,
+}[lang];
+---
+
+<a
+  class="btn btn-register"
+  href={form ?? sprint.signupUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  data-typeform-id={typeformId}
+  data-typeform-title={typeformId && popupTitle}
+>
+  {label}
+</a>
+
+<script>
+  type Popup = { open: () => void };
+  type TypeformEmbed = {
+    createPopup: (id: string, options: Record<string, unknown>) => Popup;
+  };
+
+  const links = document.querySelectorAll<HTMLAnchorElement>('a[data-typeform-id]');
+
+  if (links.length > 0) {
+    const css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://embed.typeform.com/next/css/popup.css';
+    document.head.append(css);
+
+    const sdk = document.createElement('script');
+    sdk.src = 'https://embed.typeform.com/next/embed.js';
+    sdk.async = true;
+    document.head.append(sdk);
+
+    const popups = new Map<string, Popup>();
+
+    links.forEach((link) => {
+      link.addEventListener('click', (event) => {
+        const tf = (window as unknown as { tf?: TypeformEmbed }).tf;
+        const id = link.dataset.typeformId;
+        if (!tf || !id) return;
+        event.preventDefault();
+        let popup = popups.get(id);
+        if (!popup) {
+          // Apart refuses to load inside a frame, so the form's redirect must
+          // replace the whole page, not the popup.
+          popup = tf.createPopup(id, {
+            redirectTarget: '_top',
+            iframeProps: { title: link.dataset.typeformTitle ?? '' },
+          });
+          popups.set(id, popup);
+        }
+        popup.open();
+      });
+    });
+  }
+</script>

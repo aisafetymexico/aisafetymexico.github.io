@@ -1,0 +1,248 @@
+---
+/**
+ * SprintFeature — the large, highlighted card for a sprint that is open to
+ * sign-ups or in progress. Used by /sprints and the "next event" spotlights
+ * on the home and /activities pages.
+ *
+ * Poster (if the sprint has one) beside the content: status pill with the
+ * countdown, name, tagline, summary, a fact grid (dates, format, prizes,
+ * partnership) and the sign-up pill. The clay border is the site's
+ * "featured" mark. An animated poster loops muted; with reduced motion it
+ * stays on its first frame.
+ */
+import SprintSignup from './SprintSignup.astro';
+import {
+  sprintCountdown,
+  sprintDates,
+  sprintStatus,
+  statusLabel,
+  type ApartSprint,
+} from '../lib/apart-sprints';
+import type { Locale } from '../lib/i18n';
+
+export interface Props {
+  sprint: ApartSprint;
+  lang: Locale;
+  /** Outline pill next to the sign-up one. */
+  secondary: { href: string; label: string; external?: boolean };
+  headingLevel?: 'h2' | 'h3';
+  titleId?: string;
+}
+
+const { sprint, lang, secondary, headingLevel = 'h3', titleId } = Astro.props;
+const Heading = headingLevel;
+
+const t = {
+  es: { dates: 'Fechas', format: 'Formato', prizes: 'Premios', partners: 'Colaboración' },
+  en: { dates: 'Dates', format: 'Format', prizes: 'Prizes', partners: 'Partnership' },
+}[lang];
+
+const external = secondary.external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+
+<article
+  class:list={['sprint-feature', { 'sprint-feature--poster': sprint.poster }]}
+  aria-labelledby={titleId}
+>
+  {sprint.poster?.video ? (
+    <video
+      class="sprint-feature__poster"
+      poster={sprint.poster.src}
+      width="800"
+      height="800"
+      autoplay
+      muted
+      loop
+      playsinline
+      role="img"
+      aria-label={sprint.poster.alt[lang]}
+      data-sprint-video
+    >
+      <source src={sprint.poster.video} type="video/mp4" />
+    </video>
+  ) : sprint.poster && (
+    <img
+      class="sprint-feature__poster"
+      src={sprint.poster.src}
+      alt={sprint.poster.alt[lang]}
+      width="800"
+      height="800"
+      decoding="async"
+    />
+  )}
+
+  <div class="sprint-feature__main">
+    <p class="sprint-feature__status">
+      <span class="sprint-feature__pill">
+        <span class="sprint-feature__dot" aria-hidden="true"></span>
+        {statusLabel[sprintStatus(sprint)][lang]}
+      </span>
+      <span class="sprint-feature__countdown">{sprintCountdown(sprint, lang)}</span>
+    </p>
+
+    <Heading class="sprint-feature__title" id={titleId} lang="en">{sprint.name}</Heading>
+    {sprint.tagline && <p class="sprint-feature__tagline">{sprint.tagline[lang]}</p>}
+    <p class="sprint-feature__summary">{sprint.summary[lang]}</p>
+
+    <dl class="sprint-feature__facts">
+      <div>
+        <dt>{t.dates}</dt>
+        <dd>{sprintDates(sprint, lang)}</dd>
+      </div>
+      <div>
+        <dt>{t.format}</dt>
+        <dd>{sprint.kind[lang]} · {sprint.format[lang]}</dd>
+      </div>
+      {sprint.prizes && (
+        <div>
+          <dt>{t.prizes}</dt>
+          <dd>{sprint.prizes[lang]}</dd>
+        </div>
+      )}
+      <div>
+        <dt>{t.partners}</dt>
+        <dd>Apart Research × AI Safety México</dd>
+      </div>
+    </dl>
+
+    <div class="sprint-feature__actions">
+      <SprintSignup sprint={sprint} lang={lang} />
+      <a class="btn btn-outline" href={secondary.href} {...external}>{secondary.label}</a>
+    </div>
+  </div>
+</article>
+
+<script>
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<HTMLVideoElement>('video[data-sprint-video]').forEach((video) => {
+      video.removeAttribute('autoplay');
+      video.pause();
+      video.currentTime = 0;
+    });
+  }
+</script>
+
+<style>
+  .sprint-feature {
+    display: grid;
+    grid-template-columns: 1fr;
+    background: var(--color-bg-elevated);
+    border: 2px solid var(--color-accent-decor);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  @media (min-width: 900px) {
+    .sprint-feature--poster {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    }
+  }
+
+  .sprint-feature__poster {
+    display: block;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1;
+    object-fit: contain;
+    background: #000;
+  }
+
+  .sprint-feature__main {
+    align-self: center;
+    padding: clamp(24px, 4vw, 44px);
+  }
+
+  .sprint-feature__status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+    font-size: var(--fs-caption);
+  }
+
+  .sprint-feature__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    font-weight: var(--fw-label);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+  }
+
+  .sprint-feature__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: var(--color-accent-decor);
+  }
+
+  .sprint-feature__countdown {
+    font-weight: var(--fw-medium);
+    color: var(--color-text-primary);
+  }
+
+  .sprint-feature__title {
+    margin-top: 18px;
+    font-size: clamp(1.55rem, 3.2vw, 2.2rem);
+    font-weight: var(--fw-display);
+    line-height: var(--lh-tight);
+    color: var(--color-text-heading);
+    text-wrap: balance;
+  }
+
+  .sprint-feature__tagline {
+    margin-top: 12px;
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-normal);
+    color: var(--color-text-primary);
+    text-wrap: pretty;
+  }
+
+  .sprint-feature__summary {
+    margin-top: 10px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-loose);
+    color: var(--color-text-secondary);
+    text-wrap: pretty;
+  }
+
+  .sprint-feature__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px 24px;
+    margin: 22px 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .sprint-feature__facts dt {
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-label);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .sprint-feature__facts dd {
+    margin: 2px 0 0;
+    font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-primary);
+  }
+
+  .sprint-feature__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-actions);
+    margin-top: 26px;
+  }
+
+  .sprint-feature__actions :global(.btn) {
+    padding: 13px 28px;
+  }
+</style>
