@@ -6,7 +6,8 @@
  *
  * Poster (if the sprint has one) beside the content: status pill with the
  * countdown, name, tagline, summary, a fact grid (dates, format, prizes,
- * partnership) and the sign-up pill. The clay border is the site's
+ * partnership), the sign-up pill and, when AISMx has a form, the two-step
+ * note. The clay border is the site's
  * "featured" mark. An animated poster loops muted; with reduced motion it
  * stays on its first frame.
  */
@@ -33,8 +34,24 @@ const { sprint, lang, secondary, headingLevel = 'h3', titleId } = Astro.props;
 const Heading = headingLevel;
 
 const t = {
-  es: { dates: 'Fechas', format: 'Formato', prizes: 'Premios', partners: 'Colaboración' },
-  en: { dates: 'Dates', format: 'Format', prizes: 'Prizes', partners: 'Partnership' },
+  es: {
+    dates: 'Fechas',
+    format: 'Formato',
+    prizes: 'Premios',
+    partners: 'Colaboración',
+    stepsTitle: 'El registro tiene dos pasos',
+    step1: 'Dejas tus datos básicos en el formulario de AI Safety México.',
+    step2: 'Al terminar, el formulario te lleva al registro oficial de Apart Research.',
+  },
+  en: {
+    dates: 'Dates',
+    format: 'Format',
+    prizes: 'Prizes',
+    partners: 'Partnership',
+    stepsTitle: 'Sign-up takes two steps',
+    step1: "Leave your basic details on AI Safety Mexico's form (in Spanish).",
+    step2: "When you finish, the form takes you to Apart Research's official sign-up.",
+  },
 }[lang];
 
 const external = secondary.external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
@@ -109,6 +126,16 @@ const external = secondary.external ? { target: '_blank', rel: 'noopener norefer
       <SprintSignup sprint={sprint} lang={lang} />
       <a class="btn btn-outline" href={secondary.href} {...external}>{secondary.label}</a>
     </div>
+
+    {sprint.form?.[lang] && (
+      <div class="sprint-feature__steps">
+        <p class="sprint-feature__steps-title">{t.stepsTitle}</p>
+        <ol>
+          <li>{t.step1}</li>
+          <li>{t.step2}</li>
+        </ol>
+      </div>
+    )}
   </div>
 </article>
 
@@ -244,5 +271,23 @@ const external = secondary.external ? { target: '_blank', rel: 'noopener norefer
 
   .sprint-feature__actions :global(.btn) {
     padding: 13px 28px;
+  }
+
+  .sprint-feature__steps {
+    margin-top: 18px;
+    font-size: var(--fs-small);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-secondary);
+  }
+
+  .sprint-feature__steps-title {
+    font-weight: var(--fw-medium);
+    color: var(--color-text-primary);
+  }
+
+  .sprint-feature__steps ol {
+    margin: 4px 0 0;
+    padding-left: 1.25em;
+    list-style: decimal;
   }
 </style>

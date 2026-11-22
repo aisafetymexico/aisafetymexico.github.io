@@ -102,7 +102,10 @@ const entries: SprintEntry[] = [
     },
     slug: 'agent-attribution-2026',
     utmSource: 'aismx412',
-    form: { es: 'https://form.typeform.com/to/RPJN2huV' },
+    form: {
+      es: 'https://form.typeform.com/to/RPJN2huV',
+      en: 'https://form.typeform.com/to/RPJN2huV',
+    },
   },
   {
     id: 'ai-x-epistemics',
